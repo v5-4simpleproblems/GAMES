@@ -39,4 +39,4 @@ jobs:
         git commit -m "Sync changes from jmam1593.github.io repo"
         git push
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
