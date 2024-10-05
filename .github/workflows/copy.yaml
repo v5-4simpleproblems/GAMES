@@ -1,0 +1,46 @@
+name: Clone Repository Excluding Folders and Files
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # This runs the workflow every hour. Adjust as needed.
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v2
+        with:
+          repository: jman1593/jman1593.github.io
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: source-repo
+
+      - name: Clone to destination repository
+        run: |
+          # Setup git
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+
+          # Create a new folder for the cloned files
+          mkdir destination-repo
+          
+          # Copy files while excluding specified folders and files
+          rsync -av --exclude='.github/' --exclude='html/' --exclude='img/' --exclude='newhtml/' --exclude='newswf/' --exclude='swf/' --exclude='cards_data.html' --exclude='secret-menu.html' ./source-repo/ ./destination-repo/
+
+          # Navigate to the destination folder
+          cd destination-repo
+          
+          # Initialize a new Git repository
+          git init
+          
+          # Add a remote destination repository
+          git remote add origin jman1593/strongdog-test
+          
+          # Add all changes
+          git add .
+
+          # Commit the changes
+          git commit -m "Clone repository excluding specific folders and files"
+
+          # Push to the destination repository
+          git push -f origin master  # Adjust the branch name if needed
