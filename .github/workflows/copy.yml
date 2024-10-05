@@ -14,14 +14,14 @@ jobs:
     - name: Checkout source repo (jmam1593.github.io)
       uses: actions/checkout@v3
       with:
-        repository: jmam1593.github.io
+        repository: jmam1593/jmam1593.github.io
         ref: test
         path: source_repo
 
     - name: Checkout target repo (strongdog2)
       uses: actions/checkout@v3
       with:
-        repository: strongdog2
+        repository: jmam1593/strongdog2
         ref: test
         path: target_repo
 
@@ -38,3 +38,5 @@ jobs:
         git add .
         git commit -m "Sync changes from jmam1593.github.io repo"
         git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
