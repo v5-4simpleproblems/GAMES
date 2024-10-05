@@ -1,12 +1,20 @@
-name: Sync Workflow Files to strongdog2 Test Branch
+name: Sync Workflow Files to strongdog2 Master Branch
 
 on:
   push:
     branches:
-      - test
+      - master
     paths:
+      - 'winner.html'
+      - 'swf.html'
+      - 'style.css'
+      - 'strongdog.webp'
+      - 'robots.txt'
+      - 'intro.html'
       - 'index.html'
-      - 'cards_data.html'
+      - 'html.html'
+      - 'favs.html'
+      - 'ads.txt'
   workflow_dispatch:
 
 jobs:
@@ -14,35 +22,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the source repository (jman1593.github.io) on the test branch
-      - name: Checkout Source Repository (test branch)
+      # Checkout the source repository (jman1593.github.io) on the master branch
+      - name: Checkout Source Repository (master branch)
         uses: actions/checkout@v3
         with:
           repository: jman1593/jman1593.github.io
-          ref: test  # Specify the test branch
+          ref: master  # Specify the master branch
           path: source
 
-      # Checkout the destination repository (strongdog2) on the test branch
-      - name: Checkout Destination Repository (test branch)
+      # Checkout the destination repository (strongdog2) on the master branch
+      - name: Checkout Destination Repository (master branch)
         uses: actions/checkout@v3
         with:
           repository: jman1593/strongdog2
-          ref: test  # Specify the test branch
+          ref: master  # Specify the master branch
           path: destination
           token: ${{ secrets.TOKEN }}
 
-      # Copy the workflow files from source to destination
-      - name: Copy Workflow Files
+      # Copy the specified files from source to destination
+      - name: Copy Files
         run: |
+          cp -r source/winner.html destination/
+          cp -r source/swf.html destination/
+          cp -r source/style.css destination/
+          cp -r source/strongdog.webp destination/
+          cp -r source/robots.txt destination/
+          cp -r source/intro.html destination/
           cp -r source/index.html destination/
-          cp -r source/cards_data.html destination/
+          cp -r source/html.html destination/
+          cp -r source/favs.html destination/
+          cp -r source/ads.txt destination/
 
-      # Commit and push the changes to the destination repository (test branch)
+      # Commit and push the changes to the destination repository (master branch)
       - name: Commit and Push Changes
         run: |
           cd destination
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git add index.html cards_data.html
-          git commit -m "Sync workflow files from jman1593.github.io (test branch)"
-          git push origin test  # Push to the test branch
+          git add winner.html swf.html style.css strongdog.webp robots.txt intro.html index.html html.html favs.html ads.txt
+          git commit -m "Sync files from jman1593.github.io (master branch)"
+          git push origin master  # Push to the master branch
