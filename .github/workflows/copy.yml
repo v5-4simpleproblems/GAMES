@@ -29,7 +29,8 @@ jobs:
 
     - name: Sync files (excluding specific folders and files)
       run: |
-        rsync -av --delete --exclude='html/' --exclude='img/' --exclude='swf/' --exclude='.github/' \
+        # Use rsync to copy files while excluding certain folders and files without deleting anything
+        rsync -av --exclude='html/' --exclude='img/' --exclude='swf/' --exclude='.github/' \
                   --exclude='secret-menu.html' --exclude='cards_data.html' source_repo/ target_repo/
                   
     - name: Commit and push changes to strongdog2
