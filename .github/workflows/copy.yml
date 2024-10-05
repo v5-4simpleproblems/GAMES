@@ -16,6 +16,7 @@ jobs:
       with:
         repository: jman1593/jman1593.github.io
         ref: test
+        token: ${{ secrets.TOKEN }}  # Use default GITHUB_TOKEN or replace with custom token if needed
         path: source_repo
 
     - name: Checkout target repo (strongdog2)
@@ -23,6 +24,7 @@ jobs:
       with:
         repository: jman1593/strongdog2
         ref: test
+        token: ${{ secrets.TOKEN }}  # Replace TOKEN with the secret that holds your PAT
         path: target_repo
 
     - name: Sync files (excluding specific folders and files)
@@ -39,4 +41,4 @@ jobs:
         git commit -m "Sync changes from jman1593.github.io repo"
         git push
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Use your PAT for pushing changes to the private repo
