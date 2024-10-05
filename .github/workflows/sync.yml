@@ -7,7 +7,6 @@ on:
     paths:
       - 'winner.html'
       - 'swf.html'
-      - 'style.css'
       - 'strongdog.webp'
       - 'robots.txt'
       - 'intro.html'
@@ -44,7 +43,6 @@ jobs:
         run: |
           cp -r source/winner.html destination/
           cp -r source/swf.html destination/
-          cp -r source/style.css destination/
           cp -r source/strongdog.webp destination/
           cp -r source/robots.txt destination/
           cp -r source/intro.html destination/
