@@ -57,6 +57,6 @@ jobs:
           cd destination
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git add winner.html swf.html style.css strongdog.webp robots.txt intro.html index.html html.html favs.html ads.txt
+          git add winner.html swf.html strongdog.webp robots.txt intro.html index.html html.html favs.html ads.txt
           git commit -m "Sync files from jman1593.github.io (master branch)"
           git push origin master  # Push to the master branch
