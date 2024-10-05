@@ -16,14 +16,23 @@ jobs:
       with:
         repository: jman1593/jman1593.github.io
         ref: test
-        token: ${{ secrets.TOKEN }}  # Make sure this is the PAT
+        path: source_repo
+        token: ${{ secrets.TOKEN }}  # Use the PAT here for private repo access
 
     - name: Checkout target repo (strongdog2)
       uses: actions/checkout@v3
       with:
         repository: jman1593/strongdog2
         ref: test
-        token: ${{ secrets.TOKEN }}  # Make sure this is the PAT
+        path: target_repo
+        token: ${{ secrets.TOKEN }}  # Use the PAT here for private repo access
+
+    - name: Ensure source_repo exists
+      run: |
+        if [ ! -d "source_repo" ]; then
+          echo "Source repository directory not found!"
+          exit 1
+        fi
 
     - name: Sync files (excluding specific folders and files)
       run: |
@@ -45,4 +54,4 @@ jobs:
           echo "No changes to commit."
         fi
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Make sure this is your PAT
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}  # Ensure this PAT is used for pushing changes
