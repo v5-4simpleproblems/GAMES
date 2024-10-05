@@ -1,0 +1,48 @@
+name: Sync Workflow Files to strongdog2 Test Branch
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - 'index.html'
+      - 'cards_data.html'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the source repository (jman1593.github.io) on the test branch
+      - name: Checkout Source Repository (test branch)
+        uses: actions/checkout@v3
+        with:
+          repository: jman1593/jman1593.github.io
+          ref: test  # Specify the test branch
+          path: source
+
+      # Checkout the destination repository (strongdog2) on the test branch
+      - name: Checkout Destination Repository (test branch)
+        uses: actions/checkout@v3
+        with:
+          repository: jman1593/strongdog2
+          ref: test  # Specify the test branch
+          path: destination
+          token: ${{ secrets.TOKEN }}
+
+      # Copy the workflow files from source to destination
+      - name: Copy Workflow Files
+        run: |
+          cp -r source/index.html destination/
+          cp -r source/cards_data.html destination/
+
+      # Commit and push the changes to the destination repository (test branch)
+      - name: Commit and Push Changes
+        run: |
+          cd destination
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add index.html cards_data.html
+          git commit -m "Sync workflow files from jman1593.github.io (test branch)"
+          git push origin test  # Push to the test branch
