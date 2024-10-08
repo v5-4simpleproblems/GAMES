@@ -1,205 +1,61 @@
-
-<head>
-    <title>Your Website Title</title>
-    <script>
-        window.addEventListener('load', function() {
-            // Create intro container
-            var introDiv = document.createElement('div');
-            introDiv.id = 'intro';
-
-            // Create and add STRONGDOG text
-            var strongDogDiv = document.createElement('div');
-            strongDogDiv.id = 'strongdog';
-            strongDogDiv.innerText = 'STRONGDOG';
-            strongDogDiv.style.opacity = '0'; // Start invisible
-            introDiv.appendChild(strongDogDiv);
-
-            // Create and add XP text
-            var xpDiv = document.createElement('div');
-            xpDiv.id = 'xp';
-            xpDiv.innerText = 'XP';
-            xpDiv.style.opacity = '0'; // Start invisible
-            introDiv.appendChild(xpDiv);
-
-            // Create and add image
-            var uploadedImage = document.createElement('img');
-            uploadedImage.id = 'uploadedImage';
-            uploadedImage.src = '../../../strongdog.webp'; // Path to your image
-            uploadedImage.style.display = 'none';
-            introDiv.appendChild(uploadedImage);
-
-            // Append intro to body
-            document.body.insertBefore(introDiv, document.body.firstChild);
-
-            // Add styles
-            var css = `
-                #intro {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(33, 33, 33, 1);
-                    z-index: 1000;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    transition: transform 0.5s ease-in-out;
-                }
-
-                #strongdog, #xp {
-                    font-size: 3em;
-                    font-weight: bold;
-                    opacity: 0;
-                    animation: fadeInSlam 1s ease forwards;
-                }
-
-                #strongdog {
-                    color: white;
-                }
-
-                #xp {
-                    color: orange;
-                    animation-delay: 0.5s; 
-                }
-
-                @keyframes fadeInSlam {
-                    0% { transform: scale(0); opacity: 0; }
-                    50% { transform: scale(1.2); opacity: 1; }
-                    100% { transform: scale(1); opacity: 1; }
-                }
-
-                @keyframes riseUp {
-                    0% { transform: translateY(0); }
-                    100% { transform: translateY(-100px); }
-                }
-
-                #uploadedImage {
-                    width: 100%;
-                    max-width: 600px;
-                    opacity: 0;
-                    transform: scale(0);
-                    animation: growAndSettle 1s ease forwards;
-                }
-
-                @keyframes growAndSettle {
-                    0% { transform: scale(0); opacity: 0; }
-                    50% { transform: scale(1.1); opacity: 1; }
-                    75% { transform: scale(0.9); }
-                    100% { transform: scale(1); }
-                }
-            `;
-            var styleSheet = document.createElement('style');
-            styleSheet.type = 'text/css';
-            styleSheet.innerText = css;
-            document.head.appendChild(styleSheet);
-
-            // Trigger image fade-in and text fade-out
-            setTimeout(() => {
-                uploadedImage.style.display = 'block';
-                uploadedImage.style.opacity = 1;
-                strongDogDiv.style.opacity = 0;
-                xpDiv.style.opacity = 0;
-            }, 1500);
-
-            // Slide up and remove intro
-            setTimeout(() => {
-                introDiv.style.transform = 'translateY(-100%)';
-                setTimeout(() => { introDiv.remove(); }, 500);
-            }, 3200);
-        });
-    </script>
-</head>
-
-
 <!DOCTYPE html>
-
 <html lang="en">
 
-
-
 <head>
-
     <meta charset="utf-8" />
-
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
-
     <link rel="stylesheet" href="assets/css/app.css" type="text/css" />
+    <meta property="og:image" content="moto-x3m.png" />
+    <title>Moto X3M Unblocked</title>
+    <script type="text/javascript">
+        var useEvents = (typeof(Event) === 'function');
 
-    <title>
+        var myDispatchEvent = function (name){
+            var event;
+            if (useEvents){
+                event =  new Event(name);
+            }else{
+                event = document.createEvent('Event');
+                event.initEvent(name, true, true);
+            }
+            document.getElementById("content").dispatchEvent(event);
+        }
+        var nape = "nape.mi.js";
 
-        MotoX3M
+        window.famobi_onPauseRequested = function(){
+            // code that pauses/mutes the game
+            console.log('ad started');
+            myDispatchEvent('SDK_GAME_PAUSE');
+        };
 
-    </title>
+        window.famobi_onResumeRequested = function(){
+            // code that unpauses/unmutes the game
+            console.log('ad resumed');
+            myDispatchEvent('SDK_GAME_START');
+        };
 
-
-
+        window.famobi_gameID = 'moto-x3m'; // the actual GAMEID is added to the final version by Famobi
+        window.famobi_gameJS = ['js/all.js',
+            function() {
+                // start the game
+                window.famobi_started = true;
+                myDispatchEvent('start_game');
+            }
+        ];
+        (function (document, url, fgJS, firstJS) {
+            fgJS = document.createElement('script');
+            firstJS = document.getElementsByTagName('script')[0];
+            fgJS.src = url + encodeURIComponent(document.location.href);
+            firstJS.parentNode.insertBefore(fgJS, firstJS);
+            })(document, 'js/start.js?e=');
+    </script>
 </head>
 
-
-
 <body>
-
-
-
     <div id="content"></div>
-
     <div id="orientation"></div>
-
     <div id="loader">Loading ...</div>
-
-
-
-    <script
-
-        id="gamebridge-sdk"
-
-        src="gamebridge.js"
-
-        data-ad-frequency="30s"
-
-        data-gameid="c8kv1eursfeikq6ffc50">
-
-    </script>
-
-    <script src="pk-sdk.js"></script>
-
-
-
-    <script type="text/javascript" src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-
-
-
-    <script type="text/javascript" src="assets/lib/nape.min.js">
-
-        var nape = "nape.min.js";
-
-    </script>
-
-    <script type="text/javascript" src="assets/lib/jquery-3.1.1.min.js"></script>
-
-    <script type="text/javascript" src="assets/lib/easeljs-0.8.2.combined.js"></script>
-
-    <script type="text/javascript" src="assets/lib/bluebird.min.js"></script>
-
-    <script type="text/javascript" src="assets/lib/phaser.min.js"></script>
-
-    <script type="text/javascript" src="assets/lib/phaser-cachebuster.min.js"></script>
-
-    <script type="text/javascript" src="assets/lib/phaser-super-storage.min.js"></script>
-
-    <script type="text/javascript" src="assets/lib/dragonBones.min.js"></script>
-
-    <!-- <script type="text/javascript" src="assets/lib/pksl.js"></script> -->
-
-
-
-<script type="text/javascript" src="motox3m.min.js?4e65ed0ec1976a14ed60"></script></body>
-
-
-
+    <script src="js/analytics_ubg_v1_4.js"></script>
+    <script src="js/ubg235_client_v1_1.js"></script>
 </html>
-
