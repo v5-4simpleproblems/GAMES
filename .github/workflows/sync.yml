@@ -6,12 +6,10 @@ on:
       - master
     paths:
       - 'winner.html'
-      - 'swf.html'
       - 'strongdog.webp'
       - 'robots.txt'
       - 'intro.html'
       - 'index.html'
-      - 'html.html'
       - 'favs.html'
       - 'ads.txt'
       - 'about.html'
@@ -43,12 +41,10 @@ jobs:
       - name: Copy Files
         run: |
           cp -r source/winner.html destination/
-          cp -r source/swf.html destination/
           cp -r source/strongdog.webp destination/
           cp -r source/robots.txt destination/
           cp -r source/intro.html destination/
           cp -r source/index.html destination/
-          cp -r source/html.html destination/
           cp -r source/favs.html destination/
           cp -r source/ads.txt destination/
           cp -r source/about.html destination/
@@ -59,6 +55,6 @@ jobs:
           cd destination
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git add winner.html swf.html strongdog.webp robots.txt intro.html index.html html.html favs.html ads.txt about.html
+          git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html
           git commit -m "Sync files from jman1593.github.io (master branch)"
           git push origin master  # Push to the master branch
