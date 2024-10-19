@@ -126,7 +126,7 @@
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Nosifer&display=swap");
       body {
-        font-family: 'Nosifer', Arial, sans-serif; /* Apply Nosifer as the primary font */
+        font-family: "Nosifer", Arial, sans-serif; /* Apply Nosifer as the primary font */
         margin: 0;
         padding: 0;
         background-color: #2e2e2e; /* Dark grey background */
@@ -194,23 +194,23 @@
         justify-content: center;
       }
       .card {
-  background-color: #fff;
-  border-radius: 10px;
-  margin: 5px;
-  width: 120px;
-  height: 120px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  outline: 2px solid orange; /* Adds an orange outline to the card */
-}
+        background-color: #fff;
+        border-radius: 10px;
+        margin: 5px;
+        width: 120px;
+        height: 120px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        outline: 2px solid orange; /* Adds an orange outline to the card */
+      }
 
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.29);
-  outline: 3px solid orange; /* Increases the outline thickness on hover */
-}
+      .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.29);
+        outline: 3px solid orange; /* Increases the outline thickness on hover */
+      }
       .card img {
         width: 100%;
         height: 100%;
@@ -539,9 +539,34 @@
         text-decoration: underline;
         cursor: pointer;
       }
+      #rightCobweb {
+        position: absolute;
+        width: 210px; /* Small size for the cobwebs */
+        pointer-events: none; /* Allow clicking through the image */
+        z-index: 2000; /* Ensure it stays on top visually */
+      }
+      #leftCobweb {
+        position: absolute;
+        width: 270px; /* Small size for the cobwebs */
+        pointer-events: none; /* Allow clicking through the image */
+        z-index: 2000; /* Ensure it stays on top visually */
+      }
+
+      #leftCobweb {
+        top: 0;
+        left: 0;
+      }
+
+      #rightCobweb {
+        top: 0;
+        right: 0;
+        transform: scaleX(-1); /* Mirror the image horizontally */
+      }
     </style>
   </head>
   <body>
+    <img src="halloween/web1.png" id="leftCobweb" alt="Cobweb" />
+    <img src="halloween/web1.png" id="rightCobweb" alt="Mirrored Cobweb" />
     <div
       id="secretLink"
       style="
@@ -913,13 +938,7 @@
       });
     });
   </script>
-    <footer
-    style="
-      text-align: center;
-      color: orange;
-      padding: 20px;
-    "
-  >
+  <footer style="text-align: center; color: orange; padding: 20px">
     <p>🎃 Happy Halloween from StrongDogXP 🎃</p>
   </footer>
 </html>
