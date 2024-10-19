@@ -13,6 +13,8 @@ on:
       - 'favs.html'
       - 'ads.txt'
       - 'about.html'
+      - 'signup.html'
+      - 'login.html'
   workflow_dispatch:
 
 jobs:
@@ -48,6 +50,8 @@ jobs:
           cp -r source/favs.html destination/
           cp -r source/ads.txt destination/
           cp -r source/about.html destination/
+          cp -r source/signup.html destination/
+          cp -r source/login.html destination/
 
       # Commit and push the changes to the destination repository (master branch)
       - name: Commit and Push Changes
@@ -55,6 +59,6 @@ jobs:
           cd destination
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html
+          git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html login.html signup.html
           git commit -m "Sync files from jman1593.github.io (master branch)"
           git push origin master  # Push to the master branch
