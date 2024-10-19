@@ -124,14 +124,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StrongDog XP</title>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Nosifer&display=swap");
       body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #2e2e2e; /* Dark grey background */
+        background-color: #1c1c1c; /* Dark background */
+        background-image: url("halloween/spooky-background.jpg"); /* Add spooky background image */
+        background-size: cover;
+        color: #f1f1f1;
+        font-family: "Nosifer", cursive; /* Apply spooky font */
       }
       .navbar {
         background-color: #333;
+        border-bottom: 3px solid orange;
+        text-shadow: 0 0 5px orange; /* Glowing text */
         color: white;
         padding: 10px 20px;
         display: flex;
@@ -144,17 +148,19 @@
         gap: 20px; /* Spacing between categories */
       }
 
-      .categories a:hover {
-        background-color: #565656; /* Light gray background on hover */
-        transform: scale(1.05); /* Slight increase in size */
+      .categories a {
+        background-color: #1c1c1c;
+        color: orange;
+        border: 2px solid orange;
+        border-radius: 10px;
+        padding: 10px;
       }
 
-      .categories a {
-        text-decoration: none;
-        color: white;
-        transition: all 0.3s ease;
-        padding: 5px 10px; /* Padding for touch area */
-        border-radius: 5px; /* Rounded corners */
+      .categories a:hover {
+        background-color: #ffa500; /* Bright orange on hover */
+        transform: scale(1.1);
+        text-shadow: 0 0 8px #ff8c00;
+        color: black; /* Set text color to black on hover for readability */
       }
 
       .navbar .logo {
@@ -193,22 +199,22 @@
         justify-content: center;
       }
       .card {
-        background-color: #fff;
-        border-radius: 10px;
-        margin: 5px; /* Reduced margin */
-        width: 120px;
-        height: 120px;
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        position: relative;
-        overflow: hidden;
-        position: relative;
-      }
+    background-color: #2b2b2b;
+    border: 2px solid orange;
+    color: orange;
+    border-radius: 10px;
+    margin: 5px;
+    width: 120px;
+    height: 120px; /* Ensure consistent height */
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+}
+
       .card:hover {
         transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.29);
+        box-shadow: 0 8px 16px rgba(255, 140, 0, 0.7); /* Halloween glow */
       }
       .card img {
         width: 100%;
@@ -220,17 +226,27 @@
         transform: scale(1.02); /* subtle zoom on the image */
       }
       .card figcaption {
+        text-align: center; /* Ensure text itself is centered */
         position: absolute;
-        bottom: -30px; /* start hidden */
+        bottom: 0;
         left: 0;
         width: 100%;
-        background-color: rgb(74, 74, 74);
-        color: white;
-        text-align: center;
-        padding: 5px;
-        transition: bottom 0.5s ease; /* smoother and slower */
-        overflow: hidden;
+        background-color: rgba(95, 95, 95, 0.8);
+        color: black;
+        padding: 5px 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform: translateY(100%); /* Start off-screen */
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-shadow: 0 0 2px white;
+        font-weight: 550;
+        border-radius: 10px;
+        font-size: 0.8em; /* Shrink the text inside the card */
+        line-height: 1.2; /* Adjust line height for better readability */
       }
+
       .card:hover figcaption {
         bottom: 0; /* slide up on hover */
       }
@@ -262,7 +278,8 @@
         position: absolute;
         right: 20px;
         top: 60px;
-        background-color: white;
+        background-color: #1c1c1c; /* Dark background */
+        color: orange;
         color: black;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -404,10 +421,15 @@
       }
 
       .pagination {
-        text-align: center;
-        margin: 20px 0;
+        text-align: center; /* Centers the pagination links */
+        margin: 20px auto; /* Adds some margin to separate it from other elements */
+        display: flex;
+        justify-content: center; /* Centers the pagination within its container */
       }
-
+      .pagination a {
+        color: orange;
+        border: 1px solid #ff8c00;
+      }
       .pagination a {
         color: white;
         padding: 8px 16px;
@@ -423,7 +445,10 @@
         background-color: #555;
         border-color: #777;
       }
-
+      .pagination a:hover {
+        background-color: #ff8c00;
+        box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+      }
       .pagination a:hover:not(.active) {
         background-color: #444;
       }
@@ -452,6 +477,9 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+      }
+      .bars .bar {
+        background-color: rgba(255, 140, 0, 0.8); /* Halloween orange */
       }
       .bars {
         display: flex;
@@ -494,7 +522,15 @@
       #topGameList {
         position: relative; /* Make sure topGameList is relatively positioned */
       }
-
+      @keyframes spider-crawl {
+        0%,
+        100% {
+          transform: translateY(-100px);
+        }
+        50% {
+          transform: translateY(100px);
+        }
+      }
       .modal {
         display: none;
         position: fixed;
@@ -536,6 +572,32 @@
         color: blue;
         text-decoration: underline;
         cursor: pointer;
+      }
+      button:hover {
+        box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+      }
+      /* Flying bats animation */
+      @keyframes batFly {
+        0% {
+          transform: translateX(0) translateY(0);
+        }
+        50% {
+          transform: translateX(100vw) translateY(-50px);
+        }
+        100% {
+          transform: translateX(0) translateY(0);
+        }
+      }
+
+      .bat-container img {
+        animation-timing-function: ease-in-out;
+        opacity: 0.7;
+      }
+
+      /* Spider animation on hover */
+      .spider-overlay img {
+        position: absolute;
+        animation: spider-crawl 10s infinite;
       }
     </style>
   </head>
@@ -911,4 +973,15 @@
       });
     });
   </script>
+  <footer
+    style="
+      text-align: center;
+      color: orange;
+      background-color: #1c1c1c;
+      padding: 20px;
+      border-top: 2px solid orange;
+    "
+  >
+    <p>🎃 Happy Halloween from StrongDogXP 🎃</p>
+  </footer>
 </html>
