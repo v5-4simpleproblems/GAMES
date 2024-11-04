@@ -17,7 +17,6 @@ on:
       - 'login.html'
       - 'settings.html'
       - 'about-page-data.js'
-      - 'appscript.js'
   workflow_dispatch:
 
 jobs:
@@ -57,7 +56,6 @@ jobs:
           cp -r source/login.html destination/
           cp -r source/settings.html destination/
           cp -r source/about-page-data.js destination/
-          cp -r source/appscript.js destination/
 
       # Commit and push the changes to the destination repository (master branch)
       - name: Commit and Push Changes
@@ -65,6 +63,6 @@ jobs:
           cd destination
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html login.html signup.html settings.html about-page-data.js appscript.js
+          git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html login.html signup.html settings.html about-page-data.js
           git commit -m "Sync files from jman1593.github.io (master branch)"
           git push origin master  # Push to the master branch
