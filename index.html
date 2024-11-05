@@ -14,29 +14,73 @@
 		<script type="module">
 			import games from "./cards-data.js";
 			
+			// Mapping of hostnames to their corresponding page 2 sites
+			const siteMapping = {
+				"mathcord.netlify.app": "https://mathcord2.netlify.app",
+				"mathcord2.netlify.app": "https://mathcord2.netlify.app",
+				"strongdog.netlify.app": "https://strongdog2.netlify.app",
+				"strongdog2.netlify.app": "https://strongdog2.netlify.app",
+				"stroongdog.netlify.app": "https://stroongdog2.netlify.app",
+				"jman1593.github.io": "https://jman1593.github.io/strongdog2",
+				"strongdog-1.vercel.app": "https://strongdog2.vercel.app",
+				"strongdog.onrender.com": "https://strongdog2.onrender.com",
+				"127.0.0.1": "http://127.0.0.1:8080/strongdog2",
+			};
+		
 			function getCardHTML(gameObject) {
-				const { href, imgSrc, name } = gameObject;
+				const { href, imgSrc, name, page } = gameObject;
+				let adjustedHref = href;
+				let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
+		
+				if (page === 2) {
+					// Get the current hostname
+					const hostname = window.location.hostname;
+		
+					// Determine the base URL for page 2
+					let page2BaseURL = "";
+		
+					// Find the base URL for page 2 based on the current hostname
+					for (const key in siteMapping) {
+						if (hostname.includes(key)) {
+							page2BaseURL = siteMapping[key];
+							break;
+						}
+					}
+		
+					if (page2BaseURL) {
+						// Remove leading './' from href and imgSrc if present
+						const adjustedGameHref = href.replace(/^\.\//, '');
+						adjustedHref = `${page2BaseURL}/${adjustedGameHref}`;
+		
+						const adjustedImgPath = imgSrc.replace(/^\.\//, '');
+						adjustedImgSrc = `${page2BaseURL}/img/${adjustedImgPath}`;
+					} else {
+						// If no matching hostname is found, default to the original href
+						console.warn(`No page 2 site mapping found for hostname: ${hostname}`);
+					}
+				}
+		
 				return `
-				<a href="${href}" class="card">
-						<img src="./img/${imgSrc}">
+					<a href="${adjustedHref}" class="card">
+						<img src="${adjustedImgSrc}">
 						<figcaption>${name}</figcaption>
 					</a>
 				`;
 			}
-
+		
+			// Generate the cards
 			let cardsHTMLArr = [];
-			// For loop is fastest and most efficient method
 			for (let i = 0; i < games.length; ++i) {
 				cardsHTMLArr.push(getCardHTML(games[i]));
 			}
-
+		
 			const cardsHTMLStr = cardsHTMLArr.join("");
-
+		
 			document.addEventListener(
 				"DOMContentLoaded",
 				() => (document.getElementById("allGameList").innerHTML = cardsHTMLStr)
 			);
-		</script>
+		</script>		
 		<script>
 			const firebaseConfig = {
 				apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
@@ -1161,13 +1205,15 @@
 	
 			// Configuration object mapping hostnames to link values
 			const linkMap = {
-				"github.io": { page1: "/#", page2: "/strongdog2/index.html" },
-				"vercel.app": { page1: "https://strongdog-1.vercel.app", page2: "https://strongdog2.vercel.app" },
+				"jman1593.github.io": { page1: "/#", page2: "/strongdog2/index.html" },
+				"strongdog-1.vercel.app": { page1: "https://strongdog-1.vercel.app", page2: "https://strongdog2.vercel.app" },
+				"strongdog2.vercel.app": { page1: "https://strongdog-1.vercel.app", page2: "https://strongdog2.vercel.app" },
 				"strongdog.netlify.app": { page1: "https://strongdog.netlify.app", page2: "https://strongdog2.netlify.app" },
 				"strongdog2.netlify.app": { page1: "https://strongdog.netlify.app", page2: "https://strongdog2.netlify.app" },
 				"mathcord.netlify.app": { page1: "https://mathcord.netlify.app", page2: "https://mathcord2.netlify.app" },
 				"mathcord2.netlify.app": { page1: "https://mathcord.netlify.app", page2: "https://mathcord2.netlify.app" },
-				"onrender.com": { page1: "https://strongdog.onrender.com", page2: "https://strongdog2.onrender.com" },
+				"strongdog.onrender.com": { page1: "https://strongdog.onrender.com", page2: "https://strongdog2.onrender.com" },
+				"strongdog2.onrender.com": { page1: "https://strongdog.onrender.com", page2: "https://strongdog2.onrender.com" },
 				"stroongdog.netlify.app": { page1: "https://stroongdog.netlify.app", page2: "https://stroongdog2.netlify.app" },
 				"stroongdog2.netlify.app": { page1: "https://stroongdog.netlify.app", page2: "https://stroongdog2.netlify.app" }
 			};
