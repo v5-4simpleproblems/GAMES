@@ -18,6 +18,7 @@ on:
       - 'settings.html'
       - 'about-page-data.js'
       - 'README.md'
+      - 'cards-data.js'
   workflow_dispatch:
 
 jobs:
@@ -25,12 +26,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Delete all existing artifacts at the start of the workflow
+      - name: Delete Existing Artifacts
+        run: |
+          for artifact in $(gh api -X GET /repos/jman1593/strongdog2/actions/artifacts | jq -r '.artifacts[] | .id'); do
+            gh api -X DELETE /repos/jman1593/strongdog2/actions/artifacts/$artifact
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Checkout the source repository (jman1593.github.io) on the master branch
       - name: Checkout Source Repository (master branch)
         uses: actions/checkout@v3
         with:
           repository: jman1593/jman1593.github.io
-          ref: master  # Specify the master branch
+          ref: master
           path: source
 
       # Checkout the destination repository (strongdog2) on the master branch
@@ -38,7 +48,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: jman1593/strongdog2
-          ref: master  # Specify the master branch
+          ref: master
           path: destination
           token: ${{ secrets.TOKEN }}
 
@@ -58,6 +68,7 @@ jobs:
           cp -r source/settings.html destination/
           cp -r source/about-page-data.js destination/
           cp -r source/README.md destination/
+          cp -r source/cards-data.js destination/
 
       # Commit and push the changes to the destination repository (master branch)
       - name: Commit and Push Changes
@@ -65,6 +76,15 @@ jobs:
           cd destination
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html login.html signup.html settings.html about-page-data.js README.md
+          git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html login.html signup.html settings.html about-page-data.js README.md cards-data.js
           git commit -m "Sync files from jman1593.github.io (master branch)"
-          git push origin master  # Push to the master branch
+          git push origin master
+
+      # Delete all artifacts at the end of the workflow
+      - name: Final Cleanup - Delete Artifacts
+        run: |
+          for artifact in $(gh api -X GET /repos/jman1593/strongdog2/actions/artifacts | jq -r '.artifacts[] | .id'); do
+            gh api -X DELETE /repos/jman1593/strongdog2/actions/artifacts/$artifact
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
