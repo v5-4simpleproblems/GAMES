@@ -35,15 +35,31 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Checkout the source repository (jman1593.github.io) on the master branch
+      # Checkout the source repository with sparse checkout
       - name: Checkout Source Repository (master branch)
         uses: actions/checkout@v3
         with:
           repository: jman1593/jman1593.github.io
           ref: master
           path: source
+          sparse-checkout: |
+            winner.html
+            strongdog.webp
+            robots.txt
+            intro.html
+            index.html
+            favs.html
+            ads.txt
+            about.html
+            signup.html
+            login.html
+            settings.html
+            about-page-data.js
+            README.md
+            cards-data.js
+          fetch-depth: 1
 
-      # Checkout the destination repository (strongdog2) on the master branch
+      # Checkout the destination repository with fetch-depth 1
       - name: Checkout Destination Repository (master branch)
         uses: actions/checkout@v3
         with:
@@ -51,6 +67,7 @@ jobs:
           ref: master
           path: destination
           token: ${{ secrets.TOKEN }}
+          fetch-depth: 1
 
       # Copy the specified files from source to destination
       - name: Copy Files
@@ -70,14 +87,14 @@ jobs:
           cp -r source/README.md destination/
           cp -r source/cards-data.js destination/
 
-      # Commit and push the changes to the destination repository (master branch)
+      # Commit and push the changes to the destination repository
       - name: Commit and Push Changes
         run: |
           cd destination
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html login.html signup.html settings.html about-page-data.js README.md cards-data.js
-          git commit -m "Sync files from jman1593.github.io (master branch)"
+          git commit -m "Sync files from jman1593.github.io (master branch)" || echo "No changes to commit"
           git push origin master
 
       # Delete all artifacts at the end of the workflow
