@@ -323,42 +323,72 @@
     </script>
     <script type="module">
       import games from "../../cards-data.js";
+      import { siteMapping } from "../../site-mapping.js";
 
       document.addEventListener("DOMContentLoaded", function () {
         const cardContainer = document.getElementById("cardContainer");
 
-        // Set the number of directories to go back for href
-        const hrefDirectoryDepth = 2; // Adjust this value as needed for hrefs
-
-        function adjustHrefPath(path) {
+        function adjustHrefPath(path, page) {
           // Remove leading './' or '/' from the path
           path = path.replace(/^\.\//, "").replace(/^\//, "");
 
-          // Build the prefix with the desired number of '../'
-          const prefix = "../".repeat(hrefDirectoryDepth);
-
-          return prefix + path;
+          if (page == 2) {
+            // For page 2 games
+            const currentHost = window.location.hostname;
+            const secondPageLink = siteMapping[currentHost];
+            if (secondPageLink) {
+              // Ensure proper concatenation
+              const adjustedSecondPageLink = secondPageLink.replace(/\/$/, "");
+              const adjustedPath = "/" + path;
+              return adjustedSecondPageLink + adjustedPath;
+            } else {
+              // If currentHost not found in siteMapping, log an error
+              console.error(
+                `Current host "${currentHost}" not found in siteMapping. Unable to adjust href for page 2 game.`
+              );
+              return "#"; // Fallback href
+            }
+          } else {
+            // For page 1 games, adjust the path to go back two directories
+            return "../../" + path;
+          }
         }
 
-        function adjustImgPath(path) {
+        function adjustImgPath(path, page) {
           // Remove leading './', '/', or 'img/' from the path
           path = path
             .replace(/^\.\//, "")
             .replace(/^\//, "")
             .replace(/^img\//, "");
 
-          // Build the prefix: go back two directories, then into 'img/'
-          const prefix = "../".repeat(2) + "img/";
-
-          return prefix + path;
+          if (page == 2) {
+            // For page 2 games, get image from the second page link
+            const currentHost = window.location.hostname;
+            const secondPageLink = siteMapping[currentHost];
+            if (secondPageLink) {
+              // Ensure proper concatenation
+              const adjustedSecondPageLink = secondPageLink.replace(/\/$/, "");
+              const adjustedPath = "/img/" + path;
+              return adjustedSecondPageLink + adjustedPath;
+            } else {
+              // If currentHost not found in siteMapping, log an error
+              console.error(
+                `Current host "${currentHost}" not found in siteMapping. Unable to adjust image path for page 2 game.`
+              );
+              return "../../img/" + path; // Fallback to local image
+            }
+          } else {
+            // For page 1 games, adjust the path to go back two directories
+            return "../../img/" + path;
+          }
         }
 
         function getCardHTML(gameObject) {
-          const { href, imgSrc, name } = gameObject;
+          const { href, imgSrc, name, page } = gameObject;
 
           // Adjust the href and imgSrc paths
-          const adjustedHref = adjustHrefPath(href);
-          const adjustedImgSrc = adjustImgPath(imgSrc);
+          const adjustedHref = adjustHrefPath(href, page);
+          const adjustedImgSrc = adjustImgPath(imgSrc, page);
 
           // Create the card element
           const card = document.createElement("a");
