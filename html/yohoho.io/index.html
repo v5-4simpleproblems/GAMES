@@ -289,31 +289,69 @@
             .catch(error => console.error('Error:', error));
         };
     </script>
+<script type="module">
+    import games from '../../cards-data.js';
+    import { siteMapping } from '../../site-mapping.js';
 
-<script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('../../cards_data.html')
-            .then(response => response.text())
-            .then(data => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data, 'text/html');
-                const cards = doc.querySelectorAll('.card');
-                const cardContainer = document.getElementById('cardContainer');
-                
-                let randomCards = Array.from(cards).sort(() => 0.5 - Math.random()).slice(0, 10);
-                randomCards.forEach(card => {
-                    // Update href and img src to go back two directories
-                    card.href = `../../${card.getAttribute('href')}`;
-                    
-                    const img = card.querySelector('img');
-                    if (img) {
-                        img.src = `../../${img.getAttribute('src')}`;
-                    }
+        const cardContainer = document.getElementById('cardContainer');
 
-                    cardContainer.appendChild(card);
-                });
-            })
-            .catch(error => console.error('Error loading cards:', error));
+        function getCardHTML(gameObject) {
+            const { href, imgSrc, name, page } = gameObject;
+            let adjustedHref = href;
+            let adjustedImgSrc = `../../img/${imgSrc}`; // Default img src
+
+            if (page === 2) {
+                // Get the current hostname
+                const hostname = window.location.hostname;
+
+                // Determine the base URL for page 2
+                let page2BaseURL = "";
+
+                // Find the base URL for page 2 based on the current hostname
+                for (const key in siteMapping) {
+                    if (hostname.includes(key)) {
+                        page2BaseURL = siteMapping[key];
+                        break;
+                    }
+                }
+
+                if (page2BaseURL) {
+                    // Remove leading './' from href and imgSrc if present
+                    const adjustedGameHref = href.replace(/^\.\//, "");
+                    adjustedHref = `${page2BaseURL}/${adjustedGameHref}`;
+
+                    const adjustedImgPath = imgSrc.replace(/^\.\//, "");
+                    adjustedImgSrc = `${page2BaseURL}/img/${adjustedImgPath}`;
+                } else {
+                    // If no matching hostname is found, default to the original href
+                    console.warn(`No page 2 site mapping found for hostname: ${hostname}`);
+                }
+            }
+
+            // Create card element
+            const card = document.createElement('a');
+            card.className = 'card';
+            card.href = adjustedHref;
+
+            const img = document.createElement('img');
+            img.src = adjustedImgSrc;
+            img.alt = name;
+            card.appendChild(img);
+
+            const figcaption = document.createElement('figcaption');
+            figcaption.textContent = name;
+            card.appendChild(figcaption);
+
+            return card;
+        }
+
+        // Generate and display random recommended games
+        const randomGames = games.sort(() => 0.5 - Math.random()).slice(0, 10);
+        randomGames.forEach(game => {
+            const card = getCardHTML(game);
+            cardContainer.appendChild(card);
+        });
     });
 </script>
 
