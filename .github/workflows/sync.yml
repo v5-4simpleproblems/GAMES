@@ -25,21 +25,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the source repository (jman1593.github.io) on the master branch
+      # Checkout the source repository (jman1593.github.io) on the master branch with shallow fetch
       - name: Checkout Source Repository (master branch)
         uses: actions/checkout@v3
         with:
           repository: jman1593/jman1593.github.io
           ref: master  # Specify the master branch
           path: source
+          fetch-depth: 1  # Only fetch the latest commit
 
-      # Checkout the destination repository (strongdog2) on the master branch
+      # Checkout the destination repository (strongdog2) on the master branch with shallow fetch
       - name: Checkout Destination Repository (master branch)
         uses: actions/checkout@v3
         with:
           repository: jman1593/strongdog2
           ref: master  # Specify the master branch
           path: destination
+          fetch-depth: 1  # Only fetch the latest commit
           token: ${{ secrets.TOKEN }}
 
       # Copy the specified files from source to destination
