@@ -1,4 +1,7 @@
 export default [
+	{ href: './html/poker/index.html', imgSrc: 'poker.jpg', name: 'poker' , 'page': 2},
+	{ href: './html/blackjack/index.html', imgSrc: 'blackjack.jpg', name: 'blackjack' , "page": 2},
+	{ href: "./html/leader-strike/index.html", imgSrc: "leader-strike.jfif", name: "leader strike" , "page": 2},
 	{ href: './html/we become what we behold/index.html', imgSrc: 'we become what we behold.jpg', name: 'we become what we behold' , "page": 2},
 	{ href: './html/idle lumber inc/index.html', imgSrc: 'idle lumber inc.jpg', name: 'idle lumber inc' , "page": 2},
 	{ href: './html/idle digging tycoon/index.html', imgSrc: 'idle digging tycoon.jpg', name: 'idle digging tycoon' , "page": 2},
@@ -80,7 +83,6 @@ export default [
 	{ href: "./html/Penguinio/index.html", imgSrc: "penguin-io.jfif", name: "Penguin.io" , "page": 2},
 	{ href: "./html/novabilliards/index.html", imgSrc: "nova-billiards.jfif", name: "nova billiards" , "page": 2},
 	{ href: "./html/madalin-cars/index.html", imgSrc: "madalin-cars.jfif", name: "madalin cars" , "page": 2},
-	{ href: "./html/leader-strike/index.html", imgSrc: "leader-strike.jfif", name: "leader strike" , "page": 2},
 	{ href: "./html/kart-fight-io/index.html", imgSrc: "kart-fight-io.jfif", name: "kart fight.io" , "page": 2},
 	{ href: "./html/gungame-shooting-warfare-blocky-gangster/index.html", imgSrc: "gungame-shooting-warfare-blocky-gangster.jfif", name: "blocky gangster" , "page": 2},
 	{ href: "./html/grab-party-io/index.html", imgSrc: "grab-party-io.jfif", name: "grab party.io" , "page": 2},
