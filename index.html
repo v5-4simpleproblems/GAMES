@@ -12,7 +12,7 @@
 		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 		<script type="module">
-			import games from "./cards-data.js";
+			import games from "./cards-data-test.js";
 			import { siteMapping } from "./site-mapping.js";
 		  
 			function getCardHTML(gameObject) {
@@ -805,7 +805,7 @@
 		</div>
 		<div class="updates-text-container">
 			<p class="updates-paragraph-text">
-				Strongdog now has accounts! We also brought strongdog chat back!!! You can find it on the second page.
+				Strongdog page 1 and 2 have been merged! There might be bugs, so if you find any please report them!
 			</p>
 		</div>
 		<div class="modal" id="popupModal">
@@ -825,10 +825,6 @@
 					<a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to join the Discord server!
 				</p>
 			</div>
-		</div>
-		<div class="pagination">
-			<a href="/#" id="page1-link">1</a>
-			<a href="/strongdog2/index.html" id="page2-link">2</a>
 		</div>
 		<h2 style="text-align: center"><strong>Top 10</strong></h2>
 		<div class="games-grid" id="topGameList"></div>
@@ -916,7 +912,7 @@
 			</div>
 		</div>
 		<script type="module">
-			import games from './cards-data.js';
+			import games from './cards-data-test.js';
 		
 			document.addEventListener("DOMContentLoaded", function () {
 				const menuIcon = document.getElementById("menuIcon");
@@ -1126,7 +1122,7 @@
 			});
 		</script>
 <script type="module">
-	import games from "./cards-data.js";
+	import games from "./cards-data-test.js";
 	import { siteMapping } from "./site-mapping.js";
   
 	document.addEventListener("DOMContentLoaded", function () {
@@ -1276,7 +1272,7 @@
 		});
 	</script>
 	<script type="module">
-		import games from './cards-data.js';
+		import games from './cards-data-test.js';
 
 		document.addEventListener("DOMContentLoaded", function () {
 			const randomGameButton = document.getElementById("randomGame");
