@@ -47,7 +47,6 @@ jobs:
             strongdog.webp
             robots.txt
             intro.html
-            index.html
             favs.html
             ads.txt
             about.html
@@ -76,7 +75,6 @@ jobs:
           cp -r source/strongdog.webp destination/
           cp -r source/robots.txt destination/
           cp -r source/intro.html destination/
-          cp -r source/index.html destination/
           cp -r source/favs.html destination/
           cp -r source/ads.txt destination/
           cp -r source/about.html destination/
@@ -93,7 +91,7 @@ jobs:
           cd destination
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git add winner.html strongdog.webp robots.txt intro.html index.html favs.html ads.txt about.html login.html signup.html settings.html about-page-data.js README.md cards-data.js
+          git add winner.html strongdog.webp robots.txt intro.html favs.html ads.txt about.html login.html signup.html settings.html about-page-data.js README.md cards-data.js
           git commit -m "Sync files from jman1593.github.io (master branch)" || echo "No changes to commit"
           git push origin master
 
