@@ -981,20 +981,20 @@
     </div>
     <script type="module">
       import games from "./cards-data.js";
-
+    
       document.addEventListener("DOMContentLoaded", function () {
         const menuIcon = document.getElementById("menuIcon");
         const slideMenu = document.createElement("div");
         slideMenu.className = "slide-menu";
-
+    
         // Clone the categories
         const originalCategories = document.querySelector(".categories");
         const categories = originalCategories.cloneNode(true);
-
+    
         // Append the categories to the slideMenu
         slideMenu.appendChild(categories);
         document.body.appendChild(slideMenu);
-
+    
         // Add click event to toggle the sliding menu
         menuIcon.addEventListener("click", function (event) {
           event.stopPropagation(); // Prevent click event from bubbling up
@@ -1004,52 +1004,52 @@
             slideMenu.style.transform = "translateX(0%)"; // Show menu by sliding in
           }
         });
-
+    
         // Close the menu when clicking outside of it
         window.addEventListener("click", function (event) {
           if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
             slideMenu.style.transform = "translateX(-100%)"; // Hide menu
           }
         });
-
+    
         // Check authentication state
         auth.onAuthStateChanged(async (user) => {
           let userDetailsContainer;
-
+    
           if (user) {
             // User is signed in, fetch their profile picture and username
-
+    
             // Clone the user-details-container
             const originalUserDetailsContainer = document.querySelector(
               ".user-details-container"
             );
             userDetailsContainer = originalUserDetailsContainer.cloneNode(true);
-
+    
             // Get elements inside userDetailsContainer
             const profilePictureElement =
               userDetailsContainer.querySelector(".profile-picture");
             const usernameElement =
               userDetailsContainer.querySelector(".username-text");
-
+    
             // Set profile picture
             if (user.photoURL) {
               profilePictureElement.src = user.photoURL;
             } else {
               profilePictureElement.src = "img/default-avatar.png"; // Fallback to default image
             }
-
+    
             // Set username
             const userId = user.uid;
             const userDocRef = db.collection("usernames").doc(userId);
             const userDoc = await userDocRef.get();
-
+    
             if (userDoc.exists) {
               const userData = userDoc.data();
               usernameElement.textContent = userData.username || "Username";
             } else {
               usernameElement.textContent = user.displayName || "Username";
             }
-
+    
             // Make profile picture clickable and direct to settings page
             profilePictureElement.parentElement.addEventListener(
               "click",
@@ -1057,10 +1057,10 @@
                 window.location.href = "settings.html";
               }
             );
-
+    
             // Insert the userDetailsContainer at the top of the slideMenu
             slideMenu.insertBefore(userDetailsContainer, categories);
-
+    
             // Create the "Log Out" button as a menu item
             const logoutLink = document.createElement("a");
             logoutLink.href = "#";
@@ -1068,7 +1068,7 @@
             logoutLink.textContent = "Log Out";
             logoutLink.style.backgroundColor = "#dc3545"; // Red color for the button
             logoutLink.style.color = "white";
-
+    
             // Add click event to the "Log Out" link
             logoutLink.addEventListener("click", function (e) {
               e.preventDefault();
@@ -1083,31 +1083,77 @@
                   console.error("Error signing out:", error);
                 });
             });
-
+    
             // Insert the "Log Out" link above the "Favorites" link
             const favoritesLink = categories.querySelector(
               'a[href="favs.html"]'
             );
             categories.insertBefore(logoutLink, favoritesLink);
+    
+            // **New Code Starts Here: Add "Test Games" Button for Testers**
+            try {
+              // Fetch the 'access' document for the user
+              const accessDocRef = db.collection("access").doc(user.uid);
+              const accessDoc = await accessDocRef.get();
+    
+              if (accessDoc.exists) {
+                const accessData = accessDoc.data();
+                console.log(`Access Data for User:`, accessData);
+    
+                if (accessData.tester === true) {
+                  // User has tester access, create the "Test Games" button
+                  const testGamesLink = document.createElement("a");
+                  testGamesLink.href = "test.html"; // Destination page
+                  testGamesLink.className = "option-link";
+                  testGamesLink.textContent = "Test Games";
+                  testGamesLink.style.backgroundColor = "#28a745"; // Green color
+                  testGamesLink.style.color = "white";
+                  testGamesLink.style.marginTop = "10px"; // Spacing from "Log Out" button
+    
+                  // Optional: Add hover effects similar to other links
+                  testGamesLink.addEventListener("mouseover", function () {
+                    testGamesLink.style.backgroundColor = "#218838";
+                  });
+                  testGamesLink.addEventListener("mouseout", function () {
+                    testGamesLink.style.backgroundColor = "#28a745";
+                  });
+    
+                  // Insert the "Test Games" link above the "Favorites" link, below "Log Out"
+                  categories.insertBefore(testGamesLink, favoritesLink);
+                } else {
+                  console.log(
+                    `User ID: ${user.uid} does not have tester access (tester: ${accessData.tester}).`
+                  );
+                }
+              } else {
+                console.log(
+                  `No access document found for user ID: ${user.uid}. Access denied.`
+                );
+              }
+            } catch (error) {
+              console.error("Error fetching access document:", error);
+            }
+            // **New Code Ends Here**
+    
           } else {
             // User is not signed in, display "Not logged in" and a "Log In" button
-
+    
             // Create a new userDetailsContainer
             userDetailsContainer = document.createElement("div");
             userDetailsContainer.className = "user-details-container";
-
+    
             // Create a container for the text
             const notLoggedInContainer = document.createElement("div");
             notLoggedInContainer.className = "username-container";
-
+    
             // Create the "Not logged in" text
             const notLoggedInText = document.createElement("p");
             notLoggedInText.className = "username-text";
             notLoggedInText.textContent = "Not logged in";
-
+    
             // Append the text to the container
             notLoggedInContainer.appendChild(notLoggedInText);
-
+    
             // Create the "Log In" button
             const loginButton = document.createElement("button");
             loginButton.textContent = "Log In";
@@ -1119,26 +1165,26 @@
             loginButton.style.borderRadius = "5px";
             loginButton.style.cursor = "pointer";
             loginButton.style.marginTop = "5px";
-
+    
             // Add click event to the "Log In" button
             loginButton.addEventListener("click", function () {
               window.location.href = "login.html";
             });
-
+    
             // Center the content
             userDetailsContainer.style.display = "flex";
             userDetailsContainer.style.flexDirection = "column";
             userDetailsContainer.style.alignItems = "center";
             userDetailsContainer.style.paddingBlock = "40px"; // Ensure consistent padding
-
+    
             // Append the text and button to the userDetailsContainer
             userDetailsContainer.appendChild(notLoggedInContainer);
             userDetailsContainer.appendChild(loginButton);
-
+    
             // Insert the userDetailsContainer at the top of the slideMenu
             slideMenu.insertBefore(userDetailsContainer, categories);
           }
-
+    
           // Add event listeners to the relevant buttons in the sliding menu
           categories
             .querySelector("#randomGame")
@@ -1146,14 +1192,14 @@
               e.preventDefault();
               handleRandomGameClick();
             });
-
+    
           categories
             .querySelector("#blockLanschool")
             .addEventListener("click", function (e) {
               e.preventDefault();
               handleBlockLanschoolClick();
             });
-
+    
           function handleRandomGameClick() {
             if (games.length > 0) {
               const randomIndex = Math.floor(Math.random() * games.length);
@@ -1163,25 +1209,23 @@
               console.error("No game paths available for selection.");
             }
           }
-
+    
           function handleBlockLanschoolClick() {
             var url = "https://strongdog.netlify.app";
             var newTab = window.open();
             newTab.document.write(`
-							<html>
-								<body style="margin: 0; height: 100vh;">
-									<iframe src="${url}" style="border: none; width: 100%; height: 100%;"></iframe>
-								</body>
-							</html>
-						`);
+              <html>
+                <body style="margin: 0; height: 100vh;">
+                  <iframe src="${url}" style="border: none; width: 100%; height: 100%;"></iframe>
+                </body>
+              </html>
+            `);
             newTab.document.close();
           }
-
-          // Since we're importing games directly, there's no need to load card data
-          // You can remove the loadCardData function and related code
         });
       });
     </script>
+    
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const discordLink = document.getElementById("discordLink");
