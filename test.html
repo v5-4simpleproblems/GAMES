@@ -6,15 +6,61 @@
 ></script>
 <html lang="en">
   <head>
-    <!-- Include Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
+        authDomain: "strongdog-auth.firebaseapp.com",
+        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
+        projectId: "strongdog-auth",
+        storageBucket: "strongdog-auth.appspot.com",
+        messagingSenderId: "936276282572",
+        appId: "1:936276282572:web:a802b7f609381ff9428669",
+        measurementId: "G-0YLTCV2MMS",
+      };
+  
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+  
+      // Initialize Firebase Authentication and Firestore
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+    </script>
+      <script>
+        // Listen for authentication state changes
+        auth.onAuthStateChanged((user) => {
+          if (!user) {
+            // User is not authenticated, redirect to login page
+            window.location.href = "login.html";
+          } else {
+            // User is authenticated, check Firestore 'access' collection
+            const userId = user.uid;
+            db.collection("access").doc(userId).get()
+              .then((doc) => {
+                if (doc.exists && doc.data().tester === true) {
+                  // User has tester access, show the content
+                  document.body.style.display = "block";
+                } else {
+                  // User does not have tester access, redirect to index.html
+                  window.location.href = "index.html";
+                }
+              })
+              .catch((error) => {
+                console.error("Error checking access:", error);
+                // Optionally, redirect to index.html on error
+                window.location.href = "index.html";
+              });
+          }
+        });
+      </script>
     <script type="module">
       import games from "./cards-data-test.js";
       import { siteMapping } from "./site-mapping.js";
-    
+
       // Define normalizeGameName function
       function normalizeGameName(name) {
         return name
@@ -22,19 +68,19 @@
           .replace(/\s+/g, "")
           .replace(/[^a-z0-9]/g, "");
       }
-    
+
       function getCardHTML(gameObject) {
         const { href, imgSrc, name, page } = gameObject;
         let adjustedHref = href;
         let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
-    
+
         if (page === 2) {
           // Get the current hostname
           const hostname = window.location.hostname;
-    
+
           // Determine the base URL for page 2
           let page2BaseURL = "";
-    
+
           // Find the base URL for page 2 based on the current hostname
           for (const key in siteMapping) {
             if (hostname.includes(key)) {
@@ -42,23 +88,25 @@
               break;
             }
           }
-    
+
           if (page2BaseURL) {
             // Remove leading './' from href and imgSrc if present
             const adjustedGameHref = href.replace(/^\.\//, "");
             adjustedHref = `${page2BaseURL}/${adjustedGameHref}`;
-    
+
             const adjustedImgPath = imgSrc.replace(/^\.\//, "");
             adjustedImgSrc = `${page2BaseURL}/img/${adjustedImgPath}`;
           } else {
             // If no matching hostname is found, default to the original href
-            console.warn(`No page 2 site mapping found for hostname: ${hostname}`);
+            console.warn(
+              `No page 2 site mapping found for hostname: ${hostname}`
+            );
           }
         }
-    
+
         // Generate a normalized game ID for matching
         const gameId = normalizeGameName(name);
-    
+
         return `
           <div class="card-container">
             <a href="${adjustedHref}" class="card" data-game-id="${gameId}">
@@ -72,72 +120,130 @@
           </div>
         `;
       }
-    
+
       // Generate the cards
       let cardsHTMLArr = [];
       for (let i = 0; i < games.length; ++i) {
         cardsHTMLArr.push(getCardHTML(games[i]));
       }
-    
+
       const cardsHTMLStr = cardsHTMLArr.join("");
-    
+
       // Insert the cards into the DOM once the content is loaded
       document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("allGameList").innerHTML = cardsHTMLStr;
-    
+
         // Add event listeners for the buttons
         addCardButtonListeners();
       });
-    
+
       // Function to add event listeners to Check and X buttons
       function addCardButtonListeners() {
         const checkButtons = document.querySelectorAll(".btn-check");
         const deleteButtons = document.querySelectorAll(".btn-delete");
-    
+
         checkButtons.forEach((button) => {
           button.addEventListener("click", handleCheckClick);
         });
-    
+
         deleteButtons.forEach((button) => {
           button.addEventListener("click", handleDeleteClick);
         });
       }
-    
-      // Handle Check Button Click
+
+      // *** Updated Handle Check Button Click ***
       function handleCheckClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
-        alert("Game successfully added, please wait a few minutes for the changes to appear.");
-    
-        // Trigger GitHub Workflow
-        triggerGitHubWorkflow(gameName);
+
+        // Display the custom alert message
+        alert(
+          `${gameName} has been submitted. Josh will approve it by the end of the day.`
+        );
+
+        // Get the current timestamp
+        const timestamp = new Date().toISOString(); // ISO format (e.g., 2024-04-27T14:52:00.000Z)
+
+        // Define the fixed issue message
+        const issue = "game is ready to be added";
+
+        // Send the data to Google Sheets
+        sendIssueToGoogleSheet(timestamp, gameName, issue);
+
+        // Optional: If you still want to trigger the GitHub Workflow, uncomment the line below
+        // triggerGitHubWorkflow(gameName);
       }
-    
-      // Handle Delete (X) Button Click
+
+      // Handle Delete (X) Button Click (Keep unchanged)
       function handleDeleteClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
         const issue = prompt(`What was the issue with ${gameName}?`);
-    
+
         if (issue) {
           alert(`${gameName} is now under review.`);
-    
+
           // Send game name and issue to Google Sheet
-          sendIssueToGoogleSheet(gameName, issue);
+          sendIssueToGoogleSheetWithIssue(gameName, issue);
         }
       }
-    
-      // Function to trigger GitHub Workflow via GitHub API
+
+      // *** Updated Function to Send Check Button Data to Google Sheets ***
+      function sendIssueToGoogleSheet(timestamp, gameName, issue) {
+        const scriptURL =
+          "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec"; // Replace with your Google Apps Script URL
+
+        fetch(scriptURL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ timestamp, gameName, issue }),
+        })
+          .then(() => {
+            console.log("Submission sent successfully.");
+          })
+          .catch((error) => {
+            console.error("Error sending submission:", error);
+          });
+      }
+
+      // *** New Function to Handle Delete Button Data to Google Sheets ***
+      function sendIssueToGoogleSheetWithIssue(gameName, issue) {
+        const scriptURL =
+          "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec"; // Replace with your Google Apps Script URL
+
+        const timestamp = new Date().toISOString();
+
+        fetch(scriptURL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ timestamp, gameName, issue }),
+        })
+          .then(() => {
+            console.log("Issue submitted successfully.");
+          })
+          .catch((error) => {
+            console.error("Error submitting issue:", error);
+          });
+      }
+
+      // Function to trigger GitHub Workflow via GitHub API (Optional)
       async function triggerGitHubWorkflow(gameName) {
-        const workflowDispatchUrl = "https://api.github.com/repos/OWNER/REPO/actions/workflows/WORKFLOW_FILE.yml/dispatches";
-    
-        const token = "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"; // Replace with your GitHub token
-    
+        const workflowDispatchUrl =
+          "https://api.github.com/repos/OWNER/REPO/actions/workflows/WORKFLOW_FILE.yml/dispatches";
+
+        const token = "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"; // Replace with your GitHub token
+
         const payload = {
           ref: "main", // Branch name
           inputs: {
             game_name: gameName,
           },
         };
-    
+
         try {
           const response = await fetch(workflowDispatchUrl, {
             method: "POST",
@@ -147,7 +253,7 @@
             },
             body: JSON.stringify(payload),
           });
-    
+
           if (response.ok) {
             console.log("Workflow triggered successfully.");
           } else {
@@ -157,45 +263,6 @@
           console.error("Error triggering workflow:", error);
         }
       }
-    
-      // Function to send issue data to Google Sheet via Google Apps Script
-      function sendIssueToGoogleSheet(gameName, issue) {
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec"; // Replace with your Google Apps Script URL
-    
-        fetch(scriptURL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ gameName, issue }),
-        })
-          .then(() => {
-            console.log("Issue sent successfully.");
-          })
-          .catch((error) => {
-            console.error("Error sending issue:", error);
-          });
-      }
-    </script>    
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
-        authDomain: "strongdog-auth.firebaseapp.com",
-        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
-        projectId: "strongdog-auth",
-        storageBucket: "strongdog-auth.appspot.com",
-        messagingSenderId: "936276282572",
-        appId: "1:936276282572:web:a802b7f609381ff9428669",
-        measurementId: "G-0YLTCV2MMS",
-      };
-
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-
-      // Initialize Firebase Authentication and Firestore
-      const auth = firebase.auth();
-      const db = firebase.firestore();
     </script>
     <script src="appscript.js"></script>
     <script>
@@ -496,58 +563,58 @@
       }
 
       .card {
-      display: block;
-      width: 120px;
-      height: 120px;
-      background-color: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+        display: block;
+        width: 120px;
+        height: 120px;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
 
       .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.29);
-    }
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.29);
+      }
 
       .card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
 
       .card:hover img {
-      transform: scale(1.02);
-    }
+        transform: scale(1.02);
+      }
 
       .card figcaption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: rgba(95, 95, 95, 0.8);
-      color: black;
-      padding: 5px 0;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      transform: translateY(100%);
-      opacity: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-shadow: 0 0 2px white;
-      font-weight: 550;
-      border-radius: 10px;
-    }
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(95, 95, 95, 0.8);
+        color: black;
+        padding: 5px 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform: translateY(100%);
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-shadow: 0 0 2px white;
+        font-weight: 550;
+        border-radius: 10px;
+      }
 
       .card:hover figcaption {
-      height: 30px;
-      background-color: rgba(95, 95, 95, 0.8);
-      transform: translateY(0);
-      opacity: 1;
-    }
+        height: 30px;
+        background-color: rgba(95, 95, 95, 0.8);
+        transform: translateY(0);
+        opacity: 1;
+      }
 
       .card::before {
         content: "";
@@ -882,49 +949,49 @@
         cursor: pointer;
       }
       .card-buttons {
-      display: flex;
-      justify-content: center;
-      margin-top: 5px;
-    }
-    .card-container {
-      position: relative;
-      display: inline-block; /* Allows multiple cards to align horizontally */
-      margin: 10px; /* Space between cards */
-    }
+        display: flex;
+        justify-content: center;
+        margin-top: 5px;
+      }
+      .card-container {
+        position: relative;
+        display: inline-block; /* Allows multiple cards to align horizontally */
+        margin: 10px; /* Space between cards */
+      }
 
-    .card-buttons button {
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 1.2em;
-      margin: 0 5px;
-      transition: transform 0.2s, color 0.2s;
-    }
+      .card-buttons button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2em;
+        margin: 0 5px;
+        transition: transform 0.2s, color 0.2s;
+      }
 
-    .card-buttons button:hover {
-      transform: scale(1.2);
-    }
+      .card-buttons button:hover {
+        transform: scale(1.2);
+      }
 
-    .btn-check {
-      color: green;
-    }
+      .btn-check {
+        color: green;
+      }
 
-    .btn-delete {
-      color: red;
-    }
+      .btn-delete {
+        color: red;
+      }
 
-    /* Optional: Adjust button size and spacing for better visibility */
-    .btn-check,
-    .btn-delete {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+      /* Optional: Adjust button size and spacing for better visibility */
+      .btn-check,
+      .btn-delete {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     </style>
   </head>
-  <body>
+  <body style="display: none;">
     <div
       id="secretLink"
       title="Secret Menu"
@@ -1153,7 +1220,10 @@
         // Check authentication state
         auth.onAuthStateChanged(async (user) => {
           let userDetailsContainer;
-
+          if (!user) {
+            // User is not authenticated, redirect to login page
+            window.location.href = "login.html";
+          }
           if (user) {
             // User is signed in, fetch their profile picture and username
 
