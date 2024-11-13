@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-functions-compat.js"></script>
-  
+
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
@@ -155,13 +155,12 @@
         });
       }
 
-      // *** Updated Handle Check Button Click ***
       function handleCheckClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
 
         // Display the custom alert message
         alert(
-          `${gameName} has been submitted. Josh will approve it by the end of the day.`
+          `${gameName} has been submitted and will be added to the main list shortly.`
         );
 
         // Call the Firebase function to accept the game
@@ -173,6 +172,7 @@
           })
           .catch((error) => {
             console.error("Error accepting game:", error);
+            alert(`Error accepting game: ${error.message}`);
           });
       }
 
@@ -939,7 +939,7 @@
       }
     </style>
   </head>
-  <body style="display: none;">
+  <body style="display: none">
     <div
       id="secretLink"
       title="Secret Menu"
