@@ -10,6 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-functions-compat.js"></script>
   
     <script>
       const firebaseConfig = {
@@ -22,41 +23,44 @@
         appId: "1:936276282572:web:a802b7f609381ff9428669",
         measurementId: "G-0YLTCV2MMS",
       };
-  
+
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
-  
-      // Initialize Firebase Authentication and Firestore
+
+      // Initialize Firebase Authentication, Firestore, and Functions
       const auth = firebase.auth();
       const db = firebase.firestore();
+      const functions = firebase.functions();
     </script>
-      <script>
-        // Listen for authentication state changes
-        auth.onAuthStateChanged((user) => {
-          if (!user) {
-            // User is not authenticated, redirect to login page
-            window.location.href = "login.html";
-          } else {
-            // User is authenticated, check Firestore 'access' collection
-            const userId = user.uid;
-            db.collection("access").doc(userId).get()
-              .then((doc) => {
-                if (doc.exists && doc.data().tester === true) {
-                  // User has tester access, show the content
-                  document.body.style.display = "block";
-                } else {
-                  // User does not have tester access, redirect to index.html
-                  window.location.href = "index.html";
-                }
-              })
-              .catch((error) => {
-                console.error("Error checking access:", error);
-                // Optionally, redirect to index.html on error
+    <script>
+      // Listen for authentication state changes
+      auth.onAuthStateChanged((user) => {
+        if (!user) {
+          // User is not authenticated, redirect to login page
+          window.location.href = "login.html";
+        } else {
+          // User is authenticated, check Firestore 'access' collection
+          const userId = user.uid;
+          db.collection("access")
+            .doc(userId)
+            .get()
+            .then((doc) => {
+              if (doc.exists && doc.data().tester === true) {
+                // User has tester access, show the content
+                document.body.style.display = "block";
+              } else {
+                // User does not have tester access, redirect to index.html
                 window.location.href = "index.html";
-              });
-          }
-        });
-      </script>
+              }
+            })
+            .catch((error) => {
+              console.error("Error checking access:", error);
+              // Optionally, redirect to index.html on error
+              window.location.href = "index.html";
+            });
+        }
+      });
+    </script>
     <script type="module">
       import games from "./cards-data-test.js";
       import { siteMapping } from "./site-mapping.js";
@@ -160,20 +164,19 @@
           `${gameName} has been submitted. Josh will approve it by the end of the day.`
         );
 
-        // Get the current timestamp
-        const timestamp = new Date().toISOString(); // ISO format (e.g., 2024-04-27T14:52:00.000Z)
+        // Call the Firebase function to accept the game
+        const acceptGame = functions.httpsCallable("acceptGame");
 
-        // Define the fixed issue message
-        const issue = "game is ready to be added";
-
-        // Send the data to Google Sheets
-        sendIssueToGoogleSheet(timestamp, gameName, issue);
-
-        // Optional: If you still want to trigger the GitHub Workflow, uncomment the line below
-        // triggerGitHubWorkflow(gameName);
+        acceptGame({ gameName: gameName })
+          .then((result) => {
+            console.log(result.data.message);
+          })
+          .catch((error) => {
+            console.error("Error accepting game:", error);
+          });
       }
 
-      // Handle Delete (X) Button Click (Keep unchanged)
+      // Handle Delete (X) Button Click
       function handleDeleteClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
         const issue = prompt(`What was the issue with ${gameName}?`);
@@ -186,28 +189,7 @@
         }
       }
 
-      // *** Updated Function to Send Check Button Data to Google Sheets ***
-      function sendIssueToGoogleSheet(timestamp, gameName, issue) {
-        const scriptURL =
-          "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec"; // Replace with your Google Apps Script URL
-
-        fetch(scriptURL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ timestamp, gameName, issue }),
-        })
-          .then(() => {
-            console.log("Submission sent successfully.");
-          })
-          .catch((error) => {
-            console.error("Error sending submission:", error);
-          });
-      }
-
-      // *** New Function to Handle Delete Button Data to Google Sheets ***
+      // Function to Send Delete Button Data to Google Sheets
       function sendIssueToGoogleSheetWithIssue(gameName, issue) {
         const scriptURL =
           "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec"; // Replace with your Google Apps Script URL
@@ -228,40 +210,6 @@
           .catch((error) => {
             console.error("Error submitting issue:", error);
           });
-      }
-
-      // Function to trigger GitHub Workflow via GitHub API (Optional)
-      async function triggerGitHubWorkflow(gameName) {
-        const workflowDispatchUrl =
-          "https://api.github.com/repos/OWNER/REPO/actions/workflows/WORKFLOW_FILE.yml/dispatches";
-
-        const token = "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"; // Replace with your GitHub token
-
-        const payload = {
-          ref: "main", // Branch name
-          inputs: {
-            game_name: gameName,
-          },
-        };
-
-        try {
-          const response = await fetch(workflowDispatchUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `token ${token}`,
-            },
-            body: JSON.stringify(payload),
-          });
-
-          if (response.ok) {
-            console.log("Workflow triggered successfully.");
-          } else {
-            console.error("Failed to trigger workflow:", response.statusText);
-          }
-        } catch (error) {
-          console.error("Error triggering workflow:", error);
-        }
       }
     </script>
     <script src="appscript.js"></script>
