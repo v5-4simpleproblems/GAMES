@@ -1,5 +1,5 @@
 export default [
-      { href: './html/crossy cat/index.html', imgSrc: 'crossy cat.jpg', name: 'crossy cat' , 'page': 2},
+      { href: './html/crossy cat/game/index.html', imgSrc: 'crossy cat.jpg', name: 'crossy cat' , 'page': 2},
       { href: './html/coco monkey/index.html', imgSrc: 'coco monkey.jpg', name: 'coco monkey' , 'page': 2},
       { href: './html/cities of babylon/index.html', imgSrc: 'cities of babylon.jpg', name: 'cities of babylon' , 'page': 2},
       { href: './html/babel tower/index.html', imgSrc: 'babel tower.jpg', name: 'babel tower' , 'page': 2},
