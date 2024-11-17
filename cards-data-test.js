@@ -1,4 +1,8 @@
 export default [
+      { href: './html/crossy cat/index.html', imgSrc: 'crossy cat.jpg', name: 'crossy cat' , 'page': 2},
+      { href: './html/coco monkey/index.html', imgSrc: 'coco monkey.jpg', name: 'coco monkey' , 'page': 2},
+      { href: './html/cities of babylon/index.html', imgSrc: 'cities of babylon.jpg', name: 'cities of babylon' , 'page': 2},
+      { href: './html/babel tower/index.html', imgSrc: 'babel tower.jpg', name: 'babel tower' , 'page': 2},
       { href: './swf/twin shot/index.html', imgSrc: 'twin shot.jpg', name: 'twin shot' , 'page': 2},
       { href: './swf/twin shot 2/index.html', imgSrc: 'twin shot 2.jpg', name: 'twin shot 2' , 'page': 2},
       { href: './html/red ball 4/index.html', imgSrc: 'red ball 4.jpg', name: 'red ball 4' , 'page': 2},
