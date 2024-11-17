@@ -1,4 +1,11 @@
 export default [
+      { href: './swf/twin shot/index.html', imgSrc: 'twin shot.jpg', name: 'twin shot' , 'page': 2},
+      { href: './swf/twin shot 2/index.html', imgSrc: 'twin shot 2.jpg', name: 'twin shot 2' , 'page': 2},
+      { href: './html/red ball 4/index.html', imgSrc: 'red ball 4.jpg', name: 'red ball 4' , 'page': 2},
+      { href: './html/gunblood/index.html', imgSrc: 'gunblood.jpg', name: 'gunblood' , 'page': 2},
+      { href: './html/cannon basketball 3/index.html', imgSrc: 'cannon basketball 3.jpg', name: 'cannon basketball 3' , 'page': 2},
+      { href: './html/cannon basketball 2/index.html', imgSrc: 'cannon basketball 2.jpg', name: 'cannon basketball 2' , 'page': 2},
+      { href: './html/cannon basketball/index.html', imgSrc: 'cannon basketball.jpg', name: 'cannon basketball' , 'page': 2},
       { href: './html/chicken hike/index.html', imgSrc: 'chicken hike.jpg', name: 'chicken hike' , 'page': 2},
       { href: './html/cherry on the ice cream/index.html', imgSrc: 'cherry on the ice cream.jpg', name: 'cherry on the ice cream' , 'page': 2},
       { href: './html/candy clicker/index.html', imgSrc: 'candy clicker.jpg', name: 'candy clicker' , 'page': 2},
