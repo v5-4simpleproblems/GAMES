@@ -1,4 +1,5 @@
 export default [
+      { href: './swf/gunblood/index.html', imgSrc: 'gunblood.jpg', name: 'gunblood' , 'page': 2},
       { href: './html/crossy cat/game/index.html', imgSrc: 'crossy cat.jpg', name: 'crossy cat' , 'page': 2},
       { href: './html/coco monkey/index.html', imgSrc: 'coco monkey.jpg', name: 'coco monkey' , 'page': 2},
       { href: './html/cities of babylon/index.html', imgSrc: 'cities of babylon.jpg', name: 'cities of babylon' , 'page': 2},
