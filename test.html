@@ -18,17 +18,17 @@
 
   function fetchExclusionList() {
     return new Promise((resolve, reject) => {
-      const callbackName = "jsonpCallback";
+      const callbackName = "jsonpCallback_" + Date.now();
 
       window[callbackName] = function (data) {
         console.log("Data received:", data);
         delete window[callbackName];
-        document.body.removeChild(script);
+        script.parentNode.removeChild(script);
         resolve(data);
       };
 
       const url =
-        "https://script.google.com/macros/s/AKfycbzg2MdZ2Qz2eGEwzJerCjGoxv6MMTw9UaYDs_3M0fBQq7PftYOsHpD5NhCu2u-1yLESmw/exec?callback=" +
+        "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec?callback=" +
         callbackName;
       console.log("Fetching URL:", url);
 
@@ -37,7 +37,7 @@
       script.onerror = function (error) {
         console.error("Script load error:", error, "URL:", script.src);
         delete window[callbackName];
-        document.body.removeChild(script);
+        script.parentNode.removeChild(script);
         reject(new Error("JSONP request failed: " + error.message));
       };
 
@@ -283,7 +283,6 @@
         }
       }
 
-      // Function to Send Delete Button Data to Google Sheets
       function sendIssueToGoogleSheetWithIssue(gameName, issue) {
         const scriptURL =
           "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec"; // Replace with your Google Apps Script URL
@@ -300,9 +299,13 @@
         })
           .then(() => {
             console.log("Issue submitted successfully.");
+            // Reload the page after successful submission
+            location.reload();
           })
           .catch((error) => {
             console.error("Error submitting issue:", error);
+            // Optionally, reload the page even if there's an error
+            location.reload();
           });
       }
     </script>
