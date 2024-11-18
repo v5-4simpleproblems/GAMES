@@ -1090,27 +1090,23 @@
             );
             categories.insertBefore(logoutLink, favoritesLink);
     
-            // **New Code Starts Here: Add "Test Games" Button for Testers**
             try {
-              // Fetch the 'access' document for the user
               const accessDocRef = db.collection("access").doc(user.uid);
               const accessDoc = await accessDocRef.get();
     
               if (accessDoc.exists) {
                 const accessData = accessDoc.data();
-                console.log(`Access Data for User:`, accessData);
+                console.log();
     
                 if (accessData.tester === true) {
-                  // User has tester access, create the "Test Games" button
                   const testGamesLink = document.createElement("a");
-                  testGamesLink.href = "test.html"; // Destination page
+                  testGamesLink.href = "test.html";
                   testGamesLink.className = "option-link";
                   testGamesLink.textContent = "Test Games";
-                  testGamesLink.style.backgroundColor = "#28a745"; // Green color
+                  testGamesLink.style.backgroundColor = "#28a745";
                   testGamesLink.style.color = "white";
-                  testGamesLink.style.marginTop = "10px"; // Spacing from "Log Out" button
+                  testGamesLink.style.marginTop = "10px";
     
-                  // Optional: Add hover effects similar to other links
                   testGamesLink.addEventListener("mouseover", function () {
                     testGamesLink.style.backgroundColor = "#218838";
                   });
@@ -1118,22 +1114,50 @@
                     testGamesLink.style.backgroundColor = "#28a745";
                   });
     
-                  // Insert the "Test Games" link above the "Favorites" link, below "Log Out"
                   categories.insertBefore(testGamesLink, favoritesLink);
                 } else {
-                  console.log(
-                    `User ID: ${user.uid} does not have tester access (tester: ${accessData.tester}).`
-                  );
+                  console.log();
                 }
               } else {
-                console.log(
-                  `No access document found for user ID: ${user.uid}. Access denied.`
-                );
+                console.log();
               }
             } catch (error) {
-              console.error("Error fetching access document:", error);
+              console.error();
             }
-            // **New Code Ends Here**
+            try {
+              const accessDocRef = db.collection("access").doc(user.uid);
+              const accessDoc = await accessDocRef.get();
+    
+              if (accessDoc.exists) {
+                const accessData = accessDoc.data();
+                console.log();
+    
+                if (accessData.admin === true) {
+                  const testGamesLink = document.createElement("a");
+                  testGamesLink.href = "admin.html";
+                  testGamesLink.className = "option-link";
+                  testGamesLink.textContent = "Admin Panel";
+                  testGamesLink.style.backgroundColor = "#bd0000";
+                  testGamesLink.style.color = "white";
+                  testGamesLink.style.marginTop = "10px";
+    
+                  testGamesLink.addEventListener("mouseover", function () {
+                    testGamesLink.style.backgroundColor = "#ff0000";
+                  });
+                  testGamesLink.addEventListener("mouseout", function () {
+                    testGamesLink.style.backgroundColor = "#bd0000";
+                  });
+    
+                  categories.insertBefore(testGamesLink, favoritesLink);
+                } else {
+                  console.log();
+                }
+              } else {
+                console.log();
+              }
+            } catch (error) {
+              console.error();
+            }
     
           } else {
             // User is not signed in, display "Not logged in" and a "Log In" button

@@ -53,7 +53,6 @@
       .replace(/[^a-z0-9]/g, "");
   }
 
-  // Function to hide excluded cards
   function hideExcludedCards(exclusionList) {
     // Normalize exclusion list game names
     const normalizedExclusionList = exclusionList.map((name) =>
@@ -76,12 +75,31 @@
     });
   }
 
+  function fetchExclusionListFromFirestore() {
+    return window.db
+      .collection("cards")
+      .where("disable", "==", true)
+      .get()
+      .then((querySnapshot) => {
+        const exclusionList = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          exclusionList.push(data.gameName);
+        });
+        return exclusionList;
+      })
+      .catch((error) => {
+        console.error("Error fetching exclusion list from Firestore:", error);
+        throw error;
+      });
+  }
+
   // Wait for DOMContentLoaded and exclusion list to be fetched
   Promise.all([
     new Promise((resolve) => {
       document.addEventListener("DOMContentLoaded", resolve);
     }),
-    fetchExclusionList(),
+    fetchExclusionListFromFirestore(),
   ])
     .then(([_, exclusionList]) => {
       hideExcludedCards(exclusionList);
@@ -125,6 +143,11 @@
       const auth = firebase.auth();
       const db = firebase.firestore();
       const functions = firebase.functions();
+
+      // Attach to the window object
+      window.auth = auth;
+      window.db = db;
+      window.functions = functions;
     </script>
     <script>
       // Listen for authentication state changes
@@ -257,20 +280,26 @@
           `${gameName} has been submitted and will be added to the main list shortly. PLEASE WAIT 10 SECONDS BEFORE YOU CLOSE THIS PAGE!`
         );
 
-        // Call the Firebase function to accept the game
-        const acceptGame = functions.httpsCallable("acceptGame");
+        // Normalize the game name to create a safe document ID
+        const gameId = normalizeGameName(gameName);
 
-        acceptGame({ gameName: gameName })
-          .then((result) => {
-            console.log(result.data.message);
+        // Add or update the game in Firestore with disable: false
+        window.db
+          .collection("cards")
+          .doc(gameId)
+          .set({
+            gameName: gameName,
+            disable: true,
           })
-          .catch((error) => {
-            console.error("Error accepting game:", error);
-            alert(`Error accepting game: ${error.message}`);
+          .then(function () {
+            console.log(`Game ${gameName} approved and added to Firestore.`);
+          })
+          .catch(function (error) {
+            console.error("Error adding game to Firestore: ", error);
+            alert(`Error adding game to Firestore: ${error.message}`);
           });
       }
 
-      // Handle Delete (X) Button Click
       function handleDeleteClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
         const issue = prompt(`What was the issue with ${gameName}?`);
@@ -280,9 +309,21 @@
 
           // Send game name and issue to Google Sheet
           sendIssueToGoogleSheetWithIssue(gameName, issue);
+
+          // Add the game to Firestore with disable: true
+          db.collection("cards")
+            .add({
+              gameName: gameName,
+              disable: true,
+            })
+            .then(function (docRef) {
+              console.log("Game added to Firestore with ID: ", docRef.id);
+            })
+            .catch(function (error) {
+              console.error("Error adding game to Firestore: ", error);
+            });
         }
       }
-
       function sendIssueToGoogleSheetWithIssue(gameName, issue) {
         const scriptURL =
           "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec"; // Replace with your Google Apps Script URL
