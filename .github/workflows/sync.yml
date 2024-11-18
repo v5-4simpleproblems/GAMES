@@ -4,22 +4,21 @@ on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
-    paths:
-      - 'winner.html'
-      - 'strongdog.webp'
-      - 'robots.txt'
-      - 'intro.html'
-      - 'index.html'
-      - 'favs.html'
-      - 'ads.txt'
-      - 'about.html'
-      - 'signup.html'
-      - 'login.html'
-      - 'settings.html'
-      - 'about-page-data.js'
-      - 'README.md'
-      - 'cards-data.js'
-  workflow_dispatch:
+  paths:
+    - 'winner.html'
+    - 'strongdog.webp'
+    - 'robots.txt'
+    - 'intro.html'
+    - 'index.html'
+    - 'favs.html'
+    - 'ads.txt'
+    - 'about.html'
+    - 'signup.html'
+    - 'login.html'
+    - 'settings.html'
+    - 'about-page-data.js'
+    - 'README.md'
+    - 'cards-data.js'
 
 jobs:
   sync:
