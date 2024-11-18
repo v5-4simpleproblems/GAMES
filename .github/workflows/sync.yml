@@ -2,7 +2,7 @@ name: Sync Workflow Files to strongdog2 Master Branch
 
 on:
   schedule:
-    - cron: '59 23 * * *'
+    - cron: '0 0 * * *'
   workflow_dispatch:
     paths:
       - 'winner.html'
