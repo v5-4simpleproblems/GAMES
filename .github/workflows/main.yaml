@@ -1,9 +1,8 @@
 name: Upload Website
 
 on:
-  push:
-    branches:
-      - master
+  schedule:
+    - cron: '59 23 * * *'
   workflow_dispatch:
 
 jobs:
