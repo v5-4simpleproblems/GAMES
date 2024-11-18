@@ -2,23 +2,7 @@ name: Sync Workflow Files to strongdog2 Master Branch
 
 on:
   schedule:
-    - cron: '59 23 * * *'
-  workflow_dispatch:
-    paths:
-      - 'winner.html'
-      - 'strongdog.webp'
-      - 'robots.txt'
-      - 'intro.html'
-      - 'index.html'
-      - 'favs.html'
-      - 'ads.txt'
-      - 'about.html'
-      - 'signup.html'
-      - 'login.html'
-      - 'settings.html'
-      - 'about-page-data.js'
-      - 'README.md'
-      - 'cards-data.js'
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:

@@ -273,12 +273,13 @@
       }
 
       function handleCheckClick(event) {
-        const gameName = event.target.getAttribute("data-game-name");
+  const gameName = event.target.getAttribute("data-game-name");
+  const timestamp = new Date().toISOString(); // Capture the current date and time
 
-        // Display the custom alert message
-        alert(
-          `${gameName} has been submitted and will be added to the main list shortly. PLEASE WAIT 10 SECONDS BEFORE YOU CLOSE THIS PAGE!`
-        );
+  // Display the custom alert message
+  alert(
+    `${gameName} has been submitted and will be added to the main list shortly. PLEASE WAIT 10 SECONDS BEFORE YOU CLOSE THIS PAGE!`
+  );
 
         // Normalize the game name to create a safe document ID
         const gameId = normalizeGameName(gameName);
@@ -325,30 +326,27 @@
         }
       }
       function sendIssueToGoogleSheetWithIssue(gameName, issue) {
-        const scriptURL =
-          "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec"; // Replace with your Google Apps Script URL
+  const scriptURL =
+    "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec";
 
-        const timestamp = new Date().toISOString();
+  const timestamp = new Date().toISOString();
 
-        fetch(scriptURL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ timestamp, gameName, issue }),
-        })
-          .then(() => {
-            console.log("Issue submitted successfully.");
-            // Reload the page after successful submission
-            location.reload();
-          })
-          .catch((error) => {
-            console.error("Error submitting issue:", error);
-            // Optionally, reload the page even if there's an error
-            location.reload();
-          });
-      }
+  fetch(scriptURL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ timestamp, gameName, issue }),
+  })
+    .then(() => {
+      console.log("Issue submitted successfully.");
+    })
+    .catch((error) => {
+      console.error("Error submitting issue:", error);
+    });
+}
+
     </script>
     <script src="appscript.js"></script>
     <script>

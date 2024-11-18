@@ -3,7 +3,6 @@ export default [
       { href: './html/zuck vs musk beatdown/index.html', imgSrc: 'zuck vs musk beatdown.jpg', name: 'zuck vs musk beatdown' , 'page': 2},
       { href: './html/ultimate offroad simulator/index.html', imgSrc: 'ultimate offroad simulator.jpg', name: 'ultimate offroad simulator' , 'page': 2},
       { href: './html/turn turn/index.html', imgSrc: 'turn turn.jpg', name: 'turn turn' , 'page': 2},
-      { href: './html/tube clicker/index.html', imgSrc: 'tube clicker.jpg', name: 'tube clicker' , 'page': 2},
       { href: './html/tricksplit.io/index.html', imgSrc: 'tricksplit.io.jpg', name: 'tricksplit.io' , 'page': 2},
       { href: './html/trafficmania/index.html', imgSrc: 'trafficmania.jpg', name: 'trafficmania' , 'page': 2},
       { href: './html/tower defense 2d/index.html', imgSrc: 'tower defense 2d.jpg', name: 'tower defense 2d' , 'page': 2},
