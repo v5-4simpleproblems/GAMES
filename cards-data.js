@@ -1,4 +1,6 @@
 export default [
+	{ href: "./html/throw a potato again/index.html", imgSrc: "throwapotato2.png", name: "Throw a Potato Again" },
+	{ href: "./html/throw a potato in space/index.html", imgSrc: "throwapotato3.png", name: "Throw a Potato in Space" },
 	{ href: "./html/getaway shootout/index.html", imgSrc: "getaway-shootout.jfif", name: "getaway shootout"},
     { href: './html/tube clicker/index.html', imgSrc: 'tube clicker.jpg', name: 'tube clicker' , 'page': 2},
     { href: './html/crossy cat/game/index.html', imgSrc: 'crossy cat.jpg', name: 'crossy cat' , 'page': 2},
@@ -643,7 +645,5 @@ export default [
 	{ href: "./html/pizzachallenge/game/pizzachallenge.html", imgSrc: "pizzachallenge.png", name: "Pizza Challange" },
 	{ href: "./html/retro speed/game/retro speed.html speed.html", imgSrc: "retro speed.png", name: "Retro Speed" },
 	{ href: "./html/tank trouble 2.html", imgSrc: "tank trouble 2.png", name: "Tank Trouble 2" },
-	{ href: "./html/throwapotato2.html", imgSrc: "throwapotato2.png", name: "Throw a Potato 2" },
-	{ href: "./html/throwapotato3.html", imgSrc: "throwapotato3.png", name: "Throw a Potato in Space" },
 ];
 
