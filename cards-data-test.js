@@ -11,7 +11,6 @@ export default [
       { href: './html/tower defense 2d/index.html', imgSrc: 'tower defense 2d.jpg', name: 'tower defense 2d' , 'page': 2},
       { href: './html/coco monkey/index.html', imgSrc: 'coco monkey.jpg', name: 'coco monkey' , 'page': 2},
       { href: './html/cities of babylon/index.html', imgSrc: 'cities of babylon.jpg', name: 'cities of babylon' , 'page': 2},
-      { href: './html/cannon basketball 3/index.html', imgSrc: 'cannon basketball 3.jpg', name: 'cannon basketball 3' , 'page': 2},
       { href: './html/cannon basketball 2/index.html', imgSrc: 'cannon basketball 2.jpg', name: 'cannon basketball 2' , 'page': 2},
       { href: './html/cannon basketball/index.html', imgSrc: 'cannon basketball.jpg', name: 'cannon basketball' , 'page': 2},
       { href: './html/chicken hike/index.html', imgSrc: 'chicken hike.jpg', name: 'chicken hike' , 'page': 2},
