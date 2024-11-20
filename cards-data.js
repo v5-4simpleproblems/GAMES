@@ -1,4 +1,5 @@
 export default [
+  { href: './html/cannon basketball/index.html', imgSrc: 'cannon basketball.jpg', name: 'cannon basketball' , 'page': 2},
 	{ href: './html/red ball 4/index.html', imgSrc: 'red ball 4.jpg', name: 'red ball 4' , 'page': 2},
 	{ href: './html/candy clicker/index.html', imgSrc: 'candy clicker.jpg', name: 'candy clicker' , 'page': 2},
 	{ href: './html/babel tower/index.html', imgSrc: 'babel tower.jpg', name: 'babel tower' , 'page': 2},
