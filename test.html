@@ -189,39 +189,45 @@
           .replace(/\s+/g, "")
           .replace(/[^a-z0-9]/g, "");
       }
-
       function getCardHTML(gameObject) {
         const { href, imgSrc, name, page } = gameObject;
         let adjustedHref = href;
         let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
 
-        if (page === 2) {
+        if (page >= 2) {
+          // Handle pages 2 and above
           // Get the current hostname
           const hostname = window.location.hostname;
 
-          // Determine the base URL for page 2
-          let page2BaseURL = "";
-
-          // Find the base URL for page 2 based on the current hostname
+          // Find the matching key in siteMapping
+          let matchedKey = null;
           for (const key in siteMapping) {
             if (hostname.includes(key)) {
-              page2BaseURL = siteMapping[key];
+              matchedKey = key;
               break;
             }
           }
 
-          if (page2BaseURL) {
-            // Remove leading './' from href and imgSrc if present
-            const adjustedGameHref = href.replace(/^\.\//, "");
-            adjustedHref = `${page2BaseURL}/${adjustedGameHref}`;
+          if (matchedKey) {
+            const pageIndex = page - 2; // pages start at 2, arrays at 0
+            const pageBaseURLs = siteMapping[matchedKey];
 
-            const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-            adjustedImgSrc = `${page2BaseURL}/img/${adjustedImgPath}`;
+            if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
+              const pageBaseURL = pageBaseURLs[pageIndex];
+
+              // Remove leading './' from href and imgSrc if present
+              const adjustedGameHref = href.replace(/^\.\//, "");
+              adjustedHref = `${pageBaseURL}/${adjustedGameHref}`;
+
+              const adjustedImgPath = imgSrc.replace(/^\.\//, "");
+              adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
+            } else {
+              console.warn(
+                `No site mapping found for page ${page} on hostname: ${matchedKey}`
+              );
+            }
           } else {
-            // If no matching hostname is found, default to the original href
-            console.warn(
-              `No page 2 site mapping found for hostname: ${hostname}`
-            );
+            console.warn(`No site mapping found for hostname: ${hostname}`);
           }
         }
 
@@ -229,17 +235,17 @@
         const gameId = normalizeGameName(name);
 
         return `
-          <div class="card-container">
-            <a href="${adjustedHref}" class="card" data-game-id="${gameId}">
-              <img src="${adjustedImgSrc}" alt="${name}">
-              <figcaption>${name}</figcaption>
-            </a>
-            <div class="card-buttons">
-              <button class="btn-check" data-game-name="${name}" title="Add Game">&#10003;</button>
-              <button class="btn-delete" data-game-name="${name}" title="Report Issue">&#10005;</button>
-            </div>
-          </div>
-        `;
+    <div class="card-container">
+      <a href="${adjustedHref}" class="card" data-game-id="${gameId}">
+        <img src="${adjustedImgSrc}" alt="${name}">
+        <figcaption>${name}</figcaption>
+      </a>
+      <div class="card-buttons">
+        <button class="btn-check" data-game-name="${name}" title="Add Game">&#10003;</button>
+        <button class="btn-delete" data-game-name="${name}" title="Report Issue">&#10005;</button>
+      </div>
+    </div>
+  `;
       }
 
       // Generate the cards
@@ -273,34 +279,34 @@
       }
 
       function handleCheckClick(event) {
-  const gameName = event.target.getAttribute("data-game-name");
-  const timestamp = new Date().toISOString(); // Capture the current date and time
+    const gameName = event.target.getAttribute("data-game-name");
 
-  // Display the custom alert message
-  alert(
-    `${gameName} has been submitted and will be added to the main list shortly. PLEASE WAIT 10 SECONDS BEFORE YOU CLOSE THIS PAGE!`
-  );
+    // Ensure gameName is present
+    if (!gameName) {
+        alert("Game name is missing.");
+        return;
+    }
 
-        // Normalize the game name to create a safe document ID
-        const gameId = normalizeGameName(gameName);
+    // Show a message to indicate processing
+    alert(`${gameName} is being submitted for approval. Please wait...`);
 
-        // Add or update the game in Firestore with disable: false
-        window.db
-          .collection("cards")
-          .doc(gameId)
-          .set({
-            gameName: gameName,
-            disable: true,
-          })
-          .then(function () {
-            console.log(`Game ${gameName} approved and added to Firestore.`);
-          })
-          .catch(function (error) {
-            console.error("Error adding game to Firestore: ", error);
-            alert(`Error adding game to Firestore: ${error.message}`);
-          });
-      }
+    // Firebase Function to approve the game
+    const approveGameFunction = firebase.functions().httpsCallable("approveGame");
 
+    // Call the function with properly formatted data
+    approveGameFunction({ gameName: gameName.trim() }) // Ensure no trailing spaces
+        .then((result) => {
+            console.log(`Game "${gameName}" approved via Firebase Function.`);
+            alert(result.data.message || `Game "${gameName}" has been approved.`); // Handle response message
+
+            // Optionally remove the game card from UI
+            event.target.closest(".card-container").remove();
+        })
+        .catch((error) => {
+            console.error("Error approving game via Firebase Function:", error);
+            alert(`Error approving game: ${error.message}`);
+        });
+}
       function handleDeleteClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
         const issue = prompt(`What was the issue with ${gameName}?`);
@@ -326,27 +332,26 @@
         }
       }
       function sendIssueToGoogleSheetWithIssue(gameName, issue) {
-  const scriptURL =
-    "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec";
+        const scriptURL =
+          "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec";
 
-  const timestamp = new Date().toISOString();
+        const timestamp = new Date().toISOString();
 
-  fetch(scriptURL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ timestamp, gameName, issue }),
-  })
-    .then(() => {
-      console.log("Issue submitted successfully.");
-    })
-    .catch((error) => {
-      console.error("Error submitting issue:", error);
-    });
-}
-
+        fetch(scriptURL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ timestamp, gameName, issue }),
+        })
+          .then(() => {
+            console.log("Issue submitted successfully.");
+          })
+          .catch((error) => {
+            console.error("Error submitting issue:", error);
+          });
+      }
     </script>
     <script src="appscript.js"></script>
     <script>
@@ -1495,6 +1500,7 @@
         });
       });
     </script>
+    <!-- Consolidated and Corrected Search Script -->
     <script type="module">
       import games from "./cards-data-test.js";
       import { siteMapping } from "./site-mapping.js";
@@ -1541,36 +1547,45 @@
             return;
           }
 
+          const currentURL = window.location.href;
+          let matchedKey = null;
+
+          // Find the matching key based on the current URL
+          for (const key in siteMapping) {
+            if (currentURL.includes(key)) {
+              matchedKey = key;
+              break;
+            }
+          }
+
+          if (!matchedKey) {
+            console.warn(
+              `No site mapping found for current URL: ${currentURL}`
+            );
+          }
+
           filteredGames.forEach((game) => {
             const { href, imgSrc, name, page } = game;
             let adjustedHref = href;
             let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
 
-            if (page === 2) {
-              // Get the current hostname
-              const hostname = window.location.hostname;
+            if (page >= 2 && matchedKey) {
+              // Handle pages 2 and above
+              const pageIndex = page - 2; // Indexing starts at 0
+              const pageBaseURLs = siteMapping[matchedKey];
 
-              // Determine the base URL for page 2
-              let page2BaseURL = "";
+              if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
+                const pageBaseURL = pageBaseURLs[pageIndex];
 
-              // Find the base URL for page 2 based on the current hostname
-              for (const key in siteMapping) {
-                if (hostname.includes(key)) {
-                  page2BaseURL = siteMapping[key];
-                  break;
-                }
-              }
-
-              if (page2BaseURL) {
                 // Remove leading './' from href and imgSrc if present
                 const adjustedGameHref = href.replace(/^\.\//, "");
-                adjustedHref = `${page2BaseURL}/${adjustedGameHref}`;
+                adjustedHref = `${pageBaseURL}/${adjustedGameHref}`;
 
                 const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-                adjustedImgSrc = `${page2BaseURL}/img/${adjustedImgPath}`;
+                adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
               } else {
                 console.warn(
-                  `No page 2 site mapping found for hostname: ${hostname}`
+                  `No site mapping found for page ${page} on hostname: ${matchedKey}`
                 );
               }
             }
@@ -1578,9 +1593,9 @@
             const resultLink = document.createElement("a");
             resultLink.href = adjustedHref;
             resultLink.innerHTML = `
-			<img src="${adjustedImgSrc}" alt="${name}">
-			<span>${name}</span>
-		  `;
+          <img src="${adjustedImgSrc}" alt="${name}">
+          <span>${name}</span>
+        `;
             searchResults.appendChild(resultLink);
           });
 

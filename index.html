@@ -15,7 +15,7 @@
       import games from "./cards-data.js";
       import { siteMapping } from "./site-mapping.js";
 
-      // Define normalizeGameName function
+      // Helper function to normalize game names
       function normalizeGameName(name) {
         return name
           .toLowerCase()
@@ -23,50 +23,101 @@
           .replace(/[^a-z0-9]/g, "");
       }
 
-      function getCardHTML(gameObject) {
-        const { href, imgSrc, name, page } = gameObject;
+      // Function to get the current site key from the URL
+      function getCurrentSiteKey() {
+        const currentURL = window.location.href;
+        const keys = Object.keys(siteMapping);
+
+        // Sort keys by length in descending order to match the most specific URL first
+        keys.sort((a, b) => b.length - a.length);
+
+        for (const key of keys) {
+          if (currentURL.includes(key)) {
+            return key;
+          }
+        }
+        return null;
+      }
+
+      // Function to get adjusted URLs
+      function getAdjustedUrls(href, imgSrc, page) {
         let adjustedHref = href;
         let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
 
-        if (page === 2) {
-          // Get the current hostname
-          const hostname = window.location.hostname;
+        const currentSiteKey = getCurrentSiteKey();
 
-          // Determine the base URL for page 2
-          let page2BaseURL = "";
+        if (currentSiteKey) {
+          const currentSitePages = siteMapping[currentSiteKey];
 
-          // Find the base URL for page 2 based on the current hostname
-          for (const key in siteMapping) {
-            if (hostname.includes(key)) {
-              page2BaseURL = siteMapping[key];
-              break;
+          // Build a mapping from page number to base URL
+          const pageNumberToURL = {};
+          let currentPageNumber = getPageNumberFromURL(currentSiteKey);
+          pageNumberToURL[currentPageNumber] = currentSiteKey;
+
+          currentSitePages.forEach((url) => {
+            const pageNum = getPageNumberFromURL(url);
+            pageNumberToURL[pageNum] = url;
+          });
+
+          if (page !== currentPageNumber) {
+            const adjustedBaseURL = pageNumberToURL[page];
+
+            if (adjustedBaseURL) {
+              // Remove leading './' from href and imgSrc if present
+              const adjustedGameHref = href.replace(/^\.\//, "");
+              adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
+
+              const adjustedImgPath = imgSrc.replace(/^\.\//, "");
+              adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
+            } else {
+              console.warn(
+                `No base URL found for page ${page} in site mapping.`
+              );
             }
           }
-
-          if (page2BaseURL) {
-            // Remove leading './' from href and imgSrc if present
-            const adjustedGameHref = href.replace(/^\.\//, "");
-            adjustedHref = `${page2BaseURL}/${adjustedGameHref}`;
-
-            const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-            adjustedImgSrc = `${page2BaseURL}/img/${adjustedImgPath}`;
-          } else {
-            // If no matching hostname is found, default to the original href
-            console.warn(
-              `No page 2 site mapping found for hostname: ${hostname}`
-            );
-          }
+        } else {
+          console.warn(
+            `No site mapping found for current URL: ${window.location.href}`
+          );
         }
+
+        return { adjustedHref, adjustedImgSrc };
+      }
+
+      // Function to extract the page number from a URL or key
+      function getPageNumberFromURL(url) {
+        const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
+        const match = url.match(regex);
+        if (match) {
+          const pageNum = match[2];
+          if (pageNum === "") {
+            return 1;
+          } else {
+            return parseInt(pageNum, 10);
+          }
+        } else {
+          return 1; // Default to page 1 if not found
+        }
+      }
+
+      // Function to generate card HTML
+      function getCardHTML(gameObject) {
+        const { href, imgSrc, name, page } = gameObject;
+        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+          href,
+          imgSrc,
+          page
+        );
 
         // Generate a normalized game ID for matching
         const gameId = normalizeGameName(name);
 
         return `
-			<a href="${adjustedHref}" class="card" data-game-id="${gameId}">
-			  <img src="${adjustedImgSrc}">
-			  <figcaption>${name}</figcaption>
-			</a>
-		  `;
+          <a href="${adjustedHref}" class="card" data-game-id="${gameId}" data-page="${page}">
+            <img src="${adjustedImgSrc}">
+            <figcaption>${name}</figcaption>
+          </a>
+        `;
       }
 
       // Generate the cards
@@ -80,6 +131,69 @@
       // Insert the cards into the DOM once the content is loaded
       document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("allGameList").innerHTML = cardsHTMLStr;
+
+        // --- Begin Updated Search Functionality ---
+        const searchInput = document.querySelector(".search-bar");
+        const searchResults = document.getElementById("searchResults");
+
+        if (!searchInput || !searchResults) {
+          console.error(
+            "Search input or results container not found in the DOM."
+          );
+          return;
+        }
+
+        // Show results when the search bar is focused
+        searchInput.addEventListener("focus", function () {
+          updateSearchResults(); // Display initial results if any
+        });
+
+        // Update the search results based on the input
+        searchInput.addEventListener("input", updateSearchResults);
+
+        // Hide results when clicking outside the search bar and results
+        document.addEventListener("click", function (event) {
+          if (
+            !searchInput.contains(event.target) &&
+            !searchResults.contains(event.target)
+          ) {
+            searchResults.style.display = "none";
+          }
+        });
+
+        function updateSearchResults() {
+          const searchText = searchInput.value.toLowerCase();
+          const filteredGames = games
+            .filter((game) => game.name.toLowerCase().includes(searchText))
+            .slice(0, 7); // Limit to top 7 results
+
+          searchResults.innerHTML = ""; // Clear previous results
+
+          if (filteredGames.length === 0) {
+            searchResults.style.display = "none";
+            return;
+          }
+
+          filteredGames.forEach((game) => {
+            const { href, imgSrc, name, page } = game;
+            const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+              href,
+              imgSrc,
+              page
+            );
+
+            const resultLink = document.createElement("a");
+            resultLink.href = adjustedHref;
+            resultLink.innerHTML = `
+              <img src="${adjustedImgSrc}" alt="${name}">
+              <span>${name}</span>
+            `;
+            searchResults.appendChild(resultLink);
+          });
+
+          searchResults.style.display = "block"; // Show results
+        }
+        // --- End Updated Search Functionality ---
       });
     </script>
 
@@ -981,20 +1095,20 @@
     </div>
     <script type="module">
       import games from "./cards-data.js";
-    
+
       document.addEventListener("DOMContentLoaded", function () {
         const menuIcon = document.getElementById("menuIcon");
         const slideMenu = document.createElement("div");
         slideMenu.className = "slide-menu";
-    
+
         // Clone the categories
         const originalCategories = document.querySelector(".categories");
         const categories = originalCategories.cloneNode(true);
-    
+
         // Append the categories to the slideMenu
         slideMenu.appendChild(categories);
         document.body.appendChild(slideMenu);
-    
+
         // Add click event to toggle the sliding menu
         menuIcon.addEventListener("click", function (event) {
           event.stopPropagation(); // Prevent click event from bubbling up
@@ -1004,52 +1118,52 @@
             slideMenu.style.transform = "translateX(0%)"; // Show menu by sliding in
           }
         });
-    
+
         // Close the menu when clicking outside of it
         window.addEventListener("click", function (event) {
           if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
             slideMenu.style.transform = "translateX(-100%)"; // Hide menu
           }
         });
-    
+
         // Check authentication state
         auth.onAuthStateChanged(async (user) => {
           let userDetailsContainer;
-    
+
           if (user) {
             // User is signed in, fetch their profile picture and username
-    
+
             // Clone the user-details-container
             const originalUserDetailsContainer = document.querySelector(
               ".user-details-container"
             );
             userDetailsContainer = originalUserDetailsContainer.cloneNode(true);
-    
+
             // Get elements inside userDetailsContainer
             const profilePictureElement =
               userDetailsContainer.querySelector(".profile-picture");
             const usernameElement =
               userDetailsContainer.querySelector(".username-text");
-    
+
             // Set profile picture
             if (user.photoURL) {
               profilePictureElement.src = user.photoURL;
             } else {
               profilePictureElement.src = "img/default-avatar.png"; // Fallback to default image
             }
-    
+
             // Set username
             const userId = user.uid;
             const userDocRef = db.collection("usernames").doc(userId);
             const userDoc = await userDocRef.get();
-    
+
             if (userDoc.exists) {
               const userData = userDoc.data();
               usernameElement.textContent = userData.username || "Username";
             } else {
               usernameElement.textContent = user.displayName || "Username";
             }
-    
+
             // Make profile picture clickable and direct to settings page
             profilePictureElement.parentElement.addEventListener(
               "click",
@@ -1057,10 +1171,10 @@
                 window.location.href = "settings.html";
               }
             );
-    
+
             // Insert the userDetailsContainer at the top of the slideMenu
             slideMenu.insertBefore(userDetailsContainer, categories);
-    
+
             // Create the "Log Out" button as a menu item
             const logoutLink = document.createElement("a");
             logoutLink.href = "#";
@@ -1068,7 +1182,7 @@
             logoutLink.textContent = "Log Out";
             logoutLink.style.backgroundColor = "#dc3545"; // Red color for the button
             logoutLink.style.color = "white";
-    
+
             // Add click event to the "Log Out" link
             logoutLink.addEventListener("click", function (e) {
               e.preventDefault();
@@ -1083,21 +1197,21 @@
                   console.error("Error signing out:", error);
                 });
             });
-    
+
             // Insert the "Log Out" link above the "Favorites" link
             const favoritesLink = categories.querySelector(
               'a[href="favs.html"]'
             );
             categories.insertBefore(logoutLink, favoritesLink);
-    
+
             try {
               const accessDocRef = db.collection("access").doc(user.uid);
               const accessDoc = await accessDocRef.get();
-    
+
               if (accessDoc.exists) {
                 const accessData = accessDoc.data();
                 console.log();
-    
+
                 if (accessData.tester === true) {
                   const testGamesLink = document.createElement("a");
                   testGamesLink.href = "test.html";
@@ -1106,14 +1220,14 @@
                   testGamesLink.style.backgroundColor = "#28a745";
                   testGamesLink.style.color = "white";
                   testGamesLink.style.marginTop = "10px";
-    
+
                   testGamesLink.addEventListener("mouseover", function () {
                     testGamesLink.style.backgroundColor = "#218838";
                   });
                   testGamesLink.addEventListener("mouseout", function () {
                     testGamesLink.style.backgroundColor = "#28a745";
                   });
-    
+
                   categories.insertBefore(testGamesLink, favoritesLink);
                 } else {
                   console.log();
@@ -1127,11 +1241,11 @@
             try {
               const accessDocRef = db.collection("access").doc(user.uid);
               const accessDoc = await accessDocRef.get();
-    
+
               if (accessDoc.exists) {
                 const accessData = accessDoc.data();
                 console.log();
-    
+
                 if (accessData.admin === true) {
                   const testGamesLink = document.createElement("a");
                   testGamesLink.href = "admin.html";
@@ -1140,14 +1254,14 @@
                   testGamesLink.style.backgroundColor = "#bd0000";
                   testGamesLink.style.color = "white";
                   testGamesLink.style.marginTop = "10px";
-    
+
                   testGamesLink.addEventListener("mouseover", function () {
                     testGamesLink.style.backgroundColor = "#ff0000";
                   });
                   testGamesLink.addEventListener("mouseout", function () {
                     testGamesLink.style.backgroundColor = "#bd0000";
                   });
-    
+
                   categories.insertBefore(testGamesLink, favoritesLink);
                 } else {
                   console.log();
@@ -1158,26 +1272,25 @@
             } catch (error) {
               console.error();
             }
-    
           } else {
             // User is not signed in, display "Not logged in" and a "Log In" button
-    
+
             // Create a new userDetailsContainer
             userDetailsContainer = document.createElement("div");
             userDetailsContainer.className = "user-details-container";
-    
+
             // Create a container for the text
             const notLoggedInContainer = document.createElement("div");
             notLoggedInContainer.className = "username-container";
-    
+
             // Create the "Not logged in" text
             const notLoggedInText = document.createElement("p");
             notLoggedInText.className = "username-text";
             notLoggedInText.textContent = "Not logged in";
-    
+
             // Append the text to the container
             notLoggedInContainer.appendChild(notLoggedInText);
-    
+
             // Create the "Log In" button
             const loginButton = document.createElement("button");
             loginButton.textContent = "Log In";
@@ -1189,26 +1302,26 @@
             loginButton.style.borderRadius = "5px";
             loginButton.style.cursor = "pointer";
             loginButton.style.marginTop = "5px";
-    
+
             // Add click event to the "Log In" button
             loginButton.addEventListener("click", function () {
               window.location.href = "login.html";
             });
-    
+
             // Center the content
             userDetailsContainer.style.display = "flex";
             userDetailsContainer.style.flexDirection = "column";
             userDetailsContainer.style.alignItems = "center";
             userDetailsContainer.style.paddingBlock = "40px"; // Ensure consistent padding
-    
+
             // Append the text and button to the userDetailsContainer
             userDetailsContainer.appendChild(notLoggedInContainer);
             userDetailsContainer.appendChild(loginButton);
-    
+
             // Insert the userDetailsContainer at the top of the slideMenu
             slideMenu.insertBefore(userDetailsContainer, categories);
           }
-    
+
           // Add event listeners to the relevant buttons in the sliding menu
           categories
             .querySelector("#randomGame")
@@ -1216,14 +1329,14 @@
               e.preventDefault();
               handleRandomGameClick();
             });
-    
+
           categories
             .querySelector("#blockLanschool")
             .addEventListener("click", function (e) {
               e.preventDefault();
               handleBlockLanschoolClick();
             });
-    
+
           function handleRandomGameClick() {
             if (games.length > 0) {
               const randomIndex = Math.floor(Math.random() * games.length);
@@ -1233,7 +1346,7 @@
               console.error("No game paths available for selection.");
             }
           }
-    
+
           function handleBlockLanschoolClick() {
             var url = "https://strongdog.netlify.app";
             var newTab = window.open();
@@ -1249,7 +1362,7 @@
         });
       });
     </script>
-    
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const discordLink = document.getElementById("discordLink");
@@ -1317,36 +1430,45 @@
             return;
           }
 
+          const currentURL = window.location.href;
+          let matchedKey = null;
+
+          // Find the matching key based on the current URL
+          for (const key in siteMapping) {
+            if (currentURL.includes(key)) {
+              matchedKey = key;
+              break;
+            }
+          }
+
+          if (!matchedKey) {
+            console.warn(
+              `No site mapping found for current URL: ${currentURL}`
+            );
+          }
+
           filteredGames.forEach((game) => {
             const { href, imgSrc, name, page } = game;
             let adjustedHref = href;
             let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
 
-            if (page === 2) {
-              // Get the current hostname
-              const hostname = window.location.hostname;
+            if (page >= 2 && matchedKey) {
+              // Handle pages 2 and above
+              const pageIndex = page - 2; // Indexing starts at 0
+              const pageBaseURLs = siteMapping[matchedKey];
 
-              // Determine the base URL for page 2
-              let page2BaseURL = "";
+              if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
+                const pageBaseURL = pageBaseURLs[pageIndex];
 
-              // Find the base URL for page 2 based on the current hostname
-              for (const key in siteMapping) {
-                if (hostname.includes(key)) {
-                  page2BaseURL = siteMapping[key];
-                  break;
-                }
-              }
-
-              if (page2BaseURL) {
                 // Remove leading './' from href and imgSrc if present
                 const adjustedGameHref = href.replace(/^\.\//, "");
-                adjustedHref = `${page2BaseURL}/${adjustedGameHref}`;
+                adjustedHref = `${pageBaseURL}/${adjustedGameHref}`;
 
                 const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-                adjustedImgSrc = `${page2BaseURL}/img/${adjustedImgPath}`;
+                adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
               } else {
                 console.warn(
-                  `No page 2 site mapping found for hostname: ${hostname}`
+                  `No site mapping found for page ${page} on hostname: ${matchedKey}`
                 );
               }
             }
@@ -1354,9 +1476,9 @@
             const resultLink = document.createElement("a");
             resultLink.href = adjustedHref;
             resultLink.innerHTML = `
-			<img src="${adjustedImgSrc}" alt="${name}">
-			<span>${name}</span>
-		  `;
+          <img src="${adjustedImgSrc}" alt="${name}">
+          <span>${name}</span>
+        `;
             searchResults.appendChild(resultLink);
           });
 
