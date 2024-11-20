@@ -668,4 +668,5 @@ export default [
 	{ href: "./html/pizzachallenge/game/pizzachallenge.html", imgSrc: "pizzachallenge.png", name: "Pizza Challange" },
 	{ href: "./html/retro speed/game/retro speed.html speed.html", imgSrc: "retro speed.png", name: "Retro Speed" },
 	{ href: "./html/tank trouble 2.html", imgSrc: "tank trouble 2.png", name: "Tank Trouble 2" },
+  { href: './html/cannon basketball/index.html', imgSrc: 'cannon basketball.jpg', name: 'cannon basketball' , 'page': 2},
 ];
