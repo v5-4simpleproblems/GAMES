@@ -78,7 +78,6 @@
   function fetchExclusionListFromFirestore() {
     return window.db
       .collection("cards")
-      .where("disable", "==", true)
       .get()
       .then((querySnapshot) => {
         const exclusionList = [];
@@ -303,8 +302,21 @@
               result.data.message || `Game "${gameName}" has been approved.`
             );
 
-            // Optionally remove the game card from UI
-            event.target.closest(".card-container").remove();
+            // Add the game to Firestore with disable: false
+            db.collection("cards")
+              .add({
+                gameName: gameName,
+                disable: true,
+              })
+              .then(function (docRef) {
+                console.log("Game added to Firestore with ID: ", docRef.id);
+
+                // Optionally remove the game card from UI
+                event.target.closest(".card-container").remove();
+              })
+              .catch(function (error) {
+                console.error("Error adding game to Firestore: ", error);
+              });
           })
           .catch((error) => {
             console.error("Error approving game via Firebase Function:", error);
