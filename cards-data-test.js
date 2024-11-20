@@ -1,5 +1,4 @@
 export default [
-      { href: './html/cannon basketball/index.html', imgSrc: 'cannon basketball.jpg', name: 'cannon basketball' , 'page': 2},
       { href: './html/snay.io/index.html', imgSrc: 'snay.io.jpg', name: 'snay.io' , 'page': 3},
       { href: './html/small world cup/index.html', imgSrc: 'small world cup.jpg', name: 'small world cup' , 'page': 3},
       { href: './html/tricksplit.io/index.html', imgSrc: 'tricksplit.io.jpg', name: 'tricksplit.io' , 'page': 2},
