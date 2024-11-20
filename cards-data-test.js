@@ -8,7 +8,6 @@ export default [
       { href: './html/snay.io/index.html', imgSrc: 'snay.io.jpg', name: 'snay.io' , 'page': 3},
       { href: './html/small world cup/index.html', imgSrc: 'small world cup.jpg', name: 'small world cup' , 'page': 3},
       { href: './html/tricksplit.io/index.html', imgSrc: 'tricksplit.io.jpg', name: 'tricksplit.io' , 'page': 2},
-      { href: './html/trafficmania/index.html', imgSrc: 'trafficmania.jpg', name: 'trafficmania' , 'page': 2},
       { href: './html/tower defense 2d/index.html', imgSrc: 'tower defense 2d.jpg', name: 'tower defense 2d' , 'page': 2},
       { href: './html/coco monkey/index.html', imgSrc: 'coco monkey.jpg', name: 'coco monkey' , 'page': 2},
       { href: './html/cities of babylon/index.html', imgSrc: 'cities of babylon.jpg', name: 'cities of babylon' , 'page': 2},
