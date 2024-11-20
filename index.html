@@ -39,7 +39,6 @@
         return null;
       }
 
-      // Function to get adjusted URLs
       function getAdjustedUrls(href, imgSrc, page) {
         let adjustedHref = href;
         let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
@@ -54,31 +53,47 @@
           let currentPageNumber = getPageNumberFromURL(currentSiteKey);
           pageNumberToURL[currentPageNumber] = currentSiteKey;
 
-          currentSitePages.forEach((url) => {
-            const pageNum = getPageNumberFromURL(url);
-            pageNumberToURL[pageNum] = url;
-          });
+          if (currentSitePages) {
+            currentSitePages.forEach((url) => {
+              const pageNum = getPageNumberFromURL(url);
+              pageNumberToURL[pageNum] = url;
+            });
+          }
 
-          if (page !== currentPageNumber) {
-            const adjustedBaseURL = pageNumberToURL[page];
+          // Check if page is defined and not equal to currentPageNumber
+          if (page !== undefined && page !== currentPageNumber) {
+            let adjustedBaseURL = pageNumberToURL[page];
 
-            if (adjustedBaseURL) {
-              // Remove leading './' from href and imgSrc if present
-              const adjustedGameHref = href.replace(/^\.\//, "");
-              adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
-
-              const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-              adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
-            } else {
-              console.warn(
-                `No base URL found for page ${page} in site mapping.`
-              );
+            if (!adjustedBaseURL) {
+              // No base URL found, so construct one using the current site's base URL
+              const currentOrigin = window.location.origin;
+              adjustedBaseURL = `${currentOrigin}/strongdog${page}`;
             }
+
+            // Remove leading './' from href and imgSrc if present
+            const adjustedGameHref = href.replace(/^\.\//, "");
+            adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
+
+            const adjustedImgPath = imgSrc.replace(/^\.\//, "");
+            adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
           }
         } else {
           console.warn(
             `No site mapping found for current URL: ${window.location.href}`
           );
+
+          // Since no site mapping is found, construct the adjusted URLs here
+          if (page !== undefined && page > 1) {
+            const currentOrigin = window.location.origin;
+            const adjustedBaseURL = `${currentOrigin}/strongdog${page}`;
+
+            // Remove leading './' from href and imgSrc if present
+            const adjustedGameHref = href.replace(/^\.\//, "");
+            adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
+
+            const adjustedImgPath = imgSrc.replace(/^\.\//, "");
+            adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
+          }
         }
 
         return { adjustedHref, adjustedImgSrc };
@@ -942,7 +957,10 @@
       </div>
     </div>
     <div class="updates-text-container">
-      <p class="updates-paragraph-text">Want to become a contributor/game downloader? Join the discord and message us!</p>
+      <p class="updates-paragraph-text">
+        Want to become a contributor/game downloader? Join the discord and
+        message us!
+      </p>
     </div>
     <div class="modal" id="popupModal">
       <div class="modal-content">
