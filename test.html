@@ -279,34 +279,39 @@
       }
 
       function handleCheckClick(event) {
-    const gameName = event.target.getAttribute("data-game-name");
+        const gameName = event.target.getAttribute("data-game-name");
 
-    // Ensure gameName is present
-    if (!gameName) {
-        alert("Game name is missing.");
-        return;
-    }
+        // Ensure gameName is present
+        if (!gameName) {
+          alert("Game name is missing.");
+          return;
+        }
 
-    // Show a message to indicate processing
-    alert(`${gameName} is being submitted for approval. Please wait...`);
+        // Show a message to indicate processing
+        alert(`${gameName} is being submitted for approval. Please wait...`);
 
-    // Firebase Function to approve the game
-    const approveGameFunction = firebase.functions().httpsCallable("approveGame");
+        // Firebase Callable Function to approve the game
+        const approveGameFunction = firebase
+          .functions()
+          .httpsCallable("approveGameCallable");
 
-    // Call the function with properly formatted data
-    approveGameFunction({ gameName: gameName.trim() }) // Ensure no trailing spaces
-        .then((result) => {
+        // Call the function with properly formatted data
+        approveGameFunction({ gameName: gameName.trim() })
+          .then((result) => {
             console.log(`Game "${gameName}" approved via Firebase Function.`);
-            alert(result.data.message || `Game "${gameName}" has been approved.`); // Handle response message
+            alert(
+              result.data.message || `Game "${gameName}" has been approved.`
+            );
 
             // Optionally remove the game card from UI
             event.target.closest(".card-container").remove();
-        })
-        .catch((error) => {
+          })
+          .catch((error) => {
             console.error("Error approving game via Firebase Function:", error);
             alert(`Error approving game: ${error.message}`);
-        });
-}
+          });
+      }
+
       function handleDeleteClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
         const issue = prompt(`What was the issue with ${gameName}?`);
