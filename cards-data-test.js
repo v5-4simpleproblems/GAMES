@@ -1,5 +1,4 @@
 export default [
-      { href: './html/rolly vortex ball/index.html', imgSrc: 'rolly vortex ball.jpg', name: 'rolly vortex ball' , 'page': 3},
       { href: './html/rocket soccer durbey/index.html', imgSrc: 'rocket soccer durbey.jpg', name: 'rocket soccer durbey' , 'page': 3},
       { href: './html/rise of neon square/index.html', imgSrc: 'rise of neon square.jpg', name: 'rise of neon square' , 'page': 3},
       { href: './html/real garbage truck/index.html', imgSrc: 'real garbage truck.jpg', name: 'real garbage truck' , 'page': 3},
