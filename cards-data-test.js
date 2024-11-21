@@ -11,7 +11,6 @@ export default [
       { href: './html/penalty shooters 3/index.html', imgSrc: 'penalty shooters 3.jpg', name: 'penalty shooters 3' , 'page': 3},
       { href: './html/parking fury 3/index.html', imgSrc: 'parking fury 3.jpg', name: 'parking fury 3' , 'page': 3},
       { href: './html/park out/index.html', imgSrc: 'park out.jpg', name: 'park out' , 'page': 3},
-      { href: './html/pacman remake/index.html', imgSrc: 'pacman remake.png', name: 'pacman remake' , 'page': 3},
       { href: './html/stickbattle.lol/index.html', imgSrc: 'stickbattle.lol.jpg', name: 'stickbattle.lol' , 'page': 3},
       { href: './html/skyblock/index.html', imgSrc: 'skyblock.jpg', name: 'skyblock' , 'page': 3},
       { href: './html/save the doge/index.html', imgSrc: 'save the doge.jpg', name: 'save the doge' , 'page': 3},
