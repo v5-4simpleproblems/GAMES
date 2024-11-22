@@ -1,4 +1,5 @@
 export default [
+  { href: './html/cannon basketball 2/index.html', imgSrc: 'cannon basketball 2.jpg', name: 'cannon basketball 2' , 'page': 2},
   { href: './html/president simulator/index.html', imgSrc: 'president simulator.jpg', name: 'president simulator' , 'page': 3},
   { href: './html/sausage flipping/index.html', imgSrc: 'sausage flip.jpg', name: 'sausage flipping' , 'page': 3},
   { href: './html/pixel smash duel/index.html', imgSrc: 'pixel smash duel.jpg', name: 'pixel smash duel' , 'page': 3},
