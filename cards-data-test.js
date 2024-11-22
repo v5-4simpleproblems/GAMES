@@ -4,7 +4,6 @@ export default [
       { href: './html/push the box/index.html', imgSrc: 'push the box.jpg', name: 'push the box' , 'page': 3},
       { href: './html/president simulator/index.html', imgSrc: 'president simulator.jpg', name: 'president simulator' , 'page': 3},
       { href: './html/pou/index.html', imgSrc: 'pou.jpg', name: 'pou' , 'page': 3},
-      { href: './html/pixel smash duel/index.html', imgSrc: 'pixel smash duel.jpg', name: 'pixel smash duel' , 'page': 3},
       { href: './html/pixel gun apocalypse 2/index.html', imgSrc: 'pixel gun apocalypse 2.jpg', name: 'pixel gun apocalypse 2' , 'page': 3},
       { href: './html/penalty shooters 3/index.html', imgSrc: 'penalty shooters 3.jpg', name: 'penalty shooters 3' , 'page': 3},
       { href: './html/parking fury 3/index.html', imgSrc: 'parking fury 3.jpg', name: 'parking fury 3' , 'page': 3},
