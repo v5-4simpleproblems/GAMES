@@ -11,7 +11,6 @@ export default [
       { href: './html/stickbattle.lol/index.html', imgSrc: 'stickbattle.lol.jpg', name: 'stickbattle.lol' , 'page': 3},
       { href: './html/skyblock/index.html', imgSrc: 'skyblock.jpg', name: 'skyblock' , 'page': 3},
       { href: './html/save the doge/index.html', imgSrc: 'save the doge.jpg', name: 'save the doge' , 'page': 3},
-      { href: './html/sausage flipping/index.html', imgSrc: 'sausage flip.jpg', name: 'sausage flipping' , 'page': 3},
       { href: './html/roper/index.html', imgSrc: 'roper.jpg', name: 'roper' , 'page': 3},
       { href: './html/only up/index.html', imgSrc: 'only up.jpg', name: 'only up' , 'page': 3},
       { href: './html/snay.io/index.html', imgSrc: 'snay.io.jpg', name: 'snay.io' , 'page': 3},
