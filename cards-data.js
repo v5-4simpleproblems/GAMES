@@ -1,4 +1,5 @@
 export default [
+  { href: './html/skyblock/index.html', imgSrc: 'skyblock.jpg', name: 'skyblock' , 'page': 3},
   { href: './html/cannon basketball/index.html', imgSrc: 'cannon basketball.jpg', name: 'cannon basketball' , 'page': 2},
   { href: './html/cannon basketball 2/index.html', imgSrc: 'cannon basketball 2.jpg', name: 'cannon basketball 2' , 'page': 2},
   { href: './html/president simulator/index.html', imgSrc: 'president simulator.jpg', name: 'president simulator' , 'page': 3},
