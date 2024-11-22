@@ -1,4 +1,5 @@
 export default [
+  { href: './html/president simulator/index.html', imgSrc: 'president simulator.jpg', name: 'president simulator' , 'page': 3},
   { href: './html/sausage flipping/index.html', imgSrc: 'sausage flip.jpg', name: 'sausage flipping' , 'page': 3},
   { href: './html/pixel smash duel/index.html', imgSrc: 'pixel smash duel.jpg', name: 'pixel smash duel' , 'page': 3},
   { href: './html/rocket soccer durbey/index.html', imgSrc: 'rocket soccer durbey.jpg', name: 'rocket soccer durbey' , 'page': 3},
