@@ -1,4 +1,5 @@
 export default [
+  { href: './html/gobdun/index.html', imgSrc: 'gobdun.jpg', name: 'gobdun' , 'page': 3},
   { href: './html/money rush/index.html', imgSrc: 'money rush.jpg', name: 'money rush' , 'page': 3},
   { href: './html/ovo 3d/index.html', imgSrc: 'ovo 3d.jpg', name: 'ovo 3d' , 'page': 3},
   { href: './html/ragdoll hit/index.html', imgSrc: 'ragdoll hit.jpg', name: 'ragdoll hit' , 'page': 3},
