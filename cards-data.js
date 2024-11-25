@@ -297,7 +297,7 @@ export default [
 	{ href: "./html/a maniac/index.html", imgSrc: "a maniac.webp", name: "a maniac" , "page": 2},
 	{ href: "./html/pixelshooter/index.html", imgSrc: "pixelshooter.jpeg", name: "Pixel shooter" , "page": 2},
 	{ href: "./html/polytrack/index.html", imgSrc: "polytrack.jfif", name: "Poly track" , "page": 2},
-	{ href: "./html/retro bowl college/index.html", imgSrc: "retro bowl college.png", name: "retro bowl college" , "page": 2},
+	{ href: "./html/retro bowl college/game/index.html", imgSrc: "retro bowl college.png", name: "retro bowl college" , "page": 2},
 	{ href: "./html/jptragar/web/index.html", imgSrc: "agar.jpeg", name: "agar.io" , "page": 2},
 	{ href: "./html/giraffe/index.html", imgSrc: "giraffe.png", name: "giraffes volleyball" , "page": 2},
 	{ href: "./swf/duck life tresure hunt/index.html", imgSrc: "duck life tresure hunt.png", name: "duck life tresure hunt" , "page": 2},
