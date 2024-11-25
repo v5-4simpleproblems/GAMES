@@ -1,7 +1,6 @@
 export default [
       { href: './html/narwhale.io/index.html', imgSrc: 'narwhale.io.png', name: 'narwhale.io' , 'page': 3},
       { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3},
-      { href: './html/ovo 3d/index.html', imgSrc: 'ovo 3d.jpg', name: 'ovo 3d' , 'page': 3},
       { href: './html/mutazone/index.html', imgSrc: 'mutazone.jpg', name: 'mutazone' , 'page': 3},
       { href: './html/moto maniac 3/index.html', imgSrc: 'moto maniac 3.jpg', name: 'moto maniac 3' , 'page': 3},
       { href: './html/money rush/index.html', imgSrc: 'money rush.jpg', name: 'money rush' , 'page': 3},
