@@ -9,7 +9,6 @@ export default [
       { href: './html/idle restaurants tycoon/index.html', imgSrc: 'idle restaurants tycoon.jpg', name: 'idle restaurants tycoon' , 'page': 3},
       { href: './html/hexanaut.io/index.html', imgSrc: 'hexanaut.io.jpg', name: 'hexanaut.io' , 'page': 3},
       { href: './html/hanger 2/index.html', imgSrc: 'hanger 2.jpg', name: 'hanger 2' , 'page': 3},
-      { href: './html/hanger/index.html', imgSrc: 'hanger.jpg', name: 'hanger' , 'page': 3},
       { href: './html/free kick classic/index.html', imgSrc: 'free kick classic.jpg', name: 'free kick classic' , 'page': 3},
       { href: './html/rise of neon square/index.html', imgSrc: 'rise of neon square.jpg', name: 'rise of neon square' , 'page': 3},
       { href: './html/real garbage truck/index.html', imgSrc: 'real garbage truck.jpg', name: 'real garbage truck' , 'page': 3},
