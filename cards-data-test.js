@@ -3,7 +3,6 @@ export default [
       { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3},
       { href: './html/mutazone/index.html', imgSrc: 'mutazone.jpg', name: 'mutazone' , 'page': 3},
       { href: './html/moto maniac 3/index.html', imgSrc: 'moto maniac 3.jpg', name: 'moto maniac 3' , 'page': 3},
-      { href: './html/money rush/index.html', imgSrc: 'money rush.jpg', name: 'money rush' , 'page': 3},
       { href: './html/minecraft case simulator/index.html', imgSrc: 'minecraft case simulator.jpg', name: 'minecraft case simulator' , 'page': 3},
       { href: './html/lolbeans.io/index.html', imgSrc: 'lolbeans.io.jpg', name: 'lolbeans.io' , 'page': 3},
       { href: './html/jungle td/index.html', imgSrc: 'jungle td.jpg', name: 'jungle td' , 'page': 3},
