@@ -1,4 +1,5 @@
 export default [
+  { href: './html/little alchemy 2/index.html', imgSrc: 'little alchemy 2.jpg', name: 'little alchemy 2' , 'page': 3},
   { href: './html/hanger/index.html', imgSrc: 'hanger.jpg', name: 'hanger' , 'page': 3},
   { href: './html/get on top/index.html', imgSrc: 'get on top.jpg', name: 'get on top' , 'page': 3},
   { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3},
