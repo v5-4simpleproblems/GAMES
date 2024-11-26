@@ -1,4 +1,5 @@
 export default [
+      { href: './html/little alchemy 2/index.html', imgSrc: 'little alchemy 2.jpg', name: 'little alchemy 2' , 'page': 3},
       { href: './html/narwhale.io/index.html', imgSrc: 'narwhale.io.png', name: 'narwhale.io' , 'page': 3},
       { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3},
       { href: './html/ovo 3d/index.html', imgSrc: 'ovo 3d.jpg', name: 'ovo 3d' , 'page': 3},
