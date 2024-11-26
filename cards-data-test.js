@@ -1,5 +1,4 @@
 export default [
-      { href: './html/little alchemy 2/index.html', imgSrc: 'little alchemy 2.jpg', name: 'little alchemy 2' , 'page': 3},
       { href: './html/narwhale.io/index.html', imgSrc: 'narwhale.io.png', name: 'narwhale.io' , 'page': 3},
       { href: './html/minecraft case simulator/index.html', imgSrc: 'minecraft case simulator.jpg', name: 'minecraft case simulator' , 'page': 3},
       { href: './html/lolbeans.io/index.html', imgSrc: 'lolbeans.io.jpg', name: 'lolbeans.io' , 'page': 3},
