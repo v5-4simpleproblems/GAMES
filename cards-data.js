@@ -375,7 +375,6 @@ export default [
 	{ href: "./html/beam/index.html", imgSrc: "beam.png", name: "Beam" },
 	{ href: "./html/a grim love tale/index.html", imgSrc: "a grim love tale.jpg", name: "A Grim Love Tale" },
 	{ href: "./html/a grim chase/index.html", imgSrc: "a grim chase.jpg", name: "A Grim Chase" },
-	{ href: "./html/babel tower/index.html", imgSrc: "Babel tower.avif", name: "Babel Tower" },
 	{ href: "./html/tavern master/index.html", imgSrc: "tavern master.png", name: "Tavern Master" },
 	{ href: "./html/green/index.html", imgSrc: "green.png", name: "Green" },
 	{ href: "./swf/stealing the diamond/base.html", imgSrc: "stealing the diamond.jpg", name: "Stealing the Diamond" },
