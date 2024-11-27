@@ -23,4 +23,7 @@ export const siteMapping = {
   "mathcord.com": ["https://mathcord.com/strongdog2", "https://mathcord.com/strongdog3"],
   "mathcord.com/strongdog2": ["mathcord.com", "https://mathcord.com/strongdog3"],
   "mathcord.com/strongdog3": ["mathcord.com", "https://mathcord.com/strongdog2"],
+  "strongdogxp.github.io": ["https://strongdogxp.github.io/strongdog2", "https://strongdogxp.github.io/strongdog3"],
+  "strongdogxp.github.io/strongdog2": ["https://strongdogxp.github.io", "https://strongdogxp.github.io/strongdog3"],
+  "strongdogxp.github.io/strongdog3": ["https://strongdogxp.github.io", "https://strongdogxp.github.io/strongdog2"],
 };

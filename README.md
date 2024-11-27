@@ -12,3 +12,4 @@
 * https://strongdog-1.vercel.app
 * https://mathcord.com
 * https://strongdog.com
+* https://strongdogxp.github.io
