@@ -1,4 +1,5 @@
 export default [
+  { href: './html/minecraft case simulator/index.html', imgSrc: 'minecraft case simulator.jpg', name: 'minecraft case simulator' , 'page': 3},
   { href: './html/roper/index.html', imgSrc: 'roper.jpg', name: 'roper' , 'page': 3},
   { href: './html/bit planes/index.html', imgSrc: 'bit planes.jpg', name: 'bit planes' , 'page': 3},
   { href: './html/idle tree city/index.html', imgSrc: 'idle tree city.jpg', name: 'idle tree city' , 'page': 3},
