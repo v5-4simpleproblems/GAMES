@@ -1,6 +1,5 @@
 export default [
       { href: './html/narwhale.io/index.html', imgSrc: 'narwhale.io.png', name: 'narwhale.io' , 'page': 3},
-      { href: './html/minecraft case simulator/index.html', imgSrc: 'minecraft case simulator.jpg', name: 'minecraft case simulator' , 'page': 3},
       { href: './html/lolbeans.io/index.html', imgSrc: 'lolbeans.io.jpg', name: 'lolbeans.io' , 'page': 3},
       { href: './html/jungle td/index.html', imgSrc: 'jungle td.jpg', name: 'jungle td' , 'page': 3},
       { href: './html/jewels blitz 2/index.html', imgSrc: 'jewels blitz 2.jpg', name: 'jewels blitz 2' , 'page': 3},
