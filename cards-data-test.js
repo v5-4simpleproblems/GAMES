@@ -3,7 +3,6 @@ export default [
       { href: './html/lolbeans.io/index.html', imgSrc: 'lolbeans.io.jpg', name: 'lolbeans.io' , 'page': 3},
       { href: './html/jungle td/index.html', imgSrc: 'jungle td.jpg', name: 'jungle td' , 'page': 3},
       { href: './html/jewels blitz 2/index.html', imgSrc: 'jewels blitz 2.jpg', name: 'jewels blitz 2' , 'page': 3},
-      { href: './html/infinite soccer/index.html', imgSrc: 'infinite soccer.jpg', name: 'infinite soccer' , 'page': 3},
       { href: './html/idle restaurants tycoon/index.html', imgSrc: 'idle restaurants tycoon.jpg', name: 'idle restaurants tycoon' , 'page': 3},
       { href: './html/hexanaut.io/index.html', imgSrc: 'hexanaut.io.jpg', name: 'hexanaut.io' , 'page': 3},
       { href: './html/hanger 2/index.html', imgSrc: 'hanger 2.jpg', name: 'hanger 2' , 'page': 3},
