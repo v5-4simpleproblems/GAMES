@@ -1,4 +1,5 @@
 export default [
+  { href: './html/infinite soccer/index.html', imgSrc: 'infinite soccer.jpg', name: 'infinite soccer' , 'page': 3},
   { href: './html/save the doge/index.html', imgSrc: 'save the doge.jpg', name: 'save the doge' , 'page': 3},
   { href: './html/rise of neon square/index.html', imgSrc: 'rise of neon square.jpg', name: 'rise of neon square' , 'page': 3},
   { href: './html/b-side/index.html', imgSrc: 'b-side.jpg', name: 'b-side' , 'page': 2},
