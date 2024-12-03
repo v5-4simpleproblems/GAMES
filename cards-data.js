@@ -1,4 +1,5 @@
 export default [
+  { href: './html/save the doge/index.html', imgSrc: 'save the doge.jpg', name: 'save the doge' , 'page': 3},
   { href: './html/rise of neon square/index.html', imgSrc: 'rise of neon square.jpg', name: 'rise of neon square' , 'page': 3},
   { href: './html/b-side/index.html', imgSrc: 'b-side.jpg', name: 'b-side' , 'page': 2},
   { href: './html/baw/index.html', imgSrc: 'baw.jpg', name: 'baw' , 'page': 2},
