@@ -1,4 +1,5 @@
 export default [
+  { href: './html/idle restaurants tycoon/index.html', imgSrc: 'idle restaurants tycoon.jpg', name: 'idle restaurants tycoon' , 'page': 3},
   { href: './html/jewels blitz 2/index.html', imgSrc: 'jewels blitz 2.jpg', name: 'jewels blitz 2' , 'page': 3},
   { href: './html/infinite soccer/index.html', imgSrc: 'infinite soccer.jpg', name: 'infinite soccer' , 'page': 3},
   { href: './html/save the doge/index.html', imgSrc: 'save the doge.jpg', name: 'save the doge' , 'page': 3},
