@@ -1,4 +1,5 @@
 export default [
+  { href: './html/baw/index.html', imgSrc: 'baw.jpg', name: 'baw' , 'page': 2},
   { href: './html/pixel gun apocalypse 2/index.html', imgSrc: 'pixel gun apocalypse 2.jpg', name: 'pixel gun apocalypse 2' , 'page': 3},
   { href: './html/minecraft case simulator/index.html', imgSrc: 'minecraft case simulator.jpg', name: 'minecraft case simulator' , 'page': 3},
   { href: './html/roper/index.html', imgSrc: 'roper.jpg', name: 'roper' , 'page': 3},
