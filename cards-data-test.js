@@ -12,7 +12,6 @@ export default [
       { href: './html/real garbage truck/index.html', imgSrc: 'real garbage truck.jpg', name: 'real garbage truck' , 'page': 3},
       { href: './html/push the box/index.html', imgSrc: 'push the box.jpg', name: 'push the box' , 'page': 3},
       { href: './html/pou/index.html', imgSrc: 'pou.jpg', name: 'pou' , 'page': 3},
-      { href: './html/pixel gun apocalypse 2/index.html', imgSrc: 'pixel gun apocalypse 2.jpg', name: 'pixel gun apocalypse 2' , 'page': 3},
       { href: './html/penalty shooters 3/index.html', imgSrc: 'penalty shooters 3.jpg', name: 'penalty shooters 3' , 'page': 3},
       { href: './html/parking fury 3/index.html', imgSrc: 'parking fury 3.jpg', name: 'parking fury 3' , 'page': 3},
       { href: './html/park out/index.html', imgSrc: 'park out.jpg', name: 'park out' , 'page': 3},
