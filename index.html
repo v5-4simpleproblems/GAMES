@@ -67,7 +67,8 @@
 
       function setDataInObject(dataObj) {
         Object.entries(dataObj).forEach(([key, value]) => {
-          localStorage.setItem(key, JSON.stringify(value));
+          const finalValue = typeof value === "string" ? value : JSON.stringify(value);
+          localStorage.setItem(key, finalValue);
         });
       }
 
