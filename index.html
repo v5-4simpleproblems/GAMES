@@ -46,7 +46,7 @@
         try {
           return JSON.parse(item); // Attempt to parse as JSON
         } catch (error) {
-          console.warn(`Invalid JSON for key-value: ${key} : ${item} => ${error}`);
+          console.warn(`Invalid JSON for key: ${key} Error message: ${error}`);
           return item; // Return raw string if not JSON
         }
       };
@@ -78,7 +78,7 @@
 
 			function getAndBundleDataIntoObj(keysArr) {
 				const dataObj = Object.fromEntries(keysArr.map(key => [key, getParsedItem(key)]));
-				if (!validateData(dataObj)) alert("Your data was copied, but some could not be retrieved. Please ensure all required keys of your game sava data you're trying to transfer are present in localStorage and try again.\n\nIf this issue persists, report the error to the bug report form or message us on Discord.");
+				if (!validateData(dataObj)) alert("(If you retrieved Polytrack saves this isn't a problem, please move on)\n\nYour save data will be copied, but some could not be retrieved which may cause problems importing this data. Please ensure all required keys of your game sava data you're trying to transfer are present in localStorage and try again.\n\nIf this issue persists, report the error to the bug report form or message us on Discord.");
         return JSON.stringify(dataObj);
 			}
 
