@@ -41,7 +41,15 @@
 			// FUNCTIONS //
 
 			// Function to parse retrieved content given its key
-			const getParsedItem = key => JSON.parse(localStorage.getItem(key));
+			function getParsedItem(key) {
+        const item = localStorage.getItem(key);
+        try {
+          return JSON.parse(item); // Attempt to parse as JSON
+        } catch (error) {
+          console.warn(`Invalid JSON for key-value: ${key} : ${item} => ${error}`);
+          return item; // Return raw string if not JSON
+        }
+      };
 
 			function copyText(text) {
 				// Make sure document body is focued before attempting to add text to clipboard
