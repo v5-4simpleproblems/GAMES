@@ -37,6 +37,14 @@
       const idleSharkKey = ["sharkGameSave"];
       // Cookie Clicker key
       const cookieClickerKey = ["CookieClickerGame"];
+      // Bad egg key
+      const badEggKeys = [
+        "vms--u",
+        "vms--logger-settings",
+        "vms--reload-manager-enabled",
+        "vms--mod-geo",
+        "vms--vm-abd",
+      ];
 
       // FUNCTIONS //
 
@@ -107,6 +115,7 @@
               <h2>Use these buttons to copy your save data from this page (just strongdog.netlify.app currently) to transfer it over to another StrongDogXP page:</h2>
               <button id="get-polytrack-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Polytrack Save Data</button>
               <button id="get-cookie-clicker-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Cookie Clicker Save Data</button>
+              <button id="get-bad-egg-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Bad egg Save Data</button>
               <button id="get-babel-tower-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Babel Tower Save Data</button>
               <button id="get-idle-shark-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Idle Shark Save Data</button>
               <p>If you cannot figure out how to use these buttons or they simply don't work, report an error in the <a href="./about.html" target="_blank" style="color: deepskyblue">bug report form</a> or message us on Discord.</p>
@@ -118,6 +127,7 @@
 
           const getPolytrackDataBtn = document.getElementById("get-polytrack-data");
           const getCookieClickerDataBtn = document.getElementById("get-cookie-clicker-data");
+          const getBadEggDataBtn = document.getElementById("get-bad-egg-data");
           const getBabelTowerDataBtn = document.getElementById("get-babel-tower-data");
           const getIdleSharkDataBtn = document.getElementById("get-idle-shark-data");
 
@@ -125,6 +135,8 @@
           getPolytrackDataBtn.addEventListener("click", () => getDataAndCopy(polytrackKeys));
           // Get cookie clicker data
           getCookieClickerDataBtn.addEventListener("click", () => getDataAndCopy(cookieClickerKey));
+          // Get bad egg data
+          getBadEggDataBtn.addEventListener("click", () => getDataAndCopy(badEggKeys));
           // Get babel tower data
           getBabelTowerDataBtn.addEventListener("click", () => getDataAndCopy(babelTowerKeys));
           // Get idle shark data
