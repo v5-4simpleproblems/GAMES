@@ -75,8 +75,10 @@
 
       function setDataInObject(dataObj) {
         Object.entries(dataObj).forEach(([key, value]) => {
-          const finalValue = typeof value === "string" ? value : JSON.stringify(value);
-          localStorage.setItem(key, finalValue);
+          if (value !== null) {
+            const finalValue = typeof value === "string" ? value : JSON.stringify(value);
+            localStorage.setItem(key, finalValue);
+          }
         });
       }
 
@@ -145,16 +147,34 @@
           // Importing user's save data
           const importSaveDataBtn = document.getElementById("import-save-data-btn");
           importSaveDataBtn.addEventListener("click", () => {
-            alert(
-              'After you dismiss this browser alert message, there may be a pop-up asking you to allow this page to "see text copied to the clipboard".\n\nTo be able to transfer your save data and continue, you MUST click ALLOW.'
+            const confirmMessage = confirm(
+              `IMPORTANT: note that by confirming this message, you will REWRITE ALL current save data (only on this page) for the game you chose to transfer the data from. If you have records on this page that you don't want to be overridden by records on the site you're transferring data from, cancel this message.\n\nAfter you dismiss this browser alert message, there may be a pop-up asking you to allow this page to "see text copied to the clipboard".\n\nTo be able to transfer your save data and continue, you MUST click ALLOW.`
             );
+            if (!confirmMessage) return;
             navigator.clipboard
               .readText()
               .then(text => {
-                const parsedData = JSON.parse(text);
+                if (!text) {
+                  throw new Error("Clipboard is empty. Please copy the data to the clipboard and try again.");
+                }
+
+                let parsedData;
+                try {
+                  parsedData = JSON.parse(text);
+                } catch (err) {
+                  throw new Error(
+                    "Failed to parse clipboard content as JSON. Ensure the data is in valid JSON format."
+                  );
+                }
+
+                if (typeof parsedData !== "object") {
+                  throw new Error("Invalid data format. The clipboard content must be a JSON object.");
+                }
+
                 setDataInObject(parsedData);
+                alert("Your data was successfully transferred! If there are any issues, please contact support.");
               })
-              .catch(err => alert(`Failed to read clipboard contents, check permissions: ${err}`));
+              .catch(err => alert(`Failed to read clipboard contents: ${err}`));
           });
         }
       });
