@@ -67,8 +67,10 @@
 
       function setDataInObject(dataObj) {
         Object.entries(dataObj).forEach(([key, value]) => {
-          const finalValue = typeof value === "string" ? value : JSON.stringify(value);
-          localStorage.setItem(key, finalValue);
+          if (value !== null) {
+            const finalValue = typeof value === "string" ? value : JSON.stringify(value);
+            localStorage.setItem(key, finalValue);
+          }
         });
       }
 
@@ -141,6 +143,7 @@
               .then(text => {
                 const parsedData = JSON.parse(text);
                 setDataInObject(parsedData);
+                alert("Your data was successfully transfered! If the results are unwanted, please message us on Discord or send a bug on the bug report form!");
               })
               .catch(err => alert(`Failed to read clipboard contents, check permissions: ${err}`));
           });
