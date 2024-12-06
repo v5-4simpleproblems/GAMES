@@ -12,7 +12,6 @@ export default [
       { href: './html/coco monkey/game/index.html', imgSrc: 'coco monkey.jpg', name: 'coco monkey' , 'page': 2},
       { href: './html/chicken hike/index.html', imgSrc: 'chicken hike.jpg', name: 'chicken hike' , 'page': 2},
       { href: './html/beavus/index.html', imgSrc: 'beavus.jpg', name: 'beavus' , 'page': 2},
-      { href: './html/ARROW/index.html', imgSrc: 'ARROW.jpg', name: 'ARROW' , 'page': 2},
       { href: './html/antiban/index.html', imgSrc: 'antiban.png', name: 'antiban' , 'page': 2},
       { href: './html/Blocco/index.html', imgSrc: 'blocco.jpg', name: 'Blocco' , 'page': 2},
 ];
