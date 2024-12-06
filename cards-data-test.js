@@ -4,7 +4,6 @@ export default [
       { href: './html/jungle td/index.html', imgSrc: 'jungle td.jpg', name: 'jungle td' , 'page': 3},
       { href: './html/hexanaut.io/index.html', imgSrc: 'hexanaut.io.jpg', name: 'hexanaut.io' , 'page': 3},
       { href: './html/hanger 2/index.html', imgSrc: 'hanger 2.jpg', name: 'hanger 2' , 'page': 3},
-      { href: './html/pou/index.html', imgSrc: 'pou.jpg', name: 'pou' , 'page': 3},
       { href: './html/penalty shooters 3/index.html', imgSrc: 'penalty shooters 3.jpg', name: 'penalty shooters 3' , 'page': 3},
       { href: './html/parking fury 3/index.html', imgSrc: 'parking fury 3.jpg', name: 'parking fury 3' , 'page': 3},
       { href: './html/park out/index.html', imgSrc: 'park out.jpg', name: 'park out' , 'page': 3},
