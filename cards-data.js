@@ -1,4 +1,5 @@
 export default [
+  { href: './html/real garbage truck/index.html', imgSrc: 'real garbage truck.jpg', name: 'real garbage truck' , 'page': 3},
   { href: './html/free kick classic/index.html', imgSrc: 'free kick classic.jpg', name: 'free kick classic' , 'page': 3},
   { href: './html/idle restaurants tycoon/index.html', imgSrc: 'idle restaurants tycoon.jpg', name: 'idle restaurants tycoon' , 'page': 3},
   { href: './html/jewels blitz 2/index.html', imgSrc: 'jewels blitz 2.jpg', name: 'jewels blitz 2' , 'page': 3},
