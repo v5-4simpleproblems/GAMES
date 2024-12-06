@@ -1,4 +1,5 @@
 export default [
+  { href: './html/assembloid/index.html', imgSrc: 'assembloid.png', name: 'assembloid' , 'page': 2},
   { href: './html/cherry on the ice cream/index.html', imgSrc: 'cherry on the ice cream.jpg', name: 'cherry on the ice cream' , 'page': 2},
   { href: './html/cities of babylon/index.html', imgSrc: 'cities of babylon.jpg', name: 'cities of babylon' , 'page': 2},
   { href: './html/tower defense 2d/index.html', imgSrc: 'tower defense 2d.jpg', name: 'tower defense 2d' , 'page': 2},
