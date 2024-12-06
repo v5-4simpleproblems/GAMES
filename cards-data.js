@@ -1,4 +1,5 @@
 export default [
+  { href: './html/tower defense 2d/index.html', imgSrc: 'tower defense 2d.jpg', name: 'tower defense 2d' , 'page': 2},
   { href: './html/small world cup/index.html', imgSrc: 'small world cup.jpg', name: 'small world cup' , 'page': 3},
   { href: './html/parking fury 3/index.html', imgSrc: 'parking fury 3.jpg', name: 'parking fury 3' , 'page': 3},
   { href: './html/penalty shooters 3/index.html', imgSrc: 'penalty shooters 3.jpg', name: 'penalty shooters 3' , 'page': 3},
