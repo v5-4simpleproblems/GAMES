@@ -10,7 +10,6 @@ export default [
       { href: './html/snay.io/index.html', imgSrc: 'snay.io.jpg', name: 'snay.io' , 'page': 3},
       { href: './html/tricksplit.io/index.html', imgSrc: 'tricksplit.io.jpg', name: 'tricksplit.io' , 'page': 2},
       { href: './html/coco monkey/game/index.html', imgSrc: 'coco monkey.jpg', name: 'coco monkey' , 'page': 2},
-      { href: './html/cities of babylon/index.html', imgSrc: 'cities of babylon.jpg', name: 'cities of babylon' , 'page': 2},
       { href: './html/chicken hike/index.html', imgSrc: 'chicken hike.jpg', name: 'chicken hike' , 'page': 2},
       { href: './html/cherry on the ice cream/index.html', imgSrc: 'cherry on the ice cream.jpg', name: 'cherry on the ice cream' , 'page': 2},
       { href: './html/beavus/index.html', imgSrc: 'beavus.jpg', name: 'beavus' , 'page': 2},
