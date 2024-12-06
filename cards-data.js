@@ -1,4 +1,5 @@
 export default [
+  { href: './html/parking fury 3/index.html', imgSrc: 'parking fury 3.jpg', name: 'parking fury 3' , 'page': 3},
   { href: './html/penalty shooters 3/index.html', imgSrc: 'penalty shooters 3.jpg', name: 'penalty shooters 3' , 'page': 3},
   { href: './html/pou/index.html', imgSrc: 'pou.jpg', name: 'pou' , 'page': 3},
   { href: './html/push the box/index.html', imgSrc: 'push the box.jpg', name: 'push the box' , 'page': 3},
