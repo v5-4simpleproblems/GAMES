@@ -9,7 +9,6 @@ export default [
       { href: './html/only up/index.html', imgSrc: 'only up.jpg', name: 'only up' , 'page': 3},
       { href: './html/snay.io/index.html', imgSrc: 'snay.io.jpg', name: 'snay.io' , 'page': 3},
       { href: './html/tricksplit.io/index.html', imgSrc: 'tricksplit.io.jpg', name: 'tricksplit.io' , 'page': 2},
-      { href: './html/tower defense 2d/index.html', imgSrc: 'tower defense 2d.jpg', name: 'tower defense 2d' , 'page': 2},
       { href: './html/coco monkey/game/index.html', imgSrc: 'coco monkey.jpg', name: 'coco monkey' , 'page': 2},
       { href: './html/cities of babylon/index.html', imgSrc: 'cities of babylon.jpg', name: 'cities of babylon' , 'page': 2},
       { href: './html/chicken hike/index.html', imgSrc: 'chicken hike.jpg', name: 'chicken hike' , 'page': 2},
