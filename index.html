@@ -54,7 +54,9 @@
         navigator.clipboard
           .writeText(text)
           .then(() => showTransferInstructions())
-          .catch(err => alert(`Error: failed to copy your save data: ${err}`));
+          .catch((err) =>
+            alert(`Error: failed to copy your save data: ${err}`)
+          );
       }
 
       function showTransferInstructions() {
@@ -66,18 +68,21 @@
       function setDataInObject(dataObj) {
         Object.entries(dataObj).forEach(([key, value]) => {
           if (value !== null) {
-            const finalValue = typeof value === "string" ? value : JSON.stringify(value);
+            const finalValue =
+              typeof value === "string" ? value : JSON.stringify(value);
             localStorage.setItem(key, finalValue);
           }
         });
       }
 
       function validateData(dataObj) {
-        return Object.values(dataObj).every(value => value !== null);
+        return Object.values(dataObj).every((value) => value !== null);
       }
 
       function getAndBundleDataIntoObj(keysArr) {
-        const dataObj = Object.fromEntries(keysArr.map(key => [key, getParsedItem(key)]));
+        const dataObj = Object.fromEntries(
+          keysArr.map((key) => [key, getParsedItem(key)])
+        );
         if (!validateData(dataObj))
           alert(
             "(If you retrieved Polytrack saves this isn't a problem, please move on)\n\nYour save data will be copied, but some could not be retrieved which may cause problems importing this data. Please ensure all required keys of your game save data are present in localStorage and try again.\n\nIf this issue persists, report the error to the bug report form or message us on Discord."
@@ -109,21 +114,41 @@
               <h2><strong>DON'T FORGET TO SET NEW BOOKMARKS! THIS PAGE WILL BE GOING DOWN SOON!</strong></h2>
             </div>
           `;
-          document.body.style = "height: 100vh; margin: 0; display: grid; place-items: center;";
+          document.body.style =
+            "height: 100vh; margin: 0; display: grid; place-items: center;";
 
-          const getPolytrackDataBtn = document.getElementById("get-polytrack-data");
-          const getCookieClickerDataBtn = document.getElementById("get-cookie-clicker-data");
+          const getPolytrackDataBtn =
+            document.getElementById("get-polytrack-data");
+          const getCookieClickerDataBtn = document.getElementById(
+            "get-cookie-clicker-data"
+          );
           const getBadEggDataBtn = document.getElementById("get-bad-egg-data");
-          const getBabelTowerDataBtn = document.getElementById("get-babel-tower-data");
-          const getIdleSharkDataBtn = document.getElementById("get-idle-shark-data");
+          const getBabelTowerDataBtn = document.getElementById(
+            "get-babel-tower-data"
+          );
+          const getIdleSharkDataBtn = document.getElementById(
+            "get-idle-shark-data"
+          );
 
-          getPolytrackDataBtn.addEventListener("click", () => getDataAndCopy(polytrackKeys));
-          getCookieClickerDataBtn.addEventListener("click", () => getDataAndCopy(cookieClickerKey));
-          getBadEggDataBtn.addEventListener("click", () => getDataAndCopy(badEggKeys));
-          getBabelTowerDataBtn.addEventListener("click", () => getDataAndCopy(babelTowerKeys));
-          getIdleSharkDataBtn.addEventListener("click", () => getDataAndCopy(idleSharkKey));
+          getPolytrackDataBtn.addEventListener("click", () =>
+            getDataAndCopy(polytrackKeys)
+          );
+          getCookieClickerDataBtn.addEventListener("click", () =>
+            getDataAndCopy(cookieClickerKey)
+          );
+          getBadEggDataBtn.addEventListener("click", () =>
+            getDataAndCopy(badEggKeys)
+          );
+          getBabelTowerDataBtn.addEventListener("click", () =>
+            getDataAndCopy(babelTowerKeys)
+          );
+          getIdleSharkDataBtn.addEventListener("click", () =>
+            getDataAndCopy(idleSharkKey)
+          );
         } else {
-          const importSaveDataBtn = document.getElementById("import-save-data-btn");
+          const importSaveDataBtn = document.getElementById(
+            "import-save-data-btn"
+          );
           importSaveDataBtn.addEventListener("click", () => {
             const confirmMessage = confirm(
               `IMPORTANT: note that by confirming this message, you will REWRITE ALL current save data (only on this page) for the game you chose to transfer the data from. If you have records on this page that you don't want to be overridden by records on the site you're transferring data from, cancel this message.\n\nAfter you dismiss this browser alert message, there may be a pop-up asking you to allow this page to "see text copied to the clipboard".\n\nTo be able to transfer your save data and continue, you MUST click ALLOW.`
@@ -131,26 +156,36 @@
             if (!confirmMessage) return;
             navigator.clipboard
               .readText()
-              .then(text => {
+              .then((text) => {
                 if (!text) {
-                  throw new Error("Clipboard is empty. Please copy the data to the clipboard and try again.");
+                  throw new Error(
+                    "Clipboard is empty. Please copy the data to the clipboard and try again."
+                  );
                 }
 
                 let parsedData;
                 try {
                   parsedData = JSON.parse(text);
                 } catch (err) {
-                  throw new Error("Failed to parse clipboard content as JSON. Ensure the data is in valid JSON format.");
+                  throw new Error(
+                    "Failed to parse clipboard content as JSON. Ensure the data is in valid JSON format."
+                  );
                 }
 
                 if (typeof parsedData !== "object") {
-                  throw new Error("Invalid data format. The clipboard content must be a JSON object.");
+                  throw new Error(
+                    "Invalid data format. The clipboard content must be a JSON object."
+                  );
                 }
 
                 setDataInObject(parsedData);
-                alert("Your data was successfully transferred! If there are any issues, please contact support.");
+                alert(
+                  "Your data was successfully transferred! If there are any issues, please contact support."
+                );
               })
-              .catch(err => alert(`Failed to read clipboard contents: ${err}`));
+              .catch((err) =>
+                alert(`Failed to read clipboard contents: ${err}`)
+              );
           });
         }
       });
@@ -189,7 +224,7 @@
           pageNumberToURL[currentPageNumber] = currentSiteKey;
 
           if (currentSitePages) {
-            currentSitePages.forEach(url => {
+            currentSitePages.forEach((url) => {
               const pageNum = getPageNumberFromURL(url);
               pageNumberToURL[pageNum] = url;
             });
@@ -232,16 +267,22 @@
       }
 
       function getCardHTML(gameObject) {
-        const { href, imgSrc, name, page } = gameObject;
-        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
-        const gameId = normalizeGameName(name);
-        return `
-          <a href="${adjustedHref}" class="card" data-game-id="${gameId}" data-page="${page}">
-            <img src="${adjustedImgSrc}">
-            <figcaption>${name}</figcaption>
-          </a>
-        `;
-      }
+    const { href, imgSrc, name, page } = gameObject;
+    const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+      href,
+      imgSrc,
+      page
+    ); // Use original logic for image paths
+    const gameLink = `./play/?id=${gameObject.id}`; // Adjusted to use game ID
+    const normalizedName = normalizeGameName(name); // Normalize the game name
+    return `
+    <a href="${gameLink}" class="card" data-game-id="${normalizedName}" data-page="${page}">
+        <img src="${adjustedImgSrc}" alt="${name}">
+        <figcaption>${name}</figcaption>
+    </a>
+`;
+}
+
 
       let cardsHTMLArr = [];
       for (let i = 0; i < games.length; ++i) {
@@ -257,7 +298,9 @@
         const searchResults = document.getElementById("searchResults");
 
         if (!searchInput || !searchResults) {
-          console.error("Search input or results container not found in the DOM.");
+          console.error(
+            "Search input or results container not found in the DOM."
+          );
           return;
         }
 
@@ -268,14 +311,19 @@
         searchInput.addEventListener("input", updateSearchResults);
 
         document.addEventListener("click", function (event) {
-          if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+          if (
+            !searchInput.contains(event.target) &&
+            !searchResults.contains(event.target)
+          ) {
             searchResults.style.display = "none";
           }
         });
 
         function updateSearchResults() {
           const searchText = searchInput.value.toLowerCase();
-          const filteredGames = games.filter(game => game.name.toLowerCase().includes(searchText)).slice(0, 7);
+          const filteredGames = games
+            .filter((game) => game.name.toLowerCase().includes(searchText))
+            .slice(0, 7);
 
           searchResults.innerHTML = "";
           if (filteredGames.length === 0) {
@@ -283,15 +331,17 @@
             return;
           }
 
-          filteredGames.forEach(game => {
-            const { href, imgSrc, name, page } = game;
-            const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
+          filteredGames.forEach((game) => {
+            const { id, imgSrc, name } = game;
+            const adjustedHref = `./play/?id=${id}`;
+            const adjustedImgSrc = `./img/${imgSrc}`;
+
             const resultLink = document.createElement("a");
             resultLink.href = adjustedHref;
             resultLink.innerHTML = `
-              <img src="${adjustedImgSrc}" alt="${name}">
-              <span>${name}</span>
-            `;
+            <img src="${adjustedImgSrc}" alt="${name}">
+            <span>${name}</span>
+        `;
             searchResults.appendChild(resultLink);
           });
 
@@ -363,13 +413,15 @@
           fetch(targetUrl, {
             method: "GET",
           })
-            .then(response => {
+            .then((response) => {
               if (!response.ok) {
-                throw new Error("Network response was not ok " + response.statusText);
+                throw new Error(
+                  "Network response was not ok " + response.statusText
+                );
               }
               return response.json();
             })
-            .then(data => {
+            .then((data) => {
               if (data && data.content) {
                 const parsedData = JSON.parse(data.content);
                 console.log("Parsed data:", parsedData);
@@ -378,42 +430,48 @@
                 console.error("Invalid data format", data);
               }
             })
-            .catch(error => console.error("Error:", error))
+            .catch((error) => console.error("Error:", error))
             .finally(() => {
               loadingContainerEl.style.display = "none";
             });
         }
-
         function displayTopGames(games) {
-          if (!topGameList) {
-            console.error("Required element not found.");
-            return;
-          }
-          topGameList.innerHTML = "";
+    const topGameList = document.getElementById("topGameList");
+    if (!topGameList) {
+        console.error("Required element not found.");
+        return;
+    }
 
-          games.slice(1).forEach(game => {
-            const gameName = game[0];
-            const matchingCard = findMatchingCard(gameName);
-            if (matchingCard) {
-              topGameList.appendChild(matchingCard.cloneNode(true));
-            } else {
-              console.warn(`No matching card found for game: ${gameName}`);
-            }
-          });
+    topGameList.innerHTML = ""; // Clear existing content
+
+    games.slice(1).forEach((game) => {
+        const gameName = game[0]; // Get game name from Top 10 data
+        const matchingCard = findMatchingCard(gameName); // Find the matching card
+        if (matchingCard) {
+            topGameList.appendChild(matchingCard.cloneNode(true)); // Append a clone of the card
+        } else {
+            console.warn(`No matching card found for game: ${gameName}`);
         }
+    });
+}
 
         function findMatchingCard(gameName) {
-          const formattedGameName = normalizeGameName(gameName);
-          const cards = document.querySelectorAll("#allGameList .card");
-          for (let card of cards) {
-            const cardGameId = card.getAttribute("data-game-id");
-            if (cardGameId === formattedGameName) {
-              return card;
-            }
-          }
-          console.warn(`Card not found for game: ${gameName} (ID: ${formattedGameName})`);
-          return null;
+    const formattedGameName = normalizeGameName(gameName); // Normalize the gameName from Top 10
+    const cards = document.querySelectorAll("#allGameList .card"); // Select all cards
+    
+    for (let card of cards) {
+        const cardGameId = card.getAttribute("data-game-id"); // Get the data-game-id from the card
+        if (cardGameId === formattedGameName) {
+            return card; // Return the matching card
         }
+    }
+    
+    console.warn(
+        `Card not found for game: ${gameName} (Normalized ID: ${formattedGameName})`
+    );
+    return null;
+}
+
 
         (function () {
           loadingContainerEl.style.display = "flex";
@@ -992,19 +1050,38 @@
       <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
 
       <div class="search-container">
-        <input type="text" class="search-bar" placeholder="Search for games..." id="searchInput" autocomplete="off" />
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search for games..."
+          id="searchInput"
+          autocomplete="off"
+        />
         <div class="search-results" id="searchResults"></div>
       </div>
     </div>
     <div class="updates-text-container">
       <p class="updates-paragraph-text">
-        If you want to transfer your save data from popular games like Polytrack, Cookie Clicker and more that were on
-        Netlify pages, head over to the
-        <a href="https://strongdog.netlify.app" style="color: deepskyblue;">Netlify</a> hosted page to recieve more
-        information. If you need to import your save data, click the button below:
+        If you want to transfer your save data from popular games like
+        Polytrack, Cookie Clicker and more that were on Netlify pages, head over
+        to the
+        <a href="https://strongdog.netlify.app" style="color: deepskyblue"
+          >Netlify</a
+        >
+        hosted page to recieve more information. If you need to import your save
+        data, click the button below:
         <button
           id="import-save-data-btn"
-          style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer; margin-inline: auto; display: block;"
+          style="
+            background: orange;
+            border-radius: 10px;
+            padding: 1em;
+            color: black;
+            border: none;
+            cursor: pointer;
+            margin-inline: auto;
+            display: block;
+          "
         >
           <strong>Import Save Data</strong>
         </button>
@@ -1014,16 +1091,18 @@
       <div class="modal-content">
         <span class="modal-close" id="closeModal">&times;</span>
         <p>
-          The strongdog discord server is a place for strongdog users to chill, play games together, request ideas, and
-          have fun!
+          The strongdog discord server is a place for strongdog users to chill,
+          play games together, request ideas, and have fun!
         </p>
         <p>
-          If you want to help on StrongDog, there is a chat where you can get help downloading games, and you can upload
-          games YOU download to add to StrongDog! (And yes, you WILL get credit for downloading games)
+          If you want to help on StrongDog, there is a chat where you can get
+          help downloading games, and you can upload games YOU download to add
+          to StrongDog! (And yes, you WILL get credit for downloading games)
         </p>
         <p>
           Ready to join? Click
-          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to join the Discord server!
+          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to
+          join the Discord server!
         </p>
       </div>
     </div>
@@ -1040,42 +1119,96 @@
         <div class="credits-item">
           <div class="credits-role">CEO</div>
           <div class="credits-names">
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
+              >Joshua Pettit</a
+            >
           </div>
         </div>
         <div class="credits-item">
           <div class="credits-role">Developers</div>
           <div class="credits-names">
-            <a href="https://github.com/JamesMeadows4" target="_blank" class="credits-link">James Meadows</a>
+            <a
+              href="https://github.com/JamesMeadows4"
+              target="_blank"
+              class="credits-link"
+              >James Meadows</a
+            >
             <span>|</span>
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
+              >Joshua Pettit</a
+            >
             >
           </div>
         </div>
         <div class="credits-item">
           <div class="credits-role">Game Downloaders</div>
           <div class="credits-names">
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
+              >Joshua Pettit</a
+            >
           </div>
           <span>|</span>
-          <a href="https://maxwellstevenson.com" target="_blank" class="credits-link">Maxwell Stevenson</a>
+          <a
+            href="https://maxwellstevenson.com"
+            target="_blank"
+            class="credits-link"
+            >Maxwell Stevenson</a
+          >
         </div>
         <div class="credits-item">
           <div class="credits-role">Other Links</div>
           <div class="credits-names">
-            <a href="https://strongdogxp.github.io" target="_blank" class="credits-link">strongdogxp.github.io</a>
+            <a
+              href="https://strongdogxp.github.io"
+              target="_blank"
+              class="credits-link"
+              >strongdogxp.github.io</a
+            >
             <span>|</span>
-            <a href="https://mathcord.netlify.app" target="_blank" class="credits-link">mathcord.netlify.app</a>
+            <a
+              href="https://mathcord.netlify.app"
+              target="_blank"
+              class="credits-link"
+              >mathcord.netlify.app</a
+            >
             <span>|</span>
-            <a href="https://jman1593.github.io" target="_blank" class="credits-link">jman1593.github.io</a>
+            <a
+              href="https://jman1593.github.io"
+              target="_blank"
+              class="credits-link"
+              >jman1593.github.io</a
+            >
             <span>|</span>
-            <a href="https://strongdog.netlify.app" target="_blank" class="credits-link">strongdog.netlify.app</a>
+            <a
+              href="https://strongdog.netlify.app"
+              target="_blank"
+              class="credits-link"
+              >strongdog.netlify.app</a
+            >
             <span>|</span>
-            <a href="https://strongdog-1.vercel.app" target="_blank" class="credits-link">strongdog-1.vercel.app</a>
+            <a
+              href="https://strongdog-1.vercel.app"
+              target="_blank"
+              class="credits-link"
+              >strongdog-1.vercel.app</a
+            >
             <span>|</span>
-            <a href="https://mathcord.com" target="_blank" class="credits-link">mathcord.com</a>
+            <a href="https://mathcord.com" target="_blank" class="credits-link"
+              >mathcord.com</a
+            >
             <span>|</span>
-            <a href="https://strongdog.com" target="_blank" class="credits-link">strongdog.com</a>
+            <a href="https://strongdog.com" target="_blank" class="credits-link"
+              >strongdog.com</a
+            >
           </div>
         </div>
         <div class="credits-item">
@@ -1088,7 +1221,9 @@
         <a href="favs.html" class="option-link">Favorites</a>
         <a href="#" id="randomGame" class="option-link">Random Game</a>
         <a href="#" id="blockLanschool" class="option-link">Block Lanschool</a>
-        <a href="about.html" class="option-link">About / Report Bugs / Request Games</a>
+        <a href="about.html" class="option-link"
+          >About / Report Bugs / Request Games</a
+        >
         <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
           >Discord Server<span class="new-feature-tag">new</span></a
         >
@@ -1117,7 +1252,7 @@
           }
         });
 
-        auth.onAuthStateChanged(async user => {
+        auth.onAuthStateChanged(async (user) => {
           if (user) {
             const userDetailsContainer = document.createElement("div");
             userDetailsContainer.className = "user-details-container";
@@ -1161,7 +1296,7 @@
 
             // Fetch total XP from Realtime Database
             const xpRef = rtdb.ref(`xp/${userId}`);
-            xpRef.once('value', snapshot => {
+            xpRef.once("value", (snapshot) => {
               let totalXP = 0;
               if (snapshot.exists()) {
                 totalXP = snapshot.val();
@@ -1170,7 +1305,8 @@
               }
 
               // Calculate level and progress
-              const { level, currentXP, xpNeededForNext } = getLevelAndProgressFromXP(totalXP);
+              const { level, currentXP, xpNeededForNext } =
+                getLevelAndProgressFromXP(totalXP);
 
               const xpContainer = document.createElement("div");
               xpContainer.className = "xp-container";
@@ -1218,17 +1354,19 @@
                   .then(() => {
                     window.location.reload();
                   })
-                  .catch(error => {
+                  .catch((error) => {
                     console.error("Error signing out:", error);
                   });
               });
 
-              const favoritesLink = categories.querySelector('a[href="favs.html"]');
+              const favoritesLink = categories.querySelector(
+                'a[href="favs.html"]'
+              );
               categories.insertBefore(logoutLink, favoritesLink);
 
               try {
                 const accessDocRef = db.collection("access").doc(user.uid);
-                accessDocRef.get().then(accessDoc => {
+                accessDocRef.get().then((accessDoc) => {
                   if (accessDoc.exists) {
                     const accessData = accessDoc.data();
                     if (accessData.tester === true) {
@@ -1293,15 +1431,19 @@
             slideMenu.insertBefore(userDetailsContainer, categories);
           }
 
-          categories.querySelector("#randomGame").addEventListener("click", function (e) {
-            e.preventDefault();
-            handleRandomGameClick();
-          });
+          categories
+            .querySelector("#randomGame")
+            .addEventListener("click", function (e) {
+              e.preventDefault();
+              handleRandomGameClick();
+            });
 
-          categories.querySelector("#blockLanschool").addEventListener("click", function (e) {
-            e.preventDefault();
-            handleBlockLanschoolClick();
-          });
+          categories
+            .querySelector("#blockLanschool")
+            .addEventListener("click", function (e) {
+              e.preventDefault();
+              handleBlockLanschoolClick();
+            });
 
           function handleRandomGameClick() {
             if (games.length > 0) {
@@ -1371,14 +1513,19 @@
         searchInput.addEventListener("input", updateSearchResults);
 
         document.addEventListener("click", function (event) {
-          if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+          if (
+            !searchInput.contains(event.target) &&
+            !searchResults.contains(event.target)
+          ) {
             searchResults.style.display = "none";
           }
         });
 
         function updateSearchResults() {
           const searchText = searchInput.value.toLowerCase();
-          const filteredGames = games.filter(game => game.name.toLowerCase().includes(searchText)).slice(0, 7);
+          const filteredGames = games
+            .filter((game) => game.name.toLowerCase().includes(searchText))
+            .slice(0, 7);
 
           searchResults.innerHTML = "";
           if (filteredGames.length === 0) {
@@ -1396,11 +1543,15 @@
             }
           }
 
-          if (!matchedKey) console.warn(`No site mapping found for current URL: ${currentURL}`);
+          if (!matchedKey) {
+            console.warn(
+              `No site mapping found for current URL: ${currentURL}`
+            );
+          }
 
-          filteredGames.forEach(game => {
-            const { href, imgSrc, name, page } = game;
-            let adjustedHref = href;
+          filteredGames.forEach((game) => {
+            const { id, imgSrc, name, page } = game;
+            const adjustedHref = `./play/?id=${id}`; // Only updated the href to use the game ID
             let adjustedImgSrc = `./img/${imgSrc}`;
 
             if (page >= 2 && matchedKey) {
@@ -1409,21 +1560,21 @@
 
               if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
                 const pageBaseURL = pageBaseURLs[pageIndex];
-                const adjustedGameHref = href.replace(/^\.\//, "");
-                adjustedHref = `${pageBaseURL}/${adjustedGameHref}`;
                 const adjustedImgPath = imgSrc.replace(/^\.\//, "");
                 adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
               } else {
-                console.warn(`No site mapping found for page ${page} on hostname: ${matchedKey}`);
+                console.warn(
+                  `No site mapping found for page ${page} on hostname: ${matchedKey}`
+                );
               }
             }
 
             const resultLink = document.createElement("a");
-            resultLink.href = adjustedHref;
+            resultLink.href = adjustedHref; // Use the new ID-based path
             resultLink.innerHTML = `
-              <img src="${adjustedImgSrc}" alt="${name}">
-              <span>${name}</span>
-            `;
+            <img src="${adjustedImgSrc}" alt="${name}">
+            <span>${name}</span>
+        `;
             searchResults.appendChild(resultLink);
           });
 
@@ -1488,9 +1639,11 @@
     });
   </script>
   <script>
-    document.getElementById("secretLink").addEventListener("click", function () {
-      window.location.href = "secret-menu.html";
-    });
+    document
+      .getElementById("secretLink")
+      .addEventListener("click", function () {
+        window.location.href = "secret-menu.html";
+      });
   </script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {

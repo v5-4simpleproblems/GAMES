@@ -402,6 +402,7 @@
         id="favoriteIcon"
         class="favorite-icon"
         style="cursor: pointer; font-size: 24px"
+        title="Favorite this game"
       >&#9734;</span>
       <button id="fullscreenButton" class="fullscreen-button">
         Fullscreen
@@ -588,34 +589,72 @@
           const embedPath = await getEmbedPath(adjustedHref, selectedGame.href, page);
           embedGame(embedPath, selectedGame.name);
 
-          function toggleFavorite() {
-            let favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
-            const imagePath = "../img/" + selectedGame.name + ".jpg";
+          // Initialize favorites
+          let userFavorites = new Set();
 
-            if (favorites[selectedGame.name]) {
-              delete favorites[selectedGame.name];
+          // Function to update the favorite icon based on current favorite status
+          function updateFavoriteIcon() {
+            if (userFavorites.has(selectedGame.id)) {
+              favoriteIcon.innerHTML = "&#9733;"; // Filled star
+              favoriteIcon.style.color = "gold";
             } else {
-              favorites[selectedGame.name] = {
-                path: selectedGame.href,
-                image: imagePath,
-              };
-            }
-
-            localStorage.setItem("favorites", JSON.stringify(favorites));
-            updateFavoriteIcon(favorites, selectedGame.name);
-          }
-
-          function updateFavoriteIcon(favorites, title) {
-            if (favorites[title]) {
-              favoriteIcon.innerHTML = "&#9733;";
-            } else {
-              favoriteIcon.innerHTML = "&#9734;";
+              favoriteIcon.innerHTML = "&#9734;"; // Empty star
+              favoriteIcon.style.color = "white";
             }
           }
 
-          const favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
-          updateFavoriteIcon(favorites, selectedGame.name);
+          // Function to toggle favorite status
+          async function toggleFavorite() {
+            const user = auth.currentUser;
+            if (!user) {
+              alert("Please sign in to favorite a game!");
+              return;
+            }
 
+            const favRef = db.collection("favs").doc(user.uid);
+            if (userFavorites.has(selectedGame.id)) {
+              // Remove from favorites
+              await favRef.update({
+                [selectedGame.id]: firebase.firestore.FieldValue.delete()
+              });
+              userFavorites.delete(selectedGame.id);
+            } else {
+              // Add to favorites
+              await favRef.set(
+                {
+                  [selectedGame.id]: true
+                },
+                { merge: true }
+              );
+              userFavorites.add(selectedGame.id);
+            }
+            updateFavoriteIcon();
+          }
+
+          // Function to load favorites from Firestore
+          async function loadFavorites() {
+            const user = auth.currentUser;
+            if (user) {
+              const favDoc = await db.collection("favs").doc(user.uid).get();
+              if (favDoc.exists) {
+                const data = favDoc.data();
+                userFavorites = new Set(Object.keys(data).map(id => parseInt(id, 10)));
+              } else {
+                userFavorites = new Set();
+              }
+              updateFavoriteIcon();
+            } else {
+              userFavorites = new Set();
+              updateFavoriteIcon();
+            }
+          }
+
+          // Listen for authentication state changes to load favorites accordingly
+          auth.onAuthStateChanged(user => {
+            loadFavorites();
+          });
+
+          // Event listener for favorite icon click
           favoriteIcon.addEventListener("click", function () {
             toggleFavorite();
           });
