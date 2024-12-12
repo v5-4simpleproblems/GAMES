@@ -321,6 +321,46 @@
         font-size: 16px;
         color: #ff8c00;
       }
+
+      /* Redirect Message Styles */
+      #redirectMessage {
+        display: none;
+        text-align: center;
+        margin-top: 50px;
+      }
+
+      #redirectMessage h2 {
+        color: #ff8c00;
+      }
+
+      #redirectMessage p {
+        color: #e0e0e0;
+      }
+
+      #redirectMessage a {
+        color: #ff8c00;
+        text-decoration: underline;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .content {
+          flex-direction: column;
+        }
+
+        .ad {
+          margin: 20px 0;
+        }
+
+        .game-container {
+          width: 95%;
+          height: 500px;
+        }
+
+        .game-bar {
+          width: 95%;
+        }
+      }
     </style>
   </head>
   <body>
@@ -351,6 +391,7 @@
     </div>
 
     <div class="slide-menu" id="slideMenu">
+      <!-- User Details and Menu Options will be dynamically inserted here -->
       <div class="categories">
         <a href="../favs.html" class="option-link">Favorites</a>
         <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
@@ -415,6 +456,12 @@
       <div class="card-container" id="cardContainer"></div>
     </div>
 
+    <!-- Redirect Message (Optional) -->
+    <div id="redirectMessage">
+      <h2>Redirecting to the game...</h2>
+      <p>If you are not redirected automatically, <a href="#" id="manualRedirectLink">click here</a>.</p>
+    </div>
+
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
@@ -468,6 +515,11 @@
         const gameTitleElement = document.getElementById("gameTitle");
         const favoriteIcon = document.getElementById("favoriteIcon");
         const fullscreenButton = document.getElementById("fullscreenButton");
+        const redirectMessage = document.getElementById("redirectMessage");
+        const manualRedirectLink = document.getElementById("manualRedirectLink");
+
+        // Define normal game IDs (replace with actual game IDs)
+        const normalGameIds = [250];
 
         async function fileExists(url) {
           try {
@@ -577,6 +629,17 @@
         if (!selectedGame) {
           embedGame("../404.html", "Not Found");
         } else {
+          if (normalGameIds.includes(selectedGame.id)) {
+            document.title = "Redirecting... - StrongDog XP";
+            // Show the redirect message
+            redirectMessage.style.display = "block";
+            // Set the manual redirect link with one additional ../
+            manualRedirectLink.href = "../" + selectedGame.href;
+            // Redirect to the game's original page with one additional ../
+            window.location.href = "../" + selectedGame.href;
+            return; // Stop further execution
+          }
+
           const page = selectedGame.page;
           const baseURL = getBaseURLForPage(page);
 
@@ -743,6 +806,14 @@
           }
         });
         // Enhanced Activity Tracking Ends Here
+
+        // Optional: Handle manual redirect if automatic redirection fails
+        manualRedirectLink.addEventListener("click", function(e) {
+          e.preventDefault();
+          if (selectedGame && selectedGame.href) {
+            window.location.href = "../" + selectedGame.href;
+          }
+        });
       });
     </script>
 
