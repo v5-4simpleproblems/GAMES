@@ -1,5 +1,4 @@
 export default [
-      { href: './swf/Rogue Soul/index.html', imgSrc: 'Rogue Soul.jpg', name: 'Rogue Soul' , 'page': 3, 'id': 724 },
       { href: './html/NGU idle/index.html', imgSrc: 'NGU idle.jpg', name: 'NGU idle' , 'page': 3, 'id': 717 },
       { href: './html/football strike/index.html', imgSrc: 'football strike.jpg', name: 'football strike' , 'page': 3, 'id': 718 },
       { href: './html/fishing and lines/index.html', imgSrc: 'fishing and lines.jpg', name: 'fishing and lines' , 'page': 3, 'id': 719 },
