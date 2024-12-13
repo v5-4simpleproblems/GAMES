@@ -4,5 +4,4 @@ export default [
       { href: './html/fishing and lines/index.html', imgSrc: 'fishing and lines.jpg', name: 'fishing and lines' , 'page': 3, 'id': 719 },
       { href: './html/fightz.io/index.html', imgSrc: 'fightz.io.jpg', name: 'fightz.io' , 'page': 3, 'id': 720 },
       { href: './html/endless tunnel/index.html', imgSrc: 'endless tunnel.jpg', name: 'endless tunnel' , 'page': 3, 'id': 721 },
-      { href: './html/bottle flip/index.html', imgSrc: 'bottle flip.png', name: 'bottle flip' , 'page': 3, 'id': 722 },
 ]
