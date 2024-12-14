@@ -1,5 +1,4 @@
 export default [
-      { href: './swf/jack frost/index.html', imgSrc: 'jack frost.jpg', name: 'jack frost' , 'page': 3, 'id': 724 },
       { href: './swf/toxic/index.html', imgSrc: 'toxic.jpg', name: 'toxic' , 'page': 3, 'id': 723 },
       { href: './swf/toxic 2/index.html', imgSrc: 'toxic 2.jpg', name: 'toxic 2' , 'page': 3, 'id': 722 },
       { href: './swf/tanked up/index.html', imgSrc: 'tanked up.jpg', name: 'tanked up' , 'page': 3, 'id': 721 },
