@@ -461,30 +461,35 @@
           topGameList.innerHTML = ""; // Clear existing content
 
           let foundCount = 0;
-          let index = 1; // Start after the first row if it's a header or special row
-          // We need 10 games, but we have extra data from top 20 now
+          let index = 1; // Start after any header row, if present
+          const displayedGameNames = new Set(); // Keep track of which games have been displayed
+
+          // Attempt to list up to 20 unique games
           while (foundCount < 20 && index < games.length) {
             const game = games[index];
             const gameName = game[0];
             const matchingCard = findMatchingCard(gameName);
 
             if (matchingCard) {
-              topGameList.appendChild(matchingCard.cloneNode(true));
-              foundCount++;
+              if (!displayedGameNames.has(gameName)) {
+                // If we haven't displayed this game yet, display it now
+                topGameList.appendChild(matchingCard.cloneNode(true));
+                displayedGameNames.add(gameName);
+                foundCount++;
+              } else {
+                // This is a duplicate of a previously displayed game
+                // We do nothing here, effectively ignoring this duplicate
+              }
             } else {
-              console.warn(
-                `One of the game cards missing, skipping this one.`
-              );
-              // Do not increment foundCount
+              console.warn(`Card for "${gameName}" not found, skipping.`);
+              // Do not increment foundCount since we didn't display anything
             }
 
             index++;
           }
 
           if (foundCount < 20) {
-            console.warn(
-              "Could not fill all 10 top slots, not enough matching cards found."
-            );
+            console.warn("Could not fill all 20 top slots with unique games.");
           }
         }
 
@@ -499,9 +504,7 @@
             }
           }
 
-          console.warn(
-            `Card not found one of the games.`
-          );
+          console.warn(`Card not found one of the games.`);
           return null;
         }
 
