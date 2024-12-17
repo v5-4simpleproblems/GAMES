@@ -1,4 +1,5 @@
 export default [
+  { href: './html/backgammon/index.html', imgSrc: 'backgammon.jpg', name: 'backgammon' , 'page': 3, 'id': 728 },
 	{ href: './html/nzp/index.html', imgSrc: 'nzp.jpg', name: 'nzp' , 'page': 3, 'id': 725 },
   	{ href: './html/football strike/index.html', imgSrc: 'football strike.jpg', name: 'football strike' , 'page': 3, 'id': 718 },
   	{ href: './html/endless tunnel/index.html', imgSrc: 'endless tunnel.jpg', name: 'endless tunnel' , 'page': 3, 'id': 721 },
