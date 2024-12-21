@@ -1,4 +1,5 @@
 export default [
+  { href: './html/sandtris/index.html', imgSrc: 'sandtris.jpg', name: 'sandtris' , 'page': 3, 'id': 732 },
 	{ href: './swf/tanked up/index.html', imgSrc: 'tanked up.jpg', name: 'tanked up' , 'page': 3, 'id': 727, tags: [''] },
 	{ href: './html/footballbros/index.html', imgSrc: 'footballbros.jpg', name: 'footballbros' , 'page': 3, 'id': 726, tags: [''] },
 	{ href: './html/backgammon/index.html', imgSrc: 'backgammon.jpg', name: 'backgammon' , 'page': 3, 'id': 728, tags: [''] },
