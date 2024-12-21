@@ -7,6 +7,5 @@ export default [
       { href: './html/Mirror Madness/index.html', imgSrc: 'Mirror Madness.png', name: 'Mirror Madness' , 'page': 3, 'id': 735 },
       { href: './html/Death Run/index.html', imgSrc: 'Death Run.png', name: 'Death Run' , 'page': 3, 'id': 734 },
       { href: './html/amazing strange rope police/index.html', imgSrc: 'amazing strange rope police.jpg', name: 'amazing strange rope police' , 'page': 3, 'id': 733 },
-      { href: './html/sandtris/index.html', imgSrc: 'sandtris.jpg', name: 'sandtris' , 'page': 3, 'id': 732 },
       { href: './html/block blast/index.html', imgSrc: 'block blast.jpg', name: 'block blast' , 'page': 3, 'id': 730 },
 ]
