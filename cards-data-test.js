@@ -1,5 +1,4 @@
 export default [
-      { href: './html/Red vs Blue/index.html', imgSrc: 'Red vs Blue.png', name: 'Red vs Blue' , 'page': 3, 'id': 740 },
       { href: './html/new polytrack/index.html', imgSrc: 'new polytrack.jpg', name: 'new polytrack' , 'page': 3, 'id': 739 },
       { href: './html/money movers 3/index.html', imgSrc: 'money movers 3.jpg', name: 'money movers 3' , 'page': 3, 'id': 738 },
       { href: './html/money movers 2/index.html', imgSrc: 'money movers 2.jpg', name: 'money movers 2' , 'page': 3, 'id': 737 },
