@@ -560,7 +560,7 @@
         const manualRedirectLink =
           document.getElementById("manualRedirectLink");
 
-        const normalGameIds = [250, 244, 605, 130, 729, 609];
+        const normalGameIds = [250, 244, 605, 130, 729, 609, 742];
 
         async function fileExists(url) {
           try {
@@ -1139,14 +1139,6 @@
           event.preventDefault();
         }
       });
-    </script>
-    <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("id") === "742") {
-        const script = document.createElement("script");
-        script.src = "742.js";
-        document.body.appendChild(script);
-      }
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
