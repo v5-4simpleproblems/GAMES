@@ -1,4 +1,5 @@
 export default [
+  { href: './html/taming.io/index.html', imgSrc: 'taming.io.jpg', name: 'taming.io' , 'page': 3, 'id': 750 },
   { href: './html/new 1v1.lol/index.html', imgSrc: '1v1.lol.jpg', name: 'new 1v1.lol' , 'page': 3, 'id': 748 },
   { href: './html/human or not/index.html', imgSrc: 'human or not.png', name: 'human or not' , 'page': 3, 'id': 746 },
   { href: './html/discord/game/index.html', imgSrc: 'discord.png', name: 'discord' , 'page': 3, 'id': 745 },
