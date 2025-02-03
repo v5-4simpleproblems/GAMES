@@ -1,4 +1,5 @@
 export default [
+  { href: './html/death by ai/index.html', imgSrc: 'death by ai.jpg', name: 'death by ai' , 'page': 3, 'id': 754 },
   { href: './html/narwhale.io/index.html', imgSrc: 'narwhale.io.png', name: 'narwhale.io' , 'page': 3, 'id': 753 },
   { href: './html/smashkarts/index.html', imgSrc: 'smashkarts.jpg', name: 'smashkarts' , 'page': 3, 'id': 752 },
   { href: './html/roblox/index.html', imgSrc: 'roblox.jpg', name: 'roblox' , 'page': 3, 'id': 749 },
