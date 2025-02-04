@@ -493,7 +493,8 @@
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
         authDomain: "strongdog-auth.firebaseapp.com",
-        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
+        databaseURL:
+          "https://strongdog-auth-default-rtdb.firebaseio.com",
         projectId: "strongdog-auth",
         storageBucket: "strongdog-auth.appspot.com",
         messagingSenderId: "936276282572",
@@ -809,24 +810,7 @@
             toggleFavorite();
           });
 
-          function safeKey(key) {
-            return key.replace(/[.#$\[\]]/g, "_");
-          }
-          const gameTitle = selectedGame ? selectedGame.name : "unknown";
-          const safeGameTitle = safeKey(gameTitle);
-          const connectionsRef = rtdb.ref(`connections/${safeGameTitle}`);
-          const connectedRef = rtdb.ref(".info/connected");
-
-          // Detect when a user is connected
-          connectedRef.on("value", (snap) => {
-            if (snap.val() === true) {
-              const userConnectionRef = connectionsRef.push(); // Add a connection
-              userConnectionRef.onDisconnect().remove(); // Remove on disconnect
-              userConnectionRef.set({
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-              });
-            }
-          });
+          // (Note: The Firebase Realtime Database connection tracking code has been removed.)
 
           fullscreenButton.addEventListener("click", function () {
             if (gameContainer.requestFullscreen) {
@@ -914,7 +898,6 @@
             // Add XP every minute if user is active, and also add 1 point each time XP is added
             setInterval(() => {
               if (Date.now() - lastActivityTime <= 3 * 60 * 1000) {
-                // 3 minutes
                 const xpRef = rtdb.ref(`xp/${user.uid}`);
                 xpRef.transaction((currentXP) => (currentXP || 0) + 10);
 
