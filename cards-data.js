@@ -752,4 +752,5 @@ export default [
   { href: "./html/pizzachallenge/game/pizzachallenge.html", imgSrc: "pizzachallenge.png", name: "Pizza Challange" , 'id': 3, tags: ['']},
   { href: "./html/retro speed/game/retro speed.html speed.html", imgSrc: "retro speed.png", name: "Retro Speed" , 'id': 2, tags: ['']},
   { href: "./html/tank trouble 2.html", imgSrc: "tank trouble 2.png", name: "Tank Trouble 2" , 'id': 1, tags: ['']},
+  { href: './html/youtube/game/index.html', imgSrc: 'youtube.png', name: 'youtube' , 'id': 761 },
 ];
