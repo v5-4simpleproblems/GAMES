@@ -14,7 +14,7 @@ export default [
   { href: './html/human or not/index.html', imgSrc: 'human or not.png', name: 'human or not' , 'page': 3, 'id': 746 },
   { href: './html/discord/game/index.html', imgSrc: 'discord.png', name: 'discord' , 'page': 3, 'id': 745 },
   { href: './html/amazon/game/index.html', imgSrc: 'amazon.png', name: 'amazon' , 'page': 3, 'id': 744 },
-  { href: './html/nova AI/index.html', imgSrc: 'Nova AI.png', name: 'Nova AI' , 'page': 3, 'id': 742 },
+  { href: './html/nova AI/index.html', imgSrc: 'Nova AI.png', name: 'Nova AI' , 'page': 3, 'id': 762 },
   { href: './html/Dinogen arena/index.html', imgSrc: 'Dinogen arena.jpg', name: 'Dinogen arena' , 'page': 3, 'id': 741 },
   { href: './html/five nights at winstons/index.html', imgSrc: 'five nights at winstons.jpg', name: 'five nights at winstons' , 'page': 3, 'id': 742 },
   { href: './html/amazing strange rope police/index.html', imgSrc: 'amazing strange rope police.jpg', name: 'amazing strange rope police' , 'page': 3, 'id': 733 },
