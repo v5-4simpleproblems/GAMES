@@ -3,7 +3,6 @@ export default [
       { href: './swf/learn to fly 2/index.html', imgSrc: 'learn to fly 2.jpg', name: 'learn to fly 2' , 'page': 3, 'id': 770 },
       { href: './swf/drunk guy/index.html', imgSrc: 'drunk guy.jpg', name: 'drunk guy' , 'page': 3, 'id': 769 },
       { href: './html/what beats rock/index.html', imgSrc: 'what beats rock.jpg', name: 'what beats rock' , 'page': 3, 'id': 768 },
-      { href: './html/unicycle hero/index.html', imgSrc: 'unicycle hero.png', name: 'unicycle hero' , 'page': 3, 'id': 767 },
       { href: './html/youtube/game/index.html', imgSrc: 'youtube.png', name: 'youtube' , 'id': 761 },
       { href: './html/xbox cloud gaming/index.html', imgSrc: 'xbox cloud gaming.png', name: 'xbox cloud gaming' , 'page': 3, 'id': 751 },
       { href: './html/money movers 3/index.html', imgSrc: 'money movers 3.jpg', name: 'money movers 3' , 'page': 3, 'id': 738 },
