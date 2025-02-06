@@ -9,11 +9,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Check out the repository and fetch the last 2 commits.
+      # 1. Checkout the repository with full history so that git diff works.
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2
+          fetch-depth: 0  # Fetch the entire history
 
       # 2. Configure AWS credentials.
       - name: Configure AWS Credentials
@@ -21,22 +21,44 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Adjust if your bucket is in a different region
+          aws-region: us-east-1  # Change this if your bucket is in another region
 
-      # 3. Get a list of changed files between the last two commits.
+      # 3. Attempt to download the last deployed commit hash from S3.
+      - name: Download last deployed commit hash
+        id: last-deploy
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        run: |
+          if aws s3 cp s3://$AWS_S3_BUCKET/last-deploy.txt last-deploy.txt; then
+            echo "Found last deployed commit:"
+            cat last-deploy.txt
+          else
+            echo "No previous deployment hash found. Using NONE as marker."
+            echo "NONE" > last-deploy.txt
+          fi
+
+      # 4. Determine which files have changed since the last deployment.
       - name: Determine changed files
         id: changed-files
         run: |
-          # Get the commit range. If there's only one commit, list all files.
-          if git rev-parse HEAD~1 >/dev/null 2>&1; then
-            echo "Comparing HEAD~1 and HEAD"
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-          else
-            echo "Only one commit found, using all files"
-            CHANGED_FILES=$(git ls-files)
-          fi
+          # Read the last deployed commit hash.
+          LAST_DEPLOY=$(cat last-deploy.txt)
+          CURRENT_COMMIT=$(git rev-parse HEAD)
+          echo "Last deployed commit: $LAST_DEPLOY"
+          echo "Current commit: $CURRENT_COMMIT"
           
-          # Filter out unwanted paths (.git*, strongdog2, strongdog3)
+          if [ "$LAST_DEPLOY" = "NONE" ]; then
+            echo "No previous commit found; deploying all files."
+            CHANGED_FILES=$(git ls-files)
+          else
+            # Calculate the diff between the last deployed commit and the current commit.
+            CHANGED_FILES=$(git diff --name-only $LAST_DEPLOY HEAD)
+          fi
+
+          echo "Raw changed files:"
+          echo "$CHANGED_FILES"
+
+          # Filter out unwanted files (exclude .git, strongdog2, and strongdog3 directories).
           FILTERED_FILES=""
           for file in $CHANGED_FILES; do
             if [[ "$file" == .git* ]] || [[ "$file" == strongdog2/* ]] || [[ "$file" == strongdog3/* ]]; then
@@ -45,21 +67,31 @@ jobs:
               FILTERED_FILES="$FILTERED_FILES $file"
             fi
           done
-          
-          echo "Files to upload:$FILTERED_FILES"
-          # Set the output so that later steps can use it.
-          echo "::set-output name=files::$FILTERED_FILES"
 
-      # 4. Upload only the changed files.
+          echo "Files to deploy: $FILTERED_FILES"
+
+          # Set outputs for later steps.
+          echo "::set-output name=files::$FILTERED_FILES"
+          echo "::set-output name=current::$CURRENT_COMMIT"
+
+      # 5. Upload only the changed (and non-excluded) files to S3.
       - name: Upload changed files to S3
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
           if [ -z "${{ steps.changed-files.outputs.files }}" ]; then
-            echo "No changed files detected, nothing to upload."
-            exit 0
+            echo "No changed files detected; nothing to upload."
+          else
+            for file in ${{ steps.changed-files.outputs.files }}; do
+              echo "Uploading $file to s3://$AWS_S3_BUCKET/$file"
+              aws s3 cp "$file" "s3://$AWS_S3_BUCKET/$file" --acl public-read --follow-symlinks
+            done
           fi
-          for file in ${{ steps.changed-files.outputs.files }}; do
-            echo "Uploading $file to s3://$AWS_S3_BUCKET/$file"
-            aws s3 cp "$file" "s3://$AWS_S3_BUCKET/$file" --acl public-read --follow-symlinks
-          done
+
+      # 6. Update the last deployed commit hash in S3.
+      - name: Update last deployed commit hash
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        run: |
+          echo "${{ steps.changed-files.outputs.current }}" > last-deploy.txt
+          aws s3 cp last-deploy.txt s3://$AWS_S3_BUCKET/last-deploy.txt
