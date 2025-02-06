@@ -1,4 +1,13 @@
 export default [
+  { href: './swf/learn to fly 3/index.html', imgSrc: 'learn to fly 3.jpg', name: 'learn to fly 3' , 'page': 3, 'id': 771 },
+  { href: './swf/learn to fly 2/index.html', imgSrc: 'learn to fly 2.jpg', name: 'learn to fly 2' , 'page': 3, 'id': 770 },
+  { href: './swf/drunk guy/index.html', imgSrc: 'drunk guy.jpg', name: 'drunk guy' , 'page': 3, 'id': 769 },
+  { href: './html/what beats rock/index.html', imgSrc: 'what beats rock.jpg', name: 'what beats rock' , 'page': 3, 'id': 768 },
+  { href: './html/unicycle hero/index.html', imgSrc: 'unicycle hero.png', name: 'unicycle hero' , 'page': 3, 'id': 767 },
+  { href: './html/room clicker/index.html', imgSrc: 'room clicker.jpg', name: 'room clicker' , 'page': 3, 'id': 766 },
+  { href: './html/ping pong chaos/index.html', imgSrc: 'ping pong chaos.jpg', name: 'ping pong chaos' , 'page': 3, 'id': 765 },
+  { href: './html/iron snout/index.html', imgSrc: 'iron snout.png', name: 'iron snout' , 'page': 3, 'id': 764 },
+  { href: './html/drive mad 200 levels/index.html', imgSrc: 'drive mad 200 levels.jpg', name: 'drive mad 200 levels' , 'page': 3, 'id': 763 },
   { href: './html/cstimer/index.html', imgSrc: 'cstimer.png', name: 'cstimer' , 'page': 3, 'id': 760 },
   { href: './html/kour.io/index.html', imgSrc: 'kour.io.jpg', name: 'kour.io' , 'page': 3, 'id': 758 },
   { href: './html/thats not my neighbor/game/index.html', imgSrc: 'thats not my neighbor.jpg', name: 'thats not my neighbor' , 'page': 3, 'id': 759 },
