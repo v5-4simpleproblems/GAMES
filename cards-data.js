@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/learn to fly 3/index.html', imgSrc: 'learn to fly 3.jpg', name: 'learn to fly 3' , 'page': 3, 'id': 771 },
   { href: './swf/learn to fly 2/index.html', imgSrc: 'learn to fly 2.jpg', name: 'learn to fly 2' , 'page': 3, 'id': 770 },
   { href: './swf/drunk guy/index.html', imgSrc: 'drunk guy.jpg', name: 'drunk guy' , 'page': 3, 'id': 769 },
   { href: './html/what beats rock/index.html', imgSrc: 'what beats rock.jpg', name: 'what beats rock' , 'page': 3, 'id': 768 },
