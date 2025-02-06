@@ -9,36 +9,57 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Check out the repository.
+      # 1. Check out the repository and fetch the last 2 commits.
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
-      # 2. Configure AWS credentials for the CLI.
+      # 2. Configure AWS credentials.
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # adjust if your bucket is in a different region
+          aws-region: us-east-1  # Adjust if your bucket is in a different region
 
-      # 3. Find and upload only files modified in the last 2 days.
-      - name: Upload recently modified files
+      # 3. Get a list of changed files between the last two commits.
+      - name: Determine changed files
+        id: changed-files
+        run: |
+          # Get the commit range. If there's only one commit, list all files.
+          if git rev-parse HEAD~1 >/dev/null 2>&1; then
+            echo "Comparing HEAD~1 and HEAD"
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          else
+            echo "Only one commit found, using all files"
+            CHANGED_FILES=$(git ls-files)
+          fi
+          
+          # Filter out unwanted paths (.git*, strongdog2, strongdog3)
+          FILTERED_FILES=""
+          for file in $CHANGED_FILES; do
+            if [[ "$file" == .git* ]] || [[ "$file" == strongdog2/* ]] || [[ "$file" == strongdog3/* ]]; then
+              echo "Skipping excluded file: $file"
+            else
+              FILTERED_FILES="$FILTERED_FILES $file"
+            fi
+          done
+          
+          echo "Files to upload:$FILTERED_FILES"
+          # Set the output so that later steps can use it.
+          echo "::set-output name=files::$FILTERED_FILES"
+
+      # 4. Upload only the changed files.
+      - name: Upload changed files to S3
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
-          echo "Finding files modified in the last 2 days (excluding .git*, strongdog2, and strongdog3)..."
-          # The find command excludes the directories you don't want, then prints any files with modification time less than 2 days.
-          files=$(find . -type f \( -path "./.git*" -o -path "./strongdog2/*" -o -path "./strongdog3/*" \) -prune -o -mtime -2 -print)
-          
-          if [ -z "$files" ]; then
-            echo "No files modified in the last 2 days."
+          if [ -z "${{ steps.changed-files.outputs.files }}" ]; then
+            echo "No changed files detected, nothing to upload."
             exit 0
           fi
-
-          # Loop over each file and upload it individually.
-          while IFS= read -r file; do
-            # Remove the leading "./" from the file path.
-            dest=$(echo "$file" | sed 's|^\./||')
-            echo "Uploading $file to s3://$AWS_S3_BUCKET/$dest"
-            aws s3 cp "$file" "s3://$AWS_S3_BUCKET/$dest" --acl public-read --follow-symlinks
-          done <<< "$files"
+          for file in ${{ steps.changed-files.outputs.files }}; do
+            echo "Uploading $file to s3://$AWS_S3_BUCKET/$file"
+            aws s3 cp "$file" "s3://$AWS_S3_BUCKET/$file" --acl public-read --follow-symlinks
+          done
