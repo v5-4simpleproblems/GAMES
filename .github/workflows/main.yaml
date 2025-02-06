@@ -1,55 +1,52 @@
-name: Upload Website
+name: Build and Test
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight UTC
-  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  deploy:
+  # Example: Two separate jobs instead of one mega-matrix
+  test-job-1:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [14, 16, 18]
     steps:
-      # 1. Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # 2. Configure AWS credentials
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Update region if needed
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - run: npm test
 
-      # 3. Find files modified in the last 2 days
-      - name: Find recently modified files
-        id: changed-files
-        run: |
-          # Calculate timestamp for 2 days ago
-          timestamp=$(date -d "2 days ago" +%s)
-          # Find files modified in the last 2 days, excluding specified directories
-          find . \( -path "./.git/*" -o -path "./strongdog2/*" -o -path "./strongdog3/*" \) -prune -o -type f -newermt "@$timestamp" -print > changed-files.txt
-          # Read files into array and set output
-          CHANGED_FILES=()
-          while IFS= read -r file; do
-            CHANGED_FILES+=("$file")
-          done < changed-files.txt
-          echo "files=$(printf "%s " "${CHANGED_FILES[@]}")" >> $GITHUB_OUTPUT
+  test-job-2:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16  # Single Node version for multi-OS
+      - run: npm install
+      - run: npm test
 
-      # 4. Upload modified files to S3
-      - name: Upload to S3
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-        run: |
-          if [ -z "${{ steps.changed-files.outputs.files }}" ]; then
-            echo "No files modified in the last 2 days."
-            exit 0
-          fi
+  # Additional job for build or packaging
+  build:
+    runs-on: ubuntu-latest
+    needs: [test-job-1, test-job-2]  # Wait for tests
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - run: npm install
+      - run: npm run build
 
-          echo "Uploading modified files..."
-          for file in ${{ steps.changed-files.outputs.files }}; do
-            # Remove leading './' for S3 key
-            s3_key=$(echo "$file" | sed 's|^\./||')
-            echo "Uploading: $file"
-            aws s3 cp "$file" "s3://$AWS_S3_BUCKET/$s3_key" --acl public-read
-          done
+  # Deploy or separate that into its own workflow if it's large
