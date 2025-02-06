@@ -9,11 +9,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout the repository with full history so that git diff works.
+      # 1. Checkout the repository.
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Fetch the entire history
 
       # 2. Configure AWS credentials.
       - name: Configure AWS Credentials
@@ -21,77 +19,103 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Change this if your bucket is in another region
+          aws-region: us-east-1  # Change if your bucket is in another region
 
-      # 3. Attempt to download the last deployed commit hash from S3.
-      - name: Download last deployed commit hash
-        id: last-deploy
+      # 3. Generate a manifest (list of files and their MD5 hashes) for the current code.
+      - name: Generate current manifest
+        run: |
+          # Remove any previous manifest files
+          rm -f manifest.txt
+          # Find all files except those in .git, strongdog2, and strongdog3 directories,
+          # then compute their MD5 hashes and sort the output.
+          #
+          # The find command explanation:
+          #   -type f: only files
+          #   \( -path "./.git/*" -o -path "./strongdog2/*" -o -path "./strongdog3/*" \) -prune
+          #     => skip any files in those directories
+          #   -o -type f -print => print the remaining files
+          #
+          # Then we compute md5sum for each file and sort the results.
+          find . \( -path "./.git/*" -o -path "./strongdog2/*" -o -path "./strongdog3/*" \) -prune -o -type f -print | \
+            while read -r file; do md5sum "$file"; done | sort > manifest.txt
+          echo "Current manifest generated:"
+          cat manifest.txt
+
+      # 4. Download the previous manifest from S3 (if it exists).
+      - name: Download previous manifest
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
-          if aws s3 cp s3://$AWS_S3_BUCKET/last-deploy.txt last-deploy.txt; then
-            echo "Found last deployed commit:"
-            cat last-deploy.txt
+          if aws s3 cp s3://$AWS_S3_BUCKET/manifest.txt previous-manifest.txt; then
+            echo "Previous manifest downloaded:"
+            cat previous-manifest.txt
           else
-            echo "No previous deployment hash found. Using NONE as marker."
-            echo "NONE" > last-deploy.txt
+            echo "No previous manifest found; treating all files as new."
+            # Create an empty previous manifest file so the comparison works.
+            touch previous-manifest.txt
           fi
 
-      # 4. Determine which files have changed since the last deployment.
+      # 5. Compare manifests and produce a list of files that are new or changed.
       - name: Determine changed files
         id: changed-files
         run: |
-          # Read the last deployed commit hash.
-          LAST_DEPLOY=$(cat last-deploy.txt)
-          CURRENT_COMMIT=$(git rev-parse HEAD)
-          echo "Last deployed commit: $LAST_DEPLOY"
-          echo "Current commit: $CURRENT_COMMIT"
-          
-          if [ "$LAST_DEPLOY" = "NONE" ]; then
-            echo "No previous commit found; deploying all files."
-            CHANGED_FILES=$(git ls-files)
+          # We will build a list of files whose MD5 sum differs from the previous manifest.
+          CHANGED_FILES=()
+          while read -r current_line; do
+            # current_line: "md5sum  ./path/to/file"
+            current_md5=$(echo "$current_line" | awk '{print $1}')
+            file=$(echo "$current_line" | awk '{print $2}')
+            # Try to find the same file in the previous manifest.
+            prev_line=$(grep -F " $file" previous-manifest.txt || true)
+            if [ -z "$prev_line" ]; then
+              echo "New file detected: $file"
+              CHANGED_FILES+=("$file")
+            else
+              prev_md5=$(echo "$prev_line" | awk '{print $1}')
+              if [ "$current_md5" != "$prev_md5" ]; then
+                echo "Changed file detected: $file"
+                CHANGED_FILES+=("$file")
+              fi
+            fi
+          done < manifest.txt
+
+          # Report the files to be deployed.
+          if [ ${#CHANGED_FILES[@]} -eq 0 ]; then
+            echo "No files have changed."
           else
-            # Calculate the diff between the last deployed commit and the current commit.
-            CHANGED_FILES=$(git diff --name-only $LAST_DEPLOY HEAD)
+            echo "Files to deploy:"
+            for f in "${CHANGED_FILES[@]}"; do
+              echo "$f"
+            done
           fi
 
-          echo "Raw changed files:"
-          echo "$CHANGED_FILES"
+          # Save the list as a space-separated string for the next step.
+          files_list=$(printf "%s " "${CHANGED_FILES[@]}")
+          echo "::set-output name=files::${files_list}"
+      # Note: The set-output command is being deprecated.
+      # In the future you might use workflow commands to write to $GITHUB_OUTPUT.
 
-          # Filter out unwanted files (exclude .git, strongdog2, and strongdog3 directories).
-          FILTERED_FILES=""
-          for file in $CHANGED_FILES; do
-            if [[ "$file" == .git* ]] || [[ "$file" == strongdog2/* ]] || [[ "$file" == strongdog3/* ]]; then
-              echo "Skipping excluded file: $file"
-            else
-              FILTERED_FILES="$FILTERED_FILES $file"
-            fi
-          done
-
-          echo "Files to deploy: $FILTERED_FILES"
-
-          # Set outputs for later steps.
-          echo "::set-output name=files::$FILTERED_FILES"
-          echo "::set-output name=current::$CURRENT_COMMIT"
-
-      # 5. Upload only the changed (and non-excluded) files to S3.
+      # 6. Upload only the changed files to S3.
       - name: Upload changed files to S3
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
-          if [ -z "${{ steps.changed-files.outputs.files }}" ]; then
-            echo "No changed files detected; nothing to upload."
+          CHANGED_FILES="${{ steps.changed-files.outputs.files }}"
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No changed files to upload."
           else
-            for file in ${{ steps.changed-files.outputs.files }}; do
-              echo "Uploading $file to s3://$AWS_S3_BUCKET/$file"
-              aws s3 cp "$file" "s3://$AWS_S3_BUCKET/$file" --acl public-read --follow-symlinks
+            for file in $CHANGED_FILES; do
+              # Remove any leading "./" from the file path for S3 key consistency.
+              s3_key=$(echo "$file" | sed 's|^\./||')
+              echo "Uploading $file to s3://$AWS_S3_BUCKET/$s3_key"
+              aws s3 cp "$file" "s3://$AWS_S3_BUCKET/$s3_key" --acl public-read --follow-symlinks
             done
           fi
 
-      # 6. Update the last deployed commit hash in S3.
-      - name: Update last deployed commit hash
+      # 7. Upload the new manifest to S3 for future comparisons.
+      - name: Upload new manifest to S3
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         run: |
-          echo "${{ steps.changed-files.outputs.current }}" > last-deploy.txt
-          aws s3 cp last-deploy.txt s3://$AWS_S3_BUCKET/last-deploy.txt
+          echo "Uploading new manifest.txt to S3."
+          aws s3 cp manifest.txt s3://$AWS_S3_BUCKET/manifest.txt
