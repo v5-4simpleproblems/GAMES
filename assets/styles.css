@@ -214,7 +214,7 @@ body {
   }
 
   .card {
-    background-color: #fff;
+    background: transparent;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
     position: relative;
@@ -414,66 +414,9 @@ body {
     align-items: center;
   }
 
-  .loading-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .bars {
-    display: flex;
-    align-items: center;
-  }
-
-  .bar {
-    background-color: rgba(255, 255, 255, 0.3);
-    width: 20px;
-    height: 40px;
-    margin-right: 5px;
-    border-radius: 10px;
-    animation: load ease infinite 5s;
-  }
-
-  .bar-2,
-  .bar-4 {
-    height: 50px;
-  }
-
-  .bar-2 {
-    animation-delay: 0.1s;
-  }
-
-  .bar-3 {
-    height: 60px;
-    animation-delay: 0.2s;
-  }
-
-  .bar-4 {
-    animation-delay: 0.3s;
-  }
-
-  .bar-5 {
-    animation-delay: 0.4s;
-  }
-
-  @keyframes load {
-    0%,
-    100% {
-      transform: rotate(0deg);
-    }
-
-    50% {
-      transform: rotate(720deg) rotateX(180deg);
-    }
-  }
-
   #topGameList {
-    position: relative;
+    max-width: 1300px;
+    margin-inline: auto;
   }
 
   .modal {
