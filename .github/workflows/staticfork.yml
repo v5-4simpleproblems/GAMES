@@ -2,8 +2,7 @@
 name: Add files to forked github
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
