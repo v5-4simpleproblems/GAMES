@@ -19,7 +19,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StrongDog XP</title>
-    <link rel="stylesheet" href="assets/style.css" />
+    <link rel="stylesheet" href="assets/styles.css" />
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -295,11 +295,11 @@
         const gameLink = `./play/?id=${gameObject.id}`; // Adjusted to use game ID
         const normalizedName = normalizeGameName(name); // Normalize the game name
         return `
-    <a href="${gameLink}" class="card" data-game-id="${normalizedName}" data-page="${page}">
-        <img src="${adjustedImgSrc}" alt="${name}">
-        <figcaption>${name}</figcaption>
-    </a>
-`;
+          <a href="${gameLink}" class="card" data-game-id="${normalizedName}" data-page="${page}">
+            <img src="${adjustedImgSrc}" alt="${name}">
+            <figcaption>${name}</figcaption>
+          </a>
+        `;
       }
 
       let cardsHTMLArr = [];
@@ -429,20 +429,16 @@
       }
 
       document.addEventListener("DOMContentLoaded", function () {
+        const numTopGames = 20; // Change this to adjust the amount of games to get for the top
         const topGameList = document.getElementById("topGameList");
-        const loadingContainerEl = document.createElement("div");
-        loadingContainerEl.className = "loading-container";
-        loadingContainerEl.innerHTML = `
-          <div class="bars">
-            <div class="bar bar-1"></div>
-            <div class="bar bar-2"></div>
-            <div class="bar bar-3"></div>
-            <div class="bar bar-4"></div>
-            <div class="bar bar-5"></div>
-          </div>
-        `;
 
-        topGameList.appendChild(loadingContainerEl);
+        // Adding ghost cards for loading animation
+        for (let i = 0; i < numTopGames; i++) {
+          const ghostCard = document.createElement("div");
+          ghostCard.classList.add("ghost-card");
+          ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`;
+          topGameList.appendChild(ghostCard);
+        }
 
         function fetchTopGames() {
           fetch(targetUrl, {
@@ -450,9 +446,7 @@
           })
             .then((response) => {
               if (!response.ok) {
-                throw new Error(
-                  "Network response was not ok " + response.statusText
-                );
+                throw new Error("Network response was not ok " + response.statusText);
               }
               return response.json();
             })
@@ -467,7 +461,7 @@
             })
             .catch((error) => console.error("Error:", error))
             .finally(() => {
-              loadingContainerEl.style.display = "none";
+              // Nothing here currently
             });
         }
         function displayTopGames(games) {
@@ -477,14 +471,14 @@
             return;
           }
 
-          topGameList.innerHTML = ""; // Clear existing content
-
           let foundCount = 0;
           let index = 1; // Start after any header row, if present
           const displayedGameNames = new Set(); // Keep track of which games have been displayed
+          
+          topGameList.innerHTML = ""; // Clear existing content
 
           // Attempt to list up to 20 unique games
-          while (foundCount < 20 && index < games.length) {
+          while (foundCount < numTopGames && index < games.length) {
             const game = games[index];
             const gameName = game[0];
             const matchingCard = findMatchingCard(gameName);
@@ -495,20 +489,16 @@
                 topGameList.appendChild(matchingCard.cloneNode(true));
                 displayedGameNames.add(gameName);
                 foundCount++;
-              } else {
-                // This is a duplicate of a previously displayed game
-                // We do nothing here, effectively ignoring this duplicate
               }
             } else {
               console.warn(`Card for "${gameName}" not found, skipping.`);
               // Do not increment foundCount since we didn't display anything
             }
-
             index++;
           }
 
-          if (foundCount < 20) {
-            console.warn("Could not fill all 20 top slots with unique games.");
+          if (foundCount < numTopGames) {
+            console.warn(`Could not fill all ${numTopGames} top slots with unique games.`);
           }
         }
 
@@ -527,10 +517,7 @@
           return null;
         }
 
-        (function () {
-          loadingContainerEl.style.display = "flex";
-          fetchTopGames();
-        })();
+        fetchTopGames();
       });
     </script>
   </head>
