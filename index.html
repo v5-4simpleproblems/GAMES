@@ -522,204 +522,127 @@
     </script>
   </head>
   <script>
-    window.addEventListener("DOMContentLoaded", function() {
-      console.log("Auto-save script loaded.");
-    
-      // Dynamically create the autoSaveModal (if not present) with dark theme and extra text.
-      if (!document.getElementById("autoSaveModal")) {
-        var modal = document.createElement("div");
-        modal.id = "autoSaveModal";
-        modal.style.cssText = "display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 3000;";
-        var modalContent = document.createElement("div");
-        modalContent.style.cssText = "background: #333; padding: 20px; border-radius: 5px; text-align: center; max-width: 90%; color: #fff;";
-        var p = document.createElement("p");
-        p.textContent = "Would you like to load your auto-save?\nIf you do not load the auto-save data right now, you will have to manually enable auto saves in the save menu.";
-        p.style.whiteSpace = "pre-wrap";
-        var btnYes = document.createElement("button");
-        btnYes.id = "autoSaveYes";
-        btnYes.textContent = "Yes";
-        btnYes.style.cssText = "margin-right: 10px; padding: 10px 20px; background: orange; border: none; border-radius: 5px; cursor: pointer;";
-        var btnNo = document.createElement("button");
-        btnNo.id = "autoSaveNo";
-        btnNo.textContent = "No";
-        btnNo.style.cssText = "padding: 10px 20px; background: gray; border: none; border-radius: 5px; cursor: pointer;";
-        modalContent.appendChild(p);
-        modalContent.appendChild(btnYes);
-        modalContent.appendChild(btnNo);
-        modal.appendChild(modalContent);
-        document.body.appendChild(modal);
-        console.log("autoSaveModal created dynamically.");
-      }
-    
-      // Remove persistent loading overlay; these functions now only log.
-      function showLoading(text) {
-        console.log("Show loading:", text);
-      }
-      function hideLoading() {
-        console.log("Hide loading.");
-      }
-    
-      function setCookie(name, value, expires) {
-        document.cookie = name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
-        console.log("Set cookie:", name, "=", value);
-      }
-      function getCookie(name) {
-        var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-        var result = match ? match[2] : "";
-        console.log("Got cookie:", name, "=", result);
-        return result;
-      }
-      function getAllLocalStorageData() {
-        var data = {};
-        for (var i = 0; i < localStorage.length; i++) {
-          var key = localStorage.key(i);
-          data[key] = localStorage.getItem(key);
-        }
-        console.log("Retrieved localStorage data:", data);
-        return data;
-      }
-      function setAllLocalStorageData(data) {
-        localStorage.clear();
-        for (var key in data) {
-          localStorage.setItem(key, data[key]);
-        }
-        console.log("LocalStorage data set from auto-save.");
-      }
-      function autoSaveData() {
-        if (!window.currentUserId) {
-          console.log("No currentUserId; skipping auto-save.");
-          return;
-        }
-        console.log("Auto-saving data for user", window.currentUserId);
-        var data = getAllLocalStorageData();
-        var title = "Auto Save";
-        var description = "Auto-saved on " + new Date().toLocaleString();
-        db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
-          .set({ title: title, description: description, localStorageData: data })
-          .then(function() {
-            console.log("Auto-save successfully saved to Firebase.");
-          })
-          .catch(function(err) {
-            console.error("Auto-save error:", err);
-          });
-      }
-      function loadAutoSave() {
-        if (!window.currentUserId) {
-          console.log("No currentUserId; cannot load auto-save.");
-          return;
-        }
-        console.log("Loading auto-save for user", window.currentUserId);
-        // Removed overlay display for loading.
-        db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
-          .get()
-          .then(function(doc) {
-            if (doc.exists) {
-              console.log("Auto-save document found:", doc.data());
-              var data = doc.data();
-              if (data && data.localStorageData) {
-                setAllLocalStorageData(data.localStorageData);
-                alert("Auto-save loaded!");
-                console.log("Auto-save loaded successfully.");
-              } else {
-                alert("No auto-save data found in Firebase.");
-                console.log("Document exists but no localStorageData.");
-              }
-            } else {
-              alert("No auto-save data found in Firebase.");
-              console.log("No auto-save document exists.");
-            }
-          })
-          .catch(function(err) {
-            console.error("Error loading auto-save:", err);
-          });
-      }
-      function showAutoSaveModal() {
-        var modal = document.getElementById("autoSaveModal");
-        if (modal) {
-          modal.style.display = "flex";
-          console.log("Showing auto-save modal.");
+window.addEventListener("DOMContentLoaded", function() {
+  if (!document.getElementById("autoSaveModal")) {
+    var modal = document.createElement("div");
+    modal.id = "autoSaveModal";
+    modal.style.cssText = "display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 3000;";
+    var modalContent = document.createElement("div");
+    modalContent.style.cssText = "background: #333; padding: 20px; border-radius: 5px; text-align: center; max-width: 90%; color: #fff;";
+    var p = document.createElement("p");
+    p.textContent = "Would you like to load your auto-save?\nIf you do not load the auto-save data right now, you will have to manually enable auto saves in the save menu.";
+    p.style.whiteSpace = "pre-wrap";
+    var btnYes = document.createElement("button");
+    btnYes.id = "autoSaveYes";
+    btnYes.textContent = "Yes";
+    btnYes.style.cssText = "margin-right: 10px; padding: 10px 20px; background: orange; border: none; border-radius: 5px; cursor: pointer;";
+    var btnNo = document.createElement("button");
+    btnNo.id = "autoSaveNo";
+    btnNo.textContent = "No";
+    btnNo.style.cssText = "padding: 10px 20px; background: gray; border: none; border-radius: 5px; cursor: pointer;";
+    modalContent.appendChild(p);
+    modalContent.appendChild(btnYes);
+    modalContent.appendChild(btnNo);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+  }
+
+  function setCookie(name, value, expires) {
+    document.cookie = name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
+  }
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+    return match ? match[2] : "";
+  }
+  function getAllLocalStorageData() {
+    var data = {};
+    for (var i = 0; i < localStorage.length; i++) {
+      var key = localStorage.key(i);
+      data[key] = localStorage.getItem(key);
+    }
+    return data;
+  }
+  function setAllLocalStorageData(data) {
+    localStorage.clear();
+    for (var key in data) {
+      localStorage.setItem(key, data[key]);
+    }
+  }
+  function autoSaveData() {
+    if (!window.currentUserId) return;
+    var data = getAllLocalStorageData();
+    var title = "Auto Save";
+    var description = "Auto-saved on " + new Date().toLocaleString();
+    db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
+      .set({ title: title, description: description, localStorageData: data });
+  }
+  function loadAutoSave() {
+    if (!window.currentUserId) return;
+    db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
+      .get()
+      .then(function(doc) {
+        if (doc.exists && doc.data() && doc.data().localStorageData) {
+          setAllLocalStorageData(doc.data().localStorageData);
+          alert("Auto-save loaded!");
         } else {
-          console.log("Auto-save modal element not found.");
+          alert("No auto-save data found in Firebase.");
         }
-      }
-      function hideAutoSaveModal() {
-        var modal = document.getElementById("autoSaveModal");
-        if (modal) {
-          modal.style.display = "none";
-          console.log("Hiding auto-save modal.");
-        }
-      }
-      var autoSaveYes = document.getElementById("autoSaveYes");
-      var autoSaveNo = document.getElementById("autoSaveNo");
-      if (autoSaveYes) {
-        autoSaveYes.addEventListener("click", function() {
-          console.log("User clicked YES on auto-save modal.");
-          hideAutoSaveModal();
-          setCookie("autoSaveEnabled", "true", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-          loadAutoSave();
-        });
-      } else {
-        console.log("autoSaveYes button not found.");
-      }
-      if (autoSaveNo) {
-        autoSaveNo.addEventListener("click", function() {
-          console.log("User clicked NO on auto-save modal.");
-          hideAutoSaveModal();
-          setCookie("autoSaveEnabled", "false", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-        });
-      } else {
-        console.log("autoSaveNo button not found.");
-      }
-      auth.onAuthStateChanged(function(user) {
-        if (user) {
-          window.currentUserId = user.uid;
-          console.log("User authenticated with uid:", user.uid);
-          var autoEnabled = getCookie("autoSaveEnabled");
-          if (!autoEnabled) {
-            console.log("No autoSaveEnabled cookie; checking Firebase for auto-save data.");
-            db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
-              .get().then(function(doc) {
-                if (doc.exists && doc.data() && doc.data().localStorageData) {
-                  console.log("Found auto-save data in Firebase; prompting user.");
-                  showAutoSaveModal();
-                } else {
-                  console.log("No auto-save data found in Firebase; automatically enabling auto-save.");
-                  setCookie("autoSaveEnabled", "true", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-                  if (!getCookie("autoSaveDone")) {
-                    autoSaveData();
-                    var now = new Date();
-                    var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-                    setCookie("autoSaveDone", "true", tomorrow);
-                    console.log("Auto-save performed automatically.");
-                  } else {
-                    console.log("Auto-save already done today; not saving again.");
-                  }
-                }
-              }).catch(function(err) {
-                console.error("Error checking auto-save data in Firebase:", err);
-              });
-          } else {
-            console.log("autoSaveEnabled cookie is set to:", autoEnabled);
-            if (autoEnabled === "true") {
+      });
+  }
+  function showAutoSaveModal() {
+    var modal = document.getElementById("autoSaveModal");
+    if (modal) modal.style.display = "flex";
+  }
+  function hideAutoSaveModal() {
+    var modal = document.getElementById("autoSaveModal");
+    if (modal) modal.style.display = "none";
+  }
+
+  var autoSaveYes = document.getElementById("autoSaveYes");
+  var autoSaveNo = document.getElementById("autoSaveNo");
+  if (autoSaveYes) {
+    autoSaveYes.addEventListener("click", function() {
+      hideAutoSaveModal();
+      setCookie("autoSaveEnabled", "true", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
+      loadAutoSave();
+    });
+  }
+  if (autoSaveNo) {
+    autoSaveNo.addEventListener("click", function() {
+      hideAutoSaveModal();
+      setCookie("autoSaveEnabled", "false", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
+    });
+  }
+
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      window.currentUserId = user.uid;
+      var autoEnabled = getCookie("autoSaveEnabled");
+      if (!autoEnabled) {
+        db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
+          .get().then(function(doc) {
+            if (doc.exists && doc.data() && doc.data().localStorageData) {
+              showAutoSaveModal();
+            } else {
+              setCookie("autoSaveEnabled", "true", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
               if (!getCookie("autoSaveDone")) {
-                console.log("Auto-save not done today; performing auto-save.");
                 autoSaveData();
                 var now = new Date();
                 var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
                 setCookie("autoSaveDone", "true", tomorrow);
-              } else {
-                console.log("Auto-save already done today; not saving again.");
               }
-            } else {
-              console.log("Auto-save is disabled by cookie.");
             }
-          }
-        } else {
-          console.log("User not authenticated; auto-save will not run.");
-        }
-      });
-    });
-    </script>     
+          });
+      } else if (autoEnabled === "true" && !getCookie("autoSaveDone")) {
+        autoSaveData();
+        var now = new Date();
+        var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        setCookie("autoSaveDone", "true", tomorrow);
+      }
+    }
+  });
+});
+    </script>
   <body>
     <div
       id="secretLink"
