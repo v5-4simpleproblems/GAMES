@@ -315,10 +315,13 @@ body {
   .news-container {
     margin: 20px auto;
     padding: 20px;
-    background-color: #444444;
-    border-radius: 8px;
+  }
+
+  .news-container, .alternate-links-container {
     max-width: 800px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #444444;
+    border-radius: 15px;
   }
 
   .news {
@@ -372,29 +375,36 @@ body {
     font-size: 1.5em;
   }
 
-  .pagination {
-    text-align: center;
-    margin: 20px 0;
+  .alternate-links-container {
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-inline: auto;
   }
 
-  .pagination a {
-    color: white;
-    padding: 8px 16px;
+  .alternate-link {
+      background: rgb(95, 95, 95);
+      border-radius: 10px;
+      flex-grow: 1;
+      text-align: center;
+      padding: 1rem;
+      transition-duration: 0.2s;
+  }
+
+  .alternate-link, .alternate-links-title > a {
+    font-weight: bold;
     text-decoration: none;
-    transition: background-color 0.3s;
-    border: 1px solid #444;
-    margin: 0 4px;
-    border-radius: 4px;
-    background-color: #333;
+    color: #4fa7ff;
   }
 
-  .pagination a.active {
-    background-color: #555;
-    border-color: #777;
+  .alternate-link:hover {
+      text-decoration: dotted underline;
+      filter: brightness(0.9);
   }
 
-  .pagination a:hover:not(.active) {
-    background-color: #444;
+  .alternate-links-title {
+      text-align: center;
   }
 
   .updates-paragraph-text {

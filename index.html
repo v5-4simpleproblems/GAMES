@@ -764,88 +764,52 @@ window.addEventListener("DOMContentLoaded", function() {
             >
           </div>
         </div>
-        <div class="credits-item">
-          <div class="credits-role">Other Links</div>
-          <div class="credits-names">
-            <a
-              href="https://strongdogunblocked.github.io"
-              target="_blank"
-              class="credits-link"
-              >strongdogunblocked.github.io</a
-            >
-            <a
-              href="https://gametreexp.github.io"
-              target="_blank"
-              class="credits-link"
-              >gametreexp.github.io</a
-            >
-            <span>|</span>
-            <span>|</span>
-            <a
-              href="https://weakcatxp.github.io"
-              target="_blank"
-              class="credits-link"
-              >weakcatxp.github.io</a
-            >
-            <span>|</span>
-            <a
-              href="https://strongdogxp.github.io"
-              target="_blank"
-              class="credits-link"
-              >mathcordxp.github.io</a
-            >
-            <span>|</span>
-            <a
-              href="https://strongdogxp.github.io"
-              target="_blank"
-              class="credits-link"
-              >strongdogxp.github.io</a
-            >
-            <span>|</span>
-            <a
-              href="https://jman1593.github.io"
-              target="_blank"
-              class="credits-link"
-              >jman1593.github.io</a
-            >
-            <span>|</span>
-            <a
-              href="https://strongdog-1.vercel.app"
-              target="_blank"
-              class="credits-link"
-              >strongdog-1.vercel.app</a
-            >
-            <span>|</span>
-            <a href="https://mathcord.com" target="_blank" class="credits-link"
-              >mathcord.com</a
-            >
-            <span>|</span>
-            <a href="https://strongdog.com" target="_blank" class="credits-link"
-              >strongdog.com</a
-            >
-          </div>
-        </div>
-        <div class="credits-item">
-          <div class="credits-role">MORE UNBLOCKED LINKS ON THE DISCORD</div>
-        </div>
       </div>
     </div>
+
+    <!-- Alternate links container -->
+    <h1 class="alternate-links-title">Alternate Links</h1>
+    <div class="alternate-links-container" id="alternate-links-container">
+      <!-- Generated dynamically in the script below -->
+    </div>
+    <h1 class="alternate-links-title">Exclusive links available on the StrongDogXP <a href="https://discord.gg/pWjfQ4Sz5c">Discord server</a>!</h1>
+
     <div class="slide-menu" id="slideMenu">
       <div class="categories">
         <a href="favs.html" class="option-link">Favorites</a>
         <a href="#" id="randomGame" class="option-link">Random Game</a>
         <a href="#" id="blockLanschool" class="option-link">Block Lanschool</a>
-        <a href="about.html" class="option-link"
-          >About | Bugs | Request Games</a
-        >
-        <a href="./save/" class="option-link"
-          >Save manager<span class="new-feature-tag">new</span></a
-        >
-        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
-          >Discord Server</a
-        >
+        <a href="about.html" class="option-link">About | Bugs | Request Games</a>
+        <a href="./save/" class="option-link">Save manager<span class="new-feature-tag">new</span></a>
+        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">Discord Server</a>
       </div>
     </div>
+
+    <!-- Add/remove links from this script to adjust the display of alternate links @ bottom of page -->
+    <script>
+      const alternateLinksContainer = document.getElementById("alternate-links-container");
+      const alternateLinks = [
+          "strongdogunblocked.github.io",
+          "weakcatxp.github.io",
+          "gametreexp.github.io",
+          "strongdogexp.github.io",
+          "stroongdog.github.io",
+          "mathcordxp.github.io",
+          "strongdogxp.github.io",
+          "jman1593.github.io",
+          "strongdog-1.vercel.app",
+          "mathcord.com",
+          "strongdog.com"
+      ];
+      alternateLinks.forEach(link => {
+        const a = document.createElement("a");
+        a.href = `https://${link}`;
+        a.target = "_blank";
+        a.textContent = link;
+        a.classList.add("alternate-link");
+        alternateLinksContainer.appendChild(a);
+      });
+    </script>
     <script type="module">
       import games from "./cards-data.js";
 
