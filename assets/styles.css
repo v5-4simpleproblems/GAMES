@@ -403,10 +403,6 @@ body {
       filter: brightness(0.9);
   }
 
-  .alternate-links-title {
-      text-align: center;
-  }
-
   .updates-paragraph-text {
     color: white;
     background-color: #a83632;
