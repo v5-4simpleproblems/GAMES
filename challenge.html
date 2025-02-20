@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>High Score</title>
+</head>
+<body>
+  <div id="highScore">Loading high score…</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var saveData = localStorage.getItem("save.txt");
+      if (saveData) {
+        try {
+          var saveObj = JSON.parse(saveData);
+          var score = saveObj.highscore;
+          document.getElementById("highScore").innerText = "High Score: " + score;
+        } catch (error) {
+          console.error("Error parsing save data:", error);
+          document.getElementById("highScore").innerText = "Error parsing save data";
+        }
+      } else {
+        document.getElementById("highScore").innerText = "No save data found.";
+      }
+    });
+  </script>
+</body>
+</html>
