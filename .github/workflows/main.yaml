@@ -11,27 +11,29 @@ jobs:
     if: github.event.repository.fork == false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Ensure full history is available if needed
 
-      - name: Remove unwanted files
+      - name: Remove Unwanted Files
         run: |
-          # Remove the .git directory and other dotfiles that you don't want to deploy
-          rm -rf .git
-          rm -rf .github  # Remove GitHub workflows
-          rm -rf .vscode  # Remove VS Code settings
+          rm -rf .git .github .vscode
           rm -f .gitattributes .gitignore
 
-      - name: Upload changed files to Cloudflare R2
-        uses: ryand56/r2-upload-action@latest
+      - name: Configure AWS Credentials for R2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          r2-account-id: ${{ secrets.CLOUDFLARE_R2_ACCOUNT_ID }}
-          r2-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
-          r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
-          r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
-          source-dir: './'
-          destination-dir: './'    # Upload to the root of your R2 bucket
-          output-file-url: true    # (Optional) Outputs the file URLs after upload
-          multipart-size: 100      # (Optional) File size (in MB) above which multipart upload is used
-          max-retries: 5           # (Optional) Maximum number of retries for each multipart chunk
-          multipart-concurrent: true  # (Optional) Enable concurrent multipart uploads
-          keep-file-fresh: false   # (Optional) Do not delete previous bucket contents
+          aws-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Cloudflare R2 does not require a region, but this is required by the action
+          endpoint-url: https://${{ secrets.CLOUDFLARE_R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+
+      - name: Sync Files to Cloudflare R2
+        run: |
+          aws s3 sync . s3://${{ secrets.CLOUDFLARE_R2_BUCKET }} \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude ".vscode/*" \
+            --exclude ".gitattributes" \
+            --exclude ".gitignore"
