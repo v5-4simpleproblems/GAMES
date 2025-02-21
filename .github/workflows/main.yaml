@@ -17,8 +17,9 @@ jobs:
 
       - name: Remove unwanted files
         run: |
-          # Remove the .git directory and other unwanted dotfiles
+          # Remove the .git directory and other unwanted dotfiles/directories
           rm -rf .git
+          rm -rf .github  # Remove GitHub workflows and related files from deployment
           rm -f .gitattributes .gitignore
 
       - name: Upload changed files to Cloudflare R2
@@ -30,4 +31,4 @@ jobs:
           r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
           r2-jurisdiction: "WNAM"
           source-dir: './'
-          destination-dir: '/'
+          destination-dir: ''  # Remove the leading slash
