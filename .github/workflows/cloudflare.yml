@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Upload changed files to Cloudflare R2
         uses: ryand56/r2-upload-action@master
         with:
-          # These args will ensure only changed files are uploaded,
-          # similar to the S3 sync options in your example.
-          args: --acl public-read --follow-symlinks --delete --size-only --exclude '.git*/*' --exclude 'strongdog2/*' --exclude 'strongdog3/*'
-        env:
-          CLOUDFLARE_R2_BUCKET: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
-          CLOUDFLARE_R2_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_R2_ACCOUNT_ID }}
-          CLOUDFLARE_R2_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
-          CLOUDFLARE_R2_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          r2-account-id: ${{ secrets.CLOUDFLARE_R2_ACCOUNT_ID }}
+          r2-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
+          r2-jurisdiction: ${{ secrets.CLOUDFLARE_R2_JURISDICTION }}
+          source-dir: './'         # adjust as needed
+          destination-dir: '/'     # adjust as needed
