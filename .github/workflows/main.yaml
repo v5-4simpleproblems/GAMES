@@ -11,51 +11,27 @@ jobs:
     if: github.event.repository.fork == false
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Ensure full history is available for git diff
+      - uses: actions/checkout@v2
 
-      - name: Remove Unwanted Files
+      - name: Remove unwanted files
         run: |
+          # Remove the .git directory and other dotfiles that you don't want to deploy
           rm -rf .git
-          rm -rf .github
-          rm -rf .vscode
+          rm -rf .github  # Remove GitHub workflows
+          rm -rf .vscode  # Remove VS Code settings
           rm -f .gitattributes .gitignore
 
-      - name: Collect Changed Files
-        run: |
-          mkdir -p changed
-          # If no previous commit exists (e.g. first push or manual trigger)
-          if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
-            echo "No previous commit found; copying entire directory."
-            cp -R . changed/
-          else
-            # Only consider Added (A) or Modified (M) files
-            CHANGED_FILES=$(git diff --name-only --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}")
-            echo "Changed files: $CHANGED_FILES"
-            for file in $CHANGED_FILES; do
-              # Check if the file exists (skip deleted files)
-              if [ -f "$file" ]; then
-                mkdir -p "changed/$(dirname "$file")"
-                cp --parents "$file" changed/
-              else
-                echo "Skipping '$file' as it no longer exists."
-              fi
-            done
-          fi
-
-      - name: Upload Changed Files to Cloudflare R2
+      - name: Upload changed files to Cloudflare R2
         uses: ryand56/r2-upload-action@latest
         with:
           r2-account-id: ${{ secrets.CLOUDFLARE_R2_ACCOUNT_ID }}
           r2-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
           r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
-          source-dir: './changed'
-          destination-dir: './'  # Adjust as needed
-          output-file-url: true
-          multipart-size: 100
-          max-retries: 5
-          multipart-concurrent: true
-          keep-file-fresh: false
+          source-dir: './'
+          destination-dir: './'    # Upload to the root of your R2 bucket
+          output-file-url: true    # (Optional) Outputs the file URLs after upload
+          multipart-size: 100      # (Optional) File size (in MB) above which multipart upload is used
+          max-retries: 5           # (Optional) Maximum number of retries for each multipart chunk
+          multipart-concurrent: true  # (Optional) Enable concurrent multipart uploads
+          keep-file-fresh: false   # (Optional) Do not delete previous bucket contents
