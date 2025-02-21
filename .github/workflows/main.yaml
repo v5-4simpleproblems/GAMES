@@ -15,23 +15,36 @@ jobs:
 
       - name: Remove unwanted files
         run: |
-          # Remove the .git directory and other dotfiles that you don't want to deploy
+          # Remove directories and files not needed for deployment
           rm -rf .git
-          rm -rf .github  # Remove GitHub workflows
-          rm -rf .vscode  # Remove VS Code settings
+          rm -rf .github
+          rm -rf .vscode
           rm -f .gitattributes .gitignore
 
-      - name: Upload changed files to Cloudflare R2
+      - name: Collect Changed Files
+        run: |
+          # Create a temporary directory to hold only changed files
+          mkdir -p changed
+          # List files changed between the previous commit and the current commit
+          CHANGED_FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+          echo "Changed files: $CHANGED_FILES"
+          # For each changed file, recreate its directory structure in the "changed" folder and copy it over
+          for file in $CHANGED_FILES; do
+            mkdir -p "changed/$(dirname "$file")"
+            cp --parents "$file" changed/
+          done
+
+      - name: Upload Changed Files to Cloudflare R2
         uses: ryand56/r2-upload-action@latest
         with:
           r2-account-id: ${{ secrets.CLOUDFLARE_R2_ACCOUNT_ID }}
           r2-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
           r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
-          source-dir: './'
-          destination-dir: './'    # Upload to the root of your R2 bucket
-          output-file-url: true    # (Optional) Outputs the file URLs after upload
-          multipart-size: 100      # (Optional) File size (in MB) above which multipart upload is used
-          max-retries: 5           # (Optional) Maximum number of retries for each multipart chunk
-          multipart-concurrent: true  # (Optional) Enable concurrent multipart uploads
-          keep-file-fresh: false   # (Optional) Do not delete previous bucket contents
+          source-dir: './changed'
+          destination-dir: './'   # Upload to the bucket root (adjust if needed)
+          output-file-url: true
+          multipart-size: 100     # Files over 100MB use multipart upload
+          max-retries: 5
+          multipart-concurrent: true
+          keep-file-fresh: false
