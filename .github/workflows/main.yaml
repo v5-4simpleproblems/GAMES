@@ -1,4 +1,4 @@
-name: Upload Website To Cloudflare R2
+name: Upload Website to Cloudflare R2
 
 on:
   push:
@@ -15,8 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Remove .git directory to prevent unwanted uploads
-        run: rm -rf .git
+      - name: Remove unwanted files
+        run: |
+          # Remove the .git directory and other unwanted dotfiles
+          rm -rf .git
+          rm -f .gitattributes .gitignore
 
       - name: Upload changed files to Cloudflare R2
         uses: ryand56/r2-upload-action@master
