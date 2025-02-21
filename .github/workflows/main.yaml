@@ -14,11 +14,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Fetch the full commit history for proper git diff
+          fetch-depth: 0  # Ensure full history is available for git diff
 
       - name: Remove Unwanted Files
         run: |
-          # Remove directories and files not needed for deployment
           rm -rf .git
           rm -rf .github
           rm -rf .vscode
@@ -27,18 +26,22 @@ jobs:
       - name: Collect Changed Files
         run: |
           mkdir -p changed
-          # Check if a valid commit range is available
+          # If no previous commit exists (e.g. first push or manual trigger)
           if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
-            echo "No previous commit found, copying entire directory"
+            echo "No previous commit found; copying entire directory."
             cp -R . changed/
           else
-            # Get list of changed files between the previous and current commit
-            CHANGED_FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+            # Only consider Added (A) or Modified (M) files
+            CHANGED_FILES=$(git diff --name-only --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}")
             echo "Changed files: $CHANGED_FILES"
-            # For each changed file, preserve directory structure in the 'changed' folder
             for file in $CHANGED_FILES; do
-              mkdir -p "changed/$(dirname "$file")"
-              cp --parents "$file" changed/
+              # Check if the file exists (skip deleted files)
+              if [ -f "$file" ]; then
+                mkdir -p "changed/$(dirname "$file")"
+                cp --parents "$file" changed/
+              else
+                echo "Skipping '$file' as it no longer exists."
+              fi
             done
           fi
 
@@ -50,9 +53,9 @@ jobs:
           r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
           source-dir: './changed'
-          destination-dir: './'    # Upload to the bucket root
+          destination-dir: './'  # Adjust as needed
           output-file-url: true
-          multipart-size: 100      # Use multipart upload for files over 100 MB
+          multipart-size: 100
           max-retries: 5
           multipart-concurrent: true
           keep-file-fresh: false
