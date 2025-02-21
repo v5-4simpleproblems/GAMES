@@ -1,4 +1,4 @@
-name: Upload Website To AWS
+name: Upload Website To Cloudflare R2
 
 on:
   push:
@@ -14,10 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: jakejarvis/s3-sync-action@master
+
+      - name: Remove .git directory to prevent unwanted uploads
+        run: rm -rf .git
+
+      - name: Upload changed files to Cloudflare R2
+        uses: ryand56/r2-upload-action@master
         with:
-          args: --acl public-read --follow-symlinks --delete --size-only --exclude '.git*/*' --exclude 'strongdog2/*' --exclude 'strongdog3/*'
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          r2-account-id: ${{ secrets.CLOUDFLARE_R2_ACCOUNT_ID }}
+          r2-access-key-id: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+          r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
+          r2-jurisdiction: "WNAM"
+          source-dir: './'
+          destination-dir: '/'
