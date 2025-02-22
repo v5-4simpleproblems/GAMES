@@ -3,7 +3,7 @@
   <head>
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"
+      src="https://www.googletagmanager.com/gtag/js?id=G-D88TDDVPGJ"
     ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -12,7 +12,7 @@
       }
       gtag("js", new Date());
 
-      gtag("config", "G-0YLTCV2MMS");
+      gtag("config", "G-D88TDDVPGJ");
     </script>
     <!--Tab name and icon-->
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
@@ -446,7 +446,9 @@
           })
             .then((response) => {
               if (!response.ok) {
-                throw new Error("Network response was not ok " + response.statusText);
+                throw new Error(
+                  "Network response was not ok " + response.statusText
+                );
               }
               return response.json();
             })
@@ -474,7 +476,7 @@
           let foundCount = 0;
           let index = 1; // Start after any header row, if present
           const displayedGameNames = new Set(); // Keep track of which games have been displayed
-          
+
           topGameList.innerHTML = ""; // Clear existing content
 
           // Attempt to list up to 20 unique games
@@ -498,7 +500,9 @@
           }
 
           if (foundCount < numTopGames) {
-            console.warn(`Could not fill all ${numTopGames} top slots with unique games.`);
+            console.warn(
+              `Could not fill all ${numTopGames} top slots with unique games.`
+            );
           }
         }
 
@@ -522,127 +526,169 @@
     </script>
   </head>
   <script>
-window.addEventListener("DOMContentLoaded", function() {
-  if (!document.getElementById("autoSaveModal")) {
-    var modal = document.createElement("div");
-    modal.id = "autoSaveModal";
-    modal.style.cssText = "display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 3000;";
-    var modalContent = document.createElement("div");
-    modalContent.style.cssText = "background: #333; padding: 20px; border-radius: 5px; text-align: center; max-width: 90%; color: #fff;";
-    var p = document.createElement("p");
-    p.textContent = "Would you like to load your auto-save?\nIf you do not load the auto-save data right now, you will have to manually enable auto saves in the save menu.";
-    p.style.whiteSpace = "pre-wrap";
-    var btnYes = document.createElement("button");
-    btnYes.id = "autoSaveYes";
-    btnYes.textContent = "Yes";
-    btnYes.style.cssText = "margin-right: 10px; padding: 10px 20px; background: orange; border: none; border-radius: 5px; cursor: pointer;";
-    var btnNo = document.createElement("button");
-    btnNo.id = "autoSaveNo";
-    btnNo.textContent = "No";
-    btnNo.style.cssText = "padding: 10px 20px; background: gray; border: none; border-radius: 5px; cursor: pointer;";
-    modalContent.appendChild(p);
-    modalContent.appendChild(btnYes);
-    modalContent.appendChild(btnNo);
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-  }
+    window.addEventListener("DOMContentLoaded", function () {
+      if (!document.getElementById("autoSaveModal")) {
+        var modal = document.createElement("div");
+        modal.id = "autoSaveModal";
+        modal.style.cssText =
+          "display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 3000;";
+        var modalContent = document.createElement("div");
+        modalContent.style.cssText =
+          "background: #333; padding: 20px; border-radius: 5px; text-align: center; max-width: 90%; color: #fff;";
+        var p = document.createElement("p");
+        p.textContent =
+          "Would you like to load your auto-save?\nIf you do not load the auto-save data right now, you will have to manually enable auto saves in the save menu.";
+        p.style.whiteSpace = "pre-wrap";
+        var btnYes = document.createElement("button");
+        btnYes.id = "autoSaveYes";
+        btnYes.textContent = "Yes";
+        btnYes.style.cssText =
+          "margin-right: 10px; padding: 10px 20px; background: orange; border: none; border-radius: 5px; cursor: pointer;";
+        var btnNo = document.createElement("button");
+        btnNo.id = "autoSaveNo";
+        btnNo.textContent = "No";
+        btnNo.style.cssText =
+          "padding: 10px 20px; background: gray; border: none; border-radius: 5px; cursor: pointer;";
+        modalContent.appendChild(p);
+        modalContent.appendChild(btnYes);
+        modalContent.appendChild(btnNo);
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+      }
 
-  function setCookie(name, value, expires) {
-    document.cookie = name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
-  }
-  function getCookie(name) {
-    var match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    return match ? match[2] : "";
-  }
-  function getAllLocalStorageData() {
-    var data = {};
-    for (var i = 0; i < localStorage.length; i++) {
-      var key = localStorage.key(i);
-      data[key] = localStorage.getItem(key);
-    }
-    return data;
-  }
-  function setAllLocalStorageData(data) {
-    localStorage.clear();
-    for (var key in data) {
-      localStorage.setItem(key, data[key]);
-    }
-  }
-  function autoSaveData() {
-    if (!window.currentUserId) return;
-    var data = getAllLocalStorageData();
-    var title = "Auto Save";
-    var description = "Auto-saved on " + new Date().toLocaleString();
-    db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
-      .set({ title: title, description: description, localStorageData: data });
-  }
-  function loadAutoSave() {
-    if (!window.currentUserId) return;
-    db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
-      .get()
-      .then(function(doc) {
-        if (doc.exists && doc.data() && doc.data().localStorageData) {
-          setAllLocalStorageData(doc.data().localStorageData);
-          alert("Auto-save loaded!");
-        } else {
-          alert("No auto-save data found in Firebase.");
+      function setCookie(name, value, expires) {
+        document.cookie =
+          name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
+      }
+      function getCookie(name) {
+        var match = document.cookie.match(
+          new RegExp("(^| )" + name + "=([^;]+)")
+        );
+        return match ? match[2] : "";
+      }
+      function getAllLocalStorageData() {
+        var data = {};
+        for (var i = 0; i < localStorage.length; i++) {
+          var key = localStorage.key(i);
+          data[key] = localStorage.getItem(key);
         }
-      });
-  }
-  function showAutoSaveModal() {
-    var modal = document.getElementById("autoSaveModal");
-    if (modal) modal.style.display = "flex";
-  }
-  function hideAutoSaveModal() {
-    var modal = document.getElementById("autoSaveModal");
-    if (modal) modal.style.display = "none";
-  }
-
-  var autoSaveYes = document.getElementById("autoSaveYes");
-  var autoSaveNo = document.getElementById("autoSaveNo");
-  if (autoSaveYes) {
-    autoSaveYes.addEventListener("click", function() {
-      hideAutoSaveModal();
-      setCookie("autoSaveEnabled", "true", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-      loadAutoSave();
-    });
-  }
-  if (autoSaveNo) {
-    autoSaveNo.addEventListener("click", function() {
-      hideAutoSaveModal();
-      setCookie("autoSaveEnabled", "false", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-    });
-  }
-
-  auth.onAuthStateChanged(function(user) {
-    if (user) {
-      window.currentUserId = user.uid;
-      var autoEnabled = getCookie("autoSaveEnabled");
-      if (!autoEnabled) {
-        db.collection("users").doc(window.currentUserId).collection("saves").doc("slot3")
-          .get().then(function(doc) {
+        return data;
+      }
+      function setAllLocalStorageData(data) {
+        localStorage.clear();
+        for (var key in data) {
+          localStorage.setItem(key, data[key]);
+        }
+      }
+      function autoSaveData() {
+        if (!window.currentUserId) return;
+        var data = getAllLocalStorageData();
+        var title = "Auto Save";
+        var description = "Auto-saved on " + new Date().toLocaleString();
+        db.collection("users")
+          .doc(window.currentUserId)
+          .collection("saves")
+          .doc("slot3")
+          .set({
+            title: title,
+            description: description,
+            localStorageData: data,
+          });
+      }
+      function loadAutoSave() {
+        if (!window.currentUserId) return;
+        db.collection("users")
+          .doc(window.currentUserId)
+          .collection("saves")
+          .doc("slot3")
+          .get()
+          .then(function (doc) {
             if (doc.exists && doc.data() && doc.data().localStorageData) {
-              showAutoSaveModal();
+              setAllLocalStorageData(doc.data().localStorageData);
+              alert("Auto-save loaded!");
             } else {
-              setCookie("autoSaveEnabled", "true", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-              if (!getCookie("autoSaveDone")) {
-                autoSaveData();
-                var now = new Date();
-                var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-                setCookie("autoSaveDone", "true", tomorrow);
-              }
+              alert("No auto-save data found in Firebase.");
             }
           });
-      } else if (autoEnabled === "true" && !getCookie("autoSaveDone")) {
-        autoSaveData();
-        var now = new Date();
-        var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-        setCookie("autoSaveDone", "true", tomorrow);
       }
-    }
-  });
-});
-    </script>
+      function showAutoSaveModal() {
+        var modal = document.getElementById("autoSaveModal");
+        if (modal) modal.style.display = "flex";
+      }
+      function hideAutoSaveModal() {
+        var modal = document.getElementById("autoSaveModal");
+        if (modal) modal.style.display = "none";
+      }
+
+      var autoSaveYes = document.getElementById("autoSaveYes");
+      var autoSaveNo = document.getElementById("autoSaveNo");
+      if (autoSaveYes) {
+        autoSaveYes.addEventListener("click", function () {
+          hideAutoSaveModal();
+          setCookie(
+            "autoSaveEnabled",
+            "true",
+            new Date("Fri, 31 Dec 9999 23:59:59 GMT")
+          );
+          loadAutoSave();
+        });
+      }
+      if (autoSaveNo) {
+        autoSaveNo.addEventListener("click", function () {
+          hideAutoSaveModal();
+          setCookie(
+            "autoSaveEnabled",
+            "false",
+            new Date("Fri, 31 Dec 9999 23:59:59 GMT")
+          );
+        });
+      }
+
+      auth.onAuthStateChanged(function (user) {
+        if (user) {
+          window.currentUserId = user.uid;
+          var autoEnabled = getCookie("autoSaveEnabled");
+          if (!autoEnabled) {
+            db.collection("users")
+              .doc(window.currentUserId)
+              .collection("saves")
+              .doc("slot3")
+              .get()
+              .then(function (doc) {
+                if (doc.exists && doc.data() && doc.data().localStorageData) {
+                  showAutoSaveModal();
+                } else {
+                  setCookie(
+                    "autoSaveEnabled",
+                    "true",
+                    new Date("Fri, 31 Dec 9999 23:59:59 GMT")
+                  );
+                  if (!getCookie("autoSaveDone")) {
+                    autoSaveData();
+                    var now = new Date();
+                    var tomorrow = new Date(
+                      now.getFullYear(),
+                      now.getMonth(),
+                      now.getDate() + 1
+                    );
+                    setCookie("autoSaveDone", "true", tomorrow);
+                  }
+                }
+              });
+          } else if (autoEnabled === "true" && !getCookie("autoSaveDone")) {
+            autoSaveData();
+            var now = new Date();
+            var tomorrow = new Date(
+              now.getFullYear(),
+              now.getMonth(),
+              now.getDate() + 1
+            );
+            setCookie("autoSaveDone", "true", tomorrow);
+          }
+        }
+      });
+    });
+  </script>
   <body>
     <div
       id="secretLink"
@@ -686,7 +732,10 @@ window.addEventListener("DOMContentLoaded", function() {
       </div>
     </div>
     <div class="updates-text-container">
-      <p class="updates-paragraph-text">Strongdog now auto saves! Your account will auto save all your data every day unless disabled in the save manager.</p>
+      <p class="updates-paragraph-text">
+        Strongdog now auto saves! Your account will auto save all your data
+        every day unless disabled in the save manager.
+      </p>
     </div>
     <div class="modal" id="popupModal">
       <div class="modal-content">
@@ -772,36 +821,47 @@ window.addEventListener("DOMContentLoaded", function() {
     <div class="alternate-links-container" id="alternate-links-container">
       <!-- Generated dynamically in the script below -->
     </div>
-    <h2 class="alternate-links-title">Exclusive links available on the StrongDogXP <a href="https://discord.gg/pWjfQ4Sz5c">Discord server</a>!</h2>
+    <h2 class="alternate-links-title">
+      Exclusive links available on the StrongDogXP
+      <a href="https://discord.gg/pWjfQ4Sz5c">Discord server</a>!
+    </h2>
 
     <div class="slide-menu" id="slideMenu">
       <div class="categories">
         <a href="favs.html" class="option-link">Favorites</a>
         <a href="#" id="randomGame" class="option-link">Random Game</a>
         <a href="#" id="blockLanschool" class="option-link">Block Lanschool</a>
-        <a href="about.html" class="option-link">About | Bugs | Request Games</a>
-        <a href="./save/" class="option-link">Save manager<span class="new-feature-tag">new</span></a>
-        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">Discord Server</a>
+        <a href="about.html" class="option-link"
+          >About | Bugs | Request Games</a
+        >
+        <a href="./save/" class="option-link"
+          >Save manager<span class="new-feature-tag">new</span></a
+        >
+        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
+          >Discord Server</a
+        >
       </div>
     </div>
 
     <!-- Add/remove links from this script to adjust the display of alternate links @ bottom of page -->
     <script>
-      const alternateLinksContainer = document.getElementById("alternate-links-container");
+      const alternateLinksContainer = document.getElementById(
+        "alternate-links-container"
+      );
       const alternateLinks = [
-          "gametree.net",
-          "hateroll.com",
-          "strongdogunblocked.github.io",
-          "weakcatxp.github.io",
-          "gametreexp.github.io",
-          "mathcordxp.github.io",
-          "strongdogxp.github.io",
-          "jman1593.github.io",
-          "strongdog-1.vercel.app",
-          "mathcord.com",
-          "strongdog.com"
+        "gametree.net",
+        "hateroll.com",
+        "strongdogunblocked.github.io",
+        "weakcatxp.github.io",
+        "gametreexp.github.io",
+        "mathcordxp.github.io",
+        "strongdogxp.github.io",
+        "jman1593.github.io",
+        "strongdog-1.vercel.app",
+        "mathcord.com",
+        "strongdog.com",
       ];
-      alternateLinks.forEach(link => {
+      alternateLinks.forEach((link) => {
         const a = document.createElement("a");
         a.href = `https://${link}`;
         a.target = "_blank";
