@@ -10,6 +10,7 @@ jobs:
   deploy:
     if: github.event.repository.fork == false && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -17,28 +18,37 @@ jobs:
           fetch-depth: 0  # Ensure full history is available for git diff
 
       - name: Collect Changed Files
+        shell: bash
         run: |
           mkdir -p changed
-          
-          # If no previous commit exists (first push or manual trigger), copy everything.
+
+          # If no previous commit exists (first push or manual trigger), copy everything (excluding unwanted files via rsync)
           if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
             echo "No previous commit found; copying entire directory excluding unwanted files."
-            rsync -av --exclude='.git' --exclude='.github' --exclude='.vscode' \
-                  --exclude='.gitattributes' --exclude='.gitignore' ./ changed/
+            rsync -av \
+              --exclude='.git' \
+              --exclude='.github' \
+              --exclude='.vscode' \
+              --exclude='.gitattributes' \
+              --exclude='.gitignore' \
+              ./ changed/
           else
-            echo "Changed files between ${{ github.event.before }} and ${{ github.sha }}:"
-            # Print them for debugging:
-            git diff --name-only --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}"
+            echo "Files changed between ${{ github.event.before }} and ${{ github.sha }}:"
+            
+            # 1) Print them out in quotes for debugging
+            git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
+            | xargs -0 -I {} echo "'{}'"
 
-            # Now iterate line-by-line, preserving spaces:
-            git diff --name-only --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
-            | while IFS= read -r file; do
-                # If file is empty (no changed files), skip
+            # 2) Actually copy them into 'changed/'
+            git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
+            | while IFS= read -r -d '' file; do
+                # Skip if empty (shouldn't happen, but just in case)
                 [ -z "$file" ] && continue
                 
-                # Check if the file exists (avoid trying to copy deleted files)
+                # Double-quote in echo to verify spaces are intact
+                echo "Copying changed file: '$file'"
+                
                 if [ -f "$file" ]; then
-                  echo "Copying changed file: '$file'"
                   mkdir -p "changed/$(dirname "$file")"
                   cp --parents "$file" changed/
                 else
@@ -48,7 +58,9 @@ jobs:
           fi
 
       - name: Remove Unwanted Files from Changed Directory
+        shell: bash
         run: |
+          # Remove unwanted files/folders if they exist
           rm -rf changed/.git changed/.github changed/.vscode
           rm -f changed/.gitattributes changed/.gitignore
 
@@ -60,7 +72,7 @@ jobs:
           r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
           source-dir: './changed'
-          destination-dir: './'  # Adjust as needed
+          destination-dir: './'  # Adjust as needed (e.g. 'public/' or similar)
           output-file-url: true
           multipart-size: 100
           max-retries: 5
