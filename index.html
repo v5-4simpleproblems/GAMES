@@ -1,23 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!--Tab name and icon-->
+    <!-- Tab name and icon -->
     <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StrongDog XP</title>
     <link rel="stylesheet" href="assets/styles.css" />
+
+    <!-- Popup Styles for Favorites (shown when not signed in) -->
+    <style>
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+      .popup-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+      }
+      .popup-container.active {
+        display: flex;
+      }
+      .popup {
+        background-color: #333;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        max-width: 90%;
+        width: 300px;
+        text-align: center;
+      }
+      .popup button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #ff8c00;
+        border: none;
+        color: white;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .popup button:hover {
+        background-color: #ff6a00;
+      }
+    </style>
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+    <!-- Google Ads -->
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
       crossorigin="anonymous"
     ></script>
-    <script type="module">
+
+    <!-- Script for copying localStorage from old Netlify site -->
+    <script>
       // Keys for various games
       const polytrackKeys = [
         "v1_record_445edfa992d0b19b376c8072692f69eafc4afeceb608ba355d44b3cb57a902a0",
@@ -67,7 +123,11 @@
 
       function showTransferInstructions() {
         alert(
-          "Your save data was successfully copied to your clipboard!\nTo transfer your save data to either strongdogxp.github.io or mathcordxp.github.io, please navigate to the home page of either website and in the red updates box, there will be further instruction.\n\nMAKE SURE to not copy anything to your clipboard before transferring your data!"
+          "Your save data was successfully copied to your clipboard!\n" +
+            "To transfer your save data to either strongdogxp.github.io or mathcordxp.github.io, " +
+            "navigate to the home page of either website and in the red updates box, " +
+            "you'll see instructions to import your data.\n\n" +
+            "DON'T overwrite your clipboard before you import!"
         );
       }
 
@@ -91,7 +151,9 @@
         );
         if (!validateData(dataObj))
           alert(
-            "(If you retrieved Polytrack saves this isn't a problem, please move on)\n\nYour save data will be copied, but some could not be retrieved which may cause problems importing this data. Please ensure all required keys of your game save data are present in localStorage and try again.\n\nIf this issue persists, report the error to the bug report form or message us on Discord."
+            "(If retrieving Polytrack saves, that might be ok.)\n\nSome keys " +
+              "could not be retrieved. If you notice issues, ensure all keys exist in localStorage " +
+              "and try again, or contact us on Discord."
           );
         return JSON.stringify(dataObj);
       }
@@ -102,29 +164,31 @@
       }
 
       document.addEventListener("DOMContentLoaded", function () {
+        // If on Netlify, show migration notice & save export
         if (window.location.hostname.includes("netlify.app")) {
           document.body.innerHTML = `
             <div style="padding: 20px; text-align: center; color: white; background-color: #333; font-family: Arial, sans-serif;">
-              <p>Hi there! If you're seeing this, you're trying to connect to a StrongDog version hosted on Netlify. Due to Netlify's extreme costs, we're moving back to GitHub with updated links!</p>
-              <p>Here are the new links that should be used from now on:</p>
+              <p>Hi there! If you're seeing this, you're trying to connect to a StrongDog version hosted on Netlify. Due to Netlify's costs, we moved back to GitHub with updated links!</p>
+              <p>Use these new links going forward:</p>
               <p><a href="https://strongdogxp.github.io" style="color: orange;">strongdogxp.github.io</a></p>
               <p><a href="https://mathcordxp.github.io" style="color: orange;">mathcordxp.github.io</a></p>
-              <p>If you used to use <strong>stroongdog.netlify.app</strong>, the updated GitHub link is on the Discord in the same place you found the original link.</p>
-              <h2>Use these buttons to copy your save data from this page (just strongdog.netlify.app currently) to transfer it over to another StrongDogXP page:</h2>
+              <p>If you used <strong>stroongdog.netlify.app</strong>, the updated GitHub link is on Discord in the same place the original was posted.</p>
+              <h2>Use these buttons to copy your save data from Netlify to your new site:</h2>
               <button id="get-polytrack-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Polytrack Save Data</button>
               <button id="get-cookie-clicker-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Cookie Clicker Save Data</button>
-              <button id="get-bad-egg-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Bad egg Save Data</button>
+              <button id="get-bad-egg-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Bad Egg Save Data</button>
               <button id="get-babel-tower-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Babel Tower Save Data</button>
               <button id="get-idle-shark-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Idle Shark Save Data</button>
-              <p>If you cannot figure out how to use these buttons or they simply don't work, report an error in the <a href="./about.html" target="_blank" style="color: deepskyblue">bug report form</a> or message us on Discord.</p>
-              <h2><strong>DON'T FORGET TO SET NEW BOOKMARKS! THIS PAGE WILL BE GOING DOWN SOON!</strong></h2>
+              <p>If these buttons don't work or you're unsure, message us on Discord.</p>
+              <h2><strong>DON'T FORGET TO UPDATE YOUR BOOKMARKS! This page will be gone soon!</strong></h2>
             </div>
           `;
           document.body.style =
             "height: 100vh; margin: 0; display: grid; place-items: center;";
 
-          const getPolytrackDataBtn =
-            document.getElementById("get-polytrack-data");
+          const getPolytrackDataBtn = document.getElementById(
+            "get-polytrack-data"
+          );
           const getCookieClickerDataBtn = document.getElementById(
             "get-cookie-clicker-data"
           );
@@ -132,9 +196,8 @@
           const getBabelTowerDataBtn = document.getElementById(
             "get-babel-tower-data"
           );
-          const getIdleSharkDataBtn = document.getElementById(
-            "get-idle-shark-data"
-          );
+          const getIdleSharkDataBtn =
+            document.getElementById("get-idle-shark-data");
 
           getPolytrackDataBtn.addEventListener("click", () =>
             getDataAndCopy(polytrackKeys)
@@ -152,208 +215,64 @@
             getDataAndCopy(idleSharkKey)
           );
         } else {
+          // On GitHub or elsewhere, show an import button if present
           const importSaveDataBtn = document.getElementById(
             "import-save-data-btn"
           );
-          importSaveDataBtn.addEventListener("click", () => {
-            const confirmMessage = confirm(
-              `IMPORTANT: note that by confirming this message, you will REWRITE ALL current save data (only on this page) for the game you chose to transfer the data from. If you have records on this page that you don't want to be overridden by records on the site you're transferring data from, cancel this message.\n\nAfter you dismiss this browser alert message, there may be a pop-up asking you to allow this page to "see text copied to the clipboard".\n\nTo be able to transfer your save data and continue, you MUST click ALLOW.`
-            );
-            if (!confirmMessage) return;
-            navigator.clipboard
-              .readText()
-              .then((text) => {
-                if (!text) {
-                  throw new Error(
-                    "Clipboard is empty. Please copy the data to the clipboard and try again."
-                  );
-                }
-
-                let parsedData;
-                try {
-                  parsedData = JSON.parse(text);
-                } catch (err) {
-                  throw new Error(
-                    "Failed to parse clipboard content as JSON. Ensure the data is in valid JSON format."
-                  );
-                }
-
-                if (typeof parsedData !== "object") {
-                  throw new Error(
-                    "Invalid data format. The clipboard content must be a JSON object."
-                  );
-                }
-
-                setDataInObject(parsedData);
-                alert(
-                  "Your data was successfully transferred! If there are any issues, please contact support."
-                );
-              })
-              .catch((err) =>
-                alert(`Failed to read clipboard contents: ${err}`)
+          if (importSaveDataBtn) {
+            importSaveDataBtn.addEventListener("click", () => {
+              const confirmMessage = confirm(
+                `IMPORTANT: By confirming, you OVERWRITE ALL local saves for the relevant game.\n` +
+                  `If you want to keep your current local data, press CANCEL.\n\n` +
+                  `After closing this dialog, your browser may ask permission to read your clipboard. ` +
+                  `You MUST allow it to import your data.`
               );
-          });
-        }
-      });
+              if (!confirmMessage) return;
 
-      import games from "./cards-data.js";
-      import { siteMapping } from "./site-mapping.js";
+              navigator.clipboard
+                .readText()
+                .then((text) => {
+                  if (!text) {
+                    throw new Error("Clipboard is empty. Copy your data first!");
+                  }
 
-      function normalizeGameName(name) {
-        return name
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .replace(/[^a-z0-9]/g, "");
-      }
+                  let parsedData;
+                  try {
+                    parsedData = JSON.parse(text);
+                  } catch (err) {
+                    throw new Error("Clipboard data is not valid JSON.");
+                  }
 
-      function getCurrentSiteKey() {
-        const currentURL = window.location.href;
-        const keys = Object.keys(siteMapping);
-        keys.sort((a, b) => b.length - a.length);
-        for (const key of keys) {
-          if (currentURL.includes(key)) {
-            return key;
-          }
-        }
-        return null;
-      }
+                  if (typeof parsedData !== "object") {
+                    throw new Error("Invalid data format in your clipboard.");
+                  }
 
-      function getAdjustedUrls(href, imgSrc, page) {
-        let adjustedHref = href;
-        let adjustedImgSrc = `./img/${imgSrc}`;
-        const currentSiteKey = getCurrentSiteKey();
-
-        if (currentSiteKey) {
-          const currentSitePages = siteMapping[currentSiteKey];
-          const pageNumberToURL = {};
-          let currentPageNumber = getPageNumberFromURL(currentSiteKey);
-          pageNumberToURL[currentPageNumber] = currentSiteKey;
-
-          if (currentSitePages) {
-            currentSitePages.forEach((url) => {
-              const pageNum = getPageNumberFromURL(url);
-              pageNumberToURL[pageNum] = url;
+                  setDataInObject(parsedData);
+                  alert(
+                    "Your data was successfully imported! If there are any issues, please contact support."
+                  );
+                })
+                .catch((err) =>
+                  alert(`Failed to read clipboard contents: ${err}`)
+                );
             });
           }
-
-          if (page !== undefined && page !== currentPageNumber) {
-            let adjustedBaseURL = pageNumberToURL[page];
-            if (!adjustedBaseURL) {
-              const currentOrigin = window.location.origin;
-              adjustedBaseURL = `${currentOrigin}/strongdog${page}`;
-            }
-            const adjustedGameHref = href.replace(/^\.\//, "");
-            adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
-            const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-            adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
-          }
-        } else {
-          if (page !== undefined && page > 1) {
-            const currentOrigin = window.location.origin;
-            const adjustedBaseURL = `${currentOrigin}/strongdog${page}`;
-            const adjustedGameHref = href.replace(/^\.\//, "");
-            adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
-            const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-            adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
-          }
-        }
-
-        return { adjustedHref, adjustedImgSrc };
-      }
-
-      function getPageNumberFromURL(url) {
-        const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
-        const match = url.match(regex);
-        if (match) {
-          const pageNum = match[2];
-          return pageNum === "" ? 1 : parseInt(pageNum, 10);
-        } else {
-          return 1;
-        }
-      }
-
-      function getCardHTML(gameObject) {
-        const { href, imgSrc, name, page } = gameObject;
-        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
-          href,
-          imgSrc,
-          page
-        ); // Use original logic for image paths
-        const gameLink = `./play/?id=${gameObject.id}`; // Adjusted to use game ID
-        const normalizedName = normalizeGameName(name); // Normalize the game name
-        return `
-          <a href="${gameLink}" class="card" data-game-id="${normalizedName}" data-page="${page}">
-            <img src="${adjustedImgSrc}" alt="${name}">
-            <figcaption>${name}</figcaption>
-          </a>
-        `;
-      }
-
-      let cardsHTMLArr = [];
-      for (let i = 0; i < games.length; ++i) {
-        cardsHTMLArr.push(getCardHTML(games[i]));
-      }
-
-      const cardsHTMLStr = cardsHTMLArr.join("");
-
-      document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("allGameList").innerHTML = cardsHTMLStr;
-
-        const searchInput = document.querySelector(".search-bar");
-        const searchResults = document.getElementById("searchResults");
-
-        if (!searchInput || !searchResults) {
-          console.error(
-            "Search input or results container not found in the DOM."
-          );
-          return;
-        }
-
-        searchInput.addEventListener("focus", function () {
-          updateSearchResults();
-        });
-
-        searchInput.addEventListener("input", updateSearchResults);
-
-        document.addEventListener("click", function (event) {
-          if (
-            !searchInput.contains(event.target) &&
-            !searchResults.contains(event.target)
-          ) {
-            searchResults.style.display = "none";
-          }
-        });
-
-        function updateSearchResults() {
-          const searchText = searchInput.value.toLowerCase();
-          const filteredGames = games
-            .filter((game) => game.name.toLowerCase().includes(searchText))
-            .slice(0, 7);
-
-          searchResults.innerHTML = "";
-          if (filteredGames.length === 0) {
-            searchResults.style.display = "none";
-            return;
-          }
-
-          filteredGames.forEach((game) => {
-            const { id, imgSrc, name } = game;
-            const adjustedHref = `./play/?id=${id}`;
-            const adjustedImgSrc = `./img/${imgSrc}`;
-
-            const resultLink = document.createElement("a");
-            resultLink.href = adjustedHref;
-            resultLink.innerHTML = `
-            <img src="${adjustedImgSrc}" alt="${name}">
-            <span>${name}</span>
-        `;
-            searchResults.appendChild(resultLink);
-          });
-
-          searchResults.style.display = "block";
         }
       });
     </script>
+
+    <!-- Our site-mapping import (global) -->
+    <script>
+      window.siteMapping = {
+        "strongdogxp.github.io": [
+          "https://strongdogxp.github.io/strongdog2",
+          "https://strongdogxp.github.io/strongdog3"
+        ],
+        "mathcordxp.github.io": []
+      };
+    </script>
+
+    <!-- Initialize Firebase globally -->
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
@@ -367,329 +286,175 @@
       };
 
       firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
-      const rtdb = firebase.database(); // Add this to access Realtime DB
+      window.auth = firebase.auth();
+      window.db = firebase.firestore();
+      window.rtdb = firebase.database();
     </script>
-    <script src="appscript.js"></script>
+
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-D88TDDVPGJ"
+    ></script>
     <script>
-      function normalizeGameName(name) {
-        return name
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .replace(/[^a-z0-9]/g, "");
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
       }
-      function getTierAndProgressFromXP(xp) {
-        const baseXPNeeded = 50; // Starting XP needed
-        const increasePerTier = 200; // Fixed increase after cap
-        const exponentialMultiplier = 1.2; // Multiplier for exponential increase
-        const levelsPerTier = 5; // Levels per tier
-        const capTier = 10; // Cap after this many tiers (50 levels total)
+      gtag("js", new Date());
+      gtag("config", "G-D88TDDVPGJ");
+    </script>
 
-        let level = 1;
-        let tier = 1;
-        let xpNeeded = baseXPNeeded; // Initial XP needed for the first tier
+    <!-- Auto-Save Popup -->
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        if (!document.getElementById("autoSaveModal")) {
+          var modal = document.createElement("div");
+          modal.id = "autoSaveModal";
+          modal.style.cssText =
+            "display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 3000;";
+          var modalContent = document.createElement("div");
+          modalContent.style.cssText =
+            "background: #333; padding: 20px; border-radius: 5px; text-align: center; max-width: 90%; color: #fff;";
+          var p = document.createElement("p");
+          p.textContent =
+            "Would you like to load your auto-save?\nIf you do not load it now, you must manually enable auto saves in the save menu.";
+          p.style.whiteSpace = "pre-wrap";
+          var btnYes = document.createElement("button");
+          btnYes.id = "autoSaveYes";
+          btnYes.textContent = "Yes";
+          btnYes.style.cssText =
+            "margin-right: 10px; padding: 10px 20px; background: orange; border: none; border-radius: 5px; cursor: pointer;";
+          var btnNo = document.createElement("button");
+          btnNo.id = "autoSaveNo";
+          btnNo.textContent = "No";
+          btnNo.style.cssText =
+            "padding: 10px 20px; background: gray; border: none; border-radius: 5px; cursor: pointer;";
+          modalContent.appendChild(p);
+          modalContent.appendChild(btnYes);
+          modalContent.appendChild(btnNo);
+          modal.appendChild(modalContent);
+          document.body.appendChild(modal);
+        }
 
-        while (xp >= xpNeeded) {
-          xp -= xpNeeded;
+        function setCookie(name, value, days) {
+          const date = new Date();
+          date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+          document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+        }
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(";").shift();
+          return "";
+        }
 
-          if (tier < capTier) {
-            if (level % levelsPerTier === 0) {
-              tier++;
-              xpNeeded = Math.round(xpNeeded * exponentialMultiplier);
-            }
-          } else {
-            if (level % levelsPerTier === 0) {
-              xpNeeded += increasePerTier;
-            }
+        function getAllLocalStorageData() {
+          var data = {};
+          for (var i = 0; i < localStorage.length; i++) {
+            var key = localStorage.key(i);
+            data[key] = localStorage.getItem(key);
           }
-
-          level++;
+          return data;
         }
-
-        return {
-          level,
-          tier,
-          currentXP: xp,
-          xpNeededForNext: xpNeeded,
-        };
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const numTopGames = 20; // Change this to adjust the amount of games to get for the top
-        const topGameList = document.getElementById("topGameList");
-
-        // Adding ghost cards for loading animation
-        for (let i = 0; i < numTopGames; i++) {
-          const ghostCard = document.createElement("div");
-          ghostCard.classList.add("ghost-card");
-          ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`;
-          topGameList.appendChild(ghostCard);
+        function setAllLocalStorageData(data) {
+          localStorage.clear();
+          for (var key in data) {
+            localStorage.setItem(key, data[key]);
+          }
         }
-
-        function fetchTopGames() {
-          fetch(targetUrl, {
-            method: "GET",
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(
-                  "Network response was not ok " + response.statusText
-                );
-              }
-              return response.json();
-            })
-            .then((data) => {
-              if (data && data.content) {
-                const parsedData = JSON.parse(data.content);
-                console.log("Parsed data:", parsedData);
-                displayTopGames(parsedData);
-              } else {
-                console.error("Invalid data format", data);
-              }
-            })
-            .catch((error) => console.error("Error:", error))
-            .finally(() => {
-              // Nothing here currently
+        function autoSaveData() {
+          if (!window.currentUserId) return;
+          var data = getAllLocalStorageData();
+          var title = "Auto Save";
+          var description = "Auto-saved on " + new Date().toLocaleString();
+          window.db
+            .collection("users")
+            .doc(window.currentUserId)
+            .collection("saves")
+            .doc("slot3")
+            .set({
+              title: title,
+              description: description,
+              localStorageData: data,
             });
         }
-        function displayTopGames(games) {
-          const topGameList = document.getElementById("topGameList");
-          if (!topGameList) {
-            console.error("Required element not found.");
-            return;
-          }
-
-          let foundCount = 0;
-          let index = 1; // Start after any header row, if present
-          const displayedGameNames = new Set(); // Keep track of which games have been displayed
-
-          topGameList.innerHTML = ""; // Clear existing content
-
-          // Attempt to list up to 20 unique games
-          while (foundCount < numTopGames && index < games.length) {
-            const game = games[index];
-            const gameName = game[0];
-            const matchingCard = findMatchingCard(gameName);
-
-            if (matchingCard) {
-              if (!displayedGameNames.has(gameName)) {
-                // If we haven't displayed this game yet, display it now
-                topGameList.appendChild(matchingCard.cloneNode(true));
-                displayedGameNames.add(gameName);
-                foundCount++;
+        function loadAutoSave() {
+          if (!window.currentUserId) return;
+          window.db
+            .collection("users")
+            .doc(window.currentUserId)
+            .collection("saves")
+            .doc("slot3")
+            .get()
+            .then(function (doc) {
+              if (doc.exists && doc.data() && doc.data().localStorageData) {
+                setAllLocalStorageData(doc.data().localStorageData);
+                alert("Auto-save loaded!");
+              } else {
+                alert("No auto-save data found in Firebase.");
               }
-            } else {
-              console.warn(`Card for "${gameName}" not found, skipping.`);
-              // Do not increment foundCount since we didn't display anything
-            }
-            index++;
-          }
-
-          if (foundCount < numTopGames) {
-            console.warn(
-              `Could not fill all ${numTopGames} top slots with unique games.`
-            );
-          }
+            });
+        }
+        function showAutoSaveModal() {
+          var modal = document.getElementById("autoSaveModal");
+          if (modal) modal.style.display = "flex";
+        }
+        function hideAutoSaveModal() {
+          var modal = document.getElementById("autoSaveModal");
+          if (modal) modal.style.display = "none";
         }
 
-        function findMatchingCard(gameName) {
-          const formattedGameName = normalizeGameName(gameName); // Normalize the gameName from Top 20
-          const cards = document.querySelectorAll("#allGameList .card"); // Select all cards
-
-          for (let card of cards) {
-            const cardGameId = card.getAttribute("data-game-id"); // Get the data-game-id from the card
-            if (cardGameId === formattedGameName) {
-              return card; // Return the matching card
-            }
-          }
-
-          console.warn(`Card not found one of the games.`);
-          return null;
+        var autoSaveYes = document.getElementById("autoSaveYes");
+        var autoSaveNo = document.getElementById("autoSaveNo");
+        if (autoSaveYes) {
+          autoSaveYes.addEventListener("click", function () {
+            hideAutoSaveModal();
+            setCookie("autoSaveEnabled", "true", 9999);
+            loadAutoSave();
+          });
+        }
+        if (autoSaveNo) {
+          autoSaveNo.addEventListener("click", function () {
+            hideAutoSaveModal();
+            setCookie("autoSaveEnabled", "false", 9999);
+          });
         }
 
-        fetchTopGames();
+        window.auth.onAuthStateChanged(function (user) {
+          if (user) {
+            window.currentUserId = user.uid;
+            var autoEnabled = getCookie("autoSaveEnabled");
+            if (!autoEnabled) {
+              window.db
+                .collection("users")
+                .doc(window.currentUserId)
+                .collection("saves")
+                .doc("slot3")
+                .get()
+                .then(function (doc) {
+                  if (doc.exists && doc.data() && doc.data().localStorageData) {
+                    showAutoSaveModal();
+                  } else {
+                    setCookie("autoSaveEnabled", "true", 9999);
+                    if (!getCookie("autoSaveDone")) {
+                      autoSaveData();
+                      setCookie("autoSaveDone", "true", 1);
+                    }
+                  }
+                });
+            } else if (autoEnabled === "true" && !getCookie("autoSaveDone")) {
+              autoSaveData();
+              setCookie("autoSaveDone", "true", 1);
+            }
+          }
+        });
       });
     </script>
   </head>
-  <script
-  async
-  src="https://www.googletagmanager.com/gtag/js?id=G-D88TDDVPGJ"
-></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag("js", new Date());
 
-  gtag("config", "G-D88TDDVPGJ");
-</script>
-  <script>
-    window.addEventListener("DOMContentLoaded", function () {
-      if (!document.getElementById("autoSaveModal")) {
-        var modal = document.createElement("div");
-        modal.id = "autoSaveModal";
-        modal.style.cssText =
-          "display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 3000;";
-        var modalContent = document.createElement("div");
-        modalContent.style.cssText =
-          "background: #333; padding: 20px; border-radius: 5px; text-align: center; max-width: 90%; color: #fff;";
-        var p = document.createElement("p");
-        p.textContent =
-          "Would you like to load your auto-save?\nIf you do not load the auto-save data right now, you will have to manually enable auto saves in the save menu.";
-        p.style.whiteSpace = "pre-wrap";
-        var btnYes = document.createElement("button");
-        btnYes.id = "autoSaveYes";
-        btnYes.textContent = "Yes";
-        btnYes.style.cssText =
-          "margin-right: 10px; padding: 10px 20px; background: orange; border: none; border-radius: 5px; cursor: pointer;";
-        var btnNo = document.createElement("button");
-        btnNo.id = "autoSaveNo";
-        btnNo.textContent = "No";
-        btnNo.style.cssText =
-          "padding: 10px 20px; background: gray; border: none; border-radius: 5px; cursor: pointer;";
-        modalContent.appendChild(p);
-        modalContent.appendChild(btnYes);
-        modalContent.appendChild(btnNo);
-        modal.appendChild(modalContent);
-        document.body.appendChild(modal);
-      }
-
-      function setCookie(name, value, expires) {
-        document.cookie =
-          name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
-      }
-      function getCookie(name) {
-        var match = document.cookie.match(
-          new RegExp("(^| )" + name + "=([^;]+)")
-        );
-        return match ? match[2] : "";
-      }
-      function getAllLocalStorageData() {
-        var data = {};
-        for (var i = 0; i < localStorage.length; i++) {
-          var key = localStorage.key(i);
-          data[key] = localStorage.getItem(key);
-        }
-        return data;
-      }
-      function setAllLocalStorageData(data) {
-        localStorage.clear();
-        for (var key in data) {
-          localStorage.setItem(key, data[key]);
-        }
-      }
-      function autoSaveData() {
-        if (!window.currentUserId) return;
-        var data = getAllLocalStorageData();
-        var title = "Auto Save";
-        var description = "Auto-saved on " + new Date().toLocaleString();
-        db.collection("users")
-          .doc(window.currentUserId)
-          .collection("saves")
-          .doc("slot3")
-          .set({
-            title: title,
-            description: description,
-            localStorageData: data,
-          });
-      }
-      function loadAutoSave() {
-        if (!window.currentUserId) return;
-        db.collection("users")
-          .doc(window.currentUserId)
-          .collection("saves")
-          .doc("slot3")
-          .get()
-          .then(function (doc) {
-            if (doc.exists && doc.data() && doc.data().localStorageData) {
-              setAllLocalStorageData(doc.data().localStorageData);
-              alert("Auto-save loaded!");
-            } else {
-              alert("No auto-save data found in Firebase.");
-            }
-          });
-      }
-      function showAutoSaveModal() {
-        var modal = document.getElementById("autoSaveModal");
-        if (modal) modal.style.display = "flex";
-      }
-      function hideAutoSaveModal() {
-        var modal = document.getElementById("autoSaveModal");
-        if (modal) modal.style.display = "none";
-      }
-
-      var autoSaveYes = document.getElementById("autoSaveYes");
-      var autoSaveNo = document.getElementById("autoSaveNo");
-      if (autoSaveYes) {
-        autoSaveYes.addEventListener("click", function () {
-          hideAutoSaveModal();
-          setCookie(
-            "autoSaveEnabled",
-            "true",
-            new Date("Fri, 31 Dec 9999 23:59:59 GMT")
-          );
-          loadAutoSave();
-        });
-      }
-      if (autoSaveNo) {
-        autoSaveNo.addEventListener("click", function () {
-          hideAutoSaveModal();
-          setCookie(
-            "autoSaveEnabled",
-            "false",
-            new Date("Fri, 31 Dec 9999 23:59:59 GMT")
-          );
-        });
-      }
-
-      auth.onAuthStateChanged(function (user) {
-        if (user) {
-          window.currentUserId = user.uid;
-          var autoEnabled = getCookie("autoSaveEnabled");
-          if (!autoEnabled) {
-            db.collection("users")
-              .doc(window.currentUserId)
-              .collection("saves")
-              .doc("slot3")
-              .get()
-              .then(function (doc) {
-                if (doc.exists && doc.data() && doc.data().localStorageData) {
-                  showAutoSaveModal();
-                } else {
-                  setCookie(
-                    "autoSaveEnabled",
-                    "true",
-                    new Date("Fri, 31 Dec 9999 23:59:59 GMT")
-                  );
-                  if (!getCookie("autoSaveDone")) {
-                    autoSaveData();
-                    var now = new Date();
-                    var tomorrow = new Date(
-                      now.getFullYear(),
-                      now.getMonth(),
-                      now.getDate() + 1
-                    );
-                    setCookie("autoSaveDone", "true", tomorrow);
-                  }
-                }
-              });
-          } else if (autoEnabled === "true" && !getCookie("autoSaveDone")) {
-            autoSaveData();
-            var now = new Date();
-            var tomorrow = new Date(
-              now.getFullYear(),
-              now.getMonth(),
-              now.getDate() + 1
-            );
-            setCookie("autoSaveDone", "true", tomorrow);
-          }
-        }
-      });
-    });
-  </script>
   <body>
+    <!-- Invisible secret link to "secret-menu.html" -->
     <div
       id="secretLink"
       title="Secret Menu"
@@ -716,8 +481,9 @@
       });
     </script>
 
+    <!-- Navbar -->
     <div class="navbar">
-      <div class="menu-icon" id="menuIcon">&#9776;</div>
+      <div class="menu-icon" id="menuIcon">☰</div>
       <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
 
       <div class="search-container">
@@ -731,39 +497,56 @@
         <div class="search-results" id="searchResults"></div>
       </div>
     </div>
+
+    <!-- Red updates box -->
     <div class="updates-text-container">
       <p class="updates-paragraph-text">
-        Strongdog now auto saves! Your account will auto save all your data
-        every day unless disabled in the save manager.
+        Strongdog now auto saves! Your account will auto-save daily unless disabled in the save manager.
       </p>
     </div>
+
+    <!-- Discord invitation modal -->
     <div class="modal" id="popupModal">
       <div class="modal-content">
-        <span class="modal-close" id="closeModal">&times;</span>
+        <span class="modal-close" id="closeModal">×</span>
         <p>
-          The strongdog discord server is a place for strongdog users to chill,
+          The StrongDog Discord server is a place for StrongDog users to chill,
           play games together, request ideas, and have fun!
         </p>
         <p>
-          If you want to help on StrongDog, there is a chat where you can get
-          help downloading games, and you can upload games YOU download to add
-          to StrongDog! (And yes, you WILL get credit for downloading games)
+          If you want to help with StrongDog, there's a chat where you can get
+          help downloading games, and you can upload games you download to add
+          to StrongDog! (You WILL get credit.)
         </p>
         <p>
           Ready to join? Click
-          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to
-          join the Discord server!
+          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a>
+          to join the Discord server!
         </p>
       </div>
     </div>
-    <h2 style="text-align: center"><strong>Top 20</strong></h2>
+
+    <!-- Top 20 -->
+    <h2 id="topGameHeader" style="text-align: center">
+      <strong>Top 20</strong>
+    </h2>
     <div class="games-grid" id="topGameList"></div>
 
-    <h2 style="text-align: center"><strong>All</strong></h2>
+    <!-- Favorites Section (will be enabled via custom toggle) -->
+    <div class="section-header" id="favoritesHeader" style="display: none;">
+      <h2 style="text-align: center"><strong>Favorites</strong></h2>
+    </div>
+    <div class="games-grid" id="favoritesGameList" style="display: none;"></div>
+
+    <!-- "All" heading + pencil icon -->
+    <div class="section-header">
+      <h2 style="text-align: center"><strong>All</strong></h2>
+      <span class="edit-button" id="editAllButton">✏️</span>
+    </div>
     <div class="games-grid" id="allGameList"></div>
 
+    <!-- Credits -->
     <h2 style="text-align: center"><strong>StrongDogXP LLC</strong></h2>
-
     <div class="news-container">
       <div class="news">
         <div class="credits-item">
@@ -818,15 +601,14 @@
 
     <!-- Alternate links container -->
     <h2 class="alternate-links-title">Alternate Links</h2>
-    <div class="alternate-links-container" id="alternate-links-container">
-      <!-- Generated dynamically in the script below -->
-    </div>
+    <div class="alternate-links-container" id="alternate-links-container"></div>
     <h2 class="alternate-links-title">
       Exclusive links available on the StrongDogXP
       <a href="https://discord.gg/pWjfQ4Sz5c">Discord server</a>!
     </h2>
 
-    <div class="slide-menu" id="slideMenu">
+    <!-- Slide menu -->
+    <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
       <div class="categories">
         <a href="favs.html" class="option-link">Favorites</a>
         <a href="#" id="randomGame" class="option-link">Random Game</a>
@@ -843,328 +625,263 @@
       </div>
     </div>
 
-    <!-- Add/remove links from this script to adjust the display of alternate links @ bottom of page -->
-    <script>
-      const alternateLinksContainer = document.getElementById(
-        "alternate-links-container"
-      );
-      const alternateLinks = [
-        "gametree.net",
-        "hateroll.com",
-        "strongdogunblocked.github.io",
-        "weakcatxp.github.io",
-        "gametreexp.github.io",
-        "mathcordxp.github.io",
-        "strongdogxp.github.io",
-        "jman1593.github.io",
-        "strongdog-1.vercel.app",
-        "mathcord.com",
-        "strongdog.com",
-      ];
-      alternateLinks.forEach((link) => {
-        const a = document.createElement("a");
-        a.href = `https://${link}`;
-        a.target = "_blank";
-        a.textContent = link;
-        a.classList.add("alternate-link");
-        alternateLinksContainer.appendChild(a);
-      });
-    </script>
+    <!-- Custom slide menu (toggled by the pencil icon) -->
+    <div
+      class="custom-slide-menu"
+      id="customSlideMenu"
+      style="transform: translateX(-100%)"
+    >
+      <div class="custom-options" style="padding: 20px">
+        <div class="toggle-option" style="margin-bottom: 10px">
+          <label for="top20Toggle">Show Top 20</label>
+          <input type="checkbox" id="top20Toggle" checked />
+        </div>
+        <div class="toggle-option" style="margin-bottom: 10px">
+          <label for="favoritesToggle">Show Favorites</label>
+          <input type="checkbox" id="favoritesToggle" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorites Popup (shown if not signed in) -->
+    <div class="overlay" id="favoritesOverlay"></div>
+    <div class="popup-container" id="favoritesPopupContainer">
+      <div class="popup" id="favoritesPopup">
+        <p>You need to sign in to view your favorites.</p>
+        <button id="favoritesOkButton">OK</button>
+      </div>
+    </div>
+
+    <!-- Main script (module) loading your cards-data and the external appscript.js for the Top 20 link -->
     <script type="module">
       import games from "./cards-data.js";
+      import { targetUrl } from "./appscript.js"; // import the top 20 URL from external file
 
-      document.addEventListener("DOMContentLoaded", function () {
-        const menuIcon = document.getElementById("menuIcon");
-        const slideMenu = document.querySelector(".slide-menu");
-        const categories = document.querySelector(".categories");
+      // Firebase references from global window
+      const auth = window.auth;
+      const db = window.db;
+      const rtdb = window.rtdb;
 
-        menuIcon.addEventListener("click", function (event) {
-          event.stopPropagation();
-          if (slideMenu.style.transform === "translateX(0%)") {
-            slideMenu.style.transform = "translateX(-100%)";
+      // Utility to normalize game names for matching
+      function normalizeGameName(name) {
+        return name
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .replace(/[^a-z0-9]/g, "");
+      }
+
+      // XP leveling system
+      function getTierAndProgressFromXP(xp) {
+        const baseXPNeeded = 50;
+        const increasePerTier = 200;
+        const exponentialMultiplier = 1.2;
+        const levelsPerTier = 5;
+        const capTier = 10;
+
+        let level = 1;
+        let tier = 1;
+        let xpNeeded = baseXPNeeded;
+
+        while (xp >= xpNeeded) {
+          xp -= xpNeeded;
+          if (tier < capTier) {
+            if (level % levelsPerTier === 0) {
+              tier++;
+              xpNeeded = Math.round(xpNeeded * exponentialMultiplier);
+            }
           } else {
-            slideMenu.style.transform = "translateX(0%)";
-          }
-        });
-
-        window.addEventListener("click", function (event) {
-          if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
-            slideMenu.style.transform = "translateX(-100%)";
-          }
-        });
-
-        auth.onAuthStateChanged(async (user) => {
-          if (user) {
-            const userDetailsContainer = document.createElement("div");
-            userDetailsContainer.className = "user-details-container";
-
-            const profileTopContainer = document.createElement("div");
-            profileTopContainer.className = "profile-top-container";
-
-            const profilePictureContainer = document.createElement("div");
-            profilePictureContainer.className = "profile-picture-container";
-            const profilePictureElement = document.createElement("img");
-            profilePictureElement.className = "profile-picture";
-            profilePictureContainer.appendChild(profilePictureElement);
-
-            const usernameContainer = document.createElement("div");
-            usernameContainer.className = "username-container";
-            const usernameElement = document.createElement("p");
-            usernameElement.className = "username-text";
-            usernameContainer.appendChild(usernameElement);
-
-            profileTopContainer.appendChild(profilePictureContainer);
-            profileTopContainer.appendChild(usernameContainer);
-
-            userDetailsContainer.appendChild(profileTopContainer);
-
-            if (user.photoURL) {
-              profilePictureElement.src = user.photoURL;
-            } else {
-              profilePictureElement.src = "img/default-avatar.png";
+            // Past tier 10, add a fixed amount every 5 levels
+            if (level % levelsPerTier === 0) {
+              xpNeeded += increasePerTier;
             }
+          }
+          level++;
+        }
+        return {
+          level,
+          tier,
+          currentXP: xp,
+          xpNeededForNext: xpNeeded,
+        };
+      }
 
-            const userId = user.uid;
-            const userDocRef = db.collection("usernames").doc(userId);
-            const userDoc = await userDocRef.get();
+      // --- TOP 20 FUNCTIONALITY ---
+      const numTopGames = 20;
+      const topGameList = document.getElementById("topGameList");
 
-            if (userDoc.exists) {
-              const userData = userDoc.data();
-              usernameElement.textContent = userData.username || "Username";
-            } else {
-              usernameElement.textContent = user.displayName || "Username";
-            }
-            // Fetch total XP from Realtime Database
-            const xpRef = rtdb.ref(`xp/${userId}`);
-            xpRef.once("value", (snapshot) => {
-              let totalXP = 0;
-              if (snapshot.exists()) {
-                totalXP = snapshot.val();
-              } else {
-                totalXP = 0;
-              }
+      // Add ghost-cards for loading animation for Top 20
+      for (let i = 0; i < numTopGames; i++) {
+        const ghostCard = document.createElement("div");
+        ghostCard.classList.add("ghost-card");
+        ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`;
+        topGameList.appendChild(ghostCard);
+      }
 
-              // Calculate level, tier, and progress
-              const { level, tier, currentXP, xpNeededForNext } =
-                getTierAndProgressFromXP(totalXP);
-
-              const xpContainer = document.createElement("div");
-              xpContainer.className = "xp-container";
-
-              const xpLevelText = document.createElement("div");
-              xpLevelText.className = "xp-level-text";
-              xpLevelText.textContent = `Level ${level}`;
-
-              const xpBar = document.createElement("div");
-              xpBar.className = "xp-bar";
-
-              const xpBarFill = document.createElement("div");
-              xpBarFill.className = "xp-bar-fill";
-              const fillPercent = (currentXP / xpNeededForNext) * 100;
-              xpBarFill.style.width = `${fillPercent}%`;
-
-              const xpBarText = document.createElement("div");
-              xpBarText.className = "xp-bar-text";
-              xpBarText.textContent = `${currentXP}/${xpNeededForNext}`;
-
-              xpBar.appendChild(xpBarFill);
-              xpBar.appendChild(xpBarText);
-              xpContainer.appendChild(xpLevelText);
-              xpContainer.appendChild(xpBar);
-
-              userDetailsContainer.appendChild(xpContainer);
-
-              profilePictureContainer.addEventListener("click", () => {
-                window.location.href = "settings.html";
-              });
-
-              slideMenu.insertBefore(userDetailsContainer, categories);
-
-              const logoutLink = document.createElement("a");
-              logoutLink.href = "#";
-              logoutLink.className = "option-link";
-              logoutLink.textContent = "Log Out";
-              logoutLink.style.backgroundColor = "#dc3545";
-              logoutLink.style.color = "white";
-
-              logoutLink.addEventListener("click", function (e) {
-                e.preventDefault();
-                auth
-                  .signOut()
-                  .then(() => {
-                    window.location.reload();
-                  })
-                  .catch((error) => {
-                    console.error("Error signing out:", error);
-                  });
-              });
-
-              const favoritesLink = categories.querySelector(
-                'a[href="favs.html"]'
+      // Fetch top games from your Apps Script (imported from appscript.js)
+      function fetchTopGames() {
+        fetch(targetUrl, { method: "GET" })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Network response was not ok: " + response.statusText
               );
-              categories.insertBefore(logoutLink, favoritesLink);
-
-              try {
-                const accessDocRef = db.collection("access").doc(user.uid);
-                accessDocRef.get().then((accessDoc) => {
-                  if (accessDoc.exists) {
-                    const accessData = accessDoc.data();
-                    if (accessData.tester === true) {
-                      const testGamesLink = document.createElement("a");
-                      testGamesLink.href = "test.html";
-                      testGamesLink.className = "option-link";
-                      testGamesLink.textContent = "Test Games";
-                      testGamesLink.style.backgroundColor = "#28a745";
-                      testGamesLink.style.color = "white";
-                      testGamesLink.style.marginTop = "10px";
-
-                      testGamesLink.addEventListener("mouseover", function () {
-                        testGamesLink.style.backgroundColor = "#218838";
-                      });
-                      testGamesLink.addEventListener("mouseout", function () {
-                        testGamesLink.style.backgroundColor = "#28a745";
-                      });
-
-                      categories.insertBefore(testGamesLink, favoritesLink);
-                    }
-                  }
-                });
-              } catch (error) {
-                console.error();
-              }
-            }); // end xpRef.once
-          } else {
-            const userDetailsContainer = document.createElement("div");
-            userDetailsContainer.className = "user-details-container";
-
-            const notLoggedInContainer = document.createElement("div");
-            notLoggedInContainer.className = "username-container";
-
-            const notLoggedInText = document.createElement("p");
-            notLoggedInText.className = "username-text";
-            notLoggedInText.textContent = "Not logged in";
-
-            notLoggedInContainer.appendChild(notLoggedInText);
-
-            const loginButton = document.createElement("button");
-            loginButton.textContent = "Log In";
-            loginButton.style.backgroundColor = "#007bff";
-            loginButton.style.color = "white";
-            loginButton.style.border = "none";
-            loginButton.style.padding = "10px 20px";
-            loginButton.style.fontSize = "16px";
-            loginButton.style.borderRadius = "5px";
-            loginButton.style.cursor = "pointer";
-            loginButton.style.marginTop = "5px";
-
-            loginButton.addEventListener("click", function () {
-              window.location.href = "login.html";
-            });
-
-            userDetailsContainer.style.display = "flex";
-            userDetailsContainer.style.flexDirection = "column";
-            userDetailsContainer.style.alignItems = "center";
-            userDetailsContainer.style.paddingBlock = "20px";
-
-            userDetailsContainer.appendChild(notLoggedInContainer);
-            userDetailsContainer.appendChild(loginButton);
-            slideMenu.insertBefore(userDetailsContainer, categories);
-          }
-
-          categories
-            .querySelector("#randomGame")
-            .addEventListener("click", function (e) {
-              e.preventDefault();
-              handleRandomGameClick();
-            });
-
-          categories
-            .querySelector("#blockLanschool")
-            .addEventListener("click", function (e) {
-              e.preventDefault();
-              handleBlockLanschoolClick();
-            });
-
-          function handleRandomGameClick() {
-            if (games.length > 0) {
-              const randomIndex = Math.floor(Math.random() * games.length);
-              const randomGamePath = games[randomIndex].href;
-              window.location.href = randomGamePath;
-            } else {
-              console.error("No game paths available for selection.");
             }
+            return response.json();
+          })
+          .then((data) => {
+            if (data && data.content) {
+              const parsedData = JSON.parse(data.content);
+              console.log("Parsed data:", parsedData);
+              displayTopGames(parsedData);
+            } else {
+              console.error("Invalid data format:", data);
+            }
+          })
+          .catch((error) => console.error("Error fetching top games:", error));
+      }
+
+      function displayTopGames(topData) {
+        // Clear the ghost cards
+        topGameList.innerHTML = "";
+
+        let foundCount = 0;
+        let index = 1; // skip any header row
+        const displayedGameNames = new Set();
+
+        while (foundCount < numTopGames && index < topData.length) {
+          const row = topData[index];
+          const gameName = row[0];
+          const matchingCard = findMatchingCard(gameName);
+
+          if (matchingCard) {
+            if (!displayedGameNames.has(gameName)) {
+              topGameList.appendChild(matchingCard.cloneNode(true));
+              displayedGameNames.add(gameName);
+              foundCount++;
+            }
+          } else {
+            console.warn(`Card for "${gameName}" not found, skipping.`);
           }
-
-          function handleBlockLanschoolClick() {
-            var url = window.location.href;
-            var newTab = window.open();
-            newTab.document.write(`
-    <html>
-      <body style="margin: 0; height: 100vh;">
-        <iframe src="${url}" style="border: none; width: 100%; height: 100%;"></iframe>
-      </body>
-    </html>
-  `);
-            newTab.document.close();
-          }
-        });
-      });
-    </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const discordLink = document.getElementById("discordLink");
-        const modal = document.getElementById("popupModal");
-        const closeModal = document.getElementById("closeModal");
-
-        if (discordLink) {
-          discordLink.addEventListener("click", function () {
-            modal.style.display = "flex";
-          });
+          index++;
         }
-
-        if (closeModal) {
-          closeModal.addEventListener("click", function () {
-            modal.style.display = "none";
-          });
+        if (foundCount < numTopGames) {
+          console.warn(
+            `Could not fill all ${numTopGames} top slots. Found: ${foundCount}`
+          );
         }
+      }
 
-        window.addEventListener("click", function (event) {
-          if (event.target === modal) {
-            modal.style.display = "none";
+      function findMatchingCard(gameName) {
+        const formattedGameName = normalizeGameName(gameName);
+        const allCards = document.querySelectorAll("#allGameList .card");
+        for (let card of allCards) {
+          const cardGameId = card.getAttribute("data-game-id");
+          if (cardGameId === formattedGameName) {
+            return card;
           }
-        });
-      });
-    </script>
-    <script type="module">
-      import games from "./cards-data.js";
-      import { siteMapping } from "./site-mapping.js";
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.querySelector(".search-bar");
-        const searchResults = document.getElementById("searchResults");
-
-        if (!searchInput || !searchResults) {
-          console.error("Search input or results container not found.");
-          return;
         }
+        return null;
+      }
 
-        searchInput.addEventListener("focus", updateSearchResults);
-        searchInput.addEventListener("input", updateSearchResults);
+      // Initiate the fetch for Top 20
+      fetchTopGames();
 
-        document.addEventListener("click", function (event) {
-          if (
-            !searchInput.contains(event.target) &&
-            !searchResults.contains(event.target)
-          ) {
-            searchResults.style.display = "none";
+      // --- BUILD THE "ALL" GAMES GRID ---
+      function getPageNumberFromURL(url) {
+        const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
+        const match = url.match(regex);
+        if (match) {
+          return match[2] === "" ? 1 : parseInt(match[2], 10);
+        }
+        return 1;
+      }
+
+      const siteMapping = window.siteMapping || {};
+
+      function getCurrentSiteKey() {
+        const currentURL = window.location.href;
+        const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
+        for (const key of keys) {
+          if (currentURL.includes(key)) return key;
+        }
+        return null;
+      }
+
+      function getAdjustedUrls(href, imgSrc, page) {
+        let adjustedHref = href;
+        let adjustedImgSrc = `./img/${imgSrc}`;
+
+        const currentSiteKey = getCurrentSiteKey();
+        if (currentSiteKey) {
+          const currentSitePages = siteMapping[currentSiteKey];
+          const pageNumberToURL = {};
+          let currentPageNumber = getPageNumberFromURL(currentSiteKey);
+          pageNumberToURL[currentPageNumber] = currentSiteKey;
+
+          // if siteMapping has multiple pages
+          if (currentSitePages) {
+            currentSitePages.forEach((url) => {
+              const pNum = getPageNumberFromURL(url);
+              pageNumberToURL[pNum] = url;
+            });
           }
-        });
 
+          if (page !== undefined && page !== currentPageNumber) {
+            let adjustedBaseURL = pageNumberToURL[page];
+            if (!adjustedBaseURL) {
+              const currentOrigin = window.location.origin;
+              adjustedBaseURL = `${currentOrigin}/strongdog${page}`;
+            }
+            const adjustedGameHref = href.replace(/^\.\//, "");
+            adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
+            const adjustedImgPath = imgSrc.replace(/^\.\//, "");
+            adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
+          }
+        } else {
+          // no siteMapping match
+          if (page !== undefined && page > 1) {
+            const currentOrigin = window.location.origin;
+            const adjustedBaseURL = `${currentOrigin}/strongdog${page}`;
+            const adjustedGameHref = href.replace(/^\.\//, "");
+            adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
+            const adjustedImgPath = imgSrc.replace(/^\.\//, "");
+            adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
+          }
+        }
+        return { adjustedHref, adjustedImgSrc };
+      }
+
+      function getCardHTML(gameObject) {
+        const { href, imgSrc, name, page, id } = gameObject;
+        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+          href,
+          imgSrc,
+          page
+        );
+        // We'll link to a play page with a query param for ID
+        const gameLink = `./play/?id=${id}`;
+        const normalizedName = normalizeGameName(name);
+        return `
+          <a href="${gameLink}" class="card" data-game-id="${normalizedName}" data-page="${page}">
+            <img src="${adjustedImgSrc}" alt="${name}">
+            <figcaption>${name}</figcaption>
+          </a>
+        `;
+      }
+
+      // Populate "All" games
+      const allGameListElement = document.getElementById("allGameList");
+      const cardsHTMLArr = games.map((game) => getCardHTML(game));
+      allGameListElement.innerHTML = cardsHTMLArr.join("");
+
+      // SEARCH logic
+      const searchInput = document.querySelector(".search-bar");
+      const searchResults = document.getElementById("searchResults");
+      if (searchInput && searchResults) {
         function updateSearchResults() {
           const searchText = searchInput.value.toLowerCase();
           const filteredGames = games
-            .filter((game) => game.name.toLowerCase().includes(searchText))
+            .filter((g) => g.name.toLowerCase().includes(searchText))
             .slice(0, 7);
 
           searchResults.innerHTML = "";
@@ -1173,165 +890,494 @@
             return;
           }
 
-          const currentURL = window.location.href;
-          let matchedKey = null;
-
-          for (const key in siteMapping) {
-            if (currentURL.includes(key)) {
-              matchedKey = key;
-              break;
-            }
-          }
-
-          if (!matchedKey) {
-            console.warn(
-              `No site mapping found for current URL: ${currentURL}`
-            );
-          }
-
           filteredGames.forEach((game) => {
             const { id, imgSrc, name, page } = game;
-            const adjustedHref = `./play/?id=${id}`; // Only updated the href to use the game ID
-            let adjustedImgSrc = `./img/${imgSrc}`;
-
-            if (page >= 2 && matchedKey) {
-              const pageIndex = page - 2;
-              const pageBaseURLs = siteMapping[matchedKey];
-
-              if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
-                const pageBaseURL = pageBaseURLs[pageIndex];
-                const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-                adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
-              } else {
-                console.warn(
-                  `No site mapping found for page ${page} on hostname: ${matchedKey}`
-                );
-              }
-            }
-
+            const { adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page);
             const resultLink = document.createElement("a");
-            resultLink.href = adjustedHref;
+            resultLink.href = `./play/?id=${id}`;
             resultLink.innerHTML = `
-            <img src="${adjustedImgSrc}" alt="${name}">
-            <span>${name}</span>
-        `;
+              <img src="${adjustedImgSrc}" alt="${name}">
+              <span>${name}</span>
+            `;
             searchResults.appendChild(resultLink);
           });
-
           searchResults.style.display = "block";
+        }
+
+        searchInput.addEventListener("focus", updateSearchResults);
+        searchInput.addEventListener("input", updateSearchResults);
+
+        document.addEventListener("click", (event) => {
+          if (
+            !searchInput.contains(event.target) &&
+            !searchResults.contains(event.target)
+          ) {
+            searchResults.style.display = "none";
+          }
+        });
+      }
+
+      // Slide menu logic
+      const menuIcon = document.getElementById("menuIcon");
+      const slideMenu = document.getElementById("slideMenu");
+      const categories = slideMenu.querySelector(".categories");
+
+      menuIcon.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (slideMenu.style.transform === "translateX(0%)") {
+          slideMenu.style.transform = "translateX(-100%)";
+        } else {
+          slideMenu.style.transform = "translateX(0%)";
+        }
+      });
+
+      window.addEventListener("click", (event) => {
+        if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
+          slideMenu.style.transform = "translateX(-100%)";
+        }
+      });
+
+      // Auth-based UI for slide menu (profile, XP, log out, etc.)
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          const userId = user.uid;
+          const userDetailsContainer = document.createElement("div");
+          userDetailsContainer.className = "user-details-container";
+
+          const profileTopContainer = document.createElement("div");
+          profileTopContainer.className = "profile-top-container";
+
+          const profilePictureContainer = document.createElement("div");
+          profilePictureContainer.className = "profile-picture-container";
+          const profilePictureElement = document.createElement("img");
+          profilePictureElement.className = "profile-picture";
+          profilePictureContainer.appendChild(profilePictureElement);
+
+          const usernameContainer = document.createElement("div");
+          usernameContainer.className = "username-container";
+          const usernameElement = document.createElement("p");
+          usernameElement.className = "username-text";
+          usernameContainer.appendChild(usernameElement);
+
+          profileTopContainer.appendChild(profilePictureContainer);
+          profileTopContainer.appendChild(usernameContainer);
+          userDetailsContainer.appendChild(profileTopContainer);
+
+          // user photo
+          if (user.photoURL) {
+            profilePictureElement.src = user.photoURL;
+          } else {
+            profilePictureElement.src = "img/default-avatar.png";
+          }
+
+          // fetch custom username from Firestore
+          const userDocRef = db.collection("usernames").doc(userId);
+          const userDoc = await userDocRef.get();
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            usernameElement.textContent =
+              userData.username || user.displayName || "Username";
+          } else {
+            usernameElement.textContent = user.displayName || "Username";
+          }
+
+          // fetch XP from Realtime DB
+          const xpRef = rtdb.ref(`xp/${userId}`);
+          xpRef.once("value", (snapshot) => {
+            let totalXP = snapshot.exists() ? snapshot.val() : 0;
+            const { level, currentXP, xpNeededForNext } =
+              getTierAndProgressFromXP(totalXP);
+
+            const xpContainer = document.createElement("div");
+            xpContainer.className = "xp-container";
+
+            const xpLevelText = document.createElement("div");
+            xpLevelText.className = "xp-level-text";
+            xpLevelText.textContent = `Level ${level}`;
+
+            const xpBar = document.createElement("div");
+            xpBar.className = "xp-bar";
+
+            const xpBarFill = document.createElement("div");
+            xpBarFill.className = "xp-bar-fill";
+            xpBarFill.style.width = `${(currentXP / xpNeededForNext) * 100}%`;
+
+            const xpBarText = document.createElement("div");
+            xpBarText.className = "xp-bar-text";
+            xpBarText.textContent = `${currentXP}/${xpNeededForNext}`;
+
+            xpBar.appendChild(xpBarFill);
+            xpBar.appendChild(xpBarText);
+            xpContainer.appendChild(xpLevelText);
+            xpContainer.appendChild(xpBar);
+
+            userDetailsContainer.appendChild(xpContainer);
+
+            // clicking profile => settings
+            profilePictureContainer.addEventListener("click", () => {
+              window.location.href = "settings.html";
+            });
+
+            // Insert top of slideMenu
+            slideMenu.insertBefore(userDetailsContainer, categories);
+
+            const logoutLink = document.createElement("a");
+            logoutLink.href = "#";
+            logoutLink.className = "option-link";
+            logoutLink.textContent = "Log Out";
+            logoutLink.style.backgroundColor = "#dc3545";
+            logoutLink.style.color = "white";
+            logoutLink.addEventListener("click", (e) => {
+              e.preventDefault();
+              auth
+                .signOut()
+                .then(() => window.location.reload())
+                .catch((error) => console.error("Error signing out:", error));
+            });
+
+            // Insert "Log Out" above "Favorites"
+            const favoritesLink = categories.querySelector('a[href="favs.html"]');
+            categories.insertBefore(logoutLink, favoritesLink);
+
+            // check 'access' doc
+            db.collection("access")
+              .doc(user.uid)
+              .get()
+              .then((accessDoc) => {
+                if (accessDoc.exists) {
+                  const accessData = accessDoc.data();
+                  if (accessData.tester === true) {
+                    const testGamesLink = document.createElement("a");
+                    testGamesLink.href = "test.html";
+                    testGamesLink.className = "option-link";
+                    testGamesLink.textContent = "Test Games";
+                    testGamesLink.style.backgroundColor = "#28a745";
+                    testGamesLink.style.color = "white";
+                    testGamesLink.style.marginTop = "10px";
+                    testGamesLink.addEventListener("mouseover", () => {
+                      testGamesLink.style.backgroundColor = "#218838";
+                    });
+                    testGamesLink.addEventListener("mouseout", () => {
+                      testGamesLink.style.backgroundColor = "#28a745";
+                    });
+                    categories.insertBefore(testGamesLink, favoritesLink);
+                  }
+                }
+              })
+              .catch((err) =>
+                console.error("Error checking 'access' collection:", err)
+              );
+          });
+        } else {
+          // Not logged in
+          const userDetailsContainer = document.createElement("div");
+          userDetailsContainer.className = "user-details-container";
+          const notLoggedInContainer = document.createElement("div");
+          notLoggedInContainer.className = "username-container";
+          const notLoggedInText = document.createElement("p");
+          notLoggedInText.className = "username-text";
+          notLoggedInText.textContent = "Not logged in";
+          notLoggedInContainer.appendChild(notLoggedInText);
+
+          const loginButton = document.createElement("button");
+          loginButton.textContent = "Log In";
+          loginButton.style.backgroundColor = "#007bff";
+          loginButton.style.color = "white";
+          loginButton.style.border = "none";
+          loginButton.style.padding = "10px 20px";
+          loginButton.style.fontSize = "16px";
+          loginButton.style.borderRadius = "5px";
+          loginButton.style.cursor = "pointer";
+          loginButton.style.marginTop = "5px";
+          loginButton.addEventListener("click", function () {
+            window.location.href = "login.html";
+          });
+
+          userDetailsContainer.style.display = "flex";
+          userDetailsContainer.style.flexDirection = "column";
+          userDetailsContainer.style.alignItems = "center";
+          userDetailsContainer.style.paddingBlock = "20px";
+
+          userDetailsContainer.appendChild(notLoggedInContainer);
+          userDetailsContainer.appendChild(loginButton);
+          slideMenu.insertBefore(userDetailsContainer, categories);
+        }
+
+        // random game
+        const randomGameLink = categories.querySelector("#randomGame");
+        if (randomGameLink) {
+          randomGameLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (games.length > 0) {
+              const randomIndex = Math.floor(Math.random() * games.length);
+              const selectedGame = games[randomIndex];
+              window.location.href = `./play/?id=${selectedGame.id}`;
+            } else {
+              console.error("No game paths available to pick from.");
+            }
+          });
+        }
+
+        // block lanSchool
+        const blockLanSchoolLink = categories.querySelector("#blockLanschool");
+        if (blockLanSchoolLink) {
+          blockLanSchoolLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            const url = window.location.href;
+            const newTab = window.open();
+            if (!newTab) {
+              console.warn("Popup blocked—please allow popups!");
+              return;
+            }
+            newTab.document.write(`
+              <html>
+                <body style="margin: 0; height: 100vh;">
+                  <iframe src="${url}" style="border: none; width: 100%; height: 100%;"></iframe>
+                </body>
+              </html>
+            `);
+            newTab.document.close();
+          });
+        }
+      });
+
+      // Pencil icon => open/close custom slide menu
+      const editAllButton = document.getElementById("editAllButton");
+      const customSlideMenu = document.getElementById("customSlideMenu");
+      editAllButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        // Hide the main slide menu if open
+        slideMenu.style.transform = "translateX(-100%)";
+        // Toggle the custom slide menu
+        if (customSlideMenu.style.transform === "translateX(0%)") {
+          customSlideMenu.style.transform = "translateX(-100%)";
+        } else {
+          customSlideMenu.style.transform = "translateX(0%)";
+        }
+      });
+
+      window.addEventListener("click", (e) => {
+        if (
+          e.target !== editAllButton &&
+          !customSlideMenu.contains(e.target) &&
+          e.target.id !== "editAllButton"
+        ) {
+          customSlideMenu.style.transform = "translateX(-100%)";
+        }
+      });
+
+      // Show/Hide Top 20 from cookie
+      const top20Toggle = document.getElementById("top20Toggle");
+      function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+      }
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+        return "";
+      }
+
+      const top20Disabled = getCookie("top20Disabled") === "true";
+      top20Toggle.checked = !top20Disabled;
+      const topGameHeader = document.getElementById("topGameHeader");
+      if (top20Disabled) {
+        topGameList.style.display = "none";
+        topGameHeader.style.display = "none";
+      }
+
+      top20Toggle.addEventListener("change", function () {
+        if (top20Toggle.checked) {
+          topGameList.style.display = "flex";
+          topGameHeader.style.display = "block";
+          setCookie("top20Disabled", "false", 365);
+        } else {
+          topGameList.style.display = "none";
+          topGameHeader.style.display = "none";
+          setCookie("top20Disabled", "true", 365);
+        }
+      });
+
+      // Show/Hide Favorites from cookie (default disabled)
+      const favoritesToggle = document.getElementById("favoritesToggle");
+      const favoritesHeader = document.getElementById("favoritesHeader");
+      const favoritesGameList = document.getElementById("favoritesGameList");
+      let favoritesCookie = getCookie("favoritesDisabled");
+      if (favoritesCookie === "") {
+        favoritesCookie = "true";
+      }
+      const favoritesDisabled = favoritesCookie === "true";
+      favoritesToggle.checked = !favoritesDisabled;
+      if (favoritesDisabled) {
+        favoritesHeader.style.display = "none";
+        favoritesGameList.style.display = "none";
+      } else {
+        favoritesHeader.style.display = "block";
+        favoritesGameList.style.display = "flex";
+      }
+
+      favoritesToggle.addEventListener("change", function () {
+        if (favoritesToggle.checked) {
+          favoritesHeader.style.display = "block";
+          favoritesGameList.style.display = "flex";
+          setCookie("favoritesDisabled", "false", 365);
+          loadFavorites();
+        } else {
+          favoritesHeader.style.display = "none";
+          favoritesGameList.style.display = "none";
+          setCookie("favoritesDisabled", "true", 365);
+        }
+      });
+
+      // --- FAVORITES FUNCTIONALITY ---
+      function loadFavorites() {
+        // Add 10 placeholder ghost cards for favorites loading animation
+        const numFavoritePlaceholders = 10;
+        favoritesGameList.innerHTML = "";
+        for (let i = 0; i < numFavoritePlaceholders; i++) {
+          const ghostCard = document.createElement("div");
+          ghostCard.classList.add("ghost-card");
+          ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`;
+          favoritesGameList.appendChild(ghostCard);
+        }
+        auth.onAuthStateChanged(function (user) {
+          if (user) {
+            fetchFavorites(user.uid);
+          } else {
+            showFavoritesPopup();
+            favoritesGameList.innerHTML =
+              '<p class="no-favorites">No favorites yet!</p>';
+          }
+        });
+      }
+
+      async function fetchFavorites(userId) {
+        try {
+          const favDoc = await db.collection("favs").doc(userId).get();
+          if (favDoc.exists) {
+            const favoritesData = favDoc.data(); // e.g., { "1": true, "2": true, ... }
+            console.log("Favorites data retrieved:", favoritesData);
+            displayFavorites(favoritesData);
+          } else {
+            favoritesGameList.innerHTML =
+              '<p class="no-favorites">No favorites yet!</p>';
+          }
+        } catch (error) {
+          console.error("Error fetching favorites:", error);
+          favoritesGameList.innerHTML =
+            '<p class="no-favorites">Error loading favorites.</p>';
+        }
+      }
+
+      function displayFavorites(favorites) {
+        favoritesGameList.innerHTML = ""; // Clear any loading spinner or previous content
+        let hasFavorites = false;
+        Object.keys(favorites).forEach((gameId) => {
+          if (favorites[gameId]) {
+            const game = games.find(
+              (g) => parseInt(g.id, 10) === parseInt(gameId, 10)
+            );
+            if (game) {
+              hasFavorites = true;
+              favoritesGameList.innerHTML += getCardHTML(game);
+            } else {
+              console.warn(`Game with ID ${gameId} not found in games data.`);
+            }
+          }
+        });
+        if (!hasFavorites) {
+          favoritesGameList.innerHTML =
+            '<p class="no-favorites">No favorites yet!</p>';
+        }
+      }
+
+      function showFavoritesPopup() {
+        const popupContainer = document.getElementById("favoritesPopupContainer");
+        const overlay = document.getElementById("favoritesOverlay");
+        popupContainer.classList.add("active");
+        overlay.style.display = "block";
+      }
+
+      function hideFavoritesPopup() {
+        const popupContainer = document.getElementById("favoritesPopupContainer");
+        const overlay = document.getElementById("favoritesOverlay");
+        popupContainer.classList.remove("active");
+        overlay.style.display = "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // If favorites toggle is enabled on load, load favorites.
+        if (favoritesToggle.checked) {
+          loadFavorites();
+        }
+      });
+
+      document
+        .getElementById("favoritesOkButton")
+        .addEventListener("click", function () {
+          hideFavoritesPopup();
+        });
+
+      // Final small scripts for page1-link / page2-link if you have them
+      document.addEventListener("DOMContentLoaded", () => {
+        const page1Link = document.getElementById("page1-link");
+        const page2Link = document.getElementById("page2-link");
+        if (!page1Link || !page2Link) return;
+
+        const hostname = window.location.hostname;
+        const linkMap = {
+          "jman1593.github.io": {
+            page1: "/#",
+            page2: "/strongdog2/index.html",
+          },
+          "strongdog-1.vercel.app": {
+            page1: "https://strongdog-1.vercel.app",
+            page2: "https://strongdog2.vercel.app",
+          },
+          "strongdog2.vercel.app": {
+            page1: "https://strongdog-1.vercel.app",
+            page2: "https://strongdog2.vercel.app",
+          },
+          "strongdog.netlify.app": {
+            page1: "https://strongdog.netlify.app",
+            page2: "https://strongdog2.netlify.app",
+          },
+          "strongdog2.netlify.app": {
+            page1: "https://strongdog.netlify.app",
+            page2: "https://strongdog2.netlify.app",
+          },
+          "mathcord.netlify.app": {
+            page1: "https://mathcord.netlify.app",
+            page2: "https://mathcord2.netlify.app",
+          },
+          "mathcord2.netlify.app": {
+            page1: "https://mathcord.netlify.app",
+            page2: "https://mathcord2.netlify.app",
+          },
+          "strongdog.onrender.com": {
+            page1: "https://strongdog.onrender.com",
+            page2: "https://strongdog2.onrender.com",
+          },
+          "stroongdog.netlify.app": {
+            page1: "https://stroongdog.netlify.app",
+            page2: "https://stroongdog2.netlify.app",
+          },
+          "stroongdog2.netlify.app": {
+            page1: "https://stroongdog.netlify.app",
+            page2: "https://stroongdog2.netlify.app",
+          },
+        };
+
+        for (const key in linkMap) {
+          if (hostname.includes(key)) {
+            page1Link.href = linkMap[key].page1;
+            page2Link.href = linkMap[key].page2;
+            break;
+          }
         }
       });
     </script>
   </body>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const page1Link = document.getElementById("page1-link");
-      const page2Link = document.getElementById("page2-link");
-      const hostname = window.location.hostname;
-
-      const linkMap = {
-        "jman1593.github.io": { page1: "/#", page2: "/strongdog2/index.html" },
-        "strongdog-1.vercel.app": {
-          page1: "https://strongdog-1.vercel.app",
-          page2: "https://strongdog2.vercel.app",
-        },
-        "strongdog2.vercel.app": {
-          page1: "https://strongdog-1.vercel.app",
-          page2: "https://strongdog2.vercel.app",
-        },
-        "strongdog.netlify.app": {
-          page1: "https://strongdog.netlify.app",
-          page2: "https://strongdog2.netlify.app",
-        },
-        "strongdog2.netlify.app": {
-          page1: "https://strongdog.netlify.app",
-          page2: "https://strongdog2.netlify.app",
-        },
-        "mathcord.netlify.app": {
-          page1: "https://mathcord.netlify.app",
-          page2: "https://mathcord2.netlify.app",
-        },
-        "mathcord2.netlify.app": {
-          page1: "https://mathcord.netlify.app",
-          page2: "https://mathcord2.netlify.app",
-        },
-        "strongdog.onrender.com": {
-          page1: "https://strongdog.onrender.com",
-          page2: "https://strongdog2.onrender.com",
-        },
-        "stroongdog.netlify.app": {
-          page1: "https://stroongdog.netlify.app",
-          page2: "https://stroongdog2.netlify.app",
-        },
-        "stroongdog2.netlify.app": {
-          page1: "https://stroongdog.netlify.app",
-          page2: "https://stroongdog2.netlify.app",
-        },
-      };
-
-      for (const key in linkMap) {
-        if (hostname.includes(key)) {
-          page1Link.href = linkMap[key].page1;
-          page2Link.href = linkMap[key].page2;
-          break;
-        }
-      }
-    });
-  </script>
-  <script>
-    document
-      .getElementById("secretLink")
-      .addEventListener("click", function () {
-        window.location.href = "secret-menu.html";
-      });
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const discordLink = document.getElementById("discordLink");
-      const modal = document.getElementById("popupModal");
-      const closeModal = document.getElementById("closeModal");
-
-      if (discordLink) {
-        discordLink.addEventListener("click", function () {
-          modal.style.display = "flex";
-        });
-      }
-
-      if (closeModal) {
-        closeModal.addEventListener("click", function () {
-          modal.style.display = "none";
-        });
-      }
-
-      window.addEventListener("click", function (event) {
-        if (event.target === modal) {
-          modal.style.display = "none";
-        }
-      });
-    });
-  </script>
-  <script type="module">
-    import games from "./cards-data.js";
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const randomGameButton = document.getElementById("randomGame");
-
-      function handleRandomGameClick() {
-        if (games.length > 0) {
-          const randomIndex = Math.floor(Math.random() * games.length);
-          const randomGamePath = games[randomIndex].href;
-          window.location.href = randomGamePath;
-        } else {
-          console.error("No game paths available for selection.");
-        }
-      }
-
-      if (randomGameButton) {
-        randomGameButton.addEventListener("click", function (event) {
-          event.preventDefault();
-          handleRandomGameClick();
-        });
-      }
-    });
-  </script>
 </html>
