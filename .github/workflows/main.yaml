@@ -19,24 +19,32 @@ jobs:
       - name: Collect Changed Files
         run: |
           mkdir -p changed
-          # If no previous commit exists (first push or manual trigger), copy everything (excluding unwanted files via rsync)
+          
+          # If no previous commit exists (first push or manual trigger), copy everything.
           if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
             echo "No previous commit found; copying entire directory excluding unwanted files."
-            rsync -av --exclude='.git' --exclude='.github' --exclude='.vscode' --exclude='.gitattributes' --exclude='.gitignore' ./ changed/
+            rsync -av --exclude='.git' --exclude='.github' --exclude='.vscode' \
+                  --exclude='.gitattributes' --exclude='.gitignore' ./ changed/
           else
-            # Use git diff with -z to output null-delimited file names (handles spaces correctly)
-            mapfile -d '' files < <(git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}")
-            echo "Changed files:"
-            for file in "${files[@]}"; do
-              echo "$file"
-              # Check if the file exists (skip deleted files)
-              if [ -f "$file" ]; then
-                mkdir -p "changed/$(dirname "$file")"
-                cp --parents "$file" changed/
-              else
-                echo "Skipping '$file' as it no longer exists."
-              fi
-            done
+            echo "Changed files between ${{ github.event.before }} and ${{ github.sha }}:"
+            # Print them for debugging:
+            git diff --name-only --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}"
+
+            # Now iterate line-by-line, preserving spaces:
+            git diff --name-only --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
+            | while IFS= read -r file; do
+                # If file is empty (no changed files), skip
+                [ -z "$file" ] && continue
+                
+                # Check if the file exists (avoid trying to copy deleted files)
+                if [ -f "$file" ]; then
+                  echo "Copying changed file: '$file'"
+                  mkdir -p "changed/$(dirname "$file")"
+                  cp --parents "$file" changed/
+                else
+                  echo "Skipping '$file' because it no longer exists."
+                fi
+              done
           fi
 
       - name: Remove Unwanted Files from Changed Directory
