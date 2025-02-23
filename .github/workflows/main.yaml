@@ -28,9 +28,9 @@ jobs:
             CHANGED_FILES=$(git diff --name-only --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}")
             echo "Changed files:"
             echo "$CHANGED_FILES"
-            # Set IFS to newline so filenames with spaces aren't split incorrectly
-            IFS=$'\n'
-            for file in $CHANGED_FILES; do
+            # Use mapfile to correctly handle file names with spaces
+            mapfile -t files <<< "$CHANGED_FILES"
+            for file in "${files[@]}"; do
               # Check if the file exists (skip deleted files)
               if [ -f "$file" ]; then
                 mkdir -p "changed/$(dirname "$file")"
@@ -39,7 +39,6 @@ jobs:
                 echo "Skipping '$file' as it no longer exists."
               fi
             done
-            unset IFS
           fi
 
       - name: Remove Unwanted Files from Changed Directory
