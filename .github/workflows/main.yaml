@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Ensure full history is available for git diff
 
       - name: Collect Changed Files
         run: |
@@ -24,13 +24,11 @@ jobs:
             echo "No previous commit found; copying entire directory excluding unwanted files."
             rsync -av --exclude='.git' --exclude='.github' --exclude='.vscode' --exclude='.gitattributes' --exclude='.gitignore' ./ changed/
           else
-            # Only consider Added (A) or Modified (M) files
-            CHANGED_FILES=$(git diff --name-only --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}")
+            # Use git diff with -z to output null-delimited file names (handles spaces correctly)
+            mapfile -d '' files < <(git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}")
             echo "Changed files:"
-            echo "$CHANGED_FILES"
-            # Use mapfile to correctly handle file names with spaces
-            mapfile -t files <<< "$CHANGED_FILES"
             for file in "${files[@]}"; do
+              echo "$file"
               # Check if the file exists (skip deleted files)
               if [ -f "$file" ]; then
                 mkdir -p "changed/$(dirname "$file")"
@@ -54,7 +52,7 @@ jobs:
           r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
           source-dir: './changed'
-          destination-dir: './'
+          destination-dir: './'  # Adjust as needed
           output-file-url: true
           multipart-size: 100
           max-retries: 5
