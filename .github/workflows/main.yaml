@@ -35,27 +35,20 @@ jobs:
           else
             echo "Files changed between ${{ github.event.before }} and ${{ github.sha }}:"
             
-            # 1) Print them out in quotes for debugging
+            # Print changed files in quotes for debugging
             git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
             | xargs -0 -I {} echo "'{}'"
 
-            # 2) Actually copy them into 'changed/'
+            # Copy all changed files using xargs and cp --parents
             git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
-            | while IFS= read -r -d '' file; do
-                # Skip if empty (shouldn't happen, but just in case)
-                [ -z "$file" ] && continue
-                
-                # Double-quote in echo to verify spaces are intact
-                echo "Copying changed file: '$file'"
-                
-                if [ -f "$file" ]; then
-                  mkdir -p "changed/$(dirname "$file")"
-                  cp --parents "$file" changed/
-                else
-                  echo "Skipping '$file' because it no longer exists."
-                fi
-              done
+            | xargs -0 cp --parents -t changed/
           fi
+
+      - name: List Changed Files
+        shell: bash
+        run: |
+          # List all files in the changed/ directory to verify copying
+          find changed -type f
 
       - name: Remove Unwanted Files from Changed Directory
         shell: bash
