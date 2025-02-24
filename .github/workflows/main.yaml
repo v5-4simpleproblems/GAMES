@@ -15,14 +15,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Ensure full history is available for git diff
+          fetch-depth: 0
 
       - name: Collect Changed Files
         shell: bash
         run: |
           mkdir -p changed
 
-          # If no previous commit exists (first push or manual trigger), copy everything (excluding unwanted files via rsync)
           if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
             echo "No previous commit found; copying entire directory excluding unwanted files."
             rsync -av \
@@ -34,33 +33,30 @@ jobs:
               ./ changed/
           else
             echo "Detecting files changed between ${{ github.event.before }} and ${{ github.sha }}:"
+            echo "All changes (with status):"
+            git diff --name-status "${{ github.event.before }}" "${{ github.sha }}"
+            git diff --name-only -z --diff-filter=AMR "${{ github.event.before }}" "${{ github.sha }}" > changed_files.txt
             
-            # Step 1: Output raw git diff for debugging (with null terminators as hex)
-            echo "Raw git diff output (hex):"
-            git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" | xxd
-
-            # Step 2: List changed files with quotes for readability
-            echo "Changed files (quoted):"
-            git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
-            | xargs -0 -I {} echo "'{}'"
-
-            # Step 3: Copy changed files using tar to ensure spaces are preserved
-            echo "Copying changed files to changed/ directory:"
-            git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
-            | xargs -0 tar -c --files-from=/dev/stdin | tar -x -C changed/
+            while IFS= read -r -d '' file; do
+              if [ -f "$file" ]; then
+                echo "Copying '$file' to changed/$file"
+                mkdir -p "changed/$(dirname "$file")"
+                cp "$file" "changed/$file"
+              else
+                echo "File '$file' does not exist, skipping."
+              fi
+            done < <(cat changed_files.txt)
           fi
 
       - name: List Changed Files
         shell: bash
         run: |
-          # List all files in the changed/ directory to verify copying
           echo "Files in changed/ directory:"
           find changed -type f
 
       - name: Remove Unwanted Files from Changed Directory
         shell: bash
         run: |
-          # Remove unwanted files/folders if they exist
           rm -rf changed/.git changed/.github changed/.vscode
           rm -f changed/.gitattributes changed/.gitignore
 
@@ -72,7 +68,7 @@ jobs:
           r2-secret-access-key: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
           r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
           source-dir: './changed'
-          destination-dir: './'  # Adjust as needed (e.g. 'public/' or similar)
+          destination-dir: './'
           output-file-url: true
           multipart-size: 100
           max-retries: 5
