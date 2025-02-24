@@ -1,4 +1,4 @@
-// All of the updates and their corresponding dates that will be dynamically added in the updates section on about page
+// All of the updates and their corresponding dates that will be dynamically added in the updates section on about page 
 export const updates = [
 	{ date: "2/24/25", content: "Added a card size slider to the main menu" },
 	{ date: "2/10/25", content: "Added block lanschool 3.0 to secret menu" },
