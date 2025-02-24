@@ -214,7 +214,7 @@ span.new-feature-tag {
   flex-wrap: wrap;
   padding: 20px;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
 }
 
 .ghost-card {
@@ -229,7 +229,7 @@ span.new-feature-tag {
 
 .card, .ghost-card {
   border-radius: 15px;
-  width: 140px;
+  width: 120px;
   aspect-ratio: 1;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
   transition: all 0.4s ease;
@@ -531,6 +531,7 @@ h2 {
   pointer-events: none;
   text-shadow: none;
 }
+
 .section-header {
   display: flex;
   justify-content: center;
@@ -548,6 +549,7 @@ h2 {
 .edit-button:hover {
   transform: scale(1.2);
 }
+
 .custom-slide-menu {
   position: fixed;
   top: 0;
