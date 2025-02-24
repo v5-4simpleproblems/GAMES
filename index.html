@@ -186,9 +186,8 @@
           document.body.style =
             "height: 100vh; margin: 0; display: grid; place-items: center;";
 
-          const getPolytrackDataBtn = document.getElementById(
-            "get-polytrack-data"
-          );
+          const getPolytrackDataBtn =
+            document.getElementById("get-polytrack-data");
           const getCookieClickerDataBtn = document.getElementById(
             "get-cookie-clicker-data"
           );
@@ -196,8 +195,9 @@
           const getBabelTowerDataBtn = document.getElementById(
             "get-babel-tower-data"
           );
-          const getIdleSharkDataBtn =
-            document.getElementById("get-idle-shark-data");
+          const getIdleSharkDataBtn = document.getElementById(
+            "get-idle-shark-data"
+          );
 
           getPolytrackDataBtn.addEventListener("click", () =>
             getDataAndCopy(polytrackKeys)
@@ -233,7 +233,9 @@
                 .readText()
                 .then((text) => {
                   if (!text) {
-                    throw new Error("Clipboard is empty. Copy your data first!");
+                    throw new Error(
+                      "Clipboard is empty. Copy your data first!"
+                    );
                   }
 
                   let parsedData;
@@ -266,9 +268,9 @@
       window.siteMapping = {
         "strongdogxp.github.io": [
           "https://strongdogxp.github.io/strongdog2",
-          "https://strongdogxp.github.io/strongdog3"
+          "https://strongdogxp.github.io/strongdog3",
         ],
-        "mathcordxp.github.io": []
+        "mathcordxp.github.io": [],
       };
     </script>
 
@@ -501,7 +503,8 @@
     <!-- Red updates box -->
     <div class="updates-text-container">
       <p class="updates-paragraph-text">
-        Strongdog now auto saves! Your account will auto-save daily unless disabled in the save manager.
+        Strongdog now auto saves! Your account will auto-save daily unless
+        disabled in the save manager.
       </p>
     </div>
 
@@ -533,10 +536,10 @@
     <div class="games-grid" id="topGameList"></div>
 
     <!-- Favorites Section (will be enabled via custom toggle) -->
-    <div class="section-header" id="favoritesHeader" style="display: none;">
+    <div class="section-header" id="favoritesHeader" style="display: none">
       <h2 style="text-align: center"><strong>Favorites</strong></h2>
     </div>
-    <div class="games-grid" id="favoritesGameList" style="display: none;"></div>
+    <div class="games-grid" id="favoritesGameList" style="display: none"></div>
 
     <!-- "All" heading + pencil icon -->
     <div class="section-header">
@@ -651,7 +654,32 @@
         <button id="favoritesOkButton">OK</button>
       </div>
     </div>
-
+    <script>
+      const alternateLinksContainer = document.getElementById(
+        "alternate-links-container"
+      );
+      const alternateLinks = [
+        "gametree.net",
+        "hateroll.com",
+        "strongdogunblocked.github.io",
+        "weakcatxp.github.io",
+        "gametreexp.github.io",
+        "mathcordxp.github.io",
+        "strongdogxp.github.io",
+        "jman1593.github.io",
+        "strongdog-1.vercel.app",
+        "mathcord.com",
+        "strongdog.com",
+      ];
+      alternateLinks.forEach((link) => {
+        const a = document.createElement("a");
+        a.href = `https://${link}`;
+        a.target = "_blank";
+        a.textContent = link;
+        a.classList.add("alternate-link");
+        alternateLinksContainer.appendChild(a);
+      });
+    </script>
     <!-- Main script (module) loading your cards-data and the external appscript.js for the Top 20 link -->
     <script type="module">
       import games from "./cards-data.js";
@@ -800,7 +828,9 @@
 
       function getCurrentSiteKey() {
         const currentURL = window.location.href;
-        const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
+        const keys = Object.keys(siteMapping).sort(
+          (a, b) => b.length - a.length
+        );
         for (const key of keys) {
           if (currentURL.includes(key)) return key;
         }
@@ -1036,7 +1066,9 @@
             });
 
             // Insert "Log Out" above "Favorites"
-            const favoritesLink = categories.querySelector('a[href="favs.html"]');
+            const favoritesLink = categories.querySelector(
+              'a[href="favs.html"]'
+            );
             categories.insertBefore(logoutLink, favoritesLink);
 
             // check 'access' doc
@@ -1294,14 +1326,18 @@
       }
 
       function showFavoritesPopup() {
-        const popupContainer = document.getElementById("favoritesPopupContainer");
+        const popupContainer = document.getElementById(
+          "favoritesPopupContainer"
+        );
         const overlay = document.getElementById("favoritesOverlay");
         popupContainer.classList.add("active");
         overlay.style.display = "block";
       }
 
       function hideFavoritesPopup() {
-        const popupContainer = document.getElementById("favoritesPopupContainer");
+        const popupContainer = document.getElementById(
+          "favoritesPopupContainer"
+        );
         const overlay = document.getElementById("favoritesOverlay");
         popupContainer.classList.remove("active");
         overlay.style.display = "none";
