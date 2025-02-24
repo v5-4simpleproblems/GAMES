@@ -33,21 +33,28 @@ jobs:
               --exclude='.gitignore' \
               ./ changed/
           else
-            echo "Files changed between ${{ github.event.before }} and ${{ github.sha }}:"
+            echo "Detecting files changed between ${{ github.event.before }} and ${{ github.sha }}:"
             
-            # Print changed files in quotes for debugging
+            # Step 1: Output raw git diff for debugging (with null terminators as hex)
+            echo "Raw git diff output (hex):"
+            git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" | xxd
+
+            # Step 2: List changed files with quotes for readability
+            echo "Changed files (quoted):"
             git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
             | xargs -0 -I {} echo "'{}'"
 
-            # Copy all changed files using xargs and cp --parents
+            # Step 3: Copy changed files using tar to ensure spaces are preserved
+            echo "Copying changed files to changed/ directory:"
             git diff --name-only -z --diff-filter=AM "${{ github.event.before }}" "${{ github.sha }}" \
-            | xargs -0 cp --parents -t changed/
+            | xargs -0 tar -c --files-from=/dev/stdin | tar -x -C changed/
           fi
 
       - name: List Changed Files
         shell: bash
         run: |
           # List all files in the changed/ directory to verify copying
+          echo "Files in changed/ directory:"
           find changed -type f
 
       - name: Remove Unwanted Files from Changed Directory
