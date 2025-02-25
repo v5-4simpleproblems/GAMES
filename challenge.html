@@ -13,6 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
     <style>
+      /* Base Styles */
       body {
         margin: 0;
         padding: 0;
@@ -40,19 +41,25 @@
       .xp {
         color: #ff8c00;
       }
+      .main-container {
+        display: flex;
+        height: calc(100vh - 60px);
+      }
       .game-container {
+        flex: 1;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: calc(100vh - 60px);
+        padding: 20px;
       }
       .game-content {
         text-align: center;
-        padding: 20px;
+        padding: 30px;
         background-color: #3a3a3a;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        position: relative;
+        max-width: 600px;
+        width: 100%;
       }
       .game-title {
         font-size: 2em;
@@ -89,6 +96,66 @@
       .submit-button:hover {
         background-color: #e07b00;
       }
+
+      /* Leaderboard Sidebar Styles */
+      .leaderboard-container {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        width: 300px;
+        height: calc(100vh - 100px);
+        background-color: #3a3a3a;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        overflow-y: auto;
+      }
+      .leaderboard-container h2 {
+        margin-bottom: 15px;
+        color: #ff8c00;
+        text-align: center;
+        font-size: 1.5em;
+      }
+      .leaderboard-container ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+      .leaderboard-container li {
+        padding: 8px 0;
+        border-bottom: 1px solid #555;
+      }
+      .leaderboard-container li:last-child {
+        border-bottom: none;
+      }
+      .leaderboard-container hr {
+        border: 1px solid #ff8c00;
+        margin: 10px 0;
+      }
+
+      /* Improved Highlight Effect */
+      @keyframes highlightGlow {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 5px rgba(255, 140, 0, 0.7);
+        }
+        50% {
+          transform: scale(1.02);
+          box-shadow: 0 0 15px rgba(255, 140, 0, 1);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 5px rgba(255, 140, 0, 0.7);
+        }
+      }
+      .highlight {
+        background: linear-gradient(90deg, rgba(255, 140, 0, 0.2), rgba(255, 140, 0, 0.4));
+        animation: highlightGlow 1.5s ease-in-out infinite;
+        border-radius: 4px;
+        padding: 8px;
+      }
+
+      /* Loading overlay and loader */
       .loading-overlay {
         display: none;
         position: fixed;
@@ -168,25 +235,44 @@
         background-color: #e07b00;
       }
     </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
+    </div>
 
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
-        authDomain: "strongdog-auth.firebaseapp.com",
-        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
-        projectId: "strongdog-auth",
-        storageBucket: "strongdog-auth.appspot.com",
-        messagingSenderId: "936276282572",
-        appId: "1:936276282572:web:a802b7f609381ff9428669",
-        measurementId: "G-0YLTCV2MMS",
-      };
+    <div class="main-container">
+      <div class="game-container">
+        <div class="game-content">
+          <img src="./img/color switch.png" alt="Color Switch" class="game-image" />
+          <h1 class="game-title">Color Switch</h1>
+          <p class="challenge-description">
+            This month’s challenge is for the game Color Switch.<br>
+            Try to get the highest score and if you did by the end of the month you win! The winner will get a prize of $20.<br>
+            You need to have a way for us to send it to you! (Venmo, PayPal, etc.)<br>
+            If you do not have a way for us to get you the money, we will just give it to the next best score!
+          </p>
+          <div id="highScore" class="high-score">Loading high score…</div>
+          <button class="submit-button">Submit Score</button>
+        </div>
+      </div>
 
-      firebase.initializeApp(firebaseConfig);
-      window.auth = firebase.auth();
-      window.db = firebase.firestore();
-      window.rtdb = firebase.database();
-    </script>
+      <!-- Leaderboard Sidebar -->
+      <div class="leaderboard-container">
+        <h2>Leaderboard</h2>
+        <ul id="leaderboardList">
+          <!-- Top 9 players will be inserted here -->
+        </ul>
+      </div>
+    </div>
 
+    <div class="overlay" id="loginOverlay"></div>
+    <div class="popup" id="loginPopup" style="display: none;">
+      <p>You need to log in to compete.</p>
+      <button class="popup-button" id="popupOkButton">OK</button>
+    </div>
+
+    <!-- Place scripts at the end of the body -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const highScoreElement = document.getElementById("highScore");
@@ -198,6 +284,23 @@
         document.body.appendChild(loadingOverlay);
         document.body.appendChild(loader);
 
+        // Initialize Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
+          authDomain: "strongdog-auth.firebaseapp.com",
+          databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
+          projectId: "strongdog-auth",
+          storageBucket: "strongdog-auth.appspot.com",
+          messagingSenderId: "936276282572",
+          appId: "1:936276282572:web:a802b7f609381ff9428669",
+          measurementId: "G-0YLTCV2MMS",
+        };
+        firebase.initializeApp(firebaseConfig);
+        window.auth = firebase.auth();
+        window.db = firebase.firestore();
+        window.rtdb = firebase.database();
+
+        // Listen for auth state changes
         window.auth.onAuthStateChanged(function (user) {
           if (user) {
             var saveData = localStorage.getItem("save.txt");
@@ -216,6 +319,7 @@
           } else {
             highScoreElement.innerText = "Log in to see your high score.";
           }
+          fetchLeaderboard();
         });
 
         submitButton.addEventListener("click", function () {
@@ -224,7 +328,6 @@
             showLoginPopup();
             return;
           }
-
           var email = user.email;
           var saveData = localStorage.getItem("save.txt");
           var score;
@@ -240,16 +343,12 @@
             alert("No score data found.");
             return;
           }
-
           console.log("Sending submission:", { email: email, score: score });
-
           var scriptURL = "https://script.google.com/macros/s/AKfycbwdvF3dB-yESBCULgbPnkShGGkPrtFrCiT1oImy2XPc87hfGZOWtres0q5Lo6YLjGq4/exec";
-
           loadingOverlay.style.display = "block";
           loader.style.display = "block";
           submitButton.disabled = true;
           submitButton.style.opacity = "0.6";
-
           var formData = "email=" + encodeURIComponent(email) + "&score=" + encodeURIComponent(score);
           fetch(scriptURL, {
             method: "POST",
@@ -276,8 +375,17 @@
               loader.style.display = "none";
               submitButton.disabled = false;
               submitButton.style.opacity = "1";
+              fetchLeaderboard();
             });
         });
+
+        const popupOkButton = document.getElementById("popupOkButton");
+        if (popupOkButton) {
+          popupOkButton.addEventListener("click", function () {
+            hideLoginPopup();
+            window.location.href = "index.html";
+          });
+        }
       });
 
       function showLoginPopup() {
@@ -294,37 +402,45 @@
         popup.style.display = "none";
       }
 
-      document.getElementById("popupOkButton").addEventListener("click", function () {
-        hideLoginPopup();
-        window.location.href = "index.html";
-      });
+      function fetchLeaderboard() {
+        var currentEmail = firebase.auth().currentUser ? firebase.auth().currentUser.email : "";
+        var leaderboardUrl = "https://script.google.com/macros/s/AKfycbwdvF3dB-yESBCULgbPnkShGGkPrtFrCiT1oImy2XPc87hfGZOWtres0q5Lo6YLjGq4/exec?action=leaderboard" +
+          (currentEmail ? "&email=" + encodeURIComponent(currentEmail) : "");
+        fetch(leaderboardUrl)
+          .then(response => response.json())
+          .then(data => {
+            if (data.result === "success") {
+              var list = document.getElementById("leaderboardList");
+              list.innerHTML = "";
+              // Add top 9 players
+              data.leaderboard.slice(0, 9).forEach(function (player, index) {
+                var li = document.createElement("li");
+                li.textContent = (index + 1) + ". " + player.username + " - " + player.score;
+                if (currentEmail && player.email === currentEmail) {
+                  li.classList.add("highlight");
+                }
+                list.appendChild(li);
+              });
+
+              // Handle user’s ranking if they’re not in the top 9
+              if (data.userResult && data.userResult.ranking > 9) {
+                if (data.userResult.ranking > 10) {
+                  // Add separator if rank is beyond 10
+                  var separator = document.createElement("hr");
+                  list.appendChild(separator);
+                }
+                // Add user’s entry
+                var li = document.createElement("li");
+                li.textContent = data.userResult.ranking + ". " + data.userResult.username + " - " + data.userResult.score;
+                li.classList.add("highlight");
+                list.appendChild(li);
+              }
+            } else {
+              console.error("Error fetching leaderboard:", data);
+            }
+          })
+          .catch(error => console.error("Fetch error:", error));
+      }
     </script>
-  </head>
-
-  <body>
-    <div class="navbar">
-      <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
-    </div>
-
-    <div class="game-container">
-      <div class="game-content">
-        <img src="./img/color switch.png" alt="Color Switch" class="game-image" />
-        <h1 class="game-title">Color Switch</h1>
-        <p class="challenge-description">
-          This months challange is for the game Color Switch.<br>
-          Try to get the highest score and if you did by the end of the month you win! The winner will get a prize of $20.<br>
-          You need to have a way for us to send it to you! (Venmo, Paypal, things like that.)<br>
-          If you do not have a way for us to get you the money we will just give it to the next best score!
-        </p>
-        <div id="highScore" class="high-score">Loading high score…</div>
-        <button class="submit-button">Submit Score</button>
-      </div>
-    </div>
-
-    <div class="overlay" id="loginOverlay"></div>
-    <div class="popup" id="loginPopup" style="display: none;">
-      <p>You need to log in to compete.</p>
-      <button class="popup-button" id="popupOkButton">OK</button>
-    </div>
   </body>
 </html>
