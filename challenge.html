@@ -13,7 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
     <style>
-      /* Base Styles */
+      /* Base Styles - Unchanged */
       body {
         margin: 0;
         padding: 0;
@@ -155,7 +155,7 @@
         padding: 8px;
       }
 
-      /* Loading overlay and loader */
+      /* Loading overlay and loader - Unchanged */
       .loading-overlay {
         display: none;
         position: fixed;
@@ -274,6 +274,32 @@
 
     <!-- Place scripts at the end of the body -->
     <script>
+      // Initialize Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
+        authDomain: "strongdog-auth.firebaseapp.com",
+        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
+        projectId: "strongdog-auth",
+        storageBucket: "strongdog-auth.appspot.com",
+        messagingSenderId: "936276282572",
+        appId: "1:936276282572:web:a802b7f609381ff9428669",
+        measurementId: "G-0YLTCV2MMS",
+      };
+      firebase.initializeApp(firebaseConfig);
+      window.auth = firebase.auth();
+      window.db = firebase.firestore();
+      window.rtdb = firebase.database();
+
+      // Fetch username from Firestore
+      async function getUsernameFromFirestore(user) {
+        const userDocRef = firebase.firestore().doc(`usernames/${user.uid}`);
+        const userDoc = await userDocRef.get();
+        if (userDoc.exists) {
+          return userDoc.data().username || user.displayName || user.email.split('@')[0];
+        }
+        return user.displayName || user.email.split('@')[0];
+      }
+
       document.addEventListener("DOMContentLoaded", function () {
         const highScoreElement = document.getElementById("highScore");
         const submitButton = document.querySelector(".submit-button");
@@ -284,24 +310,8 @@
         document.body.appendChild(loadingOverlay);
         document.body.appendChild(loader);
 
-        // Initialize Firebase
-        const firebaseConfig = {
-          apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
-          authDomain: "strongdog-auth.firebaseapp.com",
-          databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
-          projectId: "strongdog-auth",
-          storageBucket: "strongdog-auth.appspot.com",
-          messagingSenderId: "936276282572",
-          appId: "1:936276282572:web:a802b7f609381ff9428669",
-          measurementId: "G-0YLTCV2MMS",
-        };
-        firebase.initializeApp(firebaseConfig);
-        window.auth = firebase.auth();
-        window.db = firebase.firestore();
-        window.rtdb = firebase.database();
-
-        // Listen for auth state changes
-        window.auth.onAuthStateChanged(function (user) {
+        // Listen for auth state changes and fetch leaderboard on load
+        window.auth.onAuthStateChanged(async function (user) {
           if (user) {
             var saveData = localStorage.getItem("save.txt");
             if (saveData) {
@@ -316,19 +326,21 @@
             } else {
               highScoreElement.innerText = "No save data found.";
             }
+            fetchLeaderboard();
           } else {
             highScoreElement.innerText = "Log in to see your high score.";
+            fetchLeaderboard(); // Still fetch leaderboard for non-logged-in users
           }
-          fetchLeaderboard();
         });
 
-        submitButton.addEventListener("click", function () {
+        submitButton.addEventListener("click", async function () {
           var user = firebase.auth().currentUser;
           if (!user) {
             showLoginPopup();
             return;
           }
           var email = user.email;
+          var username = await getUsernameFromFirestore(user); // Fetch username from Firestore
           var saveData = localStorage.getItem("save.txt");
           var score;
           if (saveData) {
@@ -343,13 +355,13 @@
             alert("No score data found.");
             return;
           }
-          console.log("Sending submission:", { email: email, score: score });
+          console.log("Sending submission:", { username: username, email: email, score: score });
           var scriptURL = "https://script.google.com/macros/s/AKfycbwdvF3dB-yESBCULgbPnkShGGkPrtFrCiT1oImy2XPc87hfGZOWtres0q5Lo6YLjGq4/exec";
           loadingOverlay.style.display = "block";
           loader.style.display = "block";
           submitButton.disabled = true;
           submitButton.style.opacity = "0.6";
-          var formData = "email=" + encodeURIComponent(email) + "&score=" + encodeURIComponent(score);
+          var formData = "username=" + encodeURIComponent(username) + "&email=" + encodeURIComponent(email) + "&score=" + encodeURIComponent(score);
           fetch(scriptURL, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -402,8 +414,9 @@
         popup.style.display = "none";
       }
 
-      function fetchLeaderboard() {
+      async function fetchLeaderboard() {
         var currentEmail = firebase.auth().currentUser ? firebase.auth().currentUser.email : "";
+        var currentUsername = firebase.auth().currentUser ? await getUsernameFromFirestore(firebase.auth().currentUser) : "";
         var leaderboardUrl = "https://script.google.com/macros/s/AKfycbwdvF3dB-yESBCULgbPnkShGGkPrtFrCiT1oImy2XPc87hfGZOWtres0q5Lo6YLjGq4/exec?action=leaderboard" +
           (currentEmail ? "&email=" + encodeURIComponent(currentEmail) : "");
         fetch(leaderboardUrl)
@@ -429,7 +442,7 @@
                   var separator = document.createElement("hr");
                   list.appendChild(separator);
                 }
-                // Add user’s entry
+                // Add user’s entry with username from server
                 var li = document.createElement("li");
                 li.textContent = data.userResult.ranking + ". " + data.userResult.username + " - " + data.userResult.score;
                 li.classList.add("highlight");
