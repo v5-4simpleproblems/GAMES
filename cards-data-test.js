@@ -1,6 +1,5 @@
 export default [
       { href: './swf/strikeforce kitty last stand/index.html', imgSrc: 'strikeforce kitty last stand.jpg', name: 'strikeforce kitty last stand' , 'page': 3, 'id': 795 },
-      { href: './swf/strike force heros/index.html', imgSrc: 'strike force heros.jpg', name: 'strike force heros' , 'page': 3, 'id': 794 },
       { href: './swf/stickshot/index.html', imgSrc: 'stickshot.jpg', name: 'stickshot' , 'page': 3, 'id': 793 },
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement' , 'page': 3, 'id': 790 },
       { href: './swf/armor mayhem/index.html', imgSrc: 'armor mayhem.jpg', name: 'armor mayhem' , 'page': 3, 'id': 781 },
