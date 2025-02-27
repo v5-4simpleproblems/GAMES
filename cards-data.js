@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/deep sleep/index.html', imgSrc: 'deep sleep.jpg', name: 'deep sleep' , 'page': 3, 'id': 784 },
   { href: './html/Pokemon Emerald/index.html', imgSrc: 'Pokemon Emerald.jpg', name: 'Pokemon Emerald' , 'page': 3, 'id': 773 },
   { href: './html/pokemon unbound/index.html', imgSrc: 'pokemon unbound.jpg', name: 'pokemon unbound' , 'page': 3, 'id': 774 },
   { href: './swf/learn to fly 3/index.html', imgSrc: 'learn to fly 3.jpg', name: 'learn to fly 3' , 'page': 3, 'id': 771 },
