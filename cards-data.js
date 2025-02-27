@@ -1,4 +1,5 @@
 export default [
+  { href: './html/spotify/index.html', imgSrc: 'spotify.png', name: 'Spotify' , 'page': 3, 'id': 743 },
   { href: './swf/deeper sleep/index.html', imgSrc: 'deeper sleep.jpg', name: 'deeper sleep' , 'page': 3, 'id': 796 },
   { href: './swf/the deepest sleep/index.html', imgSrc: 'the deepest sleep.jpg', name: 'the deepest sleep' , 'page': 3, 'id': 797 },
   { href: './swf/deep sleep/index.html', imgSrc: 'deep sleep.jpg', name: 'deep sleep' , 'page': 3, 'id': 784 },
