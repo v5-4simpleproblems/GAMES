@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/eco ego/index.html', imgSrc: 'eco ego.jpg', name: 'eco ego' , 'page': 3, 'id': 785 },
   { href: './swf/effing worms/index.html', imgSrc: 'effing worms.jpg', name: 'effing worms' , 'page': 3, 'id': 786 },
   { href: './swf/kids vs santa/index.html', imgSrc: 'kids vs santa.jpg', name: 'kids vs santa' , 'page': 3, 'id': 788 },
   { href: './swf/kids vs ice cream/index.html', imgSrc: 'kids vs ice cream.jpg', name: 'kids vs ice cream' , 'page': 3, 'id': 787 },
