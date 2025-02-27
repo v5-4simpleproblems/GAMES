@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/acid bunny/index.html', imgSrc: 'acid bunny.jpg', name: 'acid bunny' , 'page': 3, 'id': 779 },
   { href: './swf/bridge tactics/index.html', imgSrc: 'bridge tactics.jpg', name: 'bridge tactics' , 'page': 3, 'id': 782 },
   { href: './swf/cursed winds/index.html', imgSrc: 'cursed winds.jpg', name: 'cursed winds' , 'page': 3, 'id': 783 },
   { href: './swf/eco ego/index.html', imgSrc: 'eco ego.jpg', name: 'eco ego' , 'page': 3, 'id': 785 },
