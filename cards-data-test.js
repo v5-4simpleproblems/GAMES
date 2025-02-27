@@ -4,7 +4,6 @@ export default [
       { href: './swf/stickshot/index.html', imgSrc: 'stickshot.jpg', name: 'stickshot' , 'page': 3, 'id': 793 },
       { href: './swf/renegade racing/index.html', imgSrc: 'renegade racing.jpg', name: 'renegade racing' , 'page': 3, 'id': 791 },
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement' , 'page': 3, 'id': 790 },
-      { href: './swf/bridge tactics/index.html', imgSrc: 'bridge tactics.jpg', name: 'bridge tactics' , 'page': 3, 'id': 782 },
       { href: './swf/armor mayhem/index.html', imgSrc: 'armor mayhem.jpg', name: 'armor mayhem' , 'page': 3, 'id': 781 },
       { href: './swf/arcane weapons/index.html', imgSrc: 'arcane weapons.jpg', name: 'arcane weapons' , 'page': 3, 'id': 780 },
       { href: './swf/acid bunny/index.html', imgSrc: 'acid bunny.jpg', name: 'acid bunny' , 'page': 3, 'id': 779 },
