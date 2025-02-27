@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/mega miner/index.html', imgSrc: 'mega miner.jpg', name: 'mega miner' , 'page': 3, 'id': 789 },
   { href: './swf/sniper assasin/index.html', imgSrc: 'sniper assasin.jpg', name: 'sniper assasin' , 'page': 3, 'id': 792 },
   { href: './html/spotify/index.html', imgSrc: 'spotify.png', name: 'Spotify' , 'page': 3, 'id': 743 },
   { href: './swf/deeper sleep/index.html', imgSrc: 'deeper sleep.jpg', name: 'deeper sleep' , 'page': 3, 'id': 796 },
