@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/renegade racing/index.html', imgSrc: 'renegade racing.jpg', name: 'renegade racing' , 'page': 3, 'id': 791 },
   { href: './html/galaga/index.html', imgSrc: 'galaga.png', name: 'galaga' , 'page': 3, 'id': 775 },
   { href: './swf/acid bunny 2/index.html', imgSrc: 'acid bunny 2.jpg', name: 'acid bunny 2' , 'page': 3, 'id': 778 },
   { href: './swf/acid bunny/index.html', imgSrc: 'acid bunny.jpg', name: 'acid bunny' , 'page': 3, 'id': 779 },
