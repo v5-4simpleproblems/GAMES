@@ -1,5 +1,4 @@
 export default [
-      { href: './swf/the deepest sleep/index.html', imgSrc: 'the deepest sleep.jpg', name: 'the deepest sleep' , 'page': 3, 'id': 797 },
       { href: './swf/deeper sleep/index.html', imgSrc: 'deeper sleep.jpg', name: 'deeper sleep' , 'page': 3, 'id': 796 },
       { href: './swf/strikeforce kitty last stand/index.html', imgSrc: 'strikeforce kitty last stand.jpg', name: 'strikeforce kitty last stand' , 'page': 3, 'id': 795 },
       { href: './swf/strike force heros/index.html', imgSrc: 'strike force heros.jpg', name: 'strike force heros' , 'page': 3, 'id': 794 },
