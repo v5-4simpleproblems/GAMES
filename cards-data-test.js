@@ -8,7 +8,6 @@ export default [
       { href: './swf/arcane weapons/index.html', imgSrc: 'arcane weapons.jpg', name: 'arcane weapons' , 'page': 3, 'id': 780 },
       { href: './html/raft wars 2/index.html', imgSrc: 'raft wars 2.jpg', name: 'raft wars 2' , 'page': 3, 'id': 777 },
       { href: './html/neon blaster/index.html', imgSrc: 'neon blaster.jpg', name: 'neon blaster' , 'page': 3, 'id': 776 },
-      { href: './html/galaga/index.html', imgSrc: 'galaga.png', name: 'galaga' , 'page': 3, 'id': 775 },
       { href: './html/new territorial.io/index.html', imgSrc: 'new territorial.io.jpg', name: 'new territorial.io' , 'page': 3, 'id': 772 },
       { href: './html/youtube/game/index.html', imgSrc: 'youtube.png', name: 'youtube' , 'id': 761 },
       { href: './html/xbox cloud gaming/index.html', imgSrc: 'xbox cloud gaming.png', name: 'xbox cloud gaming' , 'page': 3, 'id': 751 },
