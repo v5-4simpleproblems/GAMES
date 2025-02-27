@@ -4,7 +4,6 @@ export default [
       { href: './swf/stickshot/index.html', imgSrc: 'stickshot.jpg', name: 'stickshot' , 'page': 3, 'id': 793 },
       { href: './swf/renegade racing/index.html', imgSrc: 'renegade racing.jpg', name: 'renegade racing' , 'page': 3, 'id': 791 },
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement' , 'page': 3, 'id': 790 },
-      { href: './swf/mega miner/index.html', imgSrc: 'mega miner.jpg', name: 'mega miner' , 'page': 3, 'id': 789 },
       { href: './swf/kids vs santa/index.html', imgSrc: 'kids vs santa.jpg', name: 'kids vs santa' , 'page': 3, 'id': 788 },
       { href: './swf/kids vs ice cream/index.html', imgSrc: 'kids vs ice cream.jpg', name: 'kids vs ice cream' , 'page': 3, 'id': 787 },
       { href: './swf/effing worms/index.html', imgSrc: 'effing worms.jpg', name: 'effing worms' , 'page': 3, 'id': 786 },
