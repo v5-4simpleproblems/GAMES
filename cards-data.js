@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/armor mayhem/index.html', imgSrc: 'armor mayhem.jpg', name: 'armor mayhem' , 'page': 3, 'id': 781 },
   { href: './swf/stickshot/index.html', imgSrc: 'stickshot.jpg', name: 'stickshot' , 'page': 3, 'id': 793 },
   { href: './html/neon blaster/index.html', imgSrc: 'neon blaster.jpg', name: 'neon blaster' , 'page': 3, 'id': 776 },
   { href: './swf/strike force heros/index.html', imgSrc: 'strike force heros.jpg', name: 'strike force heros' , 'page': 3, 'id': 794 },
