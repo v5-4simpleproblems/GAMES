@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/kids vs santa/index.html', imgSrc: 'kids vs santa.jpg', name: 'kids vs santa' , 'page': 3, 'id': 788 },
   { href: './swf/kids vs ice cream/index.html', imgSrc: 'kids vs ice cream.jpg', name: 'kids vs ice cream' , 'page': 3, 'id': 787 },
   { href: './swf/mega miner/index.html', imgSrc: 'mega miner.jpg', name: 'mega miner' , 'page': 3, 'id': 789 },
   { href: './swf/sniper assasin/index.html', imgSrc: 'sniper assasin.jpg', name: 'sniper assasin' , 'page': 3, 'id': 792 },
