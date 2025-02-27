@@ -12,7 +12,6 @@ export default [
       { href: './swf/kids vs ice cream/index.html', imgSrc: 'kids vs ice cream.jpg', name: 'kids vs ice cream' , 'page': 3, 'id': 787 },
       { href: './swf/effing worms/index.html', imgSrc: 'effing worms.jpg', name: 'effing worms' , 'page': 3, 'id': 786 },
       { href: './swf/eco ego/index.html', imgSrc: 'eco ego.jpg', name: 'eco ego' , 'page': 3, 'id': 785 },
-      { href: './swf/deep sleep/index.html', imgSrc: 'deep sleep.jpg', name: 'deep sleep' , 'page': 3, 'id': 784 },
       { href: './swf/cursed winds/index.html', imgSrc: 'cursed winds.jpg', name: 'cursed winds' , 'page': 3, 'id': 783 },
       { href: './swf/bridge tactics/index.html', imgSrc: 'bridge tactics.jpg', name: 'bridge tactics' , 'page': 3, 'id': 782 },
       { href: './swf/armor mayhem/index.html', imgSrc: 'armor mayhem.jpg', name: 'armor mayhem' , 'page': 3, 'id': 781 },
