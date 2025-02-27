@@ -5,7 +5,6 @@ export default [
       { href: './swf/renegade racing/index.html', imgSrc: 'renegade racing.jpg', name: 'renegade racing' , 'page': 3, 'id': 791 },
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement' , 'page': 3, 'id': 790 },
       { href: './swf/kids vs santa/index.html', imgSrc: 'kids vs santa.jpg', name: 'kids vs santa' , 'page': 3, 'id': 788 },
-      { href: './swf/kids vs ice cream/index.html', imgSrc: 'kids vs ice cream.jpg', name: 'kids vs ice cream' , 'page': 3, 'id': 787 },
       { href: './swf/effing worms/index.html', imgSrc: 'effing worms.jpg', name: 'effing worms' , 'page': 3, 'id': 786 },
       { href: './swf/eco ego/index.html', imgSrc: 'eco ego.jpg', name: 'eco ego' , 'page': 3, 'id': 785 },
       { href: './swf/cursed winds/index.html', imgSrc: 'cursed winds.jpg', name: 'cursed winds' , 'page': 3, 'id': 783 },
