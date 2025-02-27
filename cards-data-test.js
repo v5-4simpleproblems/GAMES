@@ -6,7 +6,6 @@ export default [
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement' , 'page': 3, 'id': 790 },
       { href: './swf/armor mayhem/index.html', imgSrc: 'armor mayhem.jpg', name: 'armor mayhem' , 'page': 3, 'id': 781 },
       { href: './swf/arcane weapons/index.html', imgSrc: 'arcane weapons.jpg', name: 'arcane weapons' , 'page': 3, 'id': 780 },
-      { href: './swf/acid bunny 2/index.html', imgSrc: 'acid bunny 2.jpg', name: 'acid bunny 2' , 'page': 3, 'id': 778 },
       { href: './html/raft wars 2/index.html', imgSrc: 'raft wars 2.jpg', name: 'raft wars 2' , 'page': 3, 'id': 777 },
       { href: './html/neon blaster/index.html', imgSrc: 'neon blaster.jpg', name: 'neon blaster' , 'page': 3, 'id': 776 },
       { href: './html/galaga/index.html', imgSrc: 'galaga.png', name: 'galaga' , 'page': 3, 'id': 775 },
