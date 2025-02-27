@@ -15,7 +15,6 @@ export default [
   { href: './swf/kids vs ice cream/index.html', imgSrc: 'kids vs ice cream.jpg', name: 'kids vs ice cream' , 'page': 3, 'id': 787 },
   { href: './swf/mega miner/index.html', imgSrc: 'mega miner.jpg', name: 'mega miner' , 'page': 3, 'id': 789 },
   { href: './swf/sniper assasin/index.html', imgSrc: 'sniper assasin.jpg', name: 'sniper assasin' , 'page': 3, 'id': 792 },
-  { href: './html/spotify/index.html', imgSrc: 'spotify.png', name: 'Spotify' , 'page': 3, 'id': 743 },
   { href: './swf/deeper sleep/index.html', imgSrc: 'deeper sleep.jpg', name: 'deeper sleep' , 'page': 3, 'id': 796 },
   { href: './swf/the deepest sleep/index.html', imgSrc: 'the deepest sleep.jpg', name: 'the deepest sleep' , 'page': 3, 'id': 797 },
   { href: './swf/deep sleep/index.html', imgSrc: 'deep sleep.jpg', name: 'deep sleep' , 'page': 3, 'id': 784 },
