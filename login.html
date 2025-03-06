@@ -165,7 +165,6 @@
       }
     </style>
 
-    <!-- Firebase + Code -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
       import {
@@ -181,9 +180,6 @@
         setDoc,
       } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-      // -----------------------
-      // 1) Initialize Firebase
-      // -----------------------
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
         authDomain: "strongdog-auth.firebaseapp.com",
@@ -198,7 +194,6 @@
       const db = getFirestore(app);
       const provider = new GoogleAuthProvider();
 
-      // 2) Disallowed Words
       const disallowedWords = [
         "nigger",
         "nigga",
@@ -232,7 +227,6 @@
         return disallowedWords.some((word) => normalized.includes(word));
       }
 
-      // 3) The rest of your code
       document.addEventListener("DOMContentLoaded", () => {
         const loginForm = document.getElementById("login-form");
         const googleSignInBtn = document.getElementById("google-signin");
@@ -252,9 +246,6 @@
           loadingAnimation.style.animation = "none";
         }
 
-        // ---------------------------
-        // 4A) Email/Password login
-        // ---------------------------
         loginForm.addEventListener("submit", (e) => {
           e.preventDefault();
           showLoadingAnimation();
@@ -270,9 +261,6 @@
             });
         });
 
-        // ---------------------------
-        // 4B) Google sign-in
-        // ---------------------------
         googleSignInBtn.addEventListener("click", () => {
           showLoadingAnimation();
           signInWithPopup(auth, provider)
@@ -283,7 +271,6 @@
               if (result.additionalUserInfo?.isNewUser) {
                 isNewUser = true;
               }
-              // Use metadata fallback
               const creationTime = new Date(user.metadata.creationTime).getTime();
               const lastSignInTime = new Date(user.metadata.lastSignInTime).getTime();
               if (creationTime === lastSignInTime) {
@@ -291,12 +278,10 @@
               }
 
               if (isNewUser) {
-                // brand-new => prompt for username
                 document.querySelector(".form-container").style.display = "none";
                 usernamePrompt.style.display = "block";
                 hideLoadingAnimation();
               } else {
-                // existing user
                 window.location.href = "index.html";
               }
             })
@@ -306,9 +291,6 @@
             });
         });
 
-        // ---------------------------
-        // 4C) Username Prompt Form
-        // ---------------------------
         usernameForm.addEventListener("submit", async (e) => {
           e.preventDefault();
           showLoadingAnimation();
@@ -316,7 +298,6 @@
           const usernameVal = usernameInput.value.trim();
           usernameError.textContent = "";
 
-          // Basic validations
           if (usernameVal.length > 16) {
             hideLoadingAnimation();
             usernameError.textContent =
@@ -331,18 +312,12 @@
           }
 
           try {
-            // 1) Update the user's displayName in Auth
             const user = auth.currentUser;
             await updateProfile(user, { displayName: usernameVal });
-
-            // 2) Create/Update doc at /usernames/<user.uid>, storing the chosen name
-            // This satisfies the rules requiring docId == auth.uid.
             await setDoc(doc(db, "usernames", user.uid), {
               username: usernameVal,
               userId: user.uid,
             });
-
-            // done
             window.location.href = "index.html";
           } catch (error) {
             console.error("Error during username setup:", error);
@@ -362,7 +337,6 @@
         <div class="input-container">
           <input type="email" id="email" placeholder="Email" required />
           <input type="password" id="password" placeholder="Password" required />
-          <!-- Show/Hide password icons -->
           <svg
             class="show-password-svg"
             id="show-password-svg"
@@ -370,7 +344,6 @@
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <!-- (paths omitted for brevity) -->
           </svg>
           <svg
             class="show-password-svg"
@@ -378,7 +351,6 @@
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <!-- (paths omitted for brevity) -->
           </svg>
         </div>
         <p class="error" id="error-message"></p>
@@ -393,7 +365,6 @@
       </p>
     </div>
 
-    <!-- Username Prompt for new Google users -->
     <div id="username-prompt" class="username-prompt">
       <h1>Set Your Username</h1>
       <form id="username-form">
@@ -403,7 +374,6 @@
       </form>
     </div>
 
-    <!-- Loading animation overlay -->
     <div class="loading-animation-container">
       <div>
         <div class="loading-animation"></div>
@@ -412,7 +382,6 @@
     </div>
 
     <script>
-      // Password toggle logic
       let canSeePassword = false;
       const showPasswordSvg = document.getElementById("show-password-svg");
       const hidePasswordSvg = document.getElementById("hide-password-svg");
@@ -428,7 +397,6 @@
       showPasswordSvg.addEventListener("click", togglePasswordVisibility);
       hidePasswordSvg.addEventListener("click", togglePasswordVisibility);
 
-      // Make "Sign in with Google" more colorful
       const googleSignInBtnEl = document.getElementById("google-signin");
       const word = "Google".split("");
       const googleColors = ["#4889f4", "#eb493b", "#fbbe0d", "#4889f4", "#3aab58", "#eb493b"];

@@ -7,82 +7,25 @@
     <title>StrongDog XP</title>
     <link rel="stylesheet" href="assets/styles.css" />
 
-    <style>
-      .overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-      }
-      .popup-container {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-        z-index: 1001;
-      }
-      .popup-container.active {
-        display: flex;
-      }
-      .popup {
-        background-color: #333;
-        color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        max-width: 90%;
-        width: 300px;
-        text-align: center;
-      }
-      .popup button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #ff8c00;
-        border: none;
-        color: white;
-        font-size: 14px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      .popup button:hover {
-        background-color: #ff6a00;
-      }
-    </style>
-
-    <!-- Firebase (no need for firebase-database-compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <!-- NEW: Real-time Database -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
-    <!-- Ads -->
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
       crossorigin="anonymous"
     ></script>
 
-    <!-- Migration / Save Data -->
     <script>
       const polytrackKeys = [
-        /* ... your Polytrack keys ... */
       ];
       const babelTowerKeys = [
-        /* ... your Babel Tower keys ... */
       ];
       const idleSharkKey = ["sharkGameSave"];
       const cookieClickerKey = ["CookieClickerGame"];
       const badEggKeys = [
-        /* ... your BadEgg keys ... */
       ];
 
       function getParsedItem(key) {
@@ -132,7 +75,6 @@
         if (str) copyText(str);
       }
 
-      // If netlify -> show a big message...
       document.addEventListener("DOMContentLoaded", function () {
         if (window.location.hostname.includes("netlify.app")) {
           document.body.innerHTML = `
@@ -142,7 +84,6 @@
             </div>
           `;
           document.body.style = "height:100vh; margin:0; display:grid; place-items:center;";
-          // Hook up your "get-polytrack-data" button etc...
         } else {
           const importBtn = document.getElementById("import-save-data-btn");
           if (importBtn) {
@@ -169,7 +110,6 @@
       });
     </script>
 
-    <!-- siteMapping -->
     <script>
       window.siteMapping = {
         "strongdogxp.github.io": [
@@ -180,7 +120,6 @@
       };
     </script>
 
-    <!-- Initialize Firebase -->
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
@@ -193,13 +132,10 @@
       };
       firebase.initializeApp(firebaseConfig);
       window.auth = firebase.auth();
-      // Firestore
       window.db = firebase.firestore();
-      // Realtime Database
       window.rtdb = firebase.database();
     </script>
 
-    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D88TDDVPGJ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -210,10 +146,8 @@
       gtag("config", "G-D88TDDVPGJ");
     </script>
 
-    <!-- Auto-save in Firestore -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // If needed, create autoSaveModal
         if (!document.getElementById("autoSaveModal")) {
           const modal = document.createElement("div");
           modal.id = "autoSaveModal";
@@ -256,7 +190,6 @@
           }
         }
 
-        // Firestore path: /users/<uid>/saves/slot3
         function autoSaveData() {
           if (!window.currentUserId) return;
           const data = getAllLocalStorageData();
@@ -309,13 +242,11 @@
           setCookie("autoSaveEnabled", "false", 9999);
         });
 
-        // Watch auth state
         window.auth.onAuthStateChanged(async (user) => {
           if (user) {
             window.currentUserId = user.uid;
             const autoEnabled = getCookie("autoSaveEnabled");
             if (!autoEnabled) {
-              // See if there's a slot3 doc
               const docRef = window.db
                 .collection("users")
                 .doc(user.uid)
@@ -325,7 +256,6 @@
               if (docSnap.exists && docSnap.data().localStorageData) {
                 showAutoSaveModal();
               } else {
-                // no existing doc, just auto-save once
                 setCookie("autoSaveEnabled", "true", 9999);
                 if (!getCookie("autoSaveDone")) {
                   autoSaveData();
@@ -333,7 +263,6 @@
                 }
               }
             } else if (autoEnabled === "true" && !getCookie("autoSaveDone")) {
-              // do one immediate save
               autoSaveData();
               setCookie("autoSaveDone", "true", 1);
             }
@@ -418,7 +347,6 @@
             >
           </div>
         </div>
-        <!-- devs, downloaders, etc. -->
       </div>
     </div>
 
@@ -482,7 +410,6 @@
     </div>
 
     <script>
-      // Create links for "alternate-links-container"
       const altLinksEl = document.getElementById("alternate-links-container");
       const altLinks = [
         "mastersite.org",
@@ -510,14 +437,10 @@
       });
     </script>
 
-    <!-- Big code block for the games, favorites, xp, username, etc. -->
     <script type="module">
       import games from "./cards-data.js";
       import { targetUrl } from "./appscript.js";
 
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      // 1) HELPER FOR XP CALCULATIONS
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       function getTierAndProgressFromXP(xp) {
         const baseXPNeeded = 50;
         const increasePerTier = 200;
@@ -545,9 +468,6 @@
         return { level, tier, currentXP: xp, xpNeededForNext: xpNeeded };
       }
 
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      // 2) PRE-POPULATE AND FETCH "TOP GAMES" FROM URL
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       const numTopGames = 20;
       const topGameList = document.getElementById("topGameList");
       for (let i = 0; i < numTopGames; i++) {
@@ -610,9 +530,6 @@
         return null;
       }
 
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      // 3) RENDER ALL GAMES LOCALLY
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       function getPageNumberFromURL(url) {
         const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
         const match = url.match(regex);
@@ -676,9 +593,6 @@
       const allGameListElement = document.getElementById("allGameList");
       allGameListElement.innerHTML = games.map((g) => getCardHTML(g)).join("");
 
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      // 4) SIMPLE SEARCH FEATURE (MAX 7 RESULTS)
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       const searchInput = document.getElementById("searchInput");
       const searchResults = document.getElementById("searchResults");
       function updateSearchResults() {
@@ -709,9 +623,6 @@
         });
       }
 
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      // 5) SLIDE MENU, USER AUTH, XP, LOGOUT, ETC.
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       const menuIcon = document.getElementById("menuIcon");
       const slideMenu = document.getElementById("slideMenu");
       const categories = slideMenu.querySelector(".categories");
@@ -729,7 +640,6 @@
       auth.onAuthStateChanged(async (user) => {
         if (user) {
           const userId = user.uid;
-          // CREATE USER DETAILS CONTAINER
           const userDetailsContainer = document.createElement("div");
           userDetailsContainer.className = "user-details-container";
 
@@ -754,7 +664,6 @@
           profileTop.appendChild(usernameDiv);
           userDetailsContainer.appendChild(profileTop);
 
-          // 5A) GET USERNAME FROM FIRESTORE (direct doc read)
           try {
             const docRef = db.collection("usernames").doc(userId);
             const docSnap = await docRef.get();
@@ -769,7 +678,6 @@
             usernameText.textContent = user.displayName || "Username";
           }
 
-          // 5B) GET XP FROM REALTIME DATABASE
           let totalXP = 0;
           try {
             const xpSnap = await rtdb.ref(`/users/${userId}/xp`).once("value");
@@ -780,10 +688,8 @@
             console.error("Error reading XP from Realtime Database:", err);
           }
 
-          // 5C) CALCULATE TIER/LEVEL
           const { level, currentXP, xpNeededForNext } = getTierAndProgressFromXP(totalXP);
 
-          // XP container
           const xpContainer = document.createElement("div");
           xpContainer.className = "xp-container";
 
@@ -809,14 +715,12 @@
 
           userDetailsContainer.appendChild(xpContainer);
 
-          // Settings link on picture
           picContainer.addEventListener("click", () => {
             window.location.href = "settings.html";
           });
 
           slideMenu.insertBefore(userDetailsContainer, categories);
 
-          // LOG OUT LINK
           const logoutLink = document.createElement("a");
           logoutLink.href = "#";
           logoutLink.className = "option-link";
@@ -830,7 +734,6 @@
           const favoritesLink = categories.querySelector('a[href="favs.html"]');
           categories.insertBefore(logoutLink, favoritesLink);
 
-          // IF TESTER
           db.collection("access")
             .doc(userId)
             .get()
@@ -848,7 +751,6 @@
             })
             .catch((err) => console.error("Error checking 'access' doc:", err));
         } else {
-          // NOT LOGGED IN
           const userDetailsContainer = document.createElement("div");
           userDetailsContainer.className = "user-details-container";
           userDetailsContainer.style.display = "flex";
@@ -883,7 +785,6 @@
           slideMenu.insertBefore(userDetailsContainer, categories);
         }
 
-        // randomGame => from "games" array
         const randomGameLink = categories.querySelector("#randomGame");
         randomGameLink?.addEventListener("click", (ev) => {
           ev.preventDefault();
@@ -893,7 +794,6 @@
           }
         });
 
-        // blockLanSchool
         const blockLanschoolLink = categories.querySelector("#blockLanschool");
         blockLanschoolLink?.addEventListener("click", (ev) => {
           ev.preventDefault();
@@ -914,9 +814,6 @@
         });
       });
 
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      // 6) CUSTOM SLIDE MENU FOR LAYOUT EDITING
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       const editAllButton = document.getElementById("editAllButton");
       const customSlideMenu = document.getElementById("customSlideMenu");
       editAllButton.addEventListener("click", (ev) => {
@@ -949,7 +846,6 @@
         return "";
       }
 
-      // 6A) TOP 20 TOGGLE
       const top20Toggle = document.getElementById("top20Toggle");
       const topGameHeader = document.getElementById("topGameHeader");
       let top20Disabled = getCookie("top20Disabled") === "true";
@@ -970,7 +866,6 @@
         }
       });
 
-      // 6B) FAVORITES TOGGLE
       const favoritesToggle = document.getElementById("favoritesToggle");
       const favoritesHeader = document.getElementById("favoritesHeader");
       const favoritesGameList = document.getElementById("favoritesGameList");
@@ -1059,12 +954,10 @@
       }
       document.getElementById("favoritesOkButton").addEventListener("click", hideFavoritesPopup);
 
-      // Load favorites if toggle is on
       if (favoritesToggle.checked) {
         loadFavorites();
       }
 
-      // 6C) CARD SIZE SLIDER
       const cardSizeSlider = document.getElementById("cardSizeSlider");
       const cardSizeValue = document.getElementById("cardSizeValue");
 
@@ -1100,7 +993,6 @@
         const hostname = window.location.hostname;
         const linkMap = {
           "jman1593.github.io": { page1: "/#", page2: "/strongdog2/index.html" },
-          // etc ...
         };
         for (const key in linkMap) {
           if (hostname.includes(key)) {

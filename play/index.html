@@ -334,7 +334,6 @@
         color: #ff8c00;
       }
 
-      /* Redirect Message Styles */
       #redirectMessage {
         display: none;
         text-align: center;
@@ -354,7 +353,6 @@
         text-decoration: underline;
       }
 
-      /* Responsive Design */
       @media (max-width: 768px) {
         .content {
           flex-direction: column;
@@ -403,7 +401,6 @@
     </div>
 
     <div class="slide-menu" id="slideMenu">
-      <!-- User Details and Menu Options will be dynamically inserted here -->
       <div class="categories">
         <a href="../favs.html" class="option-link">Favorites</a>
         <a href="../about.html" class="option-link"
@@ -470,7 +467,6 @@
       <div class="card-container" id="cardContainer"></div>
     </div>
 
-    <!-- Redirect Message (Optional) -->
     <div id="redirectMessage">
       <h2>Redirecting to the game...</h2>
       <p>
@@ -489,7 +485,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script>
-      // Initialize Firebase
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
         authDomain: "strongdog-auth.firebaseapp.com",
@@ -507,15 +502,15 @@
       const rtdb = firebase.database();
 
       function getTierAndProgressFromXP(xp) {
-        const baseXPNeeded = 50; // Starting XP needed
-        const increasePerTier = 200; // Fixed increase after cap
-        const exponentialMultiplier = 1.2; // Multiplier for exponential increase
-        const levelsPerTier = 5; // Levels per tier
-        const capTier = 10; // Cap after this many tiers (50 levels total)
+        const baseXPNeeded = 50;
+        const increasePerTier = 200;
+        const exponentialMultiplier = 1.2;
+        const levelsPerTier = 5;
+        const capTier = 10;
 
         let level = 1;
         let tier = 1;
-        let xpNeeded = baseXPNeeded; // Initial XP needed for the first tier
+        let xpNeeded = baseXPNeeded;
 
         while (xp >= xpNeeded) {
           xp -= xpNeeded;
@@ -543,7 +538,6 @@
       }
     </script>
 
-    <!-- Your "appscript.js" which includes siteMapping or similar -->
     <script src="../appscript.js"></script>
 
     <script type="module">
@@ -619,7 +613,6 @@
             cleanHref + "base.html",
           ];
 
-          // Attempt to parse any embed path from the target file
           try {
             const response = await fetch(adjustedHref, { method: "GET" });
             if (response.ok) {
@@ -642,14 +635,12 @@
             );
           }
 
-          // If no embed path found, try known subpaths
           for (const path of pathsToTry) {
             if (await fileExists(path)) {
               return path;
             }
           }
 
-          // Fallback: the original href
           return adjustHrefPath(originalHref, page);
         }
 
@@ -673,7 +664,6 @@
           gameTitleElement.textContent = title;
           document.title = title + " - StrongDog XP";
 
-          // Record the view in your external script
           iframe.onload = function () {
             fetch(
               "https://script.google.com/macros/s/AKfycbx1xYwL2QqkOQHyeCWIVSMVLP_XXts5zpb0M-vbvlRl1MpRYYcv4NI-i8OaGc0YP0wpsg/exec?title=" +
@@ -751,14 +741,13 @@
           );
           embedGame(embedPath, selectedGame.name);
 
-          // Favorites
           let userFavorites = new Set();
           function updateFavoriteIcon() {
             if (userFavorites.has(selectedGame.id)) {
-              favoriteIcon.innerHTML = "&#9733;"; // Filled star
+              favoriteIcon.innerHTML = "&#9733;";
               favoriteIcon.style.color = "gold";
             } else {
-              favoriteIcon.innerHTML = "&#9734;"; // Empty star
+              favoriteIcon.innerHTML = "&#9734;";
               favoriteIcon.style.color = "white";
             }
           }
@@ -772,13 +761,11 @@
             const favRef = db.collection("favs").doc(user.uid);
 
             if (userFavorites.has(selectedGame.id)) {
-              // Remove from favorites
               await favRef.update({
                 [selectedGame.id]: firebase.firestore.FieldValue.delete(),
               });
               userFavorites.delete(selectedGame.id);
             } else {
-              // Add to favorites
               await favRef.set(
                 {
                   [selectedGame.id]: true,
@@ -879,7 +866,6 @@
           });
         }
 
-        // Enhanced Activity Tracking
         let lastActivityTime = Date.now();
         const activityEvents = [
           "mousemove",
@@ -896,9 +882,7 @@
 
         auth.onAuthStateChanged((user) => {
           if (user) {
-            // We store XP under "users/<uid>/xp" so your existing rules allow it
             setInterval(() => {
-              // If user was active in last 3 minutes
               if (Date.now() - lastActivityTime <= 3 * 60 * 1000) {
                 const xpRef = rtdb.ref(`users/${user.uid}/xp`);
                 xpRef.transaction((currentXP) => (currentXP || 0) + 10);
@@ -908,14 +892,12 @@
                   (currentPoints) => (currentPoints || 0) + 1
                 );
               }
-            }, 60 * 1000); // every minute
+            }, 60 * 1000);
           }
         });
 
-        // Manual redirect fallback
         manualRedirectLink.addEventListener("click", function (e) {
           e.preventDefault();
-          // If user is forced to manually redirect
           const selectedId = urlParams.get("id");
           const sGame = games.find((g) => g.id == selectedId);
           if (sGame && sGame.href) {
@@ -926,7 +908,6 @@
     </script>
 
     <script>
-      // Sidebar open/close logic and user info
       document.addEventListener("DOMContentLoaded", function () {
         const menuIcon = document.getElementById("menuIcon");
         const slideMenu = document.getElementById("slideMenu");
@@ -1003,7 +984,6 @@
               usernameElement.textContent = user.displayName || "Username";
             }
 
-            // Listen for XP changes at users/<uid>/xp
             const xpRef = rtdb.ref(`users/${userId}/xp`);
             xpRef.on("value", (snapshot) => {
               let totalXP = snapshot.exists() ? snapshot.val() : 0;
@@ -1024,7 +1004,6 @@
 
             slideMenu.insertBefore(userDetailsContainer, categories);
 
-            // Log Out link
             const logoutLink = document.createElement("a");
             logoutLink.href = "#";
             logoutLink.className = "option-link";
@@ -1047,7 +1026,6 @@
             const favsLink = categories.querySelector('a[href="../favs.html"]');
             categories.insertBefore(logoutLink, favsLink);
 
-            // If "tester" user in "access" doc => show "Test Games"
             try {
               const accessDocRef = db.collection("access").doc(user.uid);
               accessDocRef.get().then((accessDoc) => {
@@ -1077,7 +1055,6 @@
               console.error(error);
             }
           } else {
-            // Not logged in
             const notLoggedInContainer = document.createElement("div");
             notLoggedInContainer.className = "username-container";
 
@@ -1120,7 +1097,6 @@
           });
       });
 
-      // Prevent arrow keys & space from scrolling
       document.addEventListener("keydown", function (event) {
         if (
           ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(
@@ -1133,7 +1109,6 @@
     </script>
 
     <script>
-      // If user picks a special game requiring extra JS
       document.addEventListener("DOMContentLoaded", async function () {
         const specialGameIds = [739, 749];
         const urlParams = new URLSearchParams(window.location.search);

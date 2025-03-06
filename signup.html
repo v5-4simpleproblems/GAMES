@@ -13,7 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up | Strongdog</title>
     <style>
-      /* Body styling */
       body {
         font-family: "Arial", sans-serif;
         background: linear-gradient(135deg, #222, #333, #555, #888);
@@ -27,7 +26,6 @@
         overflow: hidden;
       }
 
-      /* Moving blurred blobs */
       .blob {
         position: absolute;
         width: 350px;
@@ -43,7 +41,6 @@
         z-index: -1;
       }
 
-      /* Blobs positioned on different areas */
       .blob:nth-child(1) {
         top: 10%;
         left: 20%;
@@ -63,7 +60,6 @@
         height: 300px;
       }
 
-      /* Blobs animation */
       @keyframes moveBlobs {
         0% {
           transform: translate(0, 0);
@@ -73,7 +69,6 @@
         }
       }
 
-      /* Form container */
       .form-container {
         background-color: #3c3c3c;
         padding: 30px;
@@ -84,7 +79,6 @@
         z-index: 2;
       }
 
-      /* Form header */
       .form-container h2 {
         text-align: center;
         margin-bottom: 20px;
@@ -92,7 +86,6 @@
         font-size: 24px;
       }
 
-      /* Input styling */
       .form-container input {
         width: calc(100% - 40px);
         padding: 12px;
@@ -107,7 +100,6 @@
         position: relative;
       }
 
-      /* Password container with eye icon */
       .password-container {
         position: relative;
       }
@@ -118,7 +110,6 @@
         padding-right: 30px;
       }
 
-      /* Eye icon */
       .show-password {
         position: absolute;
         right: 10px;
@@ -129,7 +120,6 @@
         font-size: 20px;
       }
 
-      /* Button styling */
       .form-container button {
         width: 100%;
         padding: 12px;
@@ -145,13 +135,11 @@
         background-color: #218838;
       }
 
-      /* Error message */
       .form-container .error {
         color: #ff4d4d;
         font-size: 14px;
       }
 
-      /* Links */
       .form-container a {
         color: #28a745;
         text-align: center;
@@ -164,7 +152,6 @@
       }
     </style>
     <script type="module">
-      // Import Firebase modules
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
       import {
         getAuth,
@@ -181,7 +168,6 @@
         getDocs,
       } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-      // Firebase configuration for strongdog-auth project
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
         authDomain: "strongdog-auth.firebaseapp.com",
@@ -192,12 +178,10 @@
         measurementId: "G-0YLTCV2MMS",
       };
 
-      // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-      // List of disallowed words
       const disallowedWords = [
         "nigger",
         "nigga",
@@ -213,18 +197,15 @@
         "n1gger",
       ];
 
-      // Function to check for disallowed words
       function containsDisallowedWords(username) {
         let normalizedUsername = username.toLowerCase();
 
-        // Replace leet speak numbers with letters
         normalizedUsername = normalizedUsername.replace(/1/g, "i");
         normalizedUsername = normalizedUsername.replace(/3/g, "e");
         normalizedUsername = normalizedUsername.replace(/4/g, "a");
         normalizedUsername = normalizedUsername.replace(/5/g, "s");
         normalizedUsername = normalizedUsername.replace(/0/g, "o");
 
-        // Remove special characters
         normalizedUsername = normalizedUsername.replace(/[^a-zA-Z]/g, "");
 
         return disallowedWords.some((word) =>
@@ -232,14 +213,12 @@
         );
       }
 
-      // Function to check username availability
       async function checkUsernameAvailability(username) {
         try {
           const usernamesRef = collection(db, "usernames");
           const q = query(usernamesRef, where("username", "==", username));
           const querySnapshot = await getDocs(q);
 
-          // If the username exists, it's taken
           if (!querySnapshot.empty) {
             return false;
           }
@@ -263,24 +242,20 @@
           const confirmPassword =
             document.getElementById("confirm-password").value;
 
-          // Reset error message
           document.getElementById("error-message").textContent = "";
 
-          // Check if the username exceeds 16 characters
           if (name.length > 16) {
             document.getElementById("error-message").textContent =
               "Username cannot be longer than 16 characters.";
             return;
           }
 
-          // Password validation
           if (password !== confirmPassword) {
             document.getElementById("error-message").textContent =
               "Passwords do not match!";
             return;
           }
 
-          // Username validation for disallowed words
           if (containsDisallowedWords(name)) {
             document.getElementById("error-message").textContent =
               "Username contains inappropriate language. Please choose another.";
@@ -288,7 +263,6 @@
           }
 
           try {
-            // Check if username is available
             const isAvailable = await checkUsernameAvailability(name);
             if (!isAvailable) {
               document.getElementById("error-message").textContent =
@@ -296,27 +270,22 @@
               return;
             }
 
-            // Create user with email and password
             const userCredential = await createUserWithEmailAndPassword(
               auth,
               email,
               password
             );
 
-            // Update user profile with the name
             await updateProfile(userCredential.user, {
               displayName: name,
             });
 
-            // Save the username to Firestore
             await setDoc(doc(db, "usernames", userCredential.user.uid), {
               username: name,
             });
 
-            // Redirect to settings page after successful sign-up
             window.location.href = "settings.html";
           } catch (error) {
-            // Handle signup errors
             console.error("Error during signup:", error);
             document.getElementById(
               "error-message"
@@ -324,16 +293,15 @@
           }
         });
 
-        // Toggle password visibility for both password fields
         togglePasswordBtns.forEach((btn) => {
           btn.addEventListener("click", () => {
             const input = btn.previousElementSibling;
             if (input.type === "password") {
               input.type = "text";
-              btn.innerHTML = "❌"; // X icon for hiding
+              btn.innerHTML = "❌";
             } else {
               input.type = "password";
-              btn.innerHTML = "&#128065;"; // Eye icon for showing
+              btn.innerHTML = "&#128065;";
             }
           });
         });
@@ -341,7 +309,6 @@
     </script>
   </head>
   <body>
-    <!-- Blurred blobs background -->
     <div class="blob"></div>
     <div class="blob"></div>
     <div class="blob"></div>
@@ -359,7 +326,6 @@
             required
           />
           <span class="show-password" id="toggle-password">&#128065;</span>
-          <!-- Eye icon -->
         </div>
         <div class="password-container">
           <input
@@ -371,7 +337,6 @@
           <span class="show-password" id="toggle-confirm-password"
             >&#128065;</span
           >
-          <!-- Eye icon -->
         </div>
         <p class="error" id="error-message"></p>
         <button type="submit">Sign Up</button>
