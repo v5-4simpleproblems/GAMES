@@ -121,7 +121,9 @@
       function getAndBundleDataIntoObj(keysArr) {
         const dataObj = Object.fromEntries(keysArr.map((k) => [k, getParsedItem(k)]));
         if (!validateData(dataObj)) {
-          alert("Some keys could not be retrieved. If unexpected, check localStorage or contact support.");
+          alert(
+            "Some keys could not be retrieved. If unexpected, check localStorage or contact support."
+          );
         }
         return JSON.stringify(dataObj);
       }
@@ -201,7 +203,9 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D88TDDVPGJ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag("js", new Date());
       gtag("config", "G-D88TDDVPGJ");
     </script>
@@ -383,7 +387,8 @@
         <span class="modal-close" id="closeModal">×</span>
         <p>
           The StrongDog Discord server is a place for StrongDog users to chill,
-          request ideas, and have fun! <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">Join here</a>.
+          request ideas, and have fun!
+          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">Join here</a>.
         </p>
       </div>
     </div>
@@ -408,7 +413,9 @@
         <div class="credits-item">
           <div class="credits-role">CEO</div>
           <div class="credits-names">
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
+            <a href="https://github.com/jman1593" target="_blank" class="credits-link"
+              >Joshua Pettit</a
+            >
           </div>
         </div>
         <!-- devs, downloaders, etc. -->
@@ -444,7 +451,10 @@
           <input type="checkbox" id="favoritesToggle" />
         </div>
         <div class="slider-option" style="margin-bottom:10px">
-          <label for="cardSizeSlider" style="color:white; display:block; margin-bottom:5px">
+          <label
+            for="cardSizeSlider"
+            style="color:white; display:block; margin-bottom:5px"
+          >
             Card Size Adjustment
           </label>
           <input
@@ -744,16 +754,13 @@
           profileTop.appendChild(usernameDiv);
           userDetailsContainer.appendChild(profileTop);
 
-          // 5A) GET USERNAME FROM FIRESTORE (if any) using a query
+          // 5A) GET USERNAME FROM FIRESTORE (direct doc read)
           try {
-            const querySnapshot = await db.collection("usernames")
-              .where("userId", "==", userId)
-              .limit(1)
-              .get();
-            if (!querySnapshot.empty) {
-              const userDoc = querySnapshot.docs[0];
+            const docRef = db.collection("usernames").doc(userId);
+            const docSnap = await docRef.get();
+            if (docSnap.exists) {
               usernameText.textContent =
-                userDoc.data().username || user.displayName || "Username";
+                docSnap.data().username || user.displayName || "Username";
             } else {
               usernameText.textContent = user.displayName || "Username";
             }
@@ -762,7 +769,7 @@
             usernameText.textContent = user.displayName || "Username";
           }
 
-          // 5B) GET XP FROM REALTIME DATABASE, INSTEAD OF FIRESTORE
+          // 5B) GET XP FROM REALTIME DATABASE
           let totalXP = 0;
           try {
             const xpSnap = await rtdb.ref(`/users/${userId}/xp`).once("value");

@@ -11,7 +11,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0YLTCV2MMS");
     </script>
     <title>Loading... - StrongDog XP</title>
@@ -490,19 +489,19 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script>
+      // Initialize Firebase
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
         authDomain: "strongdog-auth.firebaseapp.com",
-        databaseURL:
-          "https://strongdog-auth-default-rtdb.firebaseio.com",
+        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
         projectId: "strongdog-auth",
         storageBucket: "strongdog-auth.appspot.com",
         messagingSenderId: "936276282572",
         appId: "1:936276282572:web:a802b7f609381ff9428669",
         measurementId: "G-0YLTCV2MMS",
       };
-
       firebase.initializeApp(firebaseConfig);
+
       const auth = firebase.auth();
       const db = firebase.firestore();
       const rtdb = firebase.database();
@@ -544,6 +543,7 @@
       }
     </script>
 
+    <!-- Your "appscript.js" which includes siteMapping or similar -->
     <script src="../appscript.js"></script>
 
     <script type="module">
@@ -610,7 +610,6 @@
           return finalPath;
         }
 
-        // Modify getEmbedPath function to add new logic
         async function getEmbedPath(adjustedHref, originalHref, page) {
           let cleanHref = adjustedHref
             .replace(/index\.html$/, "")
@@ -627,7 +626,7 @@
             cleanHref + "base.html",
           ];
 
-          // New logic: Check the file referenced by the cards-data.js embedding logic
+          // Attempt to parse any embed path from the target file
           try {
             const response = await fetch(adjustedHref, { method: "GET" });
             if (response.ok) {
@@ -650,14 +649,14 @@
             );
           }
 
-          // Original paths to try
+          // If no embed path found, try known subpaths
           for (const path of pathsToTry) {
             if (await fileExists(path)) {
               return path;
             }
           }
 
-          // Fallback: Return the original href
+          // Fallback: the original href
           return adjustHrefPath(originalHref, page);
         }
 
@@ -665,20 +664,19 @@
           const iframe = document.createElement("iframe");
           iframe.src = gamePath;
           iframe.onload = function () {
-            iframe.contentWindow.focus(); // Automatically focus on the iframe after loading
+            iframe.contentWindow.focus();
           };
           gameContainer.innerHTML = "";
           gameContainer.appendChild(iframe);
           gameTitleElement.textContent = title;
           document.title = title + " - StrongDog XP";
 
+          // Record the view in your external script
           iframe.onload = function () {
             fetch(
               "https://script.google.com/macros/s/AKfycbx1xYwL2QqkOQHyeCWIVSMVLP_XXts5zpb0M-vbvlRl1MpRYYcv4NI-i8OaGc0YP0wpsg/exec?title=" +
                 encodeURIComponent(title),
-              {
-                method: "GET",
-              }
+              { method: "GET" }
             )
               .then((response) => response.text())
               .then((result) => console.log("[DEBUG] View recorded:", result))
@@ -700,7 +698,10 @@
         if (!selectedGame) {
           embedGame("../404.html", "Not Found");
         } else {
-          const normalGameIds = [250, 244, 605, 130, 729, 742, 743, 744, 745, 757, 759, 760, 761, 762];
+          const normalGameIds = [
+            250, 244, 605, 130, 729, 742, 743, 744, 745, 757, 759, 760, 761,
+            762,
+          ];
           if (normalGameIds.includes(selectedGame.id)) {
             document.title = "Redirecting... - StrongDog XP";
             redirectMessage.style.display = "block";
@@ -738,10 +739,8 @@
           );
           embedGame(embedPath, selectedGame.name);
 
-          // Initialize favorites
+          // Favorites
           let userFavorites = new Set();
-
-          // Function to update the favorite icon based on current favorite status
           function updateFavoriteIcon() {
             if (userFavorites.has(selectedGame.id)) {
               favoriteIcon.innerHTML = "&#9733;"; // Filled star
@@ -752,15 +751,14 @@
             }
           }
 
-          // Function to toggle favorite status
           async function toggleFavorite() {
             const user = auth.currentUser;
             if (!user) {
               alert("Please sign in to favorite a game!");
               return;
             }
-
             const favRef = db.collection("favs").doc(user.uid);
+
             if (userFavorites.has(selectedGame.id)) {
               // Remove from favorites
               await favRef.update({
@@ -780,7 +778,6 @@
             updateFavoriteIcon();
           }
 
-          // Function to load favorites from Firestore
           async function loadFavorites() {
             const user = auth.currentUser;
             if (user) {
@@ -800,17 +797,13 @@
             }
           }
 
-          // Listen for authentication state changes to load favorites accordingly
           auth.onAuthStateChanged((user) => {
             loadFavorites();
           });
 
-          // Event listener for favorite icon click
           favoriteIcon.addEventListener("click", function () {
             toggleFavorite();
           });
-
-          // (Note: The Firebase Realtime Database connection tracking code has been removed.)
 
           fullscreenButton.addEventListener("click", function () {
             if (gameContainer.requestFullscreen) {
@@ -874,10 +867,8 @@
           });
         }
 
-        // Enhanced Activity Tracking Starts Here
+        // Enhanced Activity Tracking
         let lastActivityTime = Date.now();
-
-        // List of events that indicate user activity
         const activityEvents = [
           "mousemove",
           "keydown",
@@ -885,8 +876,6 @@
           "touchstart",
           "scroll",
         ];
-
-        // Update lastActivityTime on any of the above events
         activityEvents.forEach((event) => {
           document.addEventListener(event, () => {
             lastActivityTime = Date.now();
@@ -895,27 +884,30 @@
 
         auth.onAuthStateChanged((user) => {
           if (user) {
-            // Add XP every minute if user is active, and also add 1 point each time XP is added
+            // We store XP under "users/<uid>/xp" so your existing rules allow it
             setInterval(() => {
+              // If user was active in last 3 minutes
               if (Date.now() - lastActivityTime <= 3 * 60 * 1000) {
-                const xpRef = rtdb.ref(`xp/${user.uid}`);
+                const xpRef = rtdb.ref(`users/${user.uid}/xp`);
                 xpRef.transaction((currentXP) => (currentXP || 0) + 10);
 
-                const pointsRef = rtdb.ref(`points/${user.uid}`);
+                const pointsRef = rtdb.ref(`users/${user.uid}/points`);
                 pointsRef.transaction(
                   (currentPoints) => (currentPoints || 0) + 1
                 );
               }
-            }, 60 * 1000); // Every 1 minute
+            }, 60 * 1000); // every minute
           }
         });
-        // Enhanced Activity Tracking Ends Here
 
-        // Optional: Handle manual redirect if automatic redirection fails
+        // Manual redirect fallback
         manualRedirectLink.addEventListener("click", function (e) {
           e.preventDefault();
-          if (selectedGame && selectedGame.href) {
-            window.location.href = "../" + selectedGame.href;
+          // If user is forced to manually redirect
+          const selectedId = urlParams.get("id");
+          const sGame = games.find((g) => g.id == selectedId);
+          if (sGame && sGame.href) {
+            window.location.href = "../" + sGame.href;
           }
         });
       });
@@ -964,7 +956,6 @@
 
           profileTopContainer.appendChild(profilePictureContainer);
           profileTopContainer.appendChild(usernameContainer);
-
           userDetailsContainer.appendChild(profileTopContainer);
 
           const xpContainer = document.createElement("div");
@@ -1000,14 +991,14 @@
               usernameElement.textContent = user.displayName || "Username";
             }
 
-            const xpRef = rtdb.ref(`xp/${userId}`);
+            // Listen for XP changes at users/<uid>/xp
+            const xpRef = rtdb.ref(`users/${userId}/xp`);
             xpRef.on("value", (snapshot) => {
               let totalXP = snapshot.exists() ? snapshot.val() : 0;
               const { level, tier, currentXP, xpNeededForNext } =
                 getTierAndProgressFromXP(totalXP);
 
               xpLevelText.textContent = `Level ${level}`;
-
               const fillPercent = (currentXP / xpNeededForNext) * 100;
               xpBarFill.style.width = `${fillPercent}%`;
               xpBarText.textContent = `${currentXP}/${xpNeededForNext}`;
@@ -1021,6 +1012,7 @@
 
             slideMenu.insertBefore(userDetailsContainer, categories);
 
+            // Log Out link
             const logoutLink = document.createElement("a");
             logoutLink.href = "#";
             logoutLink.className = "option-link";
@@ -1043,6 +1035,7 @@
             const favsLink = categories.querySelector('a[href="../favs.html"]');
             categories.insertBefore(logoutLink, favsLink);
 
+            // If "tester" user in "access" doc => show "Test Games"
             try {
               const accessDocRef = db.collection("access").doc(user.uid);
               accessDocRef.get().then((accessDoc) => {
@@ -1072,6 +1065,7 @@
               console.error(error);
             }
           } else {
+            // Not logged in
             const notLoggedInContainer = document.createElement("div");
             notLoggedInContainer.className = "username-container";
 
@@ -1114,6 +1108,7 @@
           });
       });
 
+      // Prevent arrow keys & space from scrolling
       document.addEventListener("keydown", function (event) {
         if (
           ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(
@@ -1124,7 +1119,9 @@
         }
       });
     </script>
+
     <script>
+      // If user picks a special game requiring extra JS
       document.addEventListener("DOMContentLoaded", async function () {
         const specialGameIds = [739, 749];
         const urlParams = new URLSearchParams(window.location.search);
@@ -1144,11 +1141,9 @@
             }
 
             const scriptContent = await response.text();
-
             const scriptElement = document.createElement("script");
             scriptElement.type = "text/javascript";
             scriptElement.text = scriptContent;
-
             document.body.appendChild(scriptElement);
           } catch (error) {
             console.error(
