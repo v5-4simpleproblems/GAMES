@@ -551,25 +551,6 @@
       import { siteMapping } from "../site-mapping.js";
 
       document.addEventListener("DOMContentLoaded", async function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const gameId = urlParams.get("id");
-        const gameContainer = document.getElementById("gameContainer");
-        const gameTitleElement = document.getElementById("gameTitle");
-        const favoriteIcon = document.getElementById("favoriteIcon");
-        const fullscreenButton = document.getElementById("fullscreenButton");
-        const redirectMessage = document.getElementById("redirectMessage");
-        const manualRedirectLink =
-          document.getElementById("manualRedirectLink");
-
-        async function fileExists(url) {
-          try {
-            const response = await fetch(url, { method: "HEAD" });
-            return response.ok;
-          } catch {
-            return false;
-          }
-        }
-
         function getCurrentKeyHostOnly() {
           const host = window.location.host;
           return host;
@@ -583,13 +564,25 @@
 
           const arr = siteMapping[currentKey];
           if (!arr) {
-            return "../";
+            if (page === 2) {
+              return "../strongdog2/";
+            } else if (page === 3) {
+              return "../strongdog3/";
+            } else {
+              return "../";
+            }
           }
           const index = page - 2;
           if (arr[index]) {
             return arr[index].replace(/^\.\/$/, "../");
           } else {
-            return "../";
+            if (page === 2) {
+              return "../strongdog2/";
+            } else if (page === 3) {
+              return "../strongdog3/";
+            } else {
+              return "../";
+            }
           }
         }
 
@@ -660,6 +653,15 @@
           return adjustHrefPath(originalHref, page);
         }
 
+        async function fileExists(url) {
+          try {
+            const response = await fetch(url, { method: "HEAD" });
+            return response.ok;
+          } catch {
+            return false;
+          }
+        }
+
         function embedGame(gamePath, title) {
           const iframe = document.createElement("iframe");
           iframe.src = gamePath;
@@ -687,6 +689,16 @@
         }
 
         let selectedGame = null;
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get("id");
+        const gameContainer = document.getElementById("gameContainer");
+        const gameTitleElement = document.getElementById("gameTitle");
+        const favoriteIcon = document.getElementById("favoriteIcon");
+        const fullscreenButton = document.getElementById("fullscreenButton");
+        const redirectMessage = document.getElementById("redirectMessage");
+        const manualRedirectLink =
+          document.getElementById("manualRedirectLink");
+
         if (gameId) {
           const idNum = parseInt(gameId, 10);
           selectedGame = games.find((g) => g.id === idNum);
