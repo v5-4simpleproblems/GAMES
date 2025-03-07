@@ -456,6 +456,7 @@
     </div>
 
     <script>
+      // Updated Alternate Links Script
       const altLinksEl = document.getElementById("alternate-links-container");
       const altLinks = [
         "mastersite.org",
@@ -474,12 +475,40 @@
         "strongdog.com",
       ];
       altLinks.forEach((link) => {
+        // Create a container div for each link and its status
+        const container = document.createElement("div");
+        container.style.marginBottom = "5px";
+
         const a = document.createElement("a");
         a.href = `https://${link}`;
         a.target = "_blank";
         a.textContent = link;
         a.classList.add("alternate-link");
-        altLinksEl.appendChild(a);
+
+        // Create a status span element
+        const statusSpan = document.createElement("span");
+        statusSpan.textContent = " (checking...)";
+        statusSpan.style.marginLeft = "5px";
+
+        container.appendChild(a);
+        container.appendChild(statusSpan);
+        altLinksEl.appendChild(container);
+
+        // Fetch the robots.txt file to check if the link is blocked or unblocked
+        fetch(`https://${link}/robots.txt`)
+          .then((response) => {
+            if (response.ok) {
+              statusSpan.textContent = " (unblocked)";
+              statusSpan.style.color = "green";
+            } else {
+              statusSpan.textContent = " (blocked)";
+              statusSpan.style.color = "red";
+            }
+          })
+          .catch((error) => {
+            statusSpan.textContent = " (blocked)";
+            statusSpan.style.color = "red";
+          });
       });
     </script>
 
