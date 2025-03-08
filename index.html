@@ -19,14 +19,11 @@
     ></script>
 
     <script>
-      const polytrackKeys = [
-      ];
-      const babelTowerKeys = [
-      ];
+      const polytrackKeys = [];
+      const babelTowerKeys = [];
       const idleSharkKey = ["sharkGameSave"];
       const cookieClickerKey = ["CookieClickerGame"];
-      const badEggKeys = [
-      ];
+      const badEggKeys = [];
 
       function getParsedItem(key) {
         const item = localStorage.getItem(key);
@@ -398,6 +395,7 @@
 
     <h2 class="alternate-links-title">Alternate Links</h2>
     <div class="alternate-links-container" id="alternate-links-container"></div>
+    <div class="alternate-links-key" id="alternate-links-key"></div>
     <h2 class="alternate-links-title">
       Exclusive links available on the StrongDogXP
       <a href="https://discord.gg/pWjfQ4Sz5c">Discord server</a>!
@@ -457,6 +455,7 @@
 
     <script>
       const altLinksEl = document.getElementById("alternate-links-container");
+      const altLinksKeyEl = document.getElementById("alternate-links-key");
       const altLinks = [
         "mastersite.org",
         "65a.org",
@@ -473,14 +472,108 @@
         "mathcord.com",
         "strongdog.com",
       ];
+    
+      function pingSite(domain) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = "https://" + domain + "/img/1v1.webp?" + new Date().getTime();
+          img.style.position = "absolute";
+          img.style.left = "-9999px";
+          img.style.width = "1px";
+          img.style.height = "1px";
+          img.style.opacity = "0";
+          document.body.appendChild(img);
+          img.onload = () => {
+            resolve(true);
+            document.body.removeChild(img);
+          };
+          img.onerror = () => {
+            resolve(false);
+            document.body.removeChild(img);
+          };
+          setTimeout(() => {
+            resolve(false);
+            if (document.body.contains(img)) document.body.removeChild(img);
+          }, 5000);
+        });
+      }
+    
+      async function checkSiteStatus(domain, statusDot, maxRetries = 2) {
+        let retries = 0;
+        let isUnblocked = await pingSite(domain);
+    
+        while (!isUnblocked && retries < maxRetries) {
+          retries++;
+          console.log(`Retrying ${domain} (Attempt ${retries + 1}/${maxRetries + 1})`);
+          isUnblocked = await pingSite(domain);
+        }
+    
+        statusDot.style.backgroundColor = isUnblocked ? "#28a745" : "#dc3545";
+      }
+    
       altLinks.forEach((link) => {
         const a = document.createElement("a");
-        a.href = `https://${link}`;
+        a.href = "https://" + link;
         a.target = "_blank";
-        a.textContent = link;
         a.classList.add("alternate-link");
+        a.style.display = "flex";
+        a.style.alignItems = "center";
+        a.style.justifyContent = "space-between";
+        a.style.padding = "10px 15px";
+        a.style.textDecoration = "none";
+        a.style.color = "#007bff";
+        a.style.backgroundColor = "#3e3e3e";
+        a.style.borderRadius = "10px";
+        a.style.transition = "all 0.3s ease";
+        a.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.3)";
+        a.onmouseover = () => {
+          a.style.color = "#0056b3";
+          a.style.backgroundColor = "#4e4e4e";
+          a.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.5)";
+        };
+        a.onmouseout = () => {
+          a.style.color = "#007bff";
+          a.style.backgroundColor = "#3e3e3e";
+          a.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.3)";
+        };
+    
+        const linkText = document.createElement("span");
+        linkText.textContent = link;
+        linkText.style.flexGrow = "1";
+        linkText.style.fontSize = "1.1rem";
+        linkText.style.fontWeight = "600";
+    
+        const statusDot = document.createElement("span");
+        statusDot.classList.add("status-dot");
+        statusDot.style.width = "12px";
+        statusDot.style.height = "12px";
+        statusDot.style.borderRadius = "50%";
+        statusDot.style.backgroundColor = "black";
+        statusDot.style.display = "inline-block";
+        statusDot.style.marginLeft = "10px";
+    
+        a.appendChild(linkText);
+        a.appendChild(statusDot);
         altLinksEl.appendChild(a);
+    
+        checkSiteStatus(link, statusDot);
       });
+    
+      altLinksKeyEl.style.textAlign = "center";
+      altLinksKeyEl.style.marginTop = "15px";
+      altLinksKeyEl.style.fontSize = "14px";
+      altLinksKeyEl.style.color = "#aaa";
+      altLinksKeyEl.innerHTML = `
+        <span style="margin-right: 15px;">
+          <span class="status-dot" style="background-color:#28a745;"></span> Unblocked
+        </span>
+        <span style="margin-right: 15px;">
+          <span class="status-dot" style="background-color:#dc3545;"></span> Blocked
+        </span>
+        <span>
+          <span class="status-dot" style="background-color:black;"></span> Loading
+        </span>
+      `;
     </script>
 
     <script type="module">
