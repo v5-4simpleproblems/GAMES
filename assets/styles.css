@@ -720,3 +720,50 @@ input[type="range"]::-webkit-slider-thumb {
 .popup button:hover {
   background-color: #ff6a00;
 }
+
+#customSlideMenu .custom-options {
+  padding: 20px !important;
+}
+
+#customSlideMenu .custom-option {
+  margin-bottom: 20px !important;
+}
+
+#customSlideMenu label {
+  color: white;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+#customSlideMenu input[type="text"] {
+  width: 100% !important;
+  padding: 10px !important;
+  border: 1px solid #444 !important;
+  border-radius: 5px !important;
+  font-size: 1rem !important;
+  background-color: #333 !important;
+  color: white !important;
+  box-sizing: border-box !important;
+}
+
+#customSlideMenu input[type="text"]::placeholder {
+  color: #bbb !important;
+}
+
+#customSlideMenu button {
+  margin-top: 10px !important;
+  padding: 10px 15px !important;
+  border: none !important;
+  border-radius: 5px !important;
+  background-color: #ff8c00 !important;
+  color: white !important;
+  cursor: pointer !important;
+  font-size: 1rem !important;
+  transition: background-color 0.3s ease !important;
+}
+
+#customSlideMenu button:hover {
+  background-color: #ff6a00 !important;
+}

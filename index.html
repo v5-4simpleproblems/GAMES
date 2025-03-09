@@ -1,25 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script data-grow-initializer="">!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTo3YjgwNWM2Ny1kNzYzLTQ2MjktODk3Yi00ZWQ3OWE3OThmYWM=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();</script>
-    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+    <script data-grow-initializer="">
+      !(function () {
+        window.growMe ||
+          ((window.growMe = function (e) {
+            window.growMe._.push(e);
+          }),
+          (window.growMe._ = []));
+        var e = document.createElement("script");
+        (e.type = "text/javascript"),
+          (e.src = "https://faves.grow.me/main.js"),
+          (e.defer = !0),
+          e.setAttribute(
+            "data-grow-faves-site-id",
+            "U2l0ZTo3YjgwNWM2Ny1kNzYzLTQ2MjktODk3Yi00ZWQ3OWE3OThmYWM="
+          );
+        var t = document.getElementsByTagName("script")[0];
+        t.parentNode.insertBefore(e, t);
+      })();
+    </script>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="img/favicon.ico"
+      id="faviconLink"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StrongDog XP</title>
     <link rel="stylesheet" href="assets/styles.css" />
-
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-
     <script>
       const polytrackKeys = [];
       const babelTowerKeys = [];
       const idleSharkKey = ["sharkGameSave"];
       const cookieClickerKey = ["CookieClickerGame"];
       const badEggKeys = [];
-
       function getParsedItem(key) {
         const item = localStorage.getItem(key);
         try {
@@ -37,9 +57,7 @@
       }
       function showTransferInstructions() {
         alert(
-          "Your save data was copied to clipboard!\n" +
-            "Paste it into the new site’s import.\n\n" +
-            "DON'T overwrite your clipboard before you import!"
+          "Your save data was copied to clipboard!\nPaste it into the new site’s import.\n\nDON'T overwrite your clipboard before you import!"
         );
       }
       function setDataInObject(dataObj) {
@@ -54,7 +72,9 @@
         return Object.values(dataObj).every((val) => val !== null);
       }
       function getAndBundleDataIntoObj(keysArr) {
-        const dataObj = Object.fromEntries(keysArr.map((k) => [k, getParsedItem(k)]));
+        const dataObj = Object.fromEntries(
+          keysArr.map((k) => [k, getParsedItem(k)])
+        );
         if (!validateData(dataObj)) {
           alert(
             "Some keys could not be retrieved. If unexpected, check localStorage or contact support."
@@ -66,7 +86,6 @@
         const str = getAndBundleDataIntoObj(keysArr);
         if (str) copyText(str);
       }
-
       document.addEventListener("DOMContentLoaded", function () {
         if (window.location.hostname.includes("netlify.app")) {
           document.body.innerHTML = `
@@ -75,12 +94,16 @@
               <p>Use these buttons to copy your data etc...</p>
             </div>
           `;
-          document.body.style = "height:100vh; margin:0; display:grid; place-items:center;";
+          document.body.style =
+            "height:100vh; margin:0; display:grid; place-items:center;";
         } else {
           const importBtn = document.getElementById("import-save-data-btn");
           if (importBtn) {
             importBtn.addEventListener("click", () => {
-              if (!confirm("Overwrite your local saves? If unsure, press CANCEL.")) return;
+              if (
+                !confirm("Overwrite your local saves? If unsure, press CANCEL.")
+              )
+                return;
               navigator.clipboard
                 .readText()
                 .then((txt) => {
@@ -91,7 +114,8 @@
                   } catch (e) {
                     throw new Error("Clipboard not valid JSON.");
                   }
-                  if (typeof parsed !== "object") throw new Error("Invalid data in clipboard.");
+                  if (typeof parsed !== "object")
+                    throw new Error("Invalid data in clipboard.");
                   setDataInObject(parsed);
                   alert("Data imported successfully!");
                 })
@@ -101,7 +125,6 @@
         }
       });
     </script>
-
     <script>
       window.siteMapping = {
         "strongdogxp.github.io": [
@@ -111,7 +134,6 @@
         "mathcordxp.github.io": [],
       };
     </script>
-
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
@@ -127,8 +149,10 @@
       window.db = firebase.firestore();
       window.rtdb = firebase.database();
     </script>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D88TDDVPGJ"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-D88TDDVPGJ"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -137,7 +161,6 @@
       gtag("js", new Date());
       gtag("config", "G-D88TDDVPGJ");
     </script>
-
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         if (!document.getElementById("autoSaveModal")) {
@@ -154,7 +177,6 @@
           `;
           document.body.appendChild(modal);
         }
-
         function setCookie(name, value, days) {
           const d = new Date();
           d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
@@ -166,7 +188,6 @@
           if (parts.length === 2) return parts.pop().split(";")[0];
           return "";
         }
-
         function getAllLocalStorageData() {
           const data = {};
           for (let i = 0; i < localStorage.length; i++) {
@@ -181,7 +202,6 @@
             localStorage.setItem(k, obj[k]);
           }
         }
-
         function autoSaveData() {
           if (!window.currentUserId) return;
           const data = getAllLocalStorageData();
@@ -214,14 +234,12 @@
             }
           });
         }
-
         function showAutoSaveModal() {
           document.getElementById("autoSaveModal").style.display = "flex";
         }
         function hideAutoSaveModal() {
           document.getElementById("autoSaveModal").style.display = "none";
         }
-
         const yesBtn = document.getElementById("autoSaveYes");
         const noBtn = document.getElementById("autoSaveNo");
         yesBtn?.addEventListener("click", () => {
@@ -233,7 +251,6 @@
           hideAutoSaveModal();
           setCookie("autoSaveEnabled", "false", 9999);
         });
-
         window.auth.onAuthStateChanged(async (user) => {
           if (user) {
             window.currentUserId = user.uid;
@@ -263,15 +280,22 @@
       });
     </script>
   </head>
-
   <body>
     <div
       id="secretLink"
       title="Secret Menu"
       style="
-        position:absolute; top:10px; right:10px; width:10px; height:10px;
-        cursor:pointer; border-radius:50%; display:flex; align-items:center;
-        justify-content:center; z-index:1000;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 10px;
+        height: 10px;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
       "
     ></div>
     <script>
@@ -282,11 +306,9 @@
         });
       });
     </script>
-
     <div class="navbar">
       <div class="menu-icon" id="menuIcon">☰</div>
       <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
-
       <div class="search-container">
         <input
           type="text"
@@ -298,11 +320,9 @@
         <div class="search-results" id="searchResults"></div>
       </div>
     </div>
-
     <div class="updates-text-container">
-      <p class="updates-paragraph-text">Dont forget to join the discord!</p>
+      <p class="updates-paragraph-text">You can now add a custom title and favicon! Click on the pencil icon next to "All" to change it.</p>
     </div>
-
     <div class="modal" id="popupModal">
       <div class="modal-content">
         <span class="modal-close" id="closeModal">×</span>
@@ -313,22 +333,20 @@
         </p>
       </div>
     </div>
-
-    <h2 id="topGameHeader" style="text-align:center"><strong>Top 20</strong></h2>
+    <h2 id="topGameHeader" style="text-align: center">
+      <strong>Top 20</strong>
+    </h2>
     <div class="games-grid" id="topGameList"></div>
-
-    <div class="section-header" id="favoritesHeader" style="display:none">
-      <h2 style="text-align:center"><strong>Favorites</strong></h2>
+    <div class="section-header" id="favoritesHeader" style="display: none">
+      <h2 style="text-align: center"><strong>Favorites</strong></h2>
     </div>
-    <div class="games-grid" id="favoritesGameList" style="display:none"></div>
-
+    <div class="games-grid" id="favoritesGameList" style="display: none"></div>
     <div class="section-header">
-      <h2 style="text-align:center"><strong>All</strong></h2>
+      <h2 style="text-align: center"><strong>All</strong></h2>
       <span class="edit-button" id="editAllButton">✏️</span>
     </div>
     <div class="games-grid" id="allGameList"></div>
-
-    <h2 style="text-align:center"><strong>StrongDogXP LLC</strong></h2>
+    <h2 style="text-align: center"><strong>StrongDogXP LLC</strong></h2>
     <div class="news-container">
       <div class="news">
         <div class="credits-item">
@@ -391,8 +409,6 @@
         </div>
       </div>
     </div>
-    </div>
-
     <h2 class="alternate-links-title">Alternate Links</h2>
     <div class="alternate-links-container" id="alternate-links-container"></div>
     <div class="alternate-links-key" id="alternate-links-key"></div>
@@ -400,32 +416,38 @@
       Exclusive links available on the StrongDogXP
       <a href="https://discord.gg/pWjfQ4Sz5c">Discord server</a>!
     </h2>
-
-    <div class="slide-menu" id="slideMenu" style="transform:translateX(-100%)">
+    <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
       <div class="categories">
         <a href="favs.html" class="option-link">Favorites</a>
         <a href="#" id="randomGame" class="option-link">Random Game</a>
         <a href="#" id="blockLanschool" class="option-link">Block Lanschool</a>
-        <a href="about.html" class="option-link">About | Bugs | Request Games</a>
+        <a href="about.html" class="option-link"
+          >About | Bugs | Request Games</a
+        >
         <a href="./save/" class="option-link">Save manager</a>
-        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">Discord Server</a>
+        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
+          >Discord Server</a
+        >
       </div>
     </div>
-
-    <div class="custom-slide-menu" id="customSlideMenu" style="transform:translateX(-100%)">
-      <div class="custom-options" style="padding:20px">
-        <div class="toggle-option" style="margin-bottom:10px">
+    <div
+      class="custom-slide-menu"
+      id="customSlideMenu"
+      style="transform: translateX(-100%)"
+    >
+      <div class="custom-options" style="padding: 20px">
+        <div class="toggle-option" style="margin-bottom: 10px">
           <label for="top20Toggle">Show Top 20</label>
           <input type="checkbox" id="top20Toggle" checked />
         </div>
-        <div class="toggle-option" style="margin-bottom:10px">
+        <div class="toggle-option" style="margin-bottom: 10px">
           <label for="favoritesToggle">Show Favorites</label>
           <input type="checkbox" id="favoritesToggle" />
         </div>
-        <div class="slider-option" style="margin-bottom:10px">
+        <div class="slider-option" style="margin-bottom: 10px">
           <label
             for="cardSizeSlider"
-            style="color:white; display:block; margin-bottom:5px"
+            style="color: white; display: block; margin-bottom: 5px"
           >
             Card Size Adjustment
           </label>
@@ -436,15 +458,49 @@
             max="100"
             value="0"
             step="1"
-            style="width:100%"
+            style="width: 100%"
           />
-          <div style="text-align:center; color:white; margin-top:5px">
+          <div style="text-align: center; color: white; margin-top: 5px">
             Value: <span id="cardSizeValue">0</span>
           </div>
         </div>
+        <div class="custom-option" style="margin-bottom: 10px">
+          <label
+            for="customTitleInput"
+            style="color: white; display: block; margin-bottom: 5px"
+            >Custom Title</label
+          >
+          <input
+            type="text"
+            id="customTitleInput"
+            style="width: 100%; padding: 5px"
+            value="StrongDog XP"
+          />
+          <button id="resetTitleBtn" style="margin-top: 5px; padding: 5px 10px">
+            Reset Title
+          </button>
+        </div>
+        <div class="custom-option" style="margin-bottom: 10px">
+          <label
+            for="customFaviconInput"
+            style="color: white; display: block; margin-bottom: 5px"
+            >Custom Favicon URL</label
+          >
+          <input
+            type="text"
+            id="customFaviconInput"
+            style="width: 100%; padding: 5px"
+            value="img/favicon.ico"
+          />
+          <button
+            id="resetFaviconBtn"
+            style="margin-top: 5px; padding: 5px 10px"
+          >
+            Reset Favicon
+          </button>
+        </div>
       </div>
     </div>
-
     <div class="overlay" id="favoritesOverlay"></div>
     <div class="popup-container" id="favoritesPopupContainer">
       <div class="popup" id="favoritesPopup">
@@ -452,7 +508,6 @@
         <button id="favoritesOkButton">OK</button>
       </div>
     </div>
-
     <script>
       const altLinksEl = document.getElementById("alternate-links-container");
       const altLinksKeyEl = document.getElementById("alternate-links-key");
@@ -472,11 +527,11 @@
         "mathcord.com",
         "strongdog.com",
       ];
-    
       function pingSite(domain) {
         return new Promise((resolve) => {
           const img = new Image();
-          img.src = "https://" + domain + "/img/1v1.webp?" + new Date().getTime();
+          img.src =
+            "https://" + domain + "/img/1v1.webp?" + new Date().getTime();
           img.style.position = "absolute";
           img.style.left = "-9999px";
           img.style.width = "1px";
@@ -497,20 +552,18 @@
           }, 5000);
         });
       }
-    
       async function checkSiteStatus(domain, statusDot, maxRetries = 2) {
         let retries = 0;
         let isUnblocked = await pingSite(domain);
-    
         while (!isUnblocked && retries < maxRetries) {
           retries++;
-          console.log(`Retrying ${domain} (Attempt ${retries + 1}/${maxRetries + 1})`);
+          console.log(
+            `Retrying ${domain} (Attempt ${retries + 1}/${maxRetries + 1})`
+          );
           isUnblocked = await pingSite(domain);
         }
-    
         statusDot.style.backgroundColor = isUnblocked ? "#28a745" : "#dc3545";
       }
-    
       altLinks.forEach((link) => {
         const a = document.createElement("a");
         a.href = "https://" + link;
@@ -536,13 +589,11 @@
           a.style.backgroundColor = "#3e3e3e";
           a.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.3)";
         };
-    
         const linkText = document.createElement("span");
         linkText.textContent = link;
         linkText.style.flexGrow = "1";
         linkText.style.fontSize = "1.1rem";
         linkText.style.fontWeight = "600";
-    
         const statusDot = document.createElement("span");
         statusDot.classList.add("status-dot");
         statusDot.style.width = "12px";
@@ -551,14 +602,11 @@
         statusDot.style.backgroundColor = "black";
         statusDot.style.display = "inline-block";
         statusDot.style.marginLeft = "10px";
-    
         a.appendChild(linkText);
         a.appendChild(statusDot);
         altLinksEl.appendChild(a);
-    
         checkSiteStatus(link, statusDot);
       });
-    
       altLinksKeyEl.style.textAlign = "center";
       altLinksKeyEl.style.marginTop = "15px";
       altLinksKeyEl.style.fontSize = "14px";
@@ -575,18 +623,15 @@
         </span>
       `;
     </script>
-
     <script type="module">
       import games from "./cards-data.js";
       import { targetUrl } from "./appscript.js";
-
       function getTierAndProgressFromXP(xp) {
         const baseXPNeeded = 50;
         const increasePerTier = 200;
         const exponentialMultiplier = 1.2;
         const levelsPerTier = 5;
         const capTier = 10;
-
         let level = 1,
           tier = 1,
           xpNeeded = baseXPNeeded;
@@ -606,7 +651,6 @@
         }
         return { level, tier, currentXP: xp, xpNeededForNext: xpNeeded };
       }
-
       const numTopGames = 20;
       const topGameList = document.getElementById("topGameList");
       for (let i = 0; i < numTopGames; i++) {
@@ -615,11 +659,11 @@
         ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`;
         topGameList.appendChild(ghostCard);
       }
-
       async function fetchTopGames() {
         try {
           const response = await fetch(targetUrl);
-          if (!response.ok) throw new Error("Network error: " + response.statusText);
+          if (!response.ok)
+            throw new Error("Network error: " + response.statusText);
           const data = await response.json();
           if (data && data.content) {
             const parsedData = JSON.parse(data.content);
@@ -633,7 +677,6 @@
         }
       }
       fetchTopGames();
-
       function displayTopGames(topData) {
         topGameList.innerHTML = "";
         let foundCount = 0;
@@ -656,7 +699,10 @@
         }
       }
       function normalizeGameName(name) {
-        return name.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
+        return name
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .replace(/[^a-z0-9]/g, "");
       }
       function findMatchingCard(gameName) {
         const normalized = normalizeGameName(gameName);
@@ -668,7 +714,6 @@
         }
         return null;
       }
-
       function getPageNumberFromURL(url) {
         const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
         const match = url.match(regex);
@@ -680,7 +725,9 @@
       const siteMapping = window.siteMapping || {};
       function getCurrentSiteKey() {
         const currentURL = window.location.href;
-        const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
+        const keys = Object.keys(siteMapping).sort(
+          (a, b) => b.length - a.length
+        );
         for (const k of keys) {
           if (currentURL.includes(k)) return k;
         }
@@ -703,7 +750,8 @@
           }
           if (page !== undefined && page !== currentPageNumber) {
             let newBase = pageMap[page];
-            if (!newBase) newBase = window.location.origin + `/strongdog${page}`;
+            if (!newBase)
+              newBase = window.location.origin + `/strongdog${page}`;
             adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`;
             adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
           }
@@ -719,7 +767,11 @@
       }
       function getCardHTML(game) {
         const { href, imgSrc, name, page, id } = game;
-        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
+        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+          href,
+          imgSrc,
+          page
+        );
         const gameLink = `./play/?id=${id}`;
         const normalized = normalizeGameName(name);
         return `
@@ -731,12 +783,13 @@
       }
       const allGameListElement = document.getElementById("allGameList");
       allGameListElement.innerHTML = games.map((g) => getCardHTML(g)).join("");
-
       const searchInput = document.getElementById("searchInput");
       const searchResults = document.getElementById("searchResults");
       function updateSearchResults() {
         const text = searchInput.value.toLowerCase();
-        const filtered = games.filter((g) => g.name.toLowerCase().includes(text)).slice(0, 7);
+        const filtered = games
+          .filter((g) => g.name.toLowerCase().includes(text))
+          .slice(0, 7);
         searchResults.innerHTML = "";
         if (filtered.length === 0) {
           searchResults.style.display = "none";
@@ -756,53 +809,51 @@
         searchInput.addEventListener("focus", updateSearchResults);
         searchInput.addEventListener("input", updateSearchResults);
         document.addEventListener("click", (ev) => {
-          if (!searchInput.contains(ev.target) && !searchResults.contains(ev.target)) {
+          if (
+            !searchInput.contains(ev.target) &&
+            !searchResults.contains(ev.target)
+          ) {
             searchResults.style.display = "none";
           }
         });
       }
-
       const menuIcon = document.getElementById("menuIcon");
       const slideMenu = document.getElementById("slideMenu");
       const categories = slideMenu.querySelector(".categories");
       menuIcon.addEventListener("click", (ev) => {
         ev.stopPropagation();
         slideMenu.style.transform =
-          slideMenu.style.transform === "translateX(0%)" ? "translateX(-100%)" : "translateX(0%)";
+          slideMenu.style.transform === "translateX(0%)"
+            ? "translateX(-100%)"
+            : "translateX(0%)";
       });
       window.addEventListener("click", (ev) => {
         if (ev.target !== menuIcon && !slideMenu.contains(ev.target)) {
           slideMenu.style.transform = "translateX(-100%)";
         }
       });
-
       auth.onAuthStateChanged(async (user) => {
         if (user) {
           const userId = user.uid;
           const userDetailsContainer = document.createElement("div");
           userDetailsContainer.className = "user-details-container";
-
           const profileTop = document.createElement("div");
           profileTop.className = "profile-top-container";
-
           const picContainer = document.createElement("div");
           picContainer.className = "profile-picture-container";
           const picEl = document.createElement("img");
           picEl.className = "profile-picture";
           picEl.src = user.photoURL || "img/default-avatar.png";
           picContainer.appendChild(picEl);
-
           const usernameDiv = document.createElement("div");
           usernameDiv.className = "username-container";
           const usernameText = document.createElement("p");
           usernameText.className = "username-text";
           usernameText.textContent = "Loading...";
           usernameDiv.appendChild(usernameText);
-
           profileTop.appendChild(picContainer);
           profileTop.appendChild(usernameDiv);
           userDetailsContainer.appendChild(profileTop);
-
           try {
             const docRef = db.collection("usernames").doc(userId);
             const docSnap = await docRef.get();
@@ -816,7 +867,6 @@
             console.error("Error reading username doc:", err);
             usernameText.textContent = user.displayName || "Username";
           }
-
           let totalXP = 0;
           try {
             const xpSnap = await rtdb.ref(`/users/${userId}/xp`).once("value");
@@ -826,40 +876,30 @@
           } catch (err) {
             console.error("Error reading XP from Realtime Database:", err);
           }
-
-          const { level, currentXP, xpNeededForNext } = getTierAndProgressFromXP(totalXP);
-
+          const { level, currentXP, xpNeededForNext } =
+            getTierAndProgressFromXP(totalXP);
           const xpContainer = document.createElement("div");
           xpContainer.className = "xp-container";
-
           const xpLevelText = document.createElement("div");
           xpLevelText.className = "xp-level-text";
           xpLevelText.textContent = `Level ${level}`;
-
           const xpBar = document.createElement("div");
           xpBar.className = "xp-bar";
-
           const xpBarFill = document.createElement("div");
           xpBarFill.className = "xp-bar-fill";
           xpBarFill.style.width = `${(currentXP / xpNeededForNext) * 100}%`;
-
           const xpBarText = document.createElement("div");
           xpBarText.className = "xp-bar-text";
           xpBarText.textContent = `${currentXP}/${xpNeededForNext}`;
-
           xpBar.appendChild(xpBarFill);
           xpBar.appendChild(xpBarText);
           xpContainer.appendChild(xpLevelText);
           xpContainer.appendChild(xpBar);
-
           userDetailsContainer.appendChild(xpContainer);
-
           picContainer.addEventListener("click", () => {
             window.location.href = "settings.html";
           });
-
           slideMenu.insertBefore(userDetailsContainer, categories);
-
           const logoutLink = document.createElement("a");
           logoutLink.href = "#";
           logoutLink.className = "option-link";
@@ -872,7 +912,6 @@
           });
           const favoritesLink = categories.querySelector('a[href="favs.html"]');
           categories.insertBefore(logoutLink, favoritesLink);
-
           db.collection("access")
             .doc(userId)
             .get()
@@ -896,14 +935,12 @@
           userDetailsContainer.style.flexDirection = "column";
           userDetailsContainer.style.alignItems = "center";
           userDetailsContainer.style.paddingBlock = "20px";
-
           const notLoggedInContainer = document.createElement("div");
           notLoggedInContainer.className = "username-container";
           const notLoggedInText = document.createElement("p");
           notLoggedInText.className = "username-text";
           notLoggedInText.textContent = "Not logged in";
           notLoggedInContainer.appendChild(notLoggedInText);
-
           const loginButton = document.createElement("button");
           loginButton.textContent = "Log In";
           loginButton.style.backgroundColor = "#007bff";
@@ -917,13 +954,10 @@
           loginButton.addEventListener("click", () => {
             window.location.href = "login.html";
           });
-
           userDetailsContainer.appendChild(notLoggedInContainer);
           userDetailsContainer.appendChild(loginButton);
-
           slideMenu.insertBefore(userDetailsContainer, categories);
         }
-
         const randomGameLink = categories.querySelector("#randomGame");
         randomGameLink?.addEventListener("click", (ev) => {
           ev.preventDefault();
@@ -932,7 +966,6 @@
             window.location.href = `./play/?id=${games[idx].id}`;
           }
         });
-
         const blockLanschoolLink = categories.querySelector("#blockLanschool");
         blockLanschoolLink?.addEventListener("click", (ev) => {
           ev.preventDefault();
@@ -952,7 +985,6 @@
           newTab.document.close();
         });
       });
-
       const editAllButton = document.getElementById("editAllButton");
       const customSlideMenu = document.getElementById("customSlideMenu");
       editAllButton.addEventListener("click", (ev) => {
@@ -972,7 +1004,6 @@
           customSlideMenu.style.transform = "translateX(-100%)";
         }
       });
-
       function setCookie(name, val, days) {
         const d = new Date();
         d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
@@ -984,7 +1015,6 @@
         if (parts.length === 2) return parts.pop().split(";")[0];
         return "";
       }
-
       const top20Toggle = document.getElementById("top20Toggle");
       const topGameHeader = document.getElementById("topGameHeader");
       let top20Disabled = getCookie("top20Disabled") === "true";
@@ -1004,7 +1034,6 @@
           setCookie("top20Disabled", "true", 365);
         }
       });
-
       const favoritesToggle = document.getElementById("favoritesToggle");
       const favoritesHeader = document.getElementById("favoritesHeader");
       const favoritesGameList = document.getElementById("favoritesGameList");
@@ -1031,7 +1060,6 @@
           setCookie("favoritesDisabled", "true", 365);
         }
       });
-
       function loadFavorites() {
         const placeholders = 10;
         favoritesGameList.innerHTML = "";
@@ -1046,7 +1074,8 @@
             fetchFavorites(user.uid);
           } else {
             showFavoritesPopup();
-            favoritesGameList.innerHTML = '<p class="no-favorites">No favorites yet!</p>';
+            favoritesGameList.innerHTML =
+              '<p class="no-favorites">No favorites yet!</p>';
           }
         });
       }
@@ -1058,11 +1087,13 @@
             console.log("Favorites data retrieved:", favData);
             displayFavorites(favData);
           } else {
-            favoritesGameList.innerHTML = '<p class="no-favorites">No favorites yet!</p>';
+            favoritesGameList.innerHTML =
+              '<p class="no-favorites">No favorites yet!</p>';
           }
         } catch (err) {
           console.error("Error fetching favorites:", err);
-          favoritesGameList.innerHTML = '<p class="no-favorites">Error loading favorites.</p>';
+          favoritesGameList.innerHTML =
+            '<p class="no-favorites">Error loading favorites.</p>';
         }
       }
       function displayFavorites(favs) {
@@ -1070,7 +1101,9 @@
         let hasFavorites = false;
         Object.keys(favs).forEach((gameId) => {
           if (favs[gameId]) {
-            const g = games.find((gm) => parseInt(gm.id, 10) === parseInt(gameId, 10));
+            const g = games.find(
+              (gm) => parseInt(gm.id, 10) === parseInt(gameId, 10)
+            );
             if (g) {
               hasFavorites = true;
               favoritesGameList.innerHTML += getCardHTML(g);
@@ -1080,33 +1113,36 @@
           }
         });
         if (!hasFavorites) {
-          favoritesGameList.innerHTML = '<p class="no-favorites">No favorites yet!</p>';
+          favoritesGameList.innerHTML =
+            '<p class="no-favorites">No favorites yet!</p>';
         }
       }
       function showFavoritesPopup() {
-        document.getElementById("favoritesPopupContainer").classList.add("active");
+        document
+          .getElementById("favoritesPopupContainer")
+          .classList.add("active");
         document.getElementById("favoritesOverlay").style.display = "block";
       }
       function hideFavoritesPopup() {
-        document.getElementById("favoritesPopupContainer").classList.remove("active");
+        document
+          .getElementById("favoritesPopupContainer")
+          .classList.remove("active");
         document.getElementById("favoritesOverlay").style.display = "none";
       }
-      document.getElementById("favoritesOkButton").addEventListener("click", hideFavoritesPopup);
-
+      document
+        .getElementById("favoritesOkButton")
+        .addEventListener("click", hideFavoritesPopup);
       if (favoritesToggle.checked) {
         loadFavorites();
       }
-
       const cardSizeSlider = document.getElementById("cardSizeSlider");
       const cardSizeValue = document.getElementById("cardSizeValue");
-
       function updateCardSizes() {
         const val = parseInt(cardSizeSlider.value, 10);
         cardSizeValue.textContent = val;
         const newSize = 120 + val;
         const newGap = Math.max(10 + val / 4, 5);
         const newRadius = val < 0 ? Math.max(15 + val * 0.13, 2) : 15;
-
         document.querySelectorAll(".card, .ghost-card").forEach((c) => {
           c.style.width = newSize + "px";
           c.style.height = newSize + "px";
@@ -1117,21 +1153,22 @@
         });
         setCookie("cardSize", val, 365);
       }
-
       cardSizeSlider.addEventListener("input", updateCardSizes);
       const savedSize = getCookie("cardSize");
       if (savedSize !== "") {
         cardSizeSlider.value = savedSize;
         updateCardSizes();
       }
-
       document.addEventListener("DOMContentLoaded", () => {
         const page1Link = document.getElementById("page1-link");
         const page2Link = document.getElementById("page2-link");
         if (!page1Link || !page2Link) return;
         const hostname = window.location.hostname;
         const linkMap = {
-          "jman1593.github.io": { page1: "/#", page2: "/strongdog2/index.html" },
+          "jman1593.github.io": {
+            page1: "/#",
+            page2: "/strongdog2/index.html",
+          },
         };
         for (const key in linkMap) {
           if (hostname.includes(key)) {
@@ -1141,6 +1178,57 @@
           }
         }
       });
+    </script>
+    <script>
+      (function () {
+        var defaultTitle = "StrongDog XP";
+        var defaultFavicon = "img/favicon.ico";
+        var titleInput = document.getElementById("customTitleInput");
+        var faviconInput = document.getElementById("customFaviconInput");
+        var resetTitleBtn = document.getElementById("resetTitleBtn");
+        var resetFaviconBtn = document.getElementById("resetFaviconBtn");
+        var faviconEl = document.querySelector('link[rel="icon"]');
+        if (localStorage.getItem("customTitle")) {
+          document.title = localStorage.getItem("customTitle");
+          titleInput.value = localStorage.getItem("customTitle");
+        } else {
+          titleInput.value = defaultTitle;
+        }
+        if (localStorage.getItem("customFavicon")) {
+          faviconEl.href = localStorage.getItem("customFavicon");
+          faviconInput.value = localStorage.getItem("customFavicon");
+        } else {
+          faviconInput.value = defaultFavicon;
+        }
+        titleInput.addEventListener("change", function () {
+          var newTitle = titleInput.value.trim();
+          if (newTitle === "") {
+            newTitle = defaultTitle;
+            titleInput.value = defaultTitle;
+          }
+          localStorage.setItem("customTitle", newTitle);
+          document.title = newTitle;
+        });
+        faviconInput.addEventListener("change", function () {
+          var newFavicon = faviconInput.value.trim();
+          if (newFavicon === "") {
+            newFavicon = defaultFavicon;
+            faviconInput.value = defaultFavicon;
+          }
+          localStorage.setItem("customFavicon", newFavicon);
+          faviconEl.href = newFavicon;
+        });
+        resetTitleBtn.addEventListener("click", function () {
+          localStorage.removeItem("customTitle");
+          document.title = defaultTitle;
+          titleInput.value = defaultTitle;
+        });
+        resetFaviconBtn.addEventListener("click", function () {
+          localStorage.removeItem("customFavicon");
+          faviconEl.href = defaultFavicon;
+          faviconInput.value = defaultFavicon;
+        });
+      })();
     </script>
   </body>
 </html>
