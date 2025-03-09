@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script data-grow-initializer="">!(function () {window.growMe ||((window.growMe = function (e) {window.growMe._.push(e);}),(window.growMe._ = []));var e = document.createElement("script");(e.type = "text/javascript"),(e.src = "https://faves.grow.me/main.js"),(e.defer = !0),e.setAttribute("data-grow-faves-site-id","U2l0ZTo3YjgwNWM2Ny1kNzYzLTQ2MjktODk3Yi00ZWQ3OWE3OThmYWM=");var t = document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e, t);})();</script>
+    <script data-grow-initializer="">
+      !(function () {
+        window.growMe ||
+          ((window.growMe = function (e) {
+            window.growMe._.push(e);
+          }),
+          (window.growMe._ = []));
+        var e = document.createElement("script");
+        (e.type = "text/javascript"),
+          (e.src = "https://faves.grow.me/main.js"),
+          (e.defer = !0),
+          e.setAttribute(
+            "data-grow-faves-site-id",
+            "U2l0ZTo3YjgwNWM2Ny1kNzYzLTQ2MjktODk3Yi00ZWQ3OWE3OThmYWM="
+          );
+        var t = document.getElementsByTagName("script")[0];
+        t.parentNode.insertBefore(e, t);
+      })();
+    </script>
     <link
       rel="icon"
       type="image/x-icon"
@@ -16,97 +34,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-    <script>
-      const polytrackKeys = [];
-      const babelTowerKeys = [];
-      const idleSharkKey = ["sharkGameSave"];
-      const cookieClickerKey = ["CookieClickerGame"];
-      const badEggKeys = [];
-      function getParsedItem(key) {
-        const item = localStorage.getItem(key);
-        try {
-          return JSON.parse(item);
-        } catch (err) {
-          console.warn(`Invalid JSON for key '${key}': ${err}`);
-          return item;
-        }
-      }
-      function copyText(text) {
-        navigator.clipboard.writeText(text).then(
-          () => showTransferInstructions(),
-          (err) => alert(`Error copying data: ${err}`)
-        );
-      }
-      function showTransferInstructions() {
-        alert(
-          "Your save data was copied to clipboard!\nPaste it into the new site’s import.\n\nDON'T overwrite your clipboard before you import!"
-        );
-      }
-      function setDataInObject(dataObj) {
-        Object.entries(dataObj).forEach(([k, v]) => {
-          if (v !== null) {
-            const strVal = typeof v === "string" ? v : JSON.stringify(v);
-            localStorage.setItem(k, strVal);
-          }
-        });
-      }
-      function validateData(dataObj) {
-        return Object.values(dataObj).every((val) => val !== null);
-      }
-      function getAndBundleDataIntoObj(keysArr) {
-        const dataObj = Object.fromEntries(
-          keysArr.map((k) => [k, getParsedItem(k)])
-        );
-        if (!validateData(dataObj)) {
-          alert(
-            "Some keys could not be retrieved. If unexpected, check localStorage or contact support."
-          );
-        }
-        return JSON.stringify(dataObj);
-      }
-      function getDataAndCopy(keysArr) {
-        const str = getAndBundleDataIntoObj(keysArr);
-        if (str) copyText(str);
-      }
-      document.addEventListener("DOMContentLoaded", function () {
-        if (window.location.hostname.includes("netlify.app")) {
-          document.body.innerHTML = `
-            <div style="padding:20px; text-align:center; color:white; background-color:#333;">
-              <p>You're on Netlify. We moved to GitHub!</p>
-              <p>Use these buttons to copy your data etc...</p>
-            </div>
-          `;
-          document.body.style =
-            "height:100vh; margin:0; display:grid; place-items:center;";
-        } else {
-          const importBtn = document.getElementById("import-save-data-btn");
-          if (importBtn) {
-            importBtn.addEventListener("click", () => {
-              if (
-                !confirm("Overwrite your local saves? If unsure, press CANCEL.")
-              )
-                return;
-              navigator.clipboard
-                .readText()
-                .then((txt) => {
-                  if (!txt) throw new Error("Clipboard is empty!");
-                  let parsed;
-                  try {
-                    parsed = JSON.parse(txt);
-                  } catch (e) {
-                    throw new Error("Clipboard not valid JSON.");
-                  }
-                  if (typeof parsed !== "object")
-                    throw new Error("Invalid data in clipboard.");
-                  setDataInObject(parsed);
-                  alert("Data imported successfully!");
-                })
-                .catch((err) => alert(`Failed to read clipboard: ${err}`));
-            });
-          }
-        }
-      });
-    </script>
     <script>
       window.siteMapping = {
         "strongdogxp.github.io": [
@@ -303,14 +230,17 @@
       </div>
     </div>
     <div class="updates-text-container">
-      <p class="updates-paragraph-text">You can now add a custom title and favicon! Click on the pencil icon next to "All" to change it.</p>
+      <p class="updates-paragraph-text">
+        You can now add a custom title and favicon! Click on the pencil icon
+        next to "All" to change it.
+      </p>
     </div>
     <div class="modal" id="popupModal">
       <div class="modal-content">
         <span class="modal-close" id="closeModal">×</span>
         <p>
           The StrongDog Discord server is a place for StrongDog users to chill,
-          request ideas, and have fun!
+          request ideas, talk with developers, and have fun!
           <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">Join here</a>.
         </p>
       </div>
@@ -325,7 +255,20 @@
     <div class="games-grid" id="favoritesGameList" style="display: none"></div>
     <div class="section-header">
       <h2 style="text-align: center"><strong>All</strong></h2>
-      <span class="edit-button" id="editAllButton">✏️</span>
+      <!-- Edit icon SVG -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        id="editAllButton"
+        class="edit-button"
+      >
+        <path
+          d="M21.121 2.707a3 3 0 0 0-4.242 0l-1.68 1.68-7.906 7.906a1 1 0 0 0-.263.464l-1 4a1 1 0 0 0 1.213 1.213l4-1a1 1 0 0 0 .464-.263l7.849-7.848 1.737-1.738a3 3 0 0 0 0-4.242l-.172-.172Zm-2.828 1.414a1 1 0 0 1 1.414 0l.172.172a1 1 0 0 1 0 1.414l-1.017 1.017-1.555-1.617.986-.986Zm-2.4 2.4 1.555 1.617-6.96 6.959-2.114.529.529-2.115 6.99-6.99ZM4 8a1 1 0 0 1 1-1h5a1 1 0 1 0 0-2H5a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h11a3 3 0 0 0 3-3v-5a1 1 0 0 0-2 0v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8Z"
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
     </div>
     <div class="games-grid" id="allGameList"></div>
     <h2 style="text-align: center"><strong>StrongDogXP LLC</strong></h2>
@@ -393,10 +336,21 @@
     </div>
     <h2 class="alternate-links-title">Alternate Links</h2>
     <div class="alternate-links-container" id="alternate-links-container"></div>
-    <div class="alternate-links-key" id="alternate-links-key"></div>
+    <div class="alternate-links-key" id="alternate-links-key">
+      <span style="margin-right: 15px">
+        <span class="status-dot" style="background-color: var(--green)"></span>
+        Unblocked
+      </span>
+      <span style="margin-right: 15px">
+        <span class="status-dot" style="background-color: var(--red)"></span>
+        Blocked/Down
+      </span>
+    </div>
     <h2 class="alternate-links-title">
       Exclusive links available on the StrongDogXP
-      <a href="https://discord.gg/pWjfQ4Sz5c">Discord server</a>!
+      <a href="https://discord.gg/pWjfQ4Sz5c" style="color: #007bff"
+        >Discord server</a
+      >!
     </h2>
     <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
       <div class="categories">
@@ -443,7 +397,7 @@
             style="width: 100%"
           />
           <div style="text-align: center; color: white; margin-top: 5px">
-            Value: <span id="cardSizeValue">0</span>
+            Size: <span id="cardSizeValue">0</span>
           </div>
         </div>
         <div class="custom-option" style="margin-bottom: 10px">
@@ -509,6 +463,25 @@
         "mathcord.com",
         "strongdog.com",
       ];
+      altLinks.forEach((link) => {
+        const a = document.createElement("a");
+        a.classList.add("alternate-link");
+        a.href = "https://" + link;
+        a.target = "_blank";
+
+        const linkText = document.createElement("span");
+        linkText.textContent = link;
+
+        const statusDot = document.createElement("span");
+        statusDot.classList.add("spinning-dot");
+        statusDot.title = "Checking site availability...";
+
+        a.appendChild(linkText);
+        a.appendChild(statusDot);
+        altLinksEl.appendChild(a);
+
+        checkSiteStatus(link, statusDot);
+      });
       function pingSite(domain) {
         return new Promise((resolve) => {
           const img = new Image();
@@ -544,66 +517,15 @@
           );
           isUnblocked = await pingSite(domain);
         }
-        statusDot.style.backgroundColor = isUnblocked ? "#28a745" : "#dc3545";
+        statusDot.classList = "status-dot";
+        if (isUnblocked) {
+          statusDot.style.backgroundColor = "var(--green)";
+          statusDot.title = "Unblocked on this computer";
+        } else {
+          statusDot.style.backgroundColor = "var(--red)";
+          statusDot.title = "Blocked on this computer";
+        }
       }
-      altLinks.forEach((link) => {
-        const a = document.createElement("a");
-        a.href = "https://" + link;
-        a.target = "_blank";
-        a.classList.add("alternate-link");
-        a.style.display = "flex";
-        a.style.alignItems = "center";
-        a.style.justifyContent = "space-between";
-        a.style.padding = "10px 15px";
-        a.style.textDecoration = "none";
-        a.style.color = "#007bff";
-        a.style.backgroundColor = "#3e3e3e";
-        a.style.borderRadius = "10px";
-        a.style.transition = "all 0.3s ease";
-        a.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.3)";
-        a.onmouseover = () => {
-          a.style.color = "#0056b3";
-          a.style.backgroundColor = "#4e4e4e";
-          a.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.5)";
-        };
-        a.onmouseout = () => {
-          a.style.color = "#007bff";
-          a.style.backgroundColor = "#3e3e3e";
-          a.style.boxShadow = "0 4px 15px rgba(0, 0, 0, 0.3)";
-        };
-        const linkText = document.createElement("span");
-        linkText.textContent = link;
-        linkText.style.flexGrow = "1";
-        linkText.style.fontSize = "1.1rem";
-        linkText.style.fontWeight = "600";
-        const statusDot = document.createElement("span");
-        statusDot.classList.add("status-dot");
-        statusDot.style.width = "12px";
-        statusDot.style.height = "12px";
-        statusDot.style.borderRadius = "50%";
-        statusDot.style.backgroundColor = "black";
-        statusDot.style.display = "inline-block";
-        statusDot.style.marginLeft = "10px";
-        a.appendChild(linkText);
-        a.appendChild(statusDot);
-        altLinksEl.appendChild(a);
-        checkSiteStatus(link, statusDot);
-      });
-      altLinksKeyEl.style.textAlign = "center";
-      altLinksKeyEl.style.marginTop = "15px";
-      altLinksKeyEl.style.fontSize = "14px";
-      altLinksKeyEl.style.color = "#aaa";
-      altLinksKeyEl.innerHTML = `
-        <span style="margin-right: 15px;">
-          <span class="status-dot" style="background-color:#28a745;"></span> Unblocked
-        </span>
-        <span style="margin-right: 15px;">
-          <span class="status-dot" style="background-color:#dc3545;"></span> Blocked/Down
-        </span>
-        <span>
-          <span class="status-dot" style="background-color:black;"></span> Loading
-        </span>
-      `;
     </script>
     <script type="module">
       import games from "./cards-data.js";
