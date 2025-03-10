@@ -35,15 +35,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script>
-      window.siteMapping = {
-        "strongdogxp.github.io": [
-          "https://strongdogxp.github.io/strongdog2",
-          "https://strongdogxp.github.io/strongdog3",
-        ],
-        "mathcordxp.github.io": [],
-      };
-    </script>
-    <script>
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
         authDomain: "strongdog-auth.firebaseapp.com",
@@ -57,6 +48,119 @@
       window.auth = firebase.auth();
       window.db = firebase.firestore();
       window.rtdb = firebase.database();
+    </script>
+    <script>
+      async function getAllIndexedDBData() {
+        if (!indexedDB.databases) return {};
+        let dbList = [];
+        try {
+          dbList = await indexedDB.databases();
+        } catch (error) {
+          console.error("Error fetching IndexedDB databases:", error);
+          return {};
+        }
+        const result = {};
+        for (const dbInfo of dbList) {
+          if (!dbInfo.name) continue;
+          result[dbInfo.name] = await getDataFromDatabase(dbInfo.name);
+        }
+        return result;
+      }
+
+      function getDataFromDatabase(dbName) {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(dbName);
+          request.onsuccess = (event) => {
+            const db = event.target.result;
+            const storeNames = Array.from(db.objectStoreNames);
+            const dbData = {};
+            let pending = storeNames.length;
+            if (pending === 0) {
+              db.close();
+              resolve(dbData);
+              return;
+            }
+            storeNames.forEach((storeName) => {
+              const transaction = db.transaction(storeName, "readonly");
+              const store = transaction.objectStore(storeName);
+              const items = [];
+              const cursorRequest = store.openCursor();
+              cursorRequest.onsuccess = (evt) => {
+                const cursor = evt.target.result;
+                if (cursor) {
+                  items.push({ key: cursor.key, value: cursor.value });
+                  cursor.continue();
+                } else {
+                  dbData[storeName] = items;
+                  pending--;
+                  if (pending === 0) {
+                    db.close();
+                    resolve(dbData);
+                  }
+                }
+              };
+              cursorRequest.onerror = (evt) => {
+                pending--;
+                if (pending === 0) {
+                  db.close();
+                  resolve(dbData);
+                }
+              };
+            });
+          };
+          request.onerror = (event) => {
+            reject(event.target.error);
+          };
+        });
+      }
+
+      async function setAllIndexedDBData(indexedData) {
+        for (const dbName in indexedData) {
+          const storesData = indexedData[dbName];
+          await new Promise((resolve) => {
+            const deleteRequest = indexedDB.deleteDatabase(dbName);
+            deleteRequest.onsuccess = () => resolve();
+            deleteRequest.onerror = () => resolve();
+            deleteRequest.onblocked = () => resolve();
+          });
+          const openRequest = indexedDB.open(dbName, 1);
+          openRequest.onupgradeneeded = function (event) {
+            const db = event.target.result;
+            for (const storeName in storesData) {
+              if (!db.objectStoreNames.contains(storeName)) {
+                db.createObjectStore(storeName, { autoIncrement: false });
+              }
+            }
+          };
+          const dbInstance = await new Promise((resolve, reject) => {
+            openRequest.onsuccess = (event) => {
+              resolve(event.target.result);
+            };
+            openRequest.onerror = (event) => {
+              reject(event.target.error);
+            };
+          });
+          for (const storeName in storesData) {
+            await new Promise((resolve) => {
+              const transaction = dbInstance.transaction(storeName, "readwrite");
+              transaction.oncomplete = () => resolve();
+              transaction.onerror = () => resolve();
+              const store = transaction.objectStore(storeName);
+              const clearRequest = store.clear();
+              clearRequest.onsuccess = async () => {
+                for (const record of storesData[storeName]) {
+                  await new Promise((r) => {
+                    const putRequest = store.put(record.value, record.key);
+                    putRequest.onsuccess = () => r();
+                    putRequest.onerror = () => r();
+                  });
+                }
+              };
+            });
+          }
+          dbInstance.close();
+        }
+      }
     </script>
     <script
       async
@@ -113,19 +217,27 @@
         }
         function autoSaveData() {
           if (!window.currentUserId) return;
-          const data = getAllLocalStorageData();
-          const docRef = window.db
-            .collection("users")
-            .doc(window.currentUserId)
-            .collection("saves")
-            .doc("slot3");
-          docRef
-            .set({
-              title: "Auto Save",
-              description: "Auto-saved on " + new Date().toLocaleString(),
-              localStorageData: data,
+          const localData = getAllLocalStorageData();
+          getAllIndexedDBData()
+            .then((indexedData) => {
+              const docRef = window.db
+                .collection("users")
+                .doc(window.currentUserId)
+                .collection("saves")
+                .doc("slot3");
+              docRef
+                .set({
+                  title: "Auto Save",
+                  description:
+                    "Auto-saved on " + new Date().toLocaleString(),
+                  localStorageData: localData,
+                  indexedDBBackup: indexedData,
+                })
+                .catch((err) => console.error("Auto-save error:", err));
             })
-            .catch((err) => console.error("Auto-save error:", err));
+            .catch((err) =>
+              console.error("Error saving IndexedDB data:", err)
+            );
         }
         function loadAutoSave() {
           if (!window.currentUserId) return;
@@ -137,7 +249,16 @@
           docRef.get().then((docSnap) => {
             if (docSnap.exists && docSnap.data().localStorageData) {
               setAllLocalStorageData(docSnap.data().localStorageData);
-              alert("Auto-save loaded!");
+              if (docSnap.data().indexedDBBackup) {
+                setAllIndexedDBData(docSnap.data().indexedDBBackup)
+                  .then(() => alert("Auto-save loaded!"))
+                  .catch((err) => {
+                    console.error("Error loading IndexedDB data:", err);
+                    alert("Error loading auto-save IndexedDB data!");
+                  });
+              } else {
+                alert("Auto-save loaded!");
+              }
             } else {
               alert("No auto-save data found in Firestore.");
             }
@@ -1101,8 +1222,6 @@
           }
         }
       });
-    </script>
-    <script>
       (function () {
         var defaultTitle = "StrongDog XP";
         var defaultFavicon = "img/favicon.ico";

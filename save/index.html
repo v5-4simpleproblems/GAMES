@@ -1,1054 +1,1258 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-0YLTCV2MMS');
-  </script>
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>StrongDog XP - Saves</title>
-  <link rel="icon" type="image/x-icon" href="../img/favicon.ico" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #2e2e2e;
-      color: white;
-    }
-    .navbar {
-      background-color: #333;
-      color: white;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      position: relative;
-      justify-content: center;
-    }
-    .logo {
-      color: white;
-      font-weight: bold;
-      text-decoration: none;
-    }
-    .logo .xp {
-      color: orange;
-    }
-    .menu-icon {
-      font-size: 2rem;
-      cursor: pointer;
-      margin-right: auto;
-      color: white;
-      position: relative;
-      z-index: 1001;
-    }
-    .slide-menu {
-      position: fixed;
-      top: 0;
-      height: 100%;
-      width: 350px;
-      background-color: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
-      color: white;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-      z-index: 1003;
-      transition: transform 0.4s ease;
-      overflow-y: auto;
-      transform: translateX(-100%);
-      padding-top: 20px;
-    }
-    .categories {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .categories > a, .categories > button {
-      display: block;
-      text-align: center;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 20px;
-      text-decoration: none;
-      color: white;
-      transition: all 0.3s ease;
-      margin-left: 20px;
-      margin-right: 20px;
-      font-size: 1.1rem;
-      position: relative;
-      overflow: hidden;
-      border: none;
-      cursor: pointer;
-    }
-    .categories > a:hover,
-    .categories > button:hover {
-      transform: scale(0.95);
-    }
-    .user-details-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-block: 20px;
-      gap: 10px;
-    }
-    .profile-top-container {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .profile-picture-container {
-      border-radius: 50%;
-      width: 100px;
-      aspect-ratio: 1;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-    .profile-picture-container:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
-    }
-    .profile-picture {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .username-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .username-text {
-      font-size: 1.5rem;
-      color: white;
-    }
-    h2 {
-      text-align: center;
-      color: white;
-      margin: 20px 0;
-      font-size: 1.5em;
-    }
-    .info-message {
-      color: #ddd;
-      text-align: center;
-      max-width: 800px;
-      margin: 0 auto 20px auto;
-      padding: 0 20px;
-      font-size: 0.9rem;
-    }
-    .saves-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .save-slot {
-      background: #444444;
-      border-radius: 20px;
-      width: 80%;
-      max-width: 500px;
-      padding: 20px;
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-    .save-slot:hover {
-      transform: scale(0.98);
-    }
-    .save-title {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-    .save-description {
-      font-size: 1em;
-      text-align: center;
-      color: #ccc;
-    }
-    .delete-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #a83632;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      width: 30px;
-      height: 30px;
-      font-size: 1em;
-      line-height: 30px;
-      text-align: center;
-    }
-    .delete-button:hover {
-      background: #f00;
-    }
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background-color: #757575;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      color: white;
-      position: relative;
-    }
-    .modal-close {
-      color: #aaa;
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .modal-close:hover {
-      color: #fff;
-    }
-    .modal-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .modal-buttons button {
-      background: orange;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 10px;
-      color: black;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    .modal-buttons button:hover {
-      transform: scale(0.95);
-    }
-    /* Loading Screen */
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      z-index: 3000;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      color: white;
-    }
-    .loading-overlay.active {
-      display: flex;
-    }
-    .loading-animation {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .loading-bar {
-      background-color: rgba(255, 255, 255, 0.3);
-      width: 20px;
-      height: 40px;
-      margin-right: 5px;
-      border-radius: 10px;
-      animation: load ease infinite 5s;
-    }
-    .loading-bar:nth-child(2) { animation-delay: 0.1s; }
-    .loading-bar:nth-child(3) { animation-delay: 0.2s; }
-    .loading-bar:nth-child(4) { animation-delay: 0.3s; }
-    .loading-bar:nth-child(5) { animation-delay: 0.4s; }
-    @keyframes load {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(720deg) rotateX(180deg); }
-    }
-    .bottom-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-      margin-top: 30px;
-    }
-    .transfer-save-file-btn {
-      border: none;
-      padding: 1rem;
-      border-radius: 10px;
-      background: orange;
-      width: 300px;
-      cursor: pointer;
-      font-size: 1.2rem;
-      transition: 0.3s;
-    }
-    .transfer-save-file-btn:hover {
-      filter: brightness(0.9);
-      transform: scale(1.05);
-    }
-    /* Toggle Switch CSS */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-    }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    input:checked + .slider {
-      background-color: #2196F3;
-    }
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-    /* Auto Save Toggle Container */
-    .auto-save-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-  <div class="navbar">
-    <div class="menu-icon" id="menuIcon">&#9776;</div>
-    <a href="../index.html" class="logo">StrongDog<span class="xp">XP</span></a>
-  </div>
-
-  <div class="slide-menu" id="slideMenu">
-    <div class="categories" id="sidebarCategories">
-      <!-- Dynamically populated based on login state -->
-    </div>
-  </div>
-
-  <h2>Manage Your Saves</h2>
-  <p class="info-message">
-    This will NOT save every game's data. Some games use different methods to save progress. This should save most games data, but not all.
-  </p>
-
-  <div class="saves-container" id="savesContainer" style="display:none;"></div>
-
-  <div class="bottom-buttons" id="bottomButtonsContainer"></div>
-
-  <!-- MODALS -->
-  <div class="modal" id="modalPrompt">
-    <div class="modal-content" id="modalContent">
-      <span class="modal-close" id="modalClose">&times;</span>
-      <p id="modalText">Modal Text</p>
-      <div class="modal-buttons" id="modalButtons"></div>
-    </div>
-  </div>
-
-  <!-- LOADING OVERLAY -->
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-animation">
-      <div class="loading-bar"></div>
-      <div class="loading-bar"></div>
-      <div class="loading-bar"></div>
-      <div class="loading-bar"></div>
-      <div class="loading-bar"></div>
-    </div>
-    <p id="loadingText">Loading...</p>
-  </div>
-
-  <script type="module">
-    import { siteMapping } from "../site-mapping.js";
-
-    // Initialize Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
-      authDomain: "strongdog-auth.firebaseapp.com",
-      databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
-      projectId: "strongdog-auth",
-      storageBucket: "strongdog-auth.appspot.com",
-      messagingSenderId: "936276282572",
-      appId: "1:936276282572:web:a802b7f609381ff9428669",
-      measurementId: "G-0YLTCV2MMS",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    // UI element references
-    const menuIcon = document.getElementById("menuIcon");
-    const slideMenu = document.getElementById("slideMenu");
-    const categories = document.getElementById("sidebarCategories");
-    const savesContainer = document.getElementById("savesContainer");
-    const bottomButtonsContainer = document.getElementById("bottomButtonsContainer");
-
-    const modal = document.getElementById("modalPrompt");
-    const modalClose = document.getElementById("modalClose");
-    const modalText = document.getElementById("modalText");
-    const modalButtons = document.getElementById("modalButtons");
-    const loadingOverlay = document.getElementById("loadingOverlay");
-    const loadingText = document.getElementById("loadingText");
-
-    let currentUser = null;
-    let userId = null;
-
-    // --- Cookie Helpers & Default ---
-    // Set a cookie with name, value and expiry date
-    function setCookie(name, value, expires) {
-      document.cookie = name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
-    }
-    // Retrieve cookie by name
-    function getCookie(name) {
-      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      return match ? match[2] : null;
-    }
-    // Ensure autoSaveEnabled cookie is set – default to "false" if not present.
-    if (getCookie("autoSaveEnabled") === null) {
-      setCookie("autoSaveEnabled", "false", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-    }
-
-    // Get current site key based on site-mapping
-    function getCurrentSiteKey() {
-      const currentURL = window.location.href;
-      const keys = Object.keys(siteMapping);
-      keys.sort((a, b) => b.length - a.length);
-      for (const key of keys) {
-        const normalizedKey = key.replace(/^https?:\/\//, '');
-        if (currentURL.includes(normalizedKey)) {
-          return normalizedKey;
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-0YLTCV2MMS");
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StrongDog XP - Saves</title>
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #2e2e2e;
+        color: white;
+      }
+      .navbar {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        justify-content: center;
+      }
+      .logo {
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      .logo .xp {
+        color: orange;
+      }
+      .menu-icon {
+        font-size: 2rem;
+        cursor: pointer;
+        margin-right: auto;
+        color: white;
+        position: relative;
+        z-index: 1001;
+      }
+      .slide-menu {
+        position: fixed;
+        top: 0;
+        height: 100%;
+        width: 350px;
+        background-color: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        color: white;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        z-index: 1003;
+        transition: transform 0.4s ease;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        padding-top: 20px;
+      }
+      .categories {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .categories > a,
+      .categories > button {
+        display: block;
+        text-align: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        text-decoration: none;
+        color: white;
+        transition: all 0.3s ease;
+        margin-left: 20px;
+        margin-right: 20px;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        cursor: pointer;
+      }
+      .categories > a:hover,
+      .categories > button:hover {
+        transform: scale(0.95);
+      }
+      .user-details-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-block: 20px;
+        gap: 10px;
+      }
+      .profile-top-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .profile-picture-container {
+        border-radius: 50%;
+        width: 100px;
+        aspect-ratio: 1;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+      .profile-picture-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      }
+      .profile-picture {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .username-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .username-text {
+        font-size: 1.5rem;
+        color: white;
+      }
+      h2 {
+        text-align: center;
+        color: white;
+        margin: 20px 0;
+        font-size: 1.5em;
+      }
+      .info-message {
+        color: #ddd;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto 20px auto;
+        padding: 0 20px;
+        font-size: 0.9rem;
+      }
+      .saves-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .save-slot {
+        background: #444444;
+        border-radius: 20px;
+        width: 80%;
+        max-width: 500px;
+        padding: 20px;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      .save-slot:hover {
+        transform: scale(0.98);
+      }
+      .save-title {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .save-description {
+        font-size: 1em;
+        text-align: center;
+        color: #ccc;
+      }
+      .delete-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #a83632;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        font-size: 1em;
+        line-height: 30px;
+        text-align: center;
+      }
+      .delete-button:hover {
+        background: #f00;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background-color: #757575;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        color: white;
+        position: relative;
+      }
+      .modal-close {
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .modal-close:hover {
+        color: #fff;
+      }
+      .modal-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .modal-buttons button {
+        background: orange;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 10px;
+        color: black;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .modal-buttons button:hover {
+        transform: scale(0.95);
+      }
+      .loading-overlay {
+        display: none;
+        position: fixed;
+        z-index: 3000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: white;
+      }
+      .loading-overlay.active {
+        display: flex;
+      }
+      .loading-animation {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .loading-bar {
+        background-color: rgba(255, 255, 255, 0.3);
+        width: 20px;
+        height: 40px;
+        margin-right: 5px;
+        border-radius: 10px;
+        animation: load ease infinite 5s;
+      }
+      .loading-bar:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .loading-bar:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .loading-bar:nth-child(4) {
+        animation-delay: 0.3s;
+      }
+      .loading-bar:nth-child(5) {
+        animation-delay: 0.4s;
+      }
+      @keyframes load {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(720deg) rotateX(180deg);
         }
       }
-      return window.location.host + window.location.pathname.replace(/\/$/, '');
-    }
-    const currentDomainKey = getCurrentSiteKey();
-
-    // Slide-menu toggle
-    menuIcon.addEventListener("click", e => {
-      e.stopPropagation();
-      if (slideMenu.style.transform === "translateX(0%)") {
-        slideMenu.style.transform = "translateX(-100%)";
-      } else {
-        slideMenu.style.transform = "translateX(0%)";
+      .bottom-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        margin-top: 30px;
       }
-    });
-    window.addEventListener("click", e => {
-      if (e.target !== menuIcon && !slideMenu.contains(e.target)) {
-        slideMenu.style.transform = "translateX(-100%)";
+      .transfer-save-file-btn {
+        border: none;
+        padding: 1rem;
+        border-radius: 10px;
+        background: orange;
+        width: 300px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: 0.3s;
       }
-    });
-
-    // Modal functions
-    function openModal(text, buttons = []) {
-      modalText.textContent = text;
-      modalButtons.innerHTML = "";
-      buttons.forEach(btn => {
-        const buttonEl = document.createElement("button");
-        buttonEl.classList.add("transfer-save-file-btn");
-        buttonEl.textContent = btn.text;
-        buttonEl.onclick = btn.onclick;
-        modalButtons.appendChild(buttonEl);
-      });
-      modal.style.display = "flex";
-    }
-    modalClose.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
-    window.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        modal.style.display = "none";
+      .transfer-save-file-btn:hover {
+        filter: brightness(0.9);
+        transform: scale(1.05);
       }
-    });
-
-    // Loading overlay functions
-    function showLoading(text = "Loading...") {
-      loadingText.textContent = text;
-      loadingOverlay.classList.add("active");
-    }
-    function hideLoading() {
-      loadingOverlay.classList.remove("active");
-    }
-
-    // Utility functions for localStorage backup
-    function getAllLocalStorageData() {
-      const data = {};
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const value = localStorage.getItem(key);
-        data[key] = value;
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
       }
-      return data;
-    }
-    function setAllLocalStorageData(data) {
-      localStorage.clear();
-      for (const [key, value] of Object.entries(data)) {
-        localStorage.setItem(key, value);
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
       }
-    }
-
-    // Firebase save functions
-    async function deleteSaveFromFirebase(slotId) {
-      if (!currentUser) return;
-      const docRef = db.collection("users").doc(userId).collection("saves").doc(slotId);
-      await docRef.delete();
-    }
-    async function saveSlotToFirebase(slotId, title, description, localData) {
-      if (!currentUser) return;
-      const docRef = db.collection("users").doc(userId).collection("saves").doc(slotId);
-      await docRef.set({ title, description, localStorageData: localData });
-    }
-    async function loadSlotFromFirebase(slotId) {
-      if (!currentUser) return null;
-      const docRef = db.collection("users").doc(userId).collection("saves").doc(slotId);
-      const doc = await docRef.get();
-      if (doc.exists) {
-        return doc.data();
-      } else {
-        return null;
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
       }
-    }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: #2196f3;
+      }
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+      .auto-save-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="menu-icon" id="menuIcon">&#9776;</div>
+      <a href="../index.html" class="logo"
+        >StrongDog<span class="xp">XP</span></a
+      >
+    </div>
+    <div class="slide-menu" id="slideMenu">
+      <div class="categories" id="sidebarCategories"></div>
+    </div>
+    <h2>Manage Your Saves</h2>
+    <p class="info-message">
+      This will NOT save every game's data. Some games use different methods to
+      save progress. This should save most games data, but not all.
+    </p>
+    <div
+      class="saves-container"
+      id="savesContainer"
+      style="display: none"
+    ></div>
+    <div class="bottom-buttons" id="bottomButtonsContainer"></div>
+    <div class="modal" id="modalPrompt">
+      <div class="modal-content" id="modalContent">
+        <span class="modal-close" id="modalClose">&times;</span>
+        <p id="modalText">Modal Text</p>
+        <div class="modal-buttons" id="modalButtons"></div>
+      </div>
+    </div>
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-animation">
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+      </div>
+      <p id="loadingText">Loading...</p>
+    </div>
+    <script type="module">
+      import { siteMapping } from "../site-mapping.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
+        authDomain: "strongdog-auth.firebaseapp.com",
+        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
+        projectId: "strongdog-auth",
+        storageBucket: "strongdog-auth.appspot.com",
+        messagingSenderId: "936276282572",
+        appId: "1:936276282572:web:a802b7f609381ff9428669",
+        measurementId: "G-0YLTCV2MMS",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+      const menuIcon = document.getElementById("menuIcon");
+      const slideMenu = document.getElementById("slideMenu");
+      const categories = document.getElementById("sidebarCategories");
+      const savesContainer = document.getElementById("savesContainer");
+      const bottomButtonsContainer = document.getElementById(
+        "bottomButtonsContainer"
+      );
+      const modal = document.getElementById("modalPrompt");
+      const modalClose = document.getElementById("modalClose");
+      const modalText = document.getElementById("modalText");
+      const modalButtons = document.getElementById("modalButtons");
+      const loadingOverlay = document.getElementById("loadingOverlay");
+      const loadingText = document.getElementById("loadingText");
+      let currentUser = null;
+      let userId = null;
+      let loadingTimeout = null;
 
-    // Domain replacement functions
-    function normalizeDomainKey(str) {
-      return str.replace(/^https?:\/\//, '').replace(/\/$/, '');
-    }
-    function replaceDomainsInData(dataObj, currentDomain) {
-      const keysToCheck = Object.keys(siteMapping).map(k => normalizeDomainKey(k));
-      const normalizedCurrentDomain = normalizeDomainKey(currentDomain);
-      function replaceInString(str) {
-        for (const oldDomain of keysToCheck) {
-          if (str.includes(oldDomain)) {
-            const idx = str.indexOf(oldDomain);
-            if (idx === 0) {
-              return normalizedCurrentDomain + str.substring(oldDomain.length);
-            } else {
-              return str.replace(oldDomain, normalizedCurrentDomain);
-            }
+      function setCookie(name, value, expires) {
+        document.cookie =
+          name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
+      }
+      function getCookie(name) {
+        const match = document.cookie.match(
+          new RegExp("(^| )" + name + "=([^;]+)")
+        );
+        return match ? match[2] : null;
+      }
+      if (getCookie("autoSaveEnabled") === null) {
+        setCookie(
+          "autoSaveEnabled",
+          "false",
+          new Date("Fri, 31 Dec 9999 23:59:59 GMT")
+        );
+      }
+      function getCurrentSiteKey() {
+        const currentURL = window.location.href;
+        const keys = Object.keys(siteMapping);
+        keys.sort((a, b) => b.length - a.length);
+        for (const key of keys) {
+          const normalizedKey = key.replace(/^https?:\/\//, "");
+          if (currentURL.includes(normalizedKey)) {
+            return normalizedKey;
           }
         }
-        return str;
+        return (
+          window.location.host + window.location.pathname.replace(/\/$/, "")
+        );
       }
-      for (const slotId in dataObj) {
-        if (slotId === "localStorageBackup") {
-          const localObj = dataObj[slotId];
-          if (localObj && typeof localObj === 'object') {
-            for (const k in localObj) {
-              const newKey = replaceInString(k);
-              let newVal = localObj[k];
-              if (typeof newVal === 'string') {
-                newVal = replaceInString(newVal);
-              }
-              if (newKey !== k) {
-                delete localObj[k];
-                localObj[newKey] = newVal;
-              } else {
-                localObj[k] = newVal;
-              }
-            }
-          }
+      const currentDomainKey = getCurrentSiteKey();
+
+      menuIcon.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (slideMenu.style.transform === "translateX(0%)") {
+          slideMenu.style.transform = "translateX(-100%)";
         } else {
-          const saveData = dataObj[slotId];
-          if (saveData && saveData.localStorageData) {
-            const lsData = saveData.localStorageData;
-            for (const k in lsData) {
-              const newKey = replaceInString(k);
-              let newVal = lsData[k];
-              if (typeof newVal === 'string') {
-                newVal = replaceInString(newVal);
-              }
-              if (newKey !== k) {
-                delete lsData[k];
-                lsData[newKey] = newVal;
-              } else {
-                lsData[k] = newVal;
-              }
-            }
-          }
+          slideMenu.style.transform = "translateX(0%)";
         }
-      }
-    }
-
-    // After loading from Firebase, also do domain replacement before setting localStorage
-    async function handleLoadSave(slotKey) {
-      showLoading("Loading save...");
-      const data = await loadSlotFromFirebase(slotKey);
-      if (data && data.localStorageData) {
-        const tempObj = { someSlot: data };
-        replaceDomainsInData(tempObj, currentDomainKey);
-        setAllLocalStorageData(tempObj.someSlot.localStorageData);
-      }
-      hideLoading();
-      alert("Load complete!");
-    }
-
-    // Render save slots (three slots)
-    function renderSlots(slotsData) {
-      savesContainer.innerHTML = "";
-      for (let i = 1; i <= 3; i++) {
-        const slotKey = `slot${i}`;
-        const slotData = slotsData[slotKey];
-        const slotEl = document.createElement("div");
-        slotEl.className = "save-slot";
-        slotEl.setAttribute("data-slot", slotKey);
-        let titleText = "Empty slot";
-        let descText = "Click here to save your progress";
-        if (slotData) {
-          titleText = slotData.title;
-          descText = slotData.description;
-          const deleteBtn = document.createElement("button");
-          deleteBtn.className = "delete-button";
-          deleteBtn.textContent = "X";
-          deleteBtn.onclick = (e) => {
-            e.stopPropagation();
-            openModal("Are you sure you want to delete this save? This action is irreversable", [
-              {
-                text: "Yes",
-                onclick: async () => {
-                  modal.style.display = "none";
-                  showLoading("Deleting save...");
-                  await deleteSaveFromFirebase(slotKey);
-                  await loadUserSaves();
-                  hideLoading();
-                }
-              },
-              {
-                text: "No",
-                onclick: () => { modal.style.display = "none"; }
-              }
-            ]);
-          };
-          slotEl.appendChild(deleteBtn);
-        }
-        const titleEl = document.createElement("div");
-        titleEl.className = "save-title";
-        titleEl.textContent = titleText;
-        const descEl = document.createElement("div");
-        descEl.className = "save-description";
-        descEl.textContent = descText;
-        slotEl.appendChild(titleEl);
-        slotEl.appendChild(descEl);
-        slotEl.addEventListener("click", () => {
-          if (!slotData) {
-            const titlePrompt = prompt("Enter a title for your save:", "");
-            if (titlePrompt === null) return;
-            const descPrompt = prompt("Enter a description for your save:", "");
-            if (descPrompt === null) return;
-            showLoading("Saving your data...");
-            const localData = getAllLocalStorageData();
-            saveSlotToFirebase(slotKey, titlePrompt, descPrompt, localData)
-              .then(() => loadUserSaves())
-              .finally(() => {
-                hideLoading();
-                alert("Save complete!");
-              });
-          } else {
-            openModal("What would you like to do?", [
-              {
-                text: "Load Save",
-                onclick: () => {
-                  modal.style.display = "none";
-                  openModal("Are you sure you would like to load this save? This will wipe unsaved changes.", [
-                    {
-                      text: "Yes",
-                      onclick: async () => {
-                        modal.style.display = "none";
-                        await handleLoadSave(slotKey);
-                      }
-                    },
-                    {
-                      text: "No",
-                      onclick: () => { modal.style.display = "none"; }
-                    }
-                  ]);
-                }
-              },
-              {
-                text: "Overwrite Save",
-                onclick: () => {
-                  modal.style.display = "none";
-                  openModal("Are you sure you want to overwrite this save? This action is irreversable.", [
-                    {
-                      text: "Yes",
-                      onclick: async () => {
-                        modal.style.display = "none";
-                        showLoading("Overwriting save...");
-                        await deleteSaveFromFirebase(slotKey);
-                        const localData = getAllLocalStorageData();
-                        await saveSlotToFirebase(slotKey, slotData.title, slotData.description, localData);
-                        await loadUserSaves();
-                        hideLoading();
-                        alert("Overwrite complete!");
-                      }
-                    },
-                    {
-                      text: "No",
-                      onclick: () => { modal.style.display = "none"; }
-                    }
-                  ]);
-                }
-              }
-            ]);
-          }
-        });
-        savesContainer.appendChild(slotEl);
-      }
-    }
-
-    // Load user saves from Firebase
-    async function loadUserSaves() {
-      if (!currentUser) {
-        savesContainer.style.display = "none";
-        return;
-      }
-      savesContainer.style.display = "flex";
-      const savesColl = db.collection("users").doc(userId).collection("saves");
-      const snapshot = await savesColl.get();
-      const slotsData = {};
-      snapshot.forEach(doc => {
-        slotsData[doc.id] = doc.data();
       });
-      renderSlots(slotsData);
-    }
-
-    // Download all saves as JSON file
-    async function downloadAllSaves() {
-      showLoading("Preparing download...");
-      const localData = getAllLocalStorageData();
-      const dataToDownload = { localStorageBackup: localData };
-      if (currentUser) {
-        const savesColl = db.collection("users").doc(userId).collection("saves");
-        const snapshot = await savesColl.get();
-        snapshot.forEach(doc => {
-          dataToDownload[doc.id] = doc.data();
+      window.addEventListener("click", (e) => {
+        if (e.target !== menuIcon && !slideMenu.contains(e.target)) {
+          slideMenu.style.transform = "translateX(-100%)";
+        }
+      });
+      function openModal(text, buttons = []) {
+        modalText.textContent = text;
+        modalButtons.innerHTML = "";
+        buttons.forEach((btn) => {
+          const buttonEl = document.createElement("button");
+          buttonEl.classList.add("transfer-save-file-btn");
+          buttonEl.textContent = btn.text;
+          buttonEl.onclick = btn.onclick;
+          modalButtons.appendChild(buttonEl);
         });
+        modal.style.display = "flex";
       }
-      hideLoading();
-      const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], {type: "application/json"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "strongdog_saves.json";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    // Handle file upload (import) – always localStorage only.
-    function handleFileUpload() {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = ".json";
-      input.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = async (evt) => {
-          const content = evt.target.result;
-          let parsed;
-          try {
-            parsed = JSON.parse(content);
-          } catch (err) {
-            alert("Invalid file format");
-            return;
-          }
-          replaceDomainsInData(parsed, currentDomainKey);
-          openModal("Are you sure you would like to upload a save? It will wipe all current data on strongdog.", [
-            {
-              text: "Yes",
-              onclick: async () => {
-                modal.style.display = "none";
-                showLoading("Uploading save...");
-                localStorage.clear();
-                let loadedData = null;
-                if (parsed.localStorageBackup && typeof parsed.localStorageBackup === 'object') {
-                  loadedData = parsed.localStorageBackup;
+      modalClose.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+      window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+      // Show loading and set a fallback to hide it after 5 seconds.
+      function showLoading(text = "Loading...") {
+        loadingText.textContent = text;
+        loadingOverlay.style.display = "flex";
+        loadingOverlay.classList.add("active");
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        loadingTimeout = setTimeout(() => {
+          hideLoading();
+        }, 5000);
+      }
+      function hideLoading() {
+        if (loadingTimeout) {
+          clearTimeout(loadingTimeout);
+          loadingTimeout = null;
+        }
+        loadingOverlay.classList.remove("active");
+        loadingOverlay.style.display = "none";
+      }
+      function getAllLocalStorageData() {
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const value = localStorage.getItem(key);
+          data[key] = value;
+        }
+        return data;
+      }
+      function setAllLocalStorageData(data) {
+        localStorage.clear();
+        for (const [key, value] of Object.entries(data)) {
+          localStorage.setItem(key, value);
+        }
+      }
+      async function getAllIndexedDBData() {
+        if (!indexedDB.databases) return {};
+        let dbList = [];
+        try {
+          dbList = await indexedDB.databases();
+        } catch (error) {
+          console.error("Error fetching IndexedDB databases:", error);
+          return {};
+        }
+        const result = {};
+        for (const dbInfo of dbList) {
+          if (!dbInfo.name) continue;
+          result[dbInfo.name] = await getDataFromDatabase(dbInfo.name);
+        }
+        return result;
+      }
+      function getDataFromDatabase(dbName) {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(dbName);
+          request.onsuccess = (event) => {
+            const db = event.target.result;
+            const storeNames = Array.from(db.objectStoreNames);
+            const dbData = {};
+            let pending = storeNames.length;
+            if (pending === 0) {
+              db.close();
+              resolve(dbData);
+              return;
+            }
+            storeNames.forEach((storeName) => {
+              const transaction = db.transaction(storeName, "readonly");
+              const store = transaction.objectStore(storeName);
+              const items = [];
+              const cursorRequest = store.openCursor();
+              cursorRequest.onsuccess = (evt) => {
+                const cursor = evt.target.result;
+                if (cursor) {
+                  items.push({ key: cursor.key, value: cursor.value });
+                  cursor.continue();
                 } else {
-                  for (const [slotId, slotData] of Object.entries(parsed)) {
-                    if (slotData && slotData.localStorageData) {
-                      loadedData = slotData.localStorageData;
-                      break;
-                    }
+                  dbData[storeName] = items;
+                  pending--;
+                  if (pending === 0) {
+                    db.close();
+                    resolve(dbData);
                   }
                 }
-                if (loadedData) setAllLocalStorageData(loadedData);
-                hideLoading();
-                alert("Upload complete!");
-              }
-            },
-            {
-              text: "No",
-              onclick: () => { modal.style.display = "none"; }
-            }
-          ]);
-        };
-        reader.readAsText(file);
-      };
-      input.click();
-    }
-
-    // --- AUTO SAVE TOGGLE SWITCH FUNCTIONS ---
-
-    // Auto-save function: saves current localStorage data to Firebase slot3
-    async function autoSaveData() {
-      if (!currentUser) return;
-      const localData = getAllLocalStorageData();
-      const title = "Auto Save";
-      const description = "Auto-saved on " + new Date().toLocaleString();
-      await saveSlotToFirebase("slot3", title, description, localData);
-    }
-
-    // --- END AUTO SAVE FUNCTIONS ---
-
-    // Listen for auth state changes and update UI accordingly
-    auth.onAuthStateChanged(async (user) => {
-      currentUser = user;
-      categories.innerHTML = "";
-      bottomButtonsContainer.innerHTML = "";
-      if (user) {
-        userId = user.uid;
-        // Logged in state – add user details to slide menu
-        const userDetailsContainer = document.createElement("div");
-        userDetailsContainer.className = "user-details-container";
-        const profileTopContainer = document.createElement("div");
-        profileTopContainer.className = "profile-top-container";
-        const profilePictureContainer = document.createElement("div");
-        profilePictureContainer.className = "profile-picture-container";
-        const profilePictureElement = document.createElement("img");
-        profilePictureElement.className = "profile-picture";
-        profilePictureElement.src = user.photoURL || "../img/default-avatar.png";
-        profilePictureContainer.appendChild(profilePictureElement);
-        profilePictureContainer.addEventListener("click", () => {
-          window.location.href = "../settings.html";
-        });
-        const usernameContainer = document.createElement("div");
-        usernameContainer.className = "username-container";
-        const usernameElement = document.createElement("p");
-        usernameElement.className = "username-text";
-        const userDocRef = db.collection("usernames").doc(userId);
-        const userDoc = await userDocRef.get();
-        if (userDoc.exists) {
-          const userData = userDoc.data();
-          usernameElement.textContent = userData.username || "Username";
-        } else {
-          usernameElement.textContent = user.displayName || "Username";
-        }
-        usernameContainer.appendChild(usernameElement);
-        profileTopContainer.appendChild(profilePictureContainer);
-        profileTopContainer.appendChild(usernameContainer);
-        userDetailsContainer.appendChild(profileTopContainer);
-        slideMenu.insertBefore(userDetailsContainer, categories);
-
-        // Add Log Out link
-        const logoutLink = document.createElement("a");
-        logoutLink.href = "#";
-        logoutLink.className = "option-link";
-        logoutLink.textContent = "Log Out";
-        logoutLink.style.backgroundColor = "#dc3545";
-        logoutLink.style.color = "white";
-        logoutLink.addEventListener("click", function (e) {
-          e.preventDefault();
-          auth.signOut().then(() => {
-            window.location.reload();
-          }).catch((error) => {
-            console.error("Error signing out:", error);
-          });
-        });
-        categories.appendChild(logoutLink);
-
-        // Show download and upload buttons
-        const downloadButton = document.createElement("button");
-        downloadButton.textContent = "Download save file";
-        downloadButton.addEventListener("click", () => {
-          downloadAllSaves();
-        });
-        const uploadButton = document.createElement("button");
-        uploadButton.textContent = "Upload save file";
-        uploadButton.addEventListener("click", () => {
-          handleFileUpload();
-        });
-        bottomButtonsContainer.appendChild(downloadButton);
-        bottomButtonsContainer.appendChild(uploadButton);
-
-        // --- Add Auto Save Toggle Switch ---
-        const autoSaveContainer = document.createElement("div");
-        autoSaveContainer.className = "auto-save-container";
-
-        const autoSaveLabel = document.createElement("span");
-        autoSaveLabel.id = "autoSaveLabel";
-        autoSaveLabel.textContent = "Auto Save is " + (getCookie("autoSaveEnabled") === "true" ? "Enabled" : "Disabled");
-
-        const autoSaveToggleWrapper = document.createElement("label");
-        autoSaveToggleWrapper.className = "switch";
-
-        const autoSaveToggleInput = document.createElement("input");
-        autoSaveToggleInput.type = "checkbox";
-        autoSaveToggleInput.id = "toggleAutoSave";
-        autoSaveToggleInput.checked = (getCookie("autoSaveEnabled") === "true");
-
-        const autoSaveToggleSpan = document.createElement("span");
-        autoSaveToggleSpan.className = "slider round";
-
-        autoSaveToggleWrapper.appendChild(autoSaveToggleInput);
-        autoSaveToggleWrapper.appendChild(autoSaveToggleSpan);
-
-        autoSaveContainer.appendChild(autoSaveLabel);
-        autoSaveContainer.appendChild(autoSaveToggleWrapper);
-
-        bottomButtonsContainer.appendChild(autoSaveContainer);
-
-        // Event listener for the toggle switch
-        autoSaveToggleInput.addEventListener("change", () => {
-          const newState = autoSaveToggleInput.checked; // true = enabled, false = disabled
-          const currentState = (getCookie("autoSaveEnabled") === "true");
-          if (newState && !currentState) {
-            // Enabling auto save
-            openModal("Enabling auto save will wipe your previous auto save data and replace it with the current data. Do you want to proceed?", [
-              {
-                text: "Yes",
-                onclick: async () => {
-                  modal.style.display = "none";
-                  setCookie("autoSaveEnabled", "true", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-                  await autoSaveData();
-                  autoSaveLabel.textContent = "Auto Save is Enabled";
-                  alert("Auto save has been enabled and current data has been saved as auto save.");
+              };
+              cursorRequest.onerror = (evt) => {
+                pending--;
+                if (pending === 0) {
+                  db.close();
+                  resolve(dbData);
                 }
-              },
-              {
-                text: "No",
-                onclick: () => {
-                  modal.style.display = "none";
-                  autoSaveToggleInput.checked = false;
-                }
-              }
-            ]);
-          } else if (!newState && currentState) {
-            // Disabling auto save
-            openModal("Disabling auto save means your progress will need to be manually saved in the future. Do you want to proceed?", [
-              {
-                text: "Yes",
-                onclick: () => {
-                  modal.style.display = "none";
-                  setCookie("autoSaveEnabled", "false", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-                  autoSaveLabel.textContent = "Auto Save is Disabled";
-                  alert("Auto save has been disabled. Remember to manually save your progress.");
-                }
-              },
-              {
-                text: "No",
-                onclick: () => {
-                  modal.style.display = "none";
-                  autoSaveToggleInput.checked = true;
-                }
-              }
-            ]);
-          }
-        });
-        // --- End Auto Save Toggle Switch ---
-
-        await loadUserSaves();
-      } else {
-        userId = null;
-        // Not logged in – show a simple login prompt in the slide menu and only local import/export buttons.
-        const userDetailsContainer = document.createElement("div");
-        userDetailsContainer.className = "user-details-container";
-        const notLoggedInContainer = document.createElement("div");
-        notLoggedInContainer.className = "username-container";
-        const notLoggedInText = document.createElement("p");
-        notLoggedInText.className = "username-text";
-        notLoggedInText.textContent = "Not logged in";
-        notLoggedInContainer.appendChild(notLoggedInText);
-        const loginButton = document.createElement("button");
-        loginButton.textContent = "Log In";
-        loginButton.style.backgroundColor = "#007bff";
-        loginButton.style.color = "white";
-        loginButton.style.border = "none";
-        loginButton.style.padding = "10px 20px";
-        loginButton.style.fontSize = "16px";
-        loginButton.style.borderRadius = "5px";
-        loginButton.style.cursor = "pointer";
-        loginButton.style.marginTop = "5px";
-        loginButton.addEventListener("click", function () {
-          window.location.href = "../login.html";
-        });
-        userDetailsContainer.appendChild(notLoggedInContainer);
-        userDetailsContainer.appendChild(loginButton);
-        slideMenu.insertBefore(userDetailsContainer, categories);
-
-        // Show only Import/Export (local) buttons
-        const downloadButton = document.createElement("button");
-        downloadButton.textContent = "Download save file";
-        downloadButton.addEventListener("click", () => {
-          alert("You are not logged in. We'll download your current local data only.");
-          showLoading("Preparing download...");
-          const dataToDownload = {
-            localStorageBackup: getAllLocalStorageData()
+              };
+            });
           };
-          hideLoading();
-          const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], {type: "application/json"});
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "strongdog_saves.json";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
+          request.onerror = (event) => {
+            reject(event.target.error);
+          };
         });
-        const uploadButton = document.createElement("button");
-        uploadButton.textContent = "Upload save file";
-        uploadButton.addEventListener("click", () => {
-          handleFileUpload();
-        });
-        bottomButtonsContainer.appendChild(downloadButton);
-        bottomButtonsContainer.appendChild(uploadButton);
-        savesContainer.style.display = "none";
       }
-    });
-  </script>
-</body>
+      // Revised function: transaction events are attached immediately.
+      async function setAllIndexedDBData(indexedData) {
+        for (const dbName in indexedData) {
+          const storesData = indexedData[dbName];
+          // Delete the existing database.
+          await new Promise((resolve) => {
+            const deleteRequest = indexedDB.deleteDatabase(dbName);
+            deleteRequest.onsuccess = () => resolve();
+            deleteRequest.onerror = () => resolve();
+            deleteRequest.onblocked = () => resolve();
+          });
+          // Open a new version of the database.
+          const openRequest = indexedDB.open(dbName, 1);
+          openRequest.onupgradeneeded = function (event) {
+            const db = event.target.result;
+            for (const storeName in storesData) {
+              if (!db.objectStoreNames.contains(storeName)) {
+                db.createObjectStore(storeName, { autoIncrement: false });
+              }
+            }
+          };
+          const dbInstance = await new Promise((resolve, reject) => {
+            openRequest.onsuccess = (event) => {
+              resolve(event.target.result);
+            };
+            openRequest.onerror = (event) => {
+              reject(event.target.error);
+            };
+          });
+          // For each store, clear the store and then add all records.
+          for (const storeName in storesData) {
+            await new Promise((resolve) => {
+              const transaction = dbInstance.transaction(
+                storeName,
+                "readwrite"
+              );
+              transaction.oncomplete = () => resolve();
+              transaction.onerror = () => resolve();
+              const store = transaction.objectStore(storeName);
+              const clearRequest = store.clear();
+              clearRequest.onsuccess = async () => {
+                for (const record of storesData[storeName]) {
+                  await new Promise((r) => {
+                    const putRequest = store.put(record.value, record.key);
+                    putRequest.onsuccess = () => r();
+                    putRequest.onerror = () => r();
+                  });
+                }
+              };
+            });
+          }
+          dbInstance.close();
+        }
+      }
+      function removeUndefined(obj) {
+        if (typeof obj !== "object" || obj === null) return obj;
+        if (Array.isArray(obj)) return obj.map(removeUndefined);
+        for (const key in obj) {
+          if (obj[key] === undefined) {
+            delete obj[key];
+          } else {
+            obj[key] = removeUndefined(obj[key]);
+          }
+        }
+        return obj;
+      }
+      async function deleteSaveFromFirebase(slotId) {
+        if (!currentUser) return;
+        const docRef = db
+          .collection("users")
+          .doc(userId)
+          .collection("saves")
+          .doc(slotId);
+        await docRef.delete();
+      }
+      async function saveSlotToFirebase(slotId, title, description, localData) {
+        if (!currentUser) return;
+        localData = removeUndefined(localData);
+        const docRef = db
+          .collection("users")
+          .doc(userId)
+          .collection("saves")
+          .doc(slotId);
+        await docRef.set({ title, description, localStorageData: localData });
+      }
+      async function loadSlotFromFirebase(slotId) {
+        if (!currentUser) return null;
+        const docRef = db
+          .collection("users")
+          .doc(userId)
+          .collection("saves")
+          .doc(slotId);
+        const doc = await docRef.get();
+        return doc.exists ? doc.data() : null;
+      }
+      function normalizeDomainKey(str) {
+        return str.replace(/^https?:\/\//, "").replace(/\/$/, "");
+      }
+      function replaceDomainsInData(dataObj, currentDomain) {
+        const keysToCheck = Object.keys(siteMapping).map((k) =>
+          normalizeDomainKey(k)
+        );
+        const normalizedCurrentDomain = normalizeDomainKey(currentDomain);
+        function replaceInString(str) {
+          for (const oldDomain of keysToCheck) {
+            if (str.includes(oldDomain)) {
+              const idx = str.indexOf(oldDomain);
+              if (idx === 0) {
+                return (
+                  normalizedCurrentDomain + str.substring(oldDomain.length)
+                );
+              } else {
+                return str.replace(oldDomain, normalizedCurrentDomain);
+              }
+            }
+          }
+          return str;
+        }
+        for (const slotId in dataObj) {
+          if (slotId === "localStorageBackup") {
+            const localObj = dataObj[slotId];
+            if (localObj && typeof localObj === "object") {
+              for (const k in localObj) {
+                const newKey = replaceInString(k);
+                let newVal = localObj[k];
+                if (typeof newVal === "string") {
+                  newVal = replaceInString(newVal);
+                }
+                if (newKey !== k) {
+                  delete localObj[k];
+                  localObj[newKey] = newVal;
+                } else {
+                  localObj[k] = newVal;
+                }
+              }
+            }
+          } else {
+            const saveData = dataObj[slotId];
+            if (saveData && saveData.localStorageData) {
+              const lsData = saveData.localStorageData;
+              for (const k in lsData) {
+                const newKey = replaceInString(k);
+                let newVal = lsData[k];
+                if (typeof newVal === "string") {
+                  newVal = replaceInString(newVal);
+                }
+                if (newKey !== k) {
+                  delete lsData[k];
+                  lsData[newKey] = newVal;
+                } else {
+                  lsData[k] = newVal;
+                }
+              }
+            }
+          }
+        }
+      }
+      async function handleLoadSave(slotKey) {
+        showLoading("Loading save...");
+        try {
+          const data = await loadSlotFromFirebase(slotKey);
+          if (data && data.localStorageData) {
+            const tempObj = { someSlot: data };
+            replaceDomainsInData(tempObj, currentDomainKey);
+            if (tempObj.someSlot.localStorageData.localStorageBackup) {
+              setAllLocalStorageData(
+                tempObj.someSlot.localStorageData.localStorageBackup
+              );
+            }
+            if (tempObj.someSlot.localStorageData.indexedDBBackup) {
+              await setAllIndexedDBData(
+                tempObj.someSlot.localStorageData.indexedDBBackup
+              );
+            }
+            alert("Load complete!");
+          }
+        } catch (e) {
+          console.error(e);
+          alert("Error loading save!");
+        } finally {
+          hideLoading();
+        }
+      }
+      function renderSlots(slotsData) {
+        savesContainer.innerHTML = "";
+        for (let i = 1; i <= 3; i++) {
+          const slotKey = `slot${i}`;
+          const slotData = slotsData[slotKey];
+          const slotEl = document.createElement("div");
+          slotEl.className = "save-slot";
+          slotEl.setAttribute("data-slot", slotKey);
+          let titleText = "Empty slot";
+          let descText = "Click here to save your progress";
+          if (slotData) {
+            titleText = slotData.title;
+            descText = slotData.description;
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "delete-button";
+            deleteBtn.textContent = "X";
+            deleteBtn.onclick = (e) => {
+              e.stopPropagation();
+              openModal(
+                "Are you sure you want to delete this save? This action is irreversable",
+                [
+                  {
+                    text: "Yes",
+                    onclick: async () => {
+                      modal.style.display = "none";
+                      showLoading("Deleting save...");
+                      await deleteSaveFromFirebase(slotKey);
+                      await loadUserSaves();
+                      hideLoading();
+                    },
+                  },
+                  {
+                    text: "No",
+                    onclick: () => {
+                      modal.style.display = "none";
+                    },
+                  },
+                ]
+              );
+            };
+            slotEl.appendChild(deleteBtn);
+          }
+          const titleEl = document.createElement("div");
+          titleEl.className = "save-title";
+          titleEl.textContent = titleText;
+          const descEl = document.createElement("div");
+          descEl.className = "save-description";
+          descEl.textContent = descText;
+          slotEl.appendChild(titleEl);
+          slotEl.appendChild(descEl);
+          slotEl.addEventListener("click", async () => {
+            if (!slotData) {
+              const titlePrompt = prompt("Enter a title for your save:", "");
+              if (titlePrompt === null) return;
+              const descPrompt = prompt(
+                "Enter a description for your save:",
+                ""
+              );
+              if (descPrompt === null) return;
+              showLoading("Saving your data...");
+              const localData = {
+                localStorageBackup: getAllLocalStorageData(),
+                indexedDBBackup: await getAllIndexedDBData(),
+              };
+              saveSlotToFirebase(slotKey, titlePrompt, descPrompt, localData)
+                .then(() => loadUserSaves())
+                .finally(() => {
+                  hideLoading();
+                  alert("Save complete!");
+                });
+            } else {
+              openModal("What would you like to do?", [
+                {
+                  text: "Load Save",
+                  onclick: () => {
+                    modal.style.display = "none";
+                    openModal(
+                      "Are you sure you would like to load this save? This will wipe unsaved changes.",
+                      [
+                        {
+                          text: "Yes",
+                          onclick: async () => {
+                            modal.style.display = "none";
+                            await handleLoadSave(slotKey);
+                          },
+                        },
+                        {
+                          text: "No",
+                          onclick: () => {
+                            modal.style.display = "none";
+                          },
+                        },
+                      ]
+                    );
+                  },
+                },
+                {
+                  text: "Overwrite Save",
+                  onclick: () => {
+                    modal.style.display = "none";
+                    openModal(
+                      "Are you sure you want to overwrite this save? This action is irreversable.",
+                      [
+                        {
+                          text: "Yes",
+                          onclick: async () => {
+                            modal.style.display = "none";
+                            showLoading("Overwriting save...");
+                            await deleteSaveFromFirebase(slotKey);
+                            const localData = {
+                              localStorageBackup: getAllLocalStorageData(),
+                              indexedDBBackup: await getAllIndexedDBData(),
+                            };
+                            await saveSlotToFirebase(
+                              slotKey,
+                              slotData.title,
+                              slotData.description,
+                              localData
+                            );
+                            await loadUserSaves();
+                            hideLoading();
+                            alert("Overwrite complete!");
+                          },
+                        },
+                        {
+                          text: "No",
+                          onclick: () => {
+                            modal.style.display = "none";
+                          },
+                        },
+                      ]
+                    );
+                  },
+                },
+              ]);
+            }
+          });
+          savesContainer.appendChild(slotEl);
+        }
+      }
+      async function loadUserSaves() {
+        if (!currentUser) {
+          savesContainer.style.display = "none";
+          return;
+        }
+        savesContainer.style.display = "flex";
+        const savesColl = db
+          .collection("users")
+          .doc(userId)
+          .collection("saves");
+        const snapshot = await savesColl.get();
+        const slotsData = {};
+        snapshot.forEach((doc) => {
+          slotsData[doc.id] = doc.data();
+        });
+        renderSlots(slotsData);
+      }
+      async function downloadAllSaves() {
+        showLoading("Preparing download...");
+        const localData = getAllLocalStorageData();
+        const indexedData = await getAllIndexedDBData();
+        const dataToDownload = {
+          localStorageBackup: localData,
+          indexedDBBackup: indexedData,
+        };
+        hideLoading();
+        const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "strongdog_saves.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+      function handleFileUpload() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.onchange = async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = async (evt) => {
+            const content = evt.target.result;
+            let parsed;
+            try {
+              parsed = JSON.parse(content);
+            } catch (err) {
+              alert("Invalid file format");
+              return;
+            }
+            replaceDomainsInData(parsed, currentDomainKey);
+            openModal(
+              "Are you sure you would like to upload a save? It will wipe all current data on strongdog.",
+              [
+                {
+                  text: "Yes",
+                  onclick: async () => {
+                    modal.style.display = "none";
+                    showLoading("Uploading save...");
+                    localStorage.clear();
+                    let loadedLocalData = null;
+                    let loadedIndexedData = null;
+                    if (
+                      parsed.localStorageBackup &&
+                      typeof parsed.localStorageBackup === "object"
+                    ) {
+                      loadedLocalData = parsed.localStorageBackup;
+                      loadedIndexedData = parsed.indexedDBBackup;
+                    } else {
+                      for (const [slotId, slotData] of Object.entries(parsed)) {
+                        if (
+                          slotData &&
+                          slotData.localStorageData &&
+                          slotData.localStorageData.localStorageBackup
+                        ) {
+                          loadedLocalData =
+                            slotData.localStorageData.localStorageBackup;
+                          loadedIndexedData =
+                            slotData.localStorageData.indexedDBBackup;
+                          break;
+                        }
+                      }
+                    }
+                    if (loadedLocalData)
+                      setAllLocalStorageData(loadedLocalData);
+                    if (loadedIndexedData)
+                      await setAllIndexedDBData(loadedIndexedData);
+                    hideLoading();
+                    alert("Upload complete!");
+                  },
+                },
+                {
+                  text: "No",
+                  onclick: () => {
+                    modal.style.display = "none";
+                  },
+                },
+              ]
+            );
+          };
+          reader.readAsText(file);
+        };
+        input.click();
+      }
+      async function autoSaveData() {
+        if (!currentUser) return;
+        const localData = {
+          localStorageBackup: getAllLocalStorageData(),
+          indexedDBBackup: await getAllIndexedDBData(),
+        };
+        const title = "Auto Save";
+        const description = "Auto-saved on " + new Date().toLocaleString();
+        await saveSlotToFirebase("slot3", title, description, localData);
+      }
+      auth.onAuthStateChanged(async (user) => {
+        currentUser = user;
+        categories.innerHTML = "";
+        bottomButtonsContainer.innerHTML = "";
+        if (user) {
+          userId = user.uid;
+          const userDetailsContainer = document.createElement("div");
+          userDetailsContainer.className = "user-details-container";
+          const profileTopContainer = document.createElement("div");
+          profileTopContainer.className = "profile-top-container";
+          const profilePictureContainer = document.createElement("div");
+          profilePictureContainer.className = "profile-picture-container";
+          const profilePictureElement = document.createElement("img");
+          profilePictureElement.className = "profile-picture";
+          profilePictureElement.src =
+            user.photoURL || "../img/default-avatar.png";
+          profilePictureContainer.appendChild(profilePictureElement);
+          profilePictureContainer.addEventListener("click", () => {
+            window.location.href = "../settings.html";
+          });
+          const usernameContainer = document.createElement("div");
+          usernameContainer.className = "username-container";
+          const usernameElement = document.createElement("p");
+          usernameElement.className = "username-text";
+          const userDocRef = db.collection("usernames").doc(userId);
+          const userDoc = await userDocRef.get();
+          usernameElement.textContent = userDoc.exists
+            ? userDoc.data().username || "Username"
+            : user.displayName || "Username";
+          usernameContainer.appendChild(usernameElement);
+          profileTopContainer.appendChild(profilePictureContainer);
+          profileTopContainer.appendChild(usernameContainer);
+          userDetailsContainer.appendChild(profileTopContainer);
+          slideMenu.insertBefore(userDetailsContainer, categories);
+          const logoutLink = document.createElement("a");
+          logoutLink.href = "#";
+          logoutLink.className = "option-link";
+          logoutLink.textContent = "Log Out";
+          logoutLink.style.backgroundColor = "#dc3545";
+          logoutLink.style.color = "white";
+          logoutLink.addEventListener("click", function (e) {
+            e.preventDefault();
+            auth
+              .signOut()
+              .then(() => {
+                window.location.reload();
+              })
+              .catch((error) => {
+                console.error("Error signing out:", error);
+              });
+          });
+          categories.appendChild(logoutLink);
+          const downloadButton = document.createElement("button");
+          downloadButton.textContent = "Download save file";
+          downloadButton.addEventListener("click", () => {
+            downloadAllSaves();
+          });
+          const uploadButton = document.createElement("button");
+          uploadButton.textContent = "Upload save file";
+          uploadButton.addEventListener("click", () => {
+            handleFileUpload();
+          });
+          bottomButtonsContainer.appendChild(downloadButton);
+          bottomButtonsContainer.appendChild(uploadButton);
+          const autoSaveContainer = document.createElement("div");
+          autoSaveContainer.className = "auto-save-container";
+          const autoSaveLabel = document.createElement("span");
+          autoSaveLabel.id = "autoSaveLabel";
+          autoSaveLabel.textContent =
+            "Auto Save is " +
+            (getCookie("autoSaveEnabled") === "true" ? "Enabled" : "Disabled");
+          const autoSaveToggleWrapper = document.createElement("label");
+          autoSaveToggleWrapper.className = "switch";
+          const autoSaveToggleInput = document.createElement("input");
+          autoSaveToggleInput.type = "checkbox";
+          autoSaveToggleInput.id = "toggleAutoSave";
+          autoSaveToggleInput.checked = getCookie("autoSaveEnabled") === "true";
+          const autoSaveToggleSpan = document.createElement("span");
+          autoSaveToggleSpan.className = "slider round";
+          autoSaveToggleWrapper.appendChild(autoSaveToggleInput);
+          autoSaveToggleWrapper.appendChild(autoSaveToggleSpan);
+          autoSaveContainer.appendChild(autoSaveLabel);
+          autoSaveContainer.appendChild(autoSaveToggleWrapper);
+          bottomButtonsContainer.appendChild(autoSaveContainer);
+          autoSaveToggleInput.addEventListener("change", () => {
+            const newState = autoSaveToggleInput.checked;
+            const currentState = getCookie("autoSaveEnabled") === "true";
+            if (newState && !currentState) {
+              openModal(
+                "Enabling auto save will wipe your previous auto save data and replace it with the current data. Do you want to proceed?",
+                [
+                  {
+                    text: "Yes",
+                    onclick: async () => {
+                      modal.style.display = "none";
+                      setCookie(
+                        "autoSaveEnabled",
+                        "true",
+                        new Date("Fri, 31 Dec 9999 23:59:59 GMT")
+                      );
+                      await autoSaveData();
+                      autoSaveLabel.textContent = "Auto Save is Enabled";
+                      alert(
+                        "Auto save has been enabled and current data has been saved as auto save."
+                      );
+                    },
+                  },
+                  {
+                    text: "No",
+                    onclick: () => {
+                      modal.style.display = "none";
+                      autoSaveToggleInput.checked = false;
+                    },
+                  },
+                ]
+              );
+            } else if (!newState && currentState) {
+              openModal(
+                "Disabling auto save means your progress will need to be manually saved in the future. Do you want to proceed?",
+                [
+                  {
+                    text: "Yes",
+                    onclick: () => {
+                      modal.style.display = "none";
+                      setCookie(
+                        "autoSaveEnabled",
+                        "false",
+                        new Date("Fri, 31 Dec 9999 23:59:59 GMT")
+                      );
+                      autoSaveLabel.textContent = "Auto Save is Disabled";
+                      alert(
+                        "Auto save has been disabled. Remember to manually save your progress."
+                      );
+                    },
+                  },
+                  {
+                    text: "No",
+                    onclick: () => {
+                      modal.style.display = "none";
+                      autoSaveToggleInput.checked = true;
+                    },
+                  },
+                ]
+              );
+            }
+          });
+          await loadUserSaves();
+        } else {
+          userId = null;
+          const userDetailsContainer = document.createElement("div");
+          userDetailsContainer.className = "user-details-container";
+          const notLoggedInContainer = document.createElement("div");
+          notLoggedInContainer.className = "username-container";
+          const notLoggedInText = document.createElement("p");
+          notLoggedInText.className = "username-text";
+          notLoggedInText.textContent = "Not logged in";
+          notLoggedInContainer.appendChild(notLoggedInText);
+          const loginButton = document.createElement("button");
+          loginButton.textContent = "Log In";
+          loginButton.style.backgroundColor = "#007bff";
+          loginButton.style.color = "white";
+          loginButton.style.border = "none";
+          loginButton.style.padding = "10px 20px";
+          loginButton.style.fontSize = "16px";
+          loginButton.style.borderRadius = "5px";
+          loginButton.style.cursor = "pointer";
+          loginButton.style.marginTop = "5px";
+          loginButton.addEventListener("click", function () {
+            window.location.href = "../login.html";
+          });
+          userDetailsContainer.appendChild(notLoggedInContainer);
+          userDetailsContainer.appendChild(loginButton);
+          slideMenu.insertBefore(userDetailsContainer, categories);
+          const downloadButton = document.createElement("button");
+          downloadButton.textContent = "Download save file";
+          downloadButton.addEventListener("click", () => {
+            alert(
+              "You are not logged in. We'll download your current local data only."
+            );
+            showLoading("Preparing download...");
+            const dataToDownload = {
+              localStorageBackup: getAllLocalStorageData(),
+            };
+            hideLoading();
+            const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], {
+              type: "application/json",
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "strongdog_saves.json";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+          });
+          const uploadButton = document.createElement("button");
+          uploadButton.textContent = "Upload save file";
+          uploadButton.addEventListener("click", () => {
+            handleFileUpload();
+          });
+          bottomButtonsContainer.appendChild(downloadButton);
+          bottomButtonsContainer.appendChild(uploadButton);
+          savesContainer.style.display = "none";
+        }
+      });
+    </script>
+  </body>
 </html>
