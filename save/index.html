@@ -667,8 +667,12 @@
         }
         return obj;
       }
-      // New helper function to convert Uint8Array values to Firestore Blobs
+      // Updated helper function: it now also converts ArrayBuffer objects
       function transformUnsupportedValues(obj) {
+        if (obj instanceof ArrayBuffer) {
+          // Convert ArrayBuffer to Uint8Array and then to a Firestore Blob
+          return firebase.firestore.Blob.fromUint8Array(new Uint8Array(obj));
+        }
         if (obj instanceof Uint8Array) {
           return firebase.firestore.Blob.fromUint8Array(obj);
         }
