@@ -484,29 +484,26 @@
       });
       function pingSite(domain) {
         return new Promise((resolve) => {
-          const img = new Image();
-          img.src =
-            "https://" + domain + "/img/1v1.webp?" + new Date().getTime();
-          img.style.position = "absolute";
-          img.style.left = "-9999px";
-          img.style.width = "1px";
-          img.style.height = "1px";
-          img.style.opacity = "0";
-          document.body.appendChild(img);
-          img.onload = () => {
-            resolve(true);
-            document.body.removeChild(img);
+          const xhr = new XMLHttpRequest();
+          xhr.open("HEAD", `https://${domain}/img/1v1.webp?${Date.now()}`);
+          xhr.timeout = 5000;
+
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+              if (xhr.status >= 200 && xhr.status < 400) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            }
           };
-          img.onerror = () => {
-            resolve(false);
-            document.body.removeChild(img);
-          };
-          setTimeout(() => {
-            resolve(false);
-            if (document.body.contains(img)) document.body.removeChild(img);
-          }, 5000);
+
+          xhr.onerror = () => resolve(false);
+          xhr.ontimeout = () => resolve(false);
+          xhr.send();
         });
       }
+
       async function checkSiteStatus(domain, statusDot, maxRetries = 2) {
         let retries = 0;
         let isUnblocked = await pingSite(domain);
