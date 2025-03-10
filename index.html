@@ -345,7 +345,15 @@
         <span class="status-dot" style="background-color: var(--red)"></span>
         Blocked/Down
       </span>
+      <span style="margin-right: 15px">
+        <span
+          class="status-dot"
+          style="background-color: yellow; border: 1px solid black"
+        ></span>
+        Unknown
+      </span>
     </div>
+
     <h2 class="alternate-links-title">
       Exclusive links available on the StrongDogXP
       <a href="https://discord.gg/pWjfQ4Sz5c" style="color: #007bff"
@@ -482,28 +490,31 @@
 
         checkSiteStatus(link, statusDot);
       });
-      function pingSite(domain) {
+      async function pingSite(domain) {
         return new Promise((resolve) => {
           const url = `https://${domain}/ads.txt?${Date.now()}`;
           let didTimeout = false;
           const timeout = setTimeout(() => {
             didTimeout = true;
-            resolve(false);
-          }, 5000); // 5-second timeout
+            resolve(domain.endsWith("github.io") ? "unknown" : false);
+          }, 5000);
 
           fetch(url, { mode: "cors" })
             .then((response) => response.text())
             .then((text) => {
               if (!didTimeout) {
                 clearTimeout(timeout);
-                // Only consider the site unblocked if the marker text is present
-                resolve(text.includes("f08c47fec0942fa0"));
+                if (domain.endsWith("github.io")) {
+                  resolve("unknown");
+                } else {
+                  resolve(text.includes("f08c47fec0942fa0") ? true : false);
+                }
               }
             })
             .catch(() => {
               if (!didTimeout) {
                 clearTimeout(timeout);
-                resolve(false);
+                resolve(domain.endsWith("github.io") ? "unknown" : false);
               }
             });
         });
@@ -511,18 +522,24 @@
 
       async function checkSiteStatus(domain, statusDot, maxRetries = 2) {
         let retries = 0;
-        let isUnblocked = await pingSite(domain);
-        while (!isUnblocked && retries < maxRetries) {
+        let status = await pingSite(domain);
+
+        while (status === false && retries < maxRetries) {
           retries++;
           console.log(
             `Retrying ${domain} (Attempt ${retries + 1}/${maxRetries + 1})`
           );
-          isUnblocked = await pingSite(domain);
+          status = await pingSite(domain);
         }
+
         statusDot.classList = "status-dot";
-        if (isUnblocked) {
+
+        if (status === true) {
           statusDot.style.backgroundColor = "var(--green)";
           statusDot.title = "Unblocked on this computer";
+        } else if (status === "unknown") {
+          statusDot.style.backgroundColor = "yellow";
+          statusDot.title = "Unknown status (GitHub Pages)";
         } else {
           statusDot.style.backgroundColor = "var(--red)";
           statusDot.title = "Blocked on this computer";
