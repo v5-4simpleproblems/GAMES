@@ -484,23 +484,28 @@
       });
       function pingSite(domain) {
         return new Promise((resolve) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open("HEAD", `https://${domain}/img/1v1.webp?${Date.now()}`);
-          xhr.timeout = 5000;
+          const url = `https://${domain}/ads.txt?${Date.now()}`;
+          let didTimeout = false;
+          const timeout = setTimeout(() => {
+            didTimeout = true;
+            resolve(false);
+          }, 5000); // 5-second timeout
 
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-              if (xhr.status >= 200 && xhr.status < 400) {
-                resolve(true);
-              } else {
+          fetch(url, { mode: "cors" })
+            .then((response) => response.text())
+            .then((text) => {
+              if (!didTimeout) {
+                clearTimeout(timeout);
+                // Only consider the site unblocked if the marker text is present
+                resolve(text.includes("f08c47fec0942fa0"));
+              }
+            })
+            .catch(() => {
+              if (!didTimeout) {
+                clearTimeout(timeout);
                 resolve(false);
               }
-            }
-          };
-
-          xhr.onerror = () => resolve(false);
-          xhr.ontimeout = () => resolve(false);
-          xhr.send();
+            });
         });
       }
 
