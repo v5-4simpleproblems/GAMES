@@ -22,6 +22,7 @@
     <title>StrongDog XP - Saves</title>
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico" />
     <style>
+      /* CSS styles remain unchanged */
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -510,7 +511,6 @@
           modal.style.display = "none";
         }
       });
-      // Show loading and set a fallback to hide it after 5 seconds.
       function showLoading(text = "Loading...") {
         loadingText.textContent = text;
         loadingOverlay.style.display = "flex";
@@ -605,18 +605,15 @@
           };
         });
       }
-      // Revised function: transaction events are attached immediately.
       async function setAllIndexedDBData(indexedData) {
         for (const dbName in indexedData) {
           const storesData = indexedData[dbName];
-          // Delete the existing database.
           await new Promise((resolve) => {
             const deleteRequest = indexedDB.deleteDatabase(dbName);
             deleteRequest.onsuccess = () => resolve();
             deleteRequest.onerror = () => resolve();
             deleteRequest.onblocked = () => resolve();
           });
-          // Open a new version of the database.
           const openRequest = indexedDB.open(dbName, 1);
           openRequest.onupgradeneeded = function (event) {
             const db = event.target.result;
@@ -634,7 +631,6 @@
               reject(event.target.error);
             };
           });
-          // For each store, clear the store and then add all records.
           for (const storeName in storesData) {
             await new Promise((resolve) => {
               const transaction = dbInstance.transaction(
@@ -671,6 +667,21 @@
         }
         return obj;
       }
+      // New helper function to convert Uint8Array values to Firestore Blobs
+      function transformUnsupportedValues(obj) {
+        if (obj instanceof Uint8Array) {
+          return firebase.firestore.Blob.fromUint8Array(obj);
+        }
+        if (Array.isArray(obj)) {
+          return obj.map(transformUnsupportedValues);
+        }
+        if (obj && typeof obj === "object") {
+          for (const key in obj) {
+            obj[key] = transformUnsupportedValues(obj[key]);
+          }
+        }
+        return obj;
+      }
       async function deleteSaveFromFirebase(slotId) {
         if (!currentUser) return;
         const docRef = db
@@ -683,6 +694,7 @@
       async function saveSlotToFirebase(slotId, title, description, localData) {
         if (!currentUser) return;
         localData = removeUndefined(localData);
+        localData = transformUnsupportedValues(localData);
         const docRef = db
           .collection("users")
           .doc(userId)
