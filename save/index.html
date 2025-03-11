@@ -22,7 +22,6 @@
     <title>StrongDog XP - Saves</title>
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico" />
     <style>
-      /* CSS styles remain unchanged */
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -667,10 +666,8 @@
         }
         return obj;
       }
-      // Updated helper function: it now also converts ArrayBuffer objects
       function transformUnsupportedValues(obj) {
         if (obj instanceof ArrayBuffer) {
-          // Convert ArrayBuffer to Uint8Array and then to a Firestore Blob
           return firebase.firestore.Blob.fromUint8Array(new Uint8Array(obj));
         }
         if (obj instanceof Uint8Array) {
