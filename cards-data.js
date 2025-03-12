@@ -1,4 +1,5 @@
 export default [
+  { href: './html/words search classic edition/index.html', imgSrc: 'word search classic edition.png', name: 'words search classic edition' , 'page': 3, 'id': 822 },
   { href: './html/wood blocks 3d/index.html', imgSrc: 'wood blocks 3d.jpg', name: 'wood blocks 3d' , 'page': 3, 'id': 821 },
   { href: './html/wizard mike/index.html', imgSrc: 'wizard mike.jpg', name: 'wizard mike' , 'page': 3, 'id': 820 },
   { href: './html/where is my cat/index.html', imgSrc: 'where is my cat.jpg', name: 'where is my cat' , 'page': 3, 'id': 819 },
