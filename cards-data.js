@@ -1,4 +1,5 @@
 export default [
+  { href: './html/wood blocks 3d/index.html', imgSrc: 'wood blocks 3d.jpg', name: 'wood blocks 3d' , 'page': 3, 'id': 821 },
   { href: './html/wizard mike/index.html', imgSrc: 'wizard mike.jpg', name: 'wizard mike' , 'page': 3, 'id': 820 },
   { href: './html/where is my cat/index.html', imgSrc: 'where is my cat.jpg', name: 'where is my cat' , 'page': 3, 'id': 819 },
   { href: './html/volleyball challange/index.html', imgSrc: 'volleyball challanges.jpg', name: 'volleyball challange' , 'page': 3, 'id': 817 },
