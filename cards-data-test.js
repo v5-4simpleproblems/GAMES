@@ -11,7 +11,6 @@ export default [
       { href: './html/war of caribbean pirates/index.html', imgSrc: 'war of caribbean pirates.jpg', name: 'war of caribbean pirates' , 'page': 3, 'id': 818 },
       { href: './html/volleyball challange/index.html', imgSrc: 'volleyball challanges.jpg', name: 'volleyball challange' , 'page': 3, 'id': 817 },
       { href: './html/village craft/index.html', imgSrc: 'village craft.jpg', name: 'village craft' , 'page': 3, 'id': 816 },
-      { href: './html/cars simulator/index.html', imgSrc: 'car simulator.jpg', name: 'cars simulator' , 'page': 3, 'id': 815 },
       { href: './html/burger clicker/index.html', imgSrc: 'burger clicker.jpg', name: 'burger clicker' , 'page': 3, 'id': 814 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/bouncy woods/index.html', imgSrc: 'bouncy woods.jpg', name: 'bouncy woods' , 'page': 3, 'id': 812 },
