@@ -10,7 +10,6 @@ export default [
       { href: './html/where is my cat/index.html', imgSrc: 'where is my cat.jpg', name: 'where is my cat' , 'page': 3, 'id': 819 },
       { href: './html/war of caribbean pirates/index.html', imgSrc: 'war of caribbean pirates.jpg', name: 'war of caribbean pirates' , 'page': 3, 'id': 818 },
       { href: './html/volleyball challange/index.html', imgSrc: 'volleyball challanges.jpg', name: 'volleyball challange' , 'page': 3, 'id': 817 },
-      { href: './html/village craft/index.html', imgSrc: 'village craft.jpg', name: 'village craft' , 'page': 3, 'id': 816 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
