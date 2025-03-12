@@ -17,7 +17,6 @@ export default [
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
       { href: './html/blocky snakes/index.html', imgSrc: 'blocky snakes.jpg', name: 'blocky snakes' , 'page': 3, 'id': 809 },
-      { href: './html/blockpost/index.html', imgSrc: 'blockpost.jpg', name: 'blockpost' , 'page': 3, 'id': 808 },
       { href: './html/biker street/index.html', imgSrc: 'biker street.jpg', name: 'biker street' , 'page': 3, 'id': 807 },
       { href: './html/ball sort soccer/index.html', imgSrc: 'ball sort soccer.jpg', name: 'ball sort soccer' , 'page': 3, 'id': 806 },
       { href: './html/arcane archer/index.html', imgSrc: 'arcane archer.jpg', name: 'arcane archer' , 'page': 3, 'id': 803 },
