@@ -22,7 +22,6 @@ export default [
       { href: './html/biker street/index.html', imgSrc: 'biker street.jpg', name: 'biker street' , 'page': 3, 'id': 807 },
       { href: './html/ball sort soccer/index.html', imgSrc: 'ball sort soccer.jpg', name: 'ball sort soccer' , 'page': 3, 'id': 806 },
       { href: './html/baldis basics field trip/index.html', imgSrc: 'baldis basics field trip.jpg', name: 'baldis basics field trip' , 'page': 3, 'id': 805 },
-      { href: './html/backrooms 2d/index.html', imgSrc: 'backrooms 2d.jpg', name: 'backrooms 2d' , 'page': 3, 'id': 804 },
       { href: './html/arcane archer/index.html', imgSrc: 'arcane archer.jpg', name: 'arcane archer' , 'page': 3, 'id': 803 },
       { href: './html/aquapark.io/index.html', imgSrc: 'aquapark.io.jpg', name: 'aquapark.io' , 'page': 3, 'id': 802 },
       { href: './html/apple shooter/index.html', imgSrc: 'apple shooter.jpg', name: 'apple shooter' , 'page': 3, 'id': 801 },
