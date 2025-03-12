@@ -1,5 +1,4 @@
 export default [
-      { href: './html/zombie outbreak arena/index.html', imgSrc: 'zombie outbreak arena.jpg', name: 'zombie outbreak arena' , 'page': 3, 'id': 827 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
