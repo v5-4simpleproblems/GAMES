@@ -1,7 +1,6 @@
 export default [
       { href: './html/zombie outbreak arena/index.html', imgSrc: 'zombie outbreak arena.jpg', name: 'zombie outbreak arena' , 'page': 3, 'id': 827 },
       { href: './html/zeepkist crash 2d/index.html', imgSrc: 'zeepkist crash 2d.jpg', name: 'zeepkist crash 2d' , 'page': 3, 'id': 826 },
-      { href: './html/wrassling/index.html', imgSrc: 'wrassling.jpg', name: 'wrassling' , 'page': 3, 'id': 825 },
       { href: './html/worlds hardest game 3/index.html', imgSrc: 'worlds hardest game 3.png', name: 'worlds hardest game 3' , 'page': 3, 'id': 824 },
       { href: './html/worlds hardest game 2/index.html', imgSrc: 'worlds hardest game 2.png', name: 'worlds hardest game 2' , 'page': 3, 'id': 823 },
       { href: './html/words search classic edition/index.html', imgSrc: 'word search classic edition.png', name: 'words search classic edition' , 'page': 3, 'id': 822 },
