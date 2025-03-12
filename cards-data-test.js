@@ -16,7 +16,6 @@ export default [
       { href: './html/bouncy woods/index.html', imgSrc: 'bouncy woods.jpg', name: 'bouncy woods' , 'page': 3, 'id': 812 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
-      { href: './html/blocky snakes/index.html', imgSrc: 'blocky snakes.jpg', name: 'blocky snakes' , 'page': 3, 'id': 809 },
       { href: './html/1010 color match/index.html', imgSrc: '1010 color match.jpg', name: '1010 color match' , 'page': 3, 'id': 798 },
       { href: './swf/strikeforce kitty last stand/index.html', imgSrc: 'strikeforce kitty last stand.jpg', name: 'strikeforce kitty last stand' , 'page': 3, 'id': 795 },
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement' , 'page': 3, 'id': 790 },
