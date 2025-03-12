@@ -1,4 +1,5 @@
 export default [
+  { href: './html/war of caribbean pirates/index.html', imgSrc: 'war of caribbean pirates.jpg', name: 'war of caribbean pirates' , 'page': 3, 'id': 818 },
   { href: './html/wrassling/index.html', imgSrc: 'wrassling.jpg', name: 'wrassling' , 'page': 3, 'id': 825 },
   { href: './html/village craft/index.html', imgSrc: 'village craft.jpg', name: 'village craft' , 'page': 3, 'id': 816 },
   { href: './html/burger clicker/index.html', imgSrc: 'burger clicker.jpg', name: 'burger clicker' , 'page': 3, 'id': 814 },
