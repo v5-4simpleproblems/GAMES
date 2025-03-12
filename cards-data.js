@@ -1,4 +1,5 @@
 export default [
+  { href: './html/worlds hardest game 3/index.html', imgSrc: 'worlds hardest game 3.png', name: 'worlds hardest game 3' , 'page': 3, 'id': 824 },
   { href: './html/worlds hardest game 2/index.html', imgSrc: 'worlds hardest game 2.png', name: 'worlds hardest game 2' , 'page': 3, 'id': 823 },
   { href: './html/words search classic edition/index.html', imgSrc: 'word search classic edition.png', name: 'words search classic edition' , 'page': 3, 'id': 822 },
   { href: './html/wood blocks 3d/index.html', imgSrc: 'wood blocks 3d.jpg', name: 'wood blocks 3d' , 'page': 3, 'id': 821 },
