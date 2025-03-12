@@ -13,7 +13,6 @@ export default [
       { href: './html/village craft/index.html', imgSrc: 'village craft.jpg', name: 'village craft' , 'page': 3, 'id': 816 },
       { href: './html/burger clicker/index.html', imgSrc: 'burger clicker.jpg', name: 'burger clicker' , 'page': 3, 'id': 814 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
-      { href: './html/bouncy woods/index.html', imgSrc: 'bouncy woods.jpg', name: 'bouncy woods' , 'page': 3, 'id': 812 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
       { href: './html/1010 color match/index.html', imgSrc: '1010 color match.jpg', name: '1010 color match' , 'page': 3, 'id': 798 },
