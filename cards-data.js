@@ -1,4 +1,5 @@
 export default [
+  { href: './html/wizard mike/index.html', imgSrc: 'wizard mike.jpg', name: 'wizard mike' , 'page': 3, 'id': 820 },
   { href: './html/where is my cat/index.html', imgSrc: 'where is my cat.jpg', name: 'where is my cat' , 'page': 3, 'id': 819 },
   { href: './html/volleyball challange/index.html', imgSrc: 'volleyball challanges.jpg', name: 'volleyball challange' , 'page': 3, 'id': 817 },
   { href: './html/war of caribbean pirates/index.html', imgSrc: 'war of caribbean pirates.jpg', name: 'war of caribbean pirates' , 'page': 3, 'id': 818 },
