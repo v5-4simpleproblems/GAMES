@@ -21,7 +21,6 @@ export default [
       { href: './html/ball sort soccer/index.html', imgSrc: 'ball sort soccer.jpg', name: 'ball sort soccer' , 'page': 3, 'id': 806 },
       { href: './html/aquapark.io/index.html', imgSrc: 'aquapark.io.jpg', name: 'aquapark.io' , 'page': 3, 'id': 802 },
       { href: './html/apple shooter/index.html', imgSrc: 'apple shooter.jpg', name: 'apple shooter' , 'page': 3, 'id': 801 },
-      { href: './html/99 balls/index.html', imgSrc: '99 balls.jpg', name: '99 balls' , 'page': 3, 'id': 800 },
       { href: './html/1010 color match/index.html', imgSrc: '1010 color match.jpg', name: '1010 color match' , 'page': 3, 'id': 798 },
       { href: './swf/strikeforce kitty last stand/index.html', imgSrc: 'strikeforce kitty last stand.jpg', name: 'strikeforce kitty last stand' , 'page': 3, 'id': 795 },
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement' , 'page': 3, 'id': 790 },
