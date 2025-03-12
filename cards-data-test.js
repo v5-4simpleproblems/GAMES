@@ -2,7 +2,6 @@ export default [
       { href: './html/zombie outbreak arena/index.html', imgSrc: 'zombie outbreak arena.jpg', name: 'zombie outbreak arena' , 'page': 3, 'id': 827 },
       { href: './html/zeepkist crash 2d/index.html', imgSrc: 'zeepkist crash 2d.jpg', name: 'zeepkist crash 2d' , 'page': 3, 'id': 826 },
       { href: './html/worlds hardest game 3/index.html', imgSrc: 'worlds hardest game 3.png', name: 'worlds hardest game 3' , 'page': 3, 'id': 824 },
-      { href: './html/worlds hardest game 2/index.html', imgSrc: 'worlds hardest game 2.png', name: 'worlds hardest game 2' , 'page': 3, 'id': 823 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
