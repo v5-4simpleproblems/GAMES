@@ -21,7 +21,6 @@ export default [
       { href: './html/super mx the champion/index.html', imgSrc: 'super mx the champion.jpg', name: 'super mx the champion' , 'page': 3, 'id': 843 },
       { href: './html/sumo party/index.html', imgSrc: 'sumo party.jpg', name: 'sumo party' , 'page': 3, 'id': 842 },
       { href: './html/striker dummies/index.html', imgSrc: 'striker dummies.jpg', name: 'striker dummies' , 'page': 3, 'id': 841 },
-      { href: './html/stickman warriers/index.html', imgSrc: 'stickman warriers.jpg', name: 'stickman warriers' , 'page': 3, 'id': 840 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
