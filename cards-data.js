@@ -1,4 +1,5 @@
 export default [
+  { href: './html/stickman golf/index.html', imgSrc: 'stickman golf.jpg', name: 'stickman golf' , 'page': 3, 'id': 838 },
   { href: './html/stickman fighter mega brawl/index.html', imgSrc: 'stickman fighter mega brawl.jpg', name: 'stickman fighter mega brawl' , 'page': 3, 'id': 837 },
   { href: './html/stickman crazy box/index.html', imgSrc: 'stickman crazy box.jpg', name: 'stickman crazy box' , 'page': 3, 'id': 836 },
   { href: './html/stickman climb 2/index.html', imgSrc: 'stickman climb 2.jpg', name: 'stickman climb 2' , 'page': 3, 'id': 835 },
