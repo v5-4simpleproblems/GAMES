@@ -23,7 +23,6 @@ export default [
       { href: './html/striker dummies/index.html', imgSrc: 'striker dummies.jpg', name: 'striker dummies' , 'page': 3, 'id': 841 },
       { href: './html/stickman warriers/index.html', imgSrc: 'stickman warriers.jpg', name: 'stickman warriers' , 'page': 3, 'id': 840 },
       { href: './html/stickman school run/index.html', imgSrc: 'stickman school run.png', name: 'stickman school run' , 'page': 3, 'id': 839 },
-      { href: './html/stickman golf/index.html', imgSrc: 'stickman golf.jpg', name: 'stickman golf' , 'page': 3, 'id': 838 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
