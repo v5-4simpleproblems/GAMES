@@ -1,4 +1,5 @@
 export default [
+  { href: './html/sumo party/index.html', imgSrc: 'sumo party.jpg', name: 'sumo party' , 'page': 3, 'id': 842 },
   { href: './html/stickman warriers/index.html', imgSrc: 'stickman warriers.jpg', name: 'stickman warriers' , 'page': 3, 'id': 840 },
   { href: './html/stickman school run/index.html', imgSrc: 'stickman school run.png', name: 'stickman school run' , 'page': 3, 'id': 839 },
   { href: './html/stickman golf/index.html', imgSrc: 'stickman golf.jpg', name: 'stickman golf' , 'page': 3, 'id': 838 },
