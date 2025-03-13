@@ -31,7 +31,6 @@ export default [
       { href: './html/stickman bike/index.html', imgSrc: 'stickman bike.jpg', name: 'stickman bike' , 'page': 3, 'id': 833 },
       { href: './html/stick fighters/index.html', imgSrc: 'stick fighters.jpg', name: 'stick fighters' , 'page': 3, 'id': 832 },
       { href: './html/stick defenders/index.html', imgSrc: 'stick defenders.jpg', name: 'stick defenders' , 'page': 3, 'id': 831 },
-      { href: './html/stair race 3d/index.html', imgSrc: 'stair race 3d.jpg', name: 'stair race 3d' , 'page': 3, 'id': 830 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
