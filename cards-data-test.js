@@ -1,12 +1,4 @@
 export default [
-      { href: './html/zombie outbreak arena/index.html', imgSrc: 'zombie outbreak arena.jpg', name: 'zombie outbreak arena' , 'page': 3, 'id': 827 },
-      { href: './html/zeepkist crash 2d/index.html', imgSrc: 'zeepkist crash 2d.jpg', name: 'zeepkist crash 2d' , 'page': 3, 'id': 826 },
-      { href: './html/worlds hardest game 3/index.html', imgSrc: 'worlds hardest game 3.png', name: 'worlds hardest game 3' , 'page': 3, 'id': 824 },
-      { href: './html/worlds hardest game 2/index.html', imgSrc: 'worlds hardest game 2.png', name: 'worlds hardest game 2' , 'page': 3, 'id': 823 },
-      { href: './html/words search classic edition/index.html', imgSrc: 'word search classic edition.png', name: 'words search classic edition' , 'page': 3, 'id': 822 },
-      { href: './html/wood blocks 3d/index.html', imgSrc: 'wood blocks 3d.jpg', name: 'wood blocks 3d' , 'page': 3, 'id': 821 },
-      { href: './html/wizard mike/index.html', imgSrc: 'wizard mike.jpg', name: 'wizard mike' , 'page': 3, 'id': 820 },
-      { href: './html/where is my cat/index.html', imgSrc: 'where is my cat.jpg', name: 'where is my cat' , 'page': 3, 'id': 819 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
       { href: './html/blumgi bloom/index.html', imgSrc: 'blumgi bloom.png', name: 'blumgi bloom' , 'page': 3, 'id': 810 },
