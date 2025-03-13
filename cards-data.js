@@ -1,4 +1,5 @@
 export default [
+  { href: './html/stair race 3d/index.html', imgSrc: 'stair race 3d.jpg', name: 'stair race 3d' , 'page': 3, 'id': 830 },
   { href: './html/stacktris/index.html', imgSrc: 'stacktris.jpg', name: 'stacktris' , 'page': 3, 'id': 829 },
   { href: './html/squish run/index.html', imgSrc: 'squish run.png', name: 'squish run' , 'page': 3, 'id': 828 },
   { href: './html/zombie outbreak arena/index.html', imgSrc: 'zombie outbreak arena.jpg', name: 'zombie outbreak arena' , 'page': 3, 'id': 827 },
