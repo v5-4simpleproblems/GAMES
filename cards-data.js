@@ -1,4 +1,5 @@
 export default [
+  { href: './html/super mx the champion/index.html', imgSrc: 'super mx the champion.jpg', name: 'super mx the champion' , 'page': 3, 'id': 843 },
   { href: './html/sumo party/index.html', imgSrc: 'sumo party.jpg', name: 'sumo party' , 'page': 3, 'id': 842 },
   { href: './html/stickman warriers/index.html', imgSrc: 'stickman warriers.jpg', name: 'stickman warriers' , 'page': 3, 'id': 840 },
   { href: './html/stickman school run/index.html', imgSrc: 'stickman school run.png', name: 'stickman school run' , 'page': 3, 'id': 839 },
