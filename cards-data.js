@@ -1,4 +1,5 @@
 export default [
+  { href: './html/the little giant/index.html', imgSrc: 'the little giant.jpg', name: 'the little giant' , 'page': 3, 'id': 851 },
   { href: './html/tennis masters/index.html', imgSrc: 'tennis masters.jpg', name: 'tennis masters' , 'page': 3, 'id': 850 },
   { href: './html/tiger simulator/index.html', imgSrc: 'tiger simulator.jpg', name: 'tiger simulator' , 'page': 3, 'id': 852 },
   { href: './html/temple of boom/index.html', imgSrc: 'temple of boom.jpg', name: 'temple of boom' , 'page': 3, 'id': 849 },
