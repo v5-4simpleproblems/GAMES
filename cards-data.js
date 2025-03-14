@@ -1,4 +1,5 @@
 export default [
+  { href: './html/tricks/index.html', imgSrc: 'tricks.jpg', name: 'tricks' , 'page': 3, 'id': 858 },
   { href: './html/traffic rush/index.html', imgSrc: 'traffic rush.jpg', name: 'traffic rush' , 'page': 3, 'id': 857 },
   { href: './html/tower of destiny/index.html', imgSrc: 'tower of destiny.jpg', name: 'tower of destiny' , 'page': 3, 'id': 856 },
   { href: './html/touchdowners/index.html', imgSrc: 'touchdowners.jpg', name: 'touchdowners' , 'page': 3, 'id': 855 },
