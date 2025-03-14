@@ -1,4 +1,5 @@
 export default [
+  { href: './html/swingo/index.html', imgSrc: 'swingo.jpg', name: 'swingo' , 'page': 3, 'id': 848 },
   { href: './html/supernova/index.html', imgSrc: 'supernova.jpg', name: 'supernova' , 'page': 3, 'id': 847 },
   { href: './html/superbike heros/index.html', imgSrc: 'superbike heros.jpg', name: 'superbike heros' , 'page': 3, 'id': 846 },
   { href: './html/superbattles 2/index.html', imgSrc: 'super battles 2.jpg', name: 'superbattles 2' , 'page': 3, 'id': 845 },
