@@ -9,7 +9,6 @@ export default [
       { href: './html/touchdowners/index.html', imgSrc: 'touchdowners.jpg', name: 'touchdowners' , 'page': 3, 'id': 855 },
       { href: './html/top speed racing 3d/index.html', imgSrc: 'top speed racing 3d.jpg', name: 'top speed racing 3d' , 'page': 3, 'id': 854 },
       { href: './html/tiny town racing/index.html', imgSrc: 'tiny town racing.jpg', name: 'tiny town racing' , 'page': 3, 'id': 853 },
-      { href: './html/tiger simulator/index.html', imgSrc: 'tiger simulator.jpg', name: 'tiger simulator' , 'page': 3, 'id': 852 },
       { href: './html/the little giant/index.html', imgSrc: 'the little giant.jpg', name: 'the little giant' , 'page': 3, 'id': 851 },
       { href: './html/tennis masters/index.html', imgSrc: 'tennis masters.jpg', name: 'tennis masters' , 'page': 3, 'id': 850 },
       { href: './html/striker dummies/index.html', imgSrc: 'striker dummies.jpg', name: 'striker dummies' , 'page': 3, 'id': 841 },
