@@ -1,4 +1,5 @@
 export default [
+  { href: './html/superbike heros/index.html', imgSrc: 'superbike heros.jpg', name: 'superbike heros' , 'page': 3, 'id': 846 },
   { href: './html/superbattles 2/index.html', imgSrc: 'super battles 2.jpg', name: 'superbattles 2' , 'page': 3, 'id': 845 },
   { href: './html/super racing gt/index.html', imgSrc: 'super racing gt.jpg', name: 'super racing gt' , 'page': 3, 'id': 844 },
   { href: './html/super mx the champion/index.html', imgSrc: 'super mx the champion.jpg', name: 'super mx the champion' , 'page': 3, 'id': 843 },
