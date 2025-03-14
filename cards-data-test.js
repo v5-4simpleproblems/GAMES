@@ -9,7 +9,6 @@ export default [
       { href: './html/touchdowners/index.html', imgSrc: 'touchdowners.jpg', name: 'touchdowners' , 'page': 3, 'id': 855 },
       { href: './html/top speed racing 3d/index.html', imgSrc: 'top speed racing 3d.jpg', name: 'top speed racing 3d' , 'page': 3, 'id': 854 },
       { href: './html/tiny town racing/index.html', imgSrc: 'tiny town racing.jpg', name: 'tiny town racing' , 'page': 3, 'id': 853 },
-      { href: './html/the little giant/index.html', imgSrc: 'the little giant.jpg', name: 'the little giant' , 'page': 3, 'id': 851 },
       { href: './html/striker dummies/index.html', imgSrc: 'striker dummies.jpg', name: 'striker dummies' , 'page': 3, 'id': 841 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
       { href: './html/boblehead soccer royale/index.html', imgSrc: 'bobblehead soccer royale.jpg', name: 'boblehead soccer royale' , 'page': 3, 'id': 811 },
