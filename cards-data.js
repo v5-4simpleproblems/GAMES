@@ -1,4 +1,5 @@
 export default [
+  { href: './html/tiger simulator/index.html', imgSrc: 'tiger simulator.jpg', name: 'tiger simulator' , 'page': 3, 'id': 852 },
   { href: './html/temple of boom/index.html', imgSrc: 'temple of boom.jpg', name: 'temple of boom' , 'page': 3, 'id': 849 },
   { href: './html/swingo/index.html', imgSrc: 'swingo.jpg', name: 'swingo' , 'page': 3, 'id': 848 },
   { href: './html/supernova/index.html', imgSrc: 'supernova.jpg', name: 'supernova' , 'page': 3, 'id': 847 },
