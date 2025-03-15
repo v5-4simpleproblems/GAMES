@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <script type="module">
   const overlay = document.createElement("div");
   overlay.style.position = "fixed";
@@ -10,7 +10,7 @@
   overlay.style.display = "flex";
   overlay.style.alignItems = "center";
   overlay.style.justifyContent = "center";
-  overlay.style.zIndex = "10000"; // Ensure it's on top
+  overlay.style.zIndex = "10000";
   overlay.innerHTML =
     '<div style="color: white; font-size: 2em;">Loading games...</div>';
   document.body.appendChild(overlay);
@@ -18,56 +18,39 @@
   function fetchExclusionList() {
     return new Promise((resolve, reject) => {
       const callbackName = "jsonpCallback_" + Date.now();
-
       window[callbackName] = function (data) {
-        console.log("Data received:", data);
         delete window[callbackName];
         script.parentNode.removeChild(script);
         resolve(data);
       };
-
       const url =
         "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec?callback=" +
         callbackName;
-      console.log("Fetching URL:", url);
-
       const script = document.createElement("script");
       script.src = url;
       script.onerror = function (error) {
-        console.error("Script load error:", error, "URL:", script.src);
         delete window[callbackName];
         script.parentNode.removeChild(script);
         reject(new Error("JSONP request failed: " + error.message));
       };
-
       document.body.appendChild(script);
     });
   }
 
-  // Function to normalize game names
   function normalizeGameName(name) {
-    return name
-      .toLowerCase()
-      .replace(/\s+/g, "")
-      .replace(/[^a-z0-9]/g, "");
+    return name.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
   }
 
   function hideExcludedCards(exclusionList) {
-    // Normalize exclusion list game names
     const normalizedExclusionList = exclusionList.map((name) =>
       normalizeGameName(name)
     );
-
-    // Get all cards
     const cards = document.querySelectorAll(".card-container");
-
     cards.forEach((cardContainer) => {
       const card = cardContainer.querySelector(".card");
       const figcaption = card.querySelector("figcaption");
       const gameName = figcaption.textContent.trim();
       const normalizedGameName = normalizeGameName(gameName);
-
-      // If normalizedGameName is in normalizedExclusionList, hide the cardContainer
       if (normalizedExclusionList.includes(normalizedGameName)) {
         cardContainer.style.display = "none";
       }
@@ -85,14 +68,9 @@
           exclusionList.push(data.gameName);
         });
         return exclusionList;
-      })
-      .catch((error) => {
-        console.error("Error fetching exclusion list from Firestore:", error);
-        throw error;
       });
   }
 
-  // Wait for DOMContentLoaded and exclusion list to be fetched
   Promise.all([
     new Promise((resolve) => {
       document.addEventListener("DOMContentLoaded", resolve);
@@ -104,7 +82,6 @@
       overlay.parentNode.removeChild(overlay);
     })
     .catch((error) => {
-      console.error("Error:", error);
       overlay.parentNode.removeChild(overlay);
     });
 </script>
@@ -121,7 +98,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-functions-compat.js"></script>
-
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
@@ -133,44 +109,31 @@
         appId: "1:936276282572:web:a802b7f609381ff9428669",
         measurementId: "G-0YLTCV2MMS",
       };
-
-      // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
-
-      // Initialize Firebase Authentication, Firestore, and Functions
       const auth = firebase.auth();
       const db = firebase.firestore();
       const functions = firebase.functions();
-
-      // Attach to the window object
       window.auth = auth;
       window.db = db;
       window.functions = functions;
     </script>
     <script>
-      // Listen for authentication state changes
       auth.onAuthStateChanged((user) => {
         if (!user) {
-          // User is not authenticated, redirect to login page
           window.location.href = "login.html";
         } else {
-          // User is authenticated, check Firestore 'access' collection
           const userId = user.uid;
           db.collection("access")
             .doc(userId)
             .get()
             .then((doc) => {
               if (doc.exists && doc.data().tester === true) {
-                // User has tester access, show the content
                 document.body.style.display = "block";
               } else {
-                // User does not have tester access, redirect to index.html
                 window.location.href = "index.html";
               }
             })
-            .catch((error) => {
-              console.error("Error checking access:", error);
-              // Optionally, redirect to index.html on error
+            .catch(() => {
               window.location.href = "index.html";
             });
         }
@@ -180,97 +143,86 @@
       import games from "./cards-data-test.js";
       import { siteMapping } from "./site-mapping.js";
 
-      // Define normalizeGameName function
       function normalizeGameName(name) {
-        return name
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .replace(/[^a-z0-9]/g, "");
+        return name.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
       }
-      function getCardHTML(gameObject) {
-        const { href, imgSrc, name, page } = gameObject;
+
+      function getAdjustedUrls(href, imgSrc, page) {
         let adjustedHref = href;
-        let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
-
+        let adjustedImgSrc = `./img/${imgSrc}`;
         if (page >= 2) {
-          // Handle pages 2 and above
-          // Get the current hostname
-          const hostname = window.location.hostname;
-
-          // Find the matching key in siteMapping
           let matchedKey = null;
           for (const key in siteMapping) {
-            if (hostname.includes(key)) {
+            if (window.location.hostname.includes(key)) {
               matchedKey = key;
               break;
             }
           }
-
           if (matchedKey) {
-            const pageIndex = page - 2; // pages start at 2, arrays at 0
+            const pageIndex = page - 2;
             const pageBaseURLs = siteMapping[matchedKey];
-
             if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
               const pageBaseURL = pageBaseURLs[pageIndex];
-
-              // Remove leading './' from href and imgSrc if present
-              const adjustedGameHref = href.replace(/^\.\//, "");
-              adjustedHref = `${pageBaseURL}/${adjustedGameHref}`;
-
-              const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-              adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
+              const newHref = href.replace(/^\.\//, "");
+              const newImg = imgSrc.replace(/^\.\//, "");
+              adjustedHref = `${pageBaseURL}/${newHref}`;
+              adjustedImgSrc = `${pageBaseURL}/img/${newImg}`;
             } else {
-              console.warn(
-                `No site mapping found for page ${page} on hostname: ${matchedKey}`
-              );
+              if (page === 2) {
+                adjustedHref = `/strongdog2/${href.replace(/^\.\//, "")}`;
+                adjustedImgSrc = `/strongdog2/img/${imgSrc.replace(/^\.\//, "")}`;
+              } else if (page === 3) {
+                adjustedHref = `/strongdog3/${href.replace(/^\.\//, "")}`;
+                adjustedImgSrc = `/strongdog3/img/${imgSrc.replace(/^\.\//, "")}`;
+              }
             }
           } else {
-            console.warn(`No site mapping found for hostname: ${hostname}`);
+            if (page === 2) {
+              adjustedHref = `/strongdog2/${href.replace(/^\.\//, "")}`;
+              adjustedImgSrc = `/strongdog2/img/${imgSrc.replace(/^\.\//, "")}`;
+            } else if (page === 3) {
+              adjustedHref = `/strongdog3/${href.replace(/^\.\//, "")}`;
+              adjustedImgSrc = `/strongdog3/img/${imgSrc.replace(/^\.\//, "")}`;
+            }
           }
         }
-
-        // Generate a normalized game ID for matching
-        const gameId = normalizeGameName(name);
-
-        return `
-    <div class="card-container">
-      <a href="${adjustedHref}" class="card" data-game-id="${gameId}">
-        <img src="${adjustedImgSrc}" alt="${name}">
-        <figcaption>${name}</figcaption>
-      </a>
-      <div class="card-buttons">
-        <button class="btn-check" data-game-name="${name}" title="Add Game">&#10003;</button>
-        <button class="btn-delete" data-game-name="${name}" title="Report Issue">&#10005;</button>
-      </div>
-    </div>
-  `;
+        return { adjustedHref, adjustedImgSrc };
       }
 
-      // Generate the cards
+      function getCardHTML(gameObject) {
+        const { href, imgSrc, name, page } = gameObject;
+        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
+        const gameId = normalizeGameName(name);
+        return `
+          <div class="card-container">
+            <a href="${adjustedHref}" class="card" data-game-id="${gameId}">
+              <img src="${adjustedImgSrc}" alt="${name}">
+              <figcaption>${name}</figcaption>
+            </a>
+            <div class="card-buttons">
+              <button class="btn-check" data-game-name="${name}" title="Add Game">&#10003;</button>
+              <button class="btn-delete" data-game-name="${name}" title="Report Issue">&#10005;</button>
+            </div>
+          </div>
+        `;
+      }
+
       let cardsHTMLArr = [];
-      for (let i = 0; i < games.length; ++i) {
+      for (let i = 0; i < games.length; i++) {
         cardsHTMLArr.push(getCardHTML(games[i]));
       }
 
-      const cardsHTMLStr = cardsHTMLArr.join("");
-
-      // Insert the cards into the DOM once the content is loaded
       document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("allGameList").innerHTML = cardsHTMLStr;
-
-        // Add event listeners for the buttons
+        document.getElementById("allGameList").innerHTML = cardsHTMLArr.join("");
         addCardButtonListeners();
       });
 
-      // Function to add event listeners to Check and X buttons
       function addCardButtonListeners() {
         const checkButtons = document.querySelectorAll(".btn-check");
         const deleteButtons = document.querySelectorAll(".btn-delete");
-
         checkButtons.forEach((button) => {
           button.addEventListener("click", handleCheckClick);
         });
-
         deleteButtons.forEach((button) => {
           button.addEventListener("click", handleDeleteClick);
         });
@@ -278,47 +230,27 @@
 
       function handleCheckClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
-
-        // Ensure gameName is present
         if (!gameName) {
           alert("Game name is missing.");
           return;
         }
-
-        // Show a message to indicate processing
         alert(`${gameName} is being submitted for approval. Please wait...`);
-
-        // Firebase Callable Function to approve the game
         const approveGameFunction = firebase
           .functions()
           .httpsCallable("approveGameCallable");
-
-        // Call the function with properly formatted data
         approveGameFunction({ gameName: gameName.trim() })
           .then((result) => {
-            console.log(`Game "${gameName}" approved via Firebase Function.`);
-            alert(
-              result.data.message || `Game "${gameName}" has been approved.`
-            );
-
-            // Add the game to Firestore with disable: false
+            alert(result.data.message || `Game "${gameName}" has been approved.`);
             db.collection("cards")
               .add({
                 gameName: gameName,
                 disable: true,
               })
-              .then(function (docRef) {
-                console.log("Game added to Firestore with ID: ", docRef.id);
-
-                // Optionally remove the game card from UI
+              .then(() => {
                 event.target.closest(".card-container").remove();
-              })
-              .catch(function (error) {
-                console.error("Error adding game to Firestore: ", error);
               });
           })
           .catch((error) => {
-            console.error("Error approving game via Firebase Function:", error);
             alert(`Error approving game: ${error.message}`);
           });
       }
@@ -326,33 +258,22 @@
       function handleDeleteClick(event) {
         const gameName = event.target.getAttribute("data-game-name");
         const issue = prompt(`What was the issue with ${gameName}?`);
-
         if (issue) {
           alert(`${gameName} is now under review.`);
-
-          // Send game name and issue to Google Sheet
           sendIssueToGoogleSheetWithIssue(gameName, issue);
-
-          // Add the game to Firestore with disable: true
           db.collection("cards")
             .add({
               gameName: gameName,
               disable: true,
             })
-            .then(function (docRef) {
-              console.log("Game added to Firestore with ID: ", docRef.id);
-            })
-            .catch(function (error) {
-              console.error("Error adding game to Firestore: ", error);
-            });
+            .then(() => {});
         }
       }
+
       function sendIssueToGoogleSheetWithIssue(gameName, issue) {
         const scriptURL =
           "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec";
-
         const timestamp = new Date().toISOString();
-
         fetch(scriptURL, {
           method: "POST",
           mode: "no-cors",
@@ -360,25 +281,14 @@
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ timestamp, gameName, issue }),
-        })
-          .then(() => {
-            console.log("Issue submitted successfully.");
-          })
-          .catch((error) => {
-            console.error("Error submitting issue:", error);
-          });
+        });
       }
     </script>
     <script src="appscript.js"></script>
     <script>
-      // Define normalizeGameName function
       function normalizeGameName(name) {
-        return name
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .replace(/[^a-z0-9]/g, "");
+        return name.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
       }
-
       document.addEventListener("DOMContentLoaded", function () {
         const topGameList = document.getElementById("topGameList");
         const loadingContainerEl = document.createElement("div");
@@ -392,13 +302,9 @@
 			  <div class="bar bar-5"></div>
 			</div>
 		  `;
-
-        // Append loadingContainerEl to topGameList
         topGameList.appendChild(loadingContainerEl);
-
         function fetchTopGames() {
           fetch(targetUrl, {
-            // Use the targetUrl from appscript.js
             method: "GET",
           })
             .then((response) => {
@@ -412,37 +318,25 @@
             .then((data) => {
               if (data && data.content) {
                 const parsedData = JSON.parse(data.content);
-                console.log("Parsed data:", parsedData);
                 displayTopGames(parsedData);
-              } else {
-                console.error("Invalid data format", data);
               }
             })
-            .catch((error) => console.error("Error:", error))
+            .catch(() => {})
             .finally(() => {
               loadingContainerEl.style.display = "none";
             });
         }
-
         function displayTopGames(games) {
-          if (!topGameList) {
-            console.error("Required element not found.");
-            return;
-          }
+          if (!topGameList) return;
           topGameList.innerHTML = "";
-
           games.slice(1).forEach((game) => {
-            // Skip the first entry as it is the header
             const gameName = game[0];
             const matchingCard = findMatchingCard(gameName);
             if (matchingCard) {
               topGameList.appendChild(matchingCard.cloneNode(true));
-            } else {
-              console.warn(`No matching card found for game: ${gameName}`);
             }
           });
         }
-
         function findMatchingCard(gameName) {
           const formattedGameName = normalizeGameName(gameName);
           const cards = document.querySelectorAll("#allGameList .card");
@@ -452,15 +346,10 @@
               return card;
             }
           }
-          console.warn(
-            `Card not found for game: ${gameName} (ID: ${formattedGameName})`
-          );
           return null;
         }
-
-        // Immediately invoked function to run fetchTopGames as soon as possible
         (function () {
-          loadingContainerEl.style.display = "flex"; // Show spinner
+          loadingContainerEl.style.display = "flex";
           fetchTopGames();
         })();
       });
@@ -475,9 +364,7 @@
         margin: 0;
         padding: 0;
         background-color: #2e2e2e;
-        /* Dark grey background */
       }
-
       .navbar {
         background-color: #333;
         color: white;
@@ -486,30 +373,22 @@
         align-items: center;
         position: relative;
         justify-content: space-between;
-        /* Keep items spread out */
       }
-
       .logo {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        /* Center the logo horizontally */
         color: white;
         font-weight: bold;
       }
-
-      /* Style for the menu icon */
       .menu-icon {
         font-size: 2rem;
         cursor: pointer;
         margin-left: 20px;
-        /* Position the icon to the left */
         color: white;
         position: relative;
         z-index: 1001;
-        /* Ensure it stays on top when clicking */
       }
-
       .slide-menu {
         position: fixed;
         top: 0;
@@ -517,25 +396,18 @@
         width: 350px;
         background-color: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(10px);
-        /* You can adjust to preferred blurring */
         color: white;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
         z-index: 1003;
-        /* Ensure it covers the menu icon when it slides in */
         transition: transform 0.4s ease;
-        /* Smooth slide-in animation */
         overflow-y: auto;
         transform: translateX(-100%);
-        /* Start off-screen completely */
       }
-
       .profile-picture {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        /* Keeps the aspect-ratio of image normal - no distortions */
       }
-
       .profile-picture-container {
         border-radius: 50%;
         width: 100px;
@@ -546,7 +418,6 @@
         align-items: center;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       }
-
       .user-details-container {
         display: flex;
         width: 100%;
@@ -554,24 +425,19 @@
         gap: 20px;
         padding-block: 40px;
       }
-
       .username-container {
         display: flex;
         align-items: center;
         justify-content: center;
       }
-
       .username-text {
         font-size: 1.5rem;
       }
-
       .categories {
         display: flex;
         flex-direction: column;
         gap: 10px;
       }
-
-      /* Styling for links in the slide menu */
       .categories > a {
         display: flex;
         justify-content: center;
@@ -589,11 +455,9 @@
         position: relative;
         overflow: hidden;
       }
-
       .categories > a::after {
         content: "";
         background: rgba(255, 255, 255, 0.1);
-        /* You can change the color to your liking */
         position: absolute;
         top: 50%;
         left: 50%;
@@ -602,47 +466,36 @@
         width: 0;
         height: 0;
         transition: 0.4s ease-out;
-        /* z-index: -1; */
       }
-
       .categories > a:hover::after {
         width: 400px;
         height: 400px;
       }
-
       .categories > a:hover {
         transform: scale(0.95);
       }
-
-      /* Styling for the "new" tags */
       span.new-feature-tag {
         background: orange;
         border-radius: 100vw;
-        /* Completely rounded edges */
         padding: 0.2rem 0.4rem;
         margin-left: 1rem;
-        /* Separate the tag from the left text */
         font-size: 0.6rem;
         color: black;
         text-transform: uppercase;
       }
-
       .navbar .logo {
         color: white;
         font-weight: bold;
       }
-
       .navbar .logo .xp {
         color: orange;
       }
-
       .navbar a,
       .navbar a:visited,
       .navbar .logo span {
         text-decoration: none;
         margin-right: 20px;
       }
-
       .search-bar {
         padding: 7px;
         padding-top: 10px;
@@ -654,19 +507,16 @@
         background-color: transparent;
         color: white;
       }
-
       .search-bar:focus {
         outline: none;
         background-color: rgba(255, 255, 255, 0.1);
       }
-
       .games-grid {
         display: flex;
         flex-wrap: wrap;
         padding: 10px;
         justify-content: center;
       }
-
       .card {
         display: block;
         width: 120px;
@@ -678,23 +528,19 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
-
       .card:hover {
         transform: scale(1.05);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.29);
       }
-
       .card img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.3s ease;
       }
-
       .card:hover img {
         transform: scale(1.02);
       }
-
       .card figcaption {
         position: absolute;
         bottom: 0;
@@ -713,14 +559,12 @@
         font-weight: 550;
         border-radius: 10px;
       }
-
       .card:hover figcaption {
         height: 30px;
         background-color: rgba(95, 95, 95, 0.8);
         transform: translateY(0);
         opacity: 1;
       }
-
       .card::before {
         content: "";
         position: absolute;
@@ -738,14 +582,11 @@
         transition: transform 0.5s, opacity 0.5s;
         opacity: 0;
         pointer-events: none;
-        /* This ensures the shine doesn't interfere with clicking the card */
       }
-
       .card:hover::before {
         transform: rotate(30deg) translate(100%, -50%);
         opacity: 1;
       }
-
       .search-results {
         position: absolute;
         right: 20px;
@@ -754,17 +595,13 @@
         color: black;
         border: 1px solid #ccc;
         width: 250px;
-        /* Adjusted for image display */
         display: none;
         z-index: 1000;
         transform-origin: left;
-        /* Anchor the transformation to the left */
         transition: transform 0.3s ease, background-color 0.3s ease;
         border-radius: 5px;
-        /* Rounded corners for the search results box */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       }
-
       .search-results a {
         display: flex;
         align-items: center;
@@ -774,7 +611,6 @@
         padding: 5px;
         transition: all 0.3s ease;
       }
-
       .search-results img {
         width: 50px;
         height: 50px;
@@ -782,100 +618,69 @@
         margin-right: 10px;
         border-radius: 5px;
       }
-
       .search-results a:last-child {
         border-bottom: none;
       }
-
       .news-container {
         margin: 20px auto;
         padding: 20px;
         background-color: #444444;
-        /* Light grey background */
         border-radius: 8px;
         max-width: 800px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Subtle shadow for depth */
       }
-
       .news {
         color: #ffffff;
-        /* Dark text for readability */
       }
-
       .credits-title {
         font-size: 1.5em;
         margin-bottom: 15px;
         color: #ffffff;
-        /* Darker title color */
         border-bottom: 2px solid #ddd;
-        /* Subtle bottom border */
         padding-bottom: 5px;
       }
-
       .credits-item {
         display: flex;
         justify-content: space-between;
         margin-bottom: 15px;
       }
-
       .credits-role {
         font-weight: bold;
         color: #ffffff;
-        /* Slightly lighter for role text */
       }
-
       .credits-names {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
-        /* Center-aligns items vertically */
       }
-
       .credits-link {
         color: #0073e6;
-        /* Blue link color */
         text-decoration: none;
         font-weight: bold;
-        /* Bold links for emphasis */
       }
-
       .credits-link:hover {
         text-decoration: underline;
       }
-
       .credits-names span {
         color: #c4c4c4;
-        /* Slightly lighter for plain text */
       }
-
-      /* Additional CSS for better spacing and style */
       .credits-item:last-child .credits-names {
         gap: 16px;
       }
-
       .credits-item:last-child .credits-link {
         color: #00b3b3;
-        /* Different link color for Other Links */
       }
-
       .credits-item:last-child .credits-link:hover {
         text-decoration: underline;
         color: #00cccc;
-        /* Hover color for Other Links */
       }
-
-      /* Styling for the All  label */
       h2 {
         text-align: center;
         color: white;
         margin: 20px 0;
-        /* Spacing above and below */
         font-size: 1.5em;
-        /* Larger font size */
       }
-
       .card figcaption {
         position: absolute;
         bottom: 0;
@@ -886,7 +691,6 @@
         padding: 5px 0;
         transition: transform 0.3s ease, opacity 0.3s ease;
         transform: translateY(100%);
-        /* Start off-screen */
         opacity: 0;
         display: flex;
         justify-content: center;
@@ -895,42 +699,12 @@
         font-weight: 550;
         border-radius: 10px;
       }
-
       .card:hover figcaption {
         height: 30px;
-        /* Show text on hover */
         background-color: rgba(95, 95, 95, 0.8);
-        /* Non-transparent background on hover */
         transform: translateY(0);
-        /* Slide up to visible */
         opacity: 1;
       }
-
-      .pagination {
-        text-align: center;
-        margin: 20px 0;
-      }
-
-      .pagination a {
-        color: white;
-        padding: 8px 16px;
-        text-decoration: none;
-        transition: background-color 0.3s;
-        border: 1px solid #444;
-        margin: 0 4px;
-        border-radius: 4px;
-        background-color: #333;
-      }
-
-      .pagination a.active {
-        background-color: #555;
-        border-color: #777;
-      }
-
-      .pagination a:hover:not(.active) {
-        background-color: #444;
-      }
-
       .updates-paragraph-text {
         color: white;
         background-color: #a83632;
@@ -939,7 +713,6 @@
         box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.05);
         margin-bottom: 30px;
       }
-
       .updates-text-container {
         margin-left: 30%;
         margin-right: 30%;
@@ -947,7 +720,6 @@
         justify-content: center;
         align-items: center;
       }
-
       .loading-container {
         position: absolute;
         top: 50%;
@@ -958,12 +730,10 @@
         justify-content: center;
         align-items: center;
       }
-
       .bars {
         display: flex;
         align-items: center;
       }
-
       .bar {
         background-color: rgba(255, 255, 255, 0.3);
         width: 20px;
@@ -972,45 +742,35 @@
         border-radius: 10px;
         animation: load ease infinite 5s;
       }
-
       .bar-2,
       .bar-4 {
         height: 50px;
       }
-
       .bar-2 {
         animation-delay: 0.1s;
       }
-
       .bar-3 {
         height: 60px;
         animation-delay: 0.2s;
       }
-
       .bar-4 {
         animation-delay: 0.3s;
       }
-
       .bar-5 {
         animation-delay: 0.4s;
       }
-
       @keyframes load {
         0%,
         100% {
           transform: rotate(0deg);
         }
-
         50% {
           transform: rotate(720deg) rotateX(180deg);
         }
       }
-
       #topGameList {
         position: relative;
-        /* Make sure topGameList is relatively positioned */
       }
-
       .modal {
         display: none;
         position: fixed;
@@ -1023,7 +783,6 @@
         justify-content: center;
         align-items: center;
       }
-
       .modal-content {
         background-color: #757575;
         padding: 20px;
@@ -1032,7 +791,6 @@
         max-width: 400px;
         text-align: center;
       }
-
       .modal-close {
         color: #aaa;
         float: right;
@@ -1040,14 +798,12 @@
         font-weight: bold;
         cursor: pointer;
       }
-
       .modal-close:hover,
       .modal-close:focus {
         color: #000;
         text-decoration: none;
         cursor: pointer;
       }
-
       .modal-link {
         color: blue;
         text-decoration: underline;
@@ -1060,10 +816,9 @@
       }
       .card-container {
         position: relative;
-        display: inline-block; /* Allows multiple cards to align horizontally */
-        margin: 10px; /* Space between cards */
+        display: inline-block;
+        margin: 10px;
       }
-
       .card-buttons button {
         background-color: transparent;
         border: none;
@@ -1072,20 +827,15 @@
         margin: 0 5px;
         transition: transform 0.2s, color 0.2s;
       }
-
       .card-buttons button:hover {
         transform: scale(1.2);
       }
-
       .btn-check {
         color: green;
       }
-
       .btn-delete {
         color: red;
       }
-
-      /* Optional: Adjust button size and spacing for better visibility */
       .btn-check,
       .btn-delete {
         width: 24px;
@@ -1111,11 +861,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000; /* Ensure it is on top */
+        z-index: 1000;
       "
     ></div>
     <script>
-      // Ensure the secretLink event listener is set up after the element is loaded
       window.addEventListener("load", function () {
         const secretLink = document.getElementById("secretLink");
         secretLink.addEventListener("click", function () {
@@ -1123,11 +872,9 @@
         });
       });
     </script>
-
     <div class="navbar">
       <div class="menu-icon" id="menuIcon">&#9776;</div>
       <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
-
       <div class="search-container">
         <input
           type="text"
@@ -1170,16 +917,12 @@
     <div class="games-grid" id="allGameList"></div>
 
     <h2 style="text-align: center"><strong>StrongDogXP LLC</strong></h2>
-
     <div class="news-container">
       <div class="news">
         <div class="credits-item">
           <div class="credits-role">CEO</div>
           <div class="credits-names">
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
+            <a href="https://github.com/jman1593" target="_blank" class="credits-link"
               >Joshua Pettit</a
             >
           </div>
@@ -1187,17 +930,11 @@
         <div class="credits-item">
           <div class="credits-role">Developers</div>
           <div class="credits-names">
-            <a
-              href="https://github.com/JamesMeadows4"
-              target="_blank"
-              class="credits-link"
+            <a href="https://github.com/JamesMeadows4" target="_blank" class="credits-link"
               >James Meadows</a
             >
             <span>|</span>
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
+            <a href="https://github.com/jman1593" target="_blank" class="credits-link"
               >Joshua Pettit</a
             >
           </div>
@@ -1205,10 +942,7 @@
         <div class="credits-item">
           <div class="credits-role">Game Downloaders</div>
           <div class="credits-names">
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
+            <a href="https://github.com/jman1593" target="_blank" class="credits-link"
               >Joshua Pettit</a
             >
           </div>
@@ -1216,38 +950,23 @@
         <div class="credits-item">
           <div class="credits-role">Other Links</div>
           <div class="credits-names">
-            <a
-              href="https://mathcord.netlify.app"
-              target="_blank"
-              class="credits-link"
+            <a href="https://mathcord.netlify.app" target="_blank" class="credits-link"
               >mathcord.netlify.app</a
             >
             <span>|</span>
-            <a
-              href="https://strongdog.onrender.com"
-              target="_blank"
-              class="credits-link"
+            <a href="https://strongdog.onrender.com" target="_blank" class="credits-link"
               >strongdog.onrender.com</a
             >
             <span>|</span>
-            <a
-              href="https://jman1593.github.io"
-              target="_blank"
-              class="credits-link"
+            <a href="https://jman1593.github.io" target="_blank" class="credits-link"
               >jman1593.github.io</a
             >
             <span>|</span>
-            <a
-              href="https://strongdog.netlify.app"
-              target="_blank"
-              class="credits-link"
+            <a href="https://strongdog.netlify.app" target="_blank" class="credits-link"
               >strongdog.netlify.app</a
             >
             <span>|</span>
-            <a
-              href="https://strongdog-1.vercel.app"
-              target="_blank"
-              class="credits-link"
+            <a href="https://strongdog-1.vercel.app" target="_blank" class="credits-link"
               >strongdog-1.vercel.app</a
             >
             <span>|</span>
@@ -1276,7 +995,6 @@
           <p class="username-text">Your Username</p>
         </div>
       </div>
-      <!-- Categories / options -->
       <div class="categories">
         <a href="favs.html" class="option-link">Favorites</a>
         <a href="#" id="randomGame" class="option-link">Random Game</a>
@@ -1291,140 +1009,90 @@
     </div>
     <script type="module">
       import games from "./cards-data-test.js";
-
       document.addEventListener("DOMContentLoaded", function () {
         const menuIcon = document.getElementById("menuIcon");
         const slideMenu = document.createElement("div");
         slideMenu.className = "slide-menu";
-
-        // Clone the categories
         const originalCategories = document.querySelector(".categories");
         const categories = originalCategories.cloneNode(true);
-
-        // Append the categories to the slideMenu
         slideMenu.appendChild(categories);
         document.body.appendChild(slideMenu);
-
-        // Add click event to toggle the sliding menu
         menuIcon.addEventListener("click", function (event) {
-          event.stopPropagation(); // Prevent click event from bubbling up
+          event.stopPropagation();
           if (slideMenu.style.transform === "translateX(0%)") {
-            slideMenu.style.transform = "translateX(-100%)"; // Hide menu by sliding out
+            slideMenu.style.transform = "translateX(-100%)";
           } else {
-            slideMenu.style.transform = "translateX(0%)"; // Show menu by sliding in
+            slideMenu.style.transform = "translateX(0%)";
           }
         });
-
-        // Close the menu when clicking outside of it
         window.addEventListener("click", function (event) {
           if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
-            slideMenu.style.transform = "translateX(-100%)"; // Hide menu
+            slideMenu.style.transform = "translateX(-100%)";
           }
         });
-
-        // Check authentication state
         auth.onAuthStateChanged(async (user) => {
           let userDetailsContainer;
           if (!user) {
-            // User is not authenticated, redirect to login page
             window.location.href = "login.html";
           }
           if (user) {
-            // User is signed in, fetch their profile picture and username
-
-            // Clone the user-details-container
             const originalUserDetailsContainer = document.querySelector(
               ".user-details-container"
             );
             userDetailsContainer = originalUserDetailsContainer.cloneNode(true);
-
-            // Get elements inside userDetailsContainer
             const profilePictureElement =
               userDetailsContainer.querySelector(".profile-picture");
             const usernameElement =
               userDetailsContainer.querySelector(".username-text");
-
-            // Set profile picture
             if (user.photoURL) {
               profilePictureElement.src = user.photoURL;
             } else {
-              profilePictureElement.src = "img/default-avatar.png"; // Fallback to default image
+              profilePictureElement.src = "img/default-avatar.png";
             }
-
-            // Set username
             const userId = user.uid;
             const userDocRef = db.collection("usernames").doc(userId);
             const userDoc = await userDocRef.get();
-
             if (userDoc.exists) {
               const userData = userDoc.data();
               usernameElement.textContent = userData.username || "Username";
             } else {
               usernameElement.textContent = user.displayName || "Username";
             }
-
-            // Make profile picture clickable and direct to settings page
-            profilePictureElement.parentElement.addEventListener(
-              "click",
-              () => {
-                window.location.href = "settings.html";
-              }
-            );
-
-            // Insert the userDetailsContainer at the top of the slideMenu
+            profilePictureElement.parentElement.addEventListener("click", () => {
+              window.location.href = "settings.html";
+            });
             slideMenu.insertBefore(userDetailsContainer, categories);
-
-            // Create the "Log Out" button as a menu item
             const logoutLink = document.createElement("a");
             logoutLink.href = "#";
             logoutLink.className = "option-link";
             logoutLink.textContent = "Log Out";
-            logoutLink.style.backgroundColor = "#dc3545"; // Red color for the button
+            logoutLink.style.backgroundColor = "#dc3545";
             logoutLink.style.color = "white";
-
-            // Add click event to the "Log Out" link
             logoutLink.addEventListener("click", function (e) {
               e.preventDefault();
               auth
                 .signOut()
                 .then(() => {
-                  // Sign-out successful.
                   window.location.reload();
                 })
                 .catch((error) => {
-                  // An error happened.
                   console.error("Error signing out:", error);
                 });
             });
-
-            // Insert the "Log Out" link above the "Favorites" link
-            const favoritesLink = categories.querySelector(
-              'a[href="favs.html"]'
-            );
+            const favoritesLink = categories.querySelector('a[href="favs.html"]');
             categories.insertBefore(logoutLink, favoritesLink);
           } else {
-            // User is not signed in, display "Not logged in" and a "Log In" button
-
-            // Create a new userDetailsContainer
             userDetailsContainer = document.createElement("div");
             userDetailsContainer.className = "user-details-container";
-
-            // Create a container for the text
             const notLoggedInContainer = document.createElement("div");
             notLoggedInContainer.className = "username-container";
-
-            // Create the "Not logged in" text
             const notLoggedInText = document.createElement("p");
             notLoggedInText.className = "username-text";
             notLoggedInText.textContent = "Not logged in";
-
-            // Append the text to the container
             notLoggedInContainer.appendChild(notLoggedInText);
-
-            // Create the "Log In" button
             const loginButton = document.createElement("button");
             loginButton.textContent = "Log In";
-            loginButton.style.backgroundColor = "#007bff"; // Blue color
+            loginButton.style.backgroundColor = "#007bff";
             loginButton.style.color = "white";
             loginButton.style.border = "none";
             loginButton.style.padding = "10px 20px";
@@ -1432,66 +1100,43 @@
             loginButton.style.borderRadius = "5px";
             loginButton.style.cursor = "pointer";
             loginButton.style.marginTop = "5px";
-
-            // Add click event to the "Log In" button
             loginButton.addEventListener("click", function () {
               window.location.href = "login.html";
             });
-
-            // Center the content
             userDetailsContainer.style.display = "flex";
             userDetailsContainer.style.flexDirection = "column";
             userDetailsContainer.style.alignItems = "center";
-            userDetailsContainer.style.paddingBlock = "40px"; // Ensure consistent padding
-
-            // Append the text and button to the userDetailsContainer
+            userDetailsContainer.style.paddingBlock = "40px";
             userDetailsContainer.appendChild(notLoggedInContainer);
             userDetailsContainer.appendChild(loginButton);
-
-            // Insert the userDetailsContainer at the top of the slideMenu
             slideMenu.insertBefore(userDetailsContainer, categories);
           }
-
-          // Add event listeners to the relevant buttons in the sliding menu
-          categories
-            .querySelector("#randomGame")
-            .addEventListener("click", function (e) {
-              e.preventDefault();
-              handleRandomGameClick();
-            });
-
-          categories
-            .querySelector("#blockLanschool")
-            .addEventListener("click", function (e) {
-              e.preventDefault();
-              handleBlockLanschoolClick();
-            });
-
-          function handleRandomGameClick() {
+          const randomGameLink = categories.querySelector("#randomGame");
+          randomGameLink?.addEventListener("click", function (e) {
+            e.preventDefault();
             if (games.length > 0) {
               const randomIndex = Math.floor(Math.random() * games.length);
               const randomGamePath = games[randomIndex].href;
               window.location.href = randomGamePath;
-            } else {
-              console.error("No game paths available for selection.");
             }
-          }
-
-          function handleBlockLanschoolClick() {
+          });
+          const blockLanschoolLink = categories.querySelector("#blockLanschool");
+          blockLanschoolLink?.addEventListener("click", function (e) {
+            e.preventDefault();
             var url = "https://strongdog.netlify.app";
             var newTab = window.open();
+            if (!newTab) {
+              return;
+            }
             newTab.document.write(`
-							<html>
-								<body style="margin: 0; height: 100vh;">
-									<iframe src="${url}" style="border: none; width: 100%; height: 100%;"></iframe>
-								</body>
-							</html>
-						`);
+              <html>
+                <body style="margin: 0; height: 100vh;">
+                  <iframe src="${url}" style="border: none; width: 100%; height: 100%;"></iframe>
+                </body>
+              </html>
+            `);
             newTab.document.close();
-          }
-
-          // Since we're importing games directly, there's no need to load card data
-          // You can remove the loadCardData function and related code
+          });
         });
       });
     </script>
@@ -1500,15 +1145,12 @@
         const discordLink = document.getElementById("discordLink");
         const modal = document.getElementById("popupModal");
         const closeModal = document.getElementById("closeModal");
-
-        discordLink.addEventListener("click", function () {
+        discordLink?.addEventListener("click", function () {
           modal.style.display = "flex";
         });
-
-        closeModal.addEventListener("click", function () {
+        closeModal?.addEventListener("click", function () {
           modal.style.display = "none";
         });
-
         window.addEventListener("click", function (event) {
           if (event.target === modal) {
             modal.style.display = "none";
@@ -1516,31 +1158,15 @@
         });
       });
     </script>
-    <!-- Consolidated and Corrected Search Script -->
     <script type="module">
       import games from "./cards-data-test.js";
       import { siteMapping } from "./site-mapping.js";
-
       document.addEventListener("DOMContentLoaded", function () {
         const searchInput = document.querySelector(".search-bar");
         const searchResults = document.getElementById("searchResults");
-
-        if (!searchInput || !searchResults) {
-          console.error(
-            "Search input or results container not found in the DOM."
-          );
-          return;
-        }
-
-        // Show results when the search bar is focused
-        searchInput.addEventListener("focus", function () {
-          updateSearchResults(); // Display initial results if any
-        });
-
-        // Update the search results based on the input
+        if (!searchInput || !searchResults) return;
+        searchInput.addEventListener("focus", updateSearchResults);
         searchInput.addEventListener("input", updateSearchResults);
-
-        // Hide results when clicking outside the search bar and results
         document.addEventListener("click", function (event) {
           if (
             !searchInput.contains(event.target) &&
@@ -1549,187 +1175,171 @@
             searchResults.style.display = "none";
           }
         });
-
         function updateSearchResults() {
           const searchText = searchInput.value.toLowerCase();
-          const filteredGames = games
+          const filtered = games
             .filter((game) => game.name.toLowerCase().includes(searchText))
-            .slice(0, 7); // Limit to top 7 results
-
-          searchResults.innerHTML = ""; // Clear previous results
-
-          if (filteredGames.length === 0) {
+            .slice(0, 7);
+          searchResults.innerHTML = "";
+          if (filtered.length === 0) {
             searchResults.style.display = "none";
             return;
           }
-
-          const currentURL = window.location.href;
-          let matchedKey = null;
-
-          // Find the matching key based on the current URL
-          for (const key in siteMapping) {
-            if (currentURL.includes(key)) {
-              matchedKey = key;
-              break;
-            }
-          }
-
-          if (!matchedKey) {
-            console.warn(
-              `No site mapping found for current URL: ${currentURL}`
-            );
-          }
-
-          filteredGames.forEach((game) => {
-            const { href, imgSrc, name, page } = game;
-            let adjustedHref = href;
-            let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
-
-            if (page >= 2 && matchedKey) {
-              // Handle pages 2 and above
-              const pageIndex = page - 2; // Indexing starts at 0
-              const pageBaseURLs = siteMapping[matchedKey];
-
-              if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
-                const pageBaseURL = pageBaseURLs[pageIndex];
-
-                // Remove leading './' from href and imgSrc if present
-                const adjustedGameHref = href.replace(/^\.\//, "");
-                adjustedHref = `${pageBaseURL}/${adjustedGameHref}`;
-
-                const adjustedImgPath = imgSrc.replace(/^\.\//, "");
-                adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
+          filtered.forEach((game) => {
+            let adjustedHref = game.href;
+            let adjustedImg = `./img/${game.imgSrc}`;
+            if (game.page >= 2) {
+              let matchedKey = null;
+              for (const key in siteMapping) {
+                if (window.location.hostname.includes(key)) {
+                  matchedKey = key;
+                  break;
+                }
+              }
+              if (matchedKey) {
+                const pageIndex = game.page - 2;
+                const pageBaseURLs = siteMapping[matchedKey];
+                if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
+                  const pageBaseURL = pageBaseURLs[pageIndex];
+                  adjustedHref = `${pageBaseURL}/${game.href.replace(/^\.\//, "")}`;
+                  adjustedImg = `${pageBaseURL}/img/${game.imgSrc.replace(
+                    /^\.\//,
+                    ""
+                  )}`;
+                } else {
+                  if (game.page === 2) {
+                    adjustedHref = `/strongdog2/${game.href.replace(/^\.\//, "")}`;
+                    adjustedImg = `/strongdog2/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                  } else if (game.page === 3) {
+                    adjustedHref = `/strongdog3/${game.href.replace(/^\.\//, "")}`;
+                    adjustedImg = `/strongdog3/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                  }
+                }
               } else {
-                console.warn(
-                  `No site mapping found for page ${page} on hostname: ${matchedKey}`
-                );
+                if (game.page === 2) {
+                  adjustedHref = `/strongdog2/${game.href.replace(/^\.\//, "")}`;
+                  adjustedImg = `/strongdog2/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                } else if (game.page === 3) {
+                  adjustedHref = `/strongdog3/${game.href.replace(/^\.\//, "")}`;
+                  adjustedImg = `/strongdog3/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                }
               }
             }
-
             const resultLink = document.createElement("a");
             resultLink.href = adjustedHref;
             resultLink.innerHTML = `
-          <img src="${adjustedImgSrc}" alt="${name}">
-          <span>${name}</span>
-        `;
+              <img src="${adjustedImg}" alt="${game.name}">
+              <span>${game.name}</span>
+            `;
             searchResults.appendChild(resultLink);
           });
-
-          searchResults.style.display = "block"; // Show results
+          searchResults.style.display = "block";
         }
       });
     </script>
-  </body>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const page1Link = document.getElementById("page1-link");
-      const page2Link = document.getElementById("page2-link");
-      const hostname = window.location.hostname;
-
-      // Configuration object mapping hostnames to link values
-      const linkMap = {
-        "jman1593.github.io": { page1: "/#", page2: "/strongdog2/index.html" },
-        "strongdog-1.vercel.app": {
-          page1: "https://strongdog-1.vercel.app",
-          page2: "https://strongdog2.vercel.app",
-        },
-        "strongdog2.vercel.app": {
-          page1: "https://strongdog-1.vercel.app",
-          page2: "https://strongdog2.vercel.app",
-        },
-        "strongdog.netlify.app": {
-          page1: "https://strongdog.netlify.app",
-          page2: "https://strongdog2.netlify.app",
-        },
-        "strongdog2.netlify.app": {
-          page1: "https://strongdog.netlify.app",
-          page2: "https://strongdog2.netlify.app",
-        },
-        "mathcord.netlify.app": {
-          page1: "https://mathcord.netlify.app",
-          page2: "https://mathcord2.netlify.app",
-        },
-        "mathcord2.netlify.app": {
-          page1: "https://mathcord.netlify.app",
-          page2: "https://mathcord2.netlify.app",
-        },
-        "strongdog.onrender.com": {
-          page1: "https://strongdog.onrender.com",
-          page2: "https://strongdog2.onrender.com",
-        },
-        "strongdog2.onrender.com": {
-          page1: "https://strongdog.onrender.com",
-          page2: "https://strongdog2.onrender.com",
-        },
-        "stroongdog.netlify.app": {
-          page1: "https://stroongdog.netlify.app",
-          page2: "https://stroongdog2.netlify.app",
-        },
-        "stroongdog2.netlify.app": {
-          page1: "https://stroongdog.netlify.app",
-          page2: "https://stroongdog2.netlify.app",
-        },
-      };
-
-      // Find matching hostname and set hrefs accordingly
-      for (const key in linkMap) {
-        if (hostname.includes(key)) {
-          page1Link.href = linkMap[key].page1;
-          page2Link.href = linkMap[key].page2;
-          break; // stop once a match is found
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const page1Link = document.getElementById("page1-link");
+        const page2Link = document.getElementById("page2-link");
+        const hostname = window.location.hostname;
+        const linkMap = {
+          "jman1593.github.io": {
+            page1: "/#",
+            page2: "/strongdog2/index.html",
+          },
+          "strongdog-1.vercel.app": {
+            page1: "https://strongdog-1.vercel.app",
+            page2: "https://strongdog2.vercel.app",
+          },
+          "strongdog2.vercel.app": {
+            page1: "https://strongdog-1.vercel.app",
+            page2: "https://strongdog2.vercel.app",
+          },
+          "strongdog.netlify.app": {
+            page1: "https://strongdog.netlify.app",
+            page2: "https://strongdog2.netlify.app",
+          },
+          "strongdog2.netlify.app": {
+            page1: "https://strongdog.netlify.app",
+            page2: "https://strongdog2.netlify.app",
+          },
+          "mathcord.netlify.app": {
+            page1: "https://mathcord.netlify.app",
+            page2: "https://mathcord2.netlify.app",
+          },
+          "mathcord2.netlify.app": {
+            page1: "https://mathcord.netlify.app",
+            page2: "https://mathcord2.netlify.app",
+          },
+          "strongdog.onrender.com": {
+            page1: "https://strongdog.onrender.com",
+            page2: "https://strongdog2.onrender.com",
+          },
+          "strongdog2.onrender.com": {
+            page1: "https://strongdog.onrender.com",
+            page2: "https://strongdog2.onrender.com",
+          },
+          "stroongdog.netlify.app": {
+            page1: "https://stroongdog.netlify.app",
+            page2: "https://stroongdog2.netlify.app",
+          },
+          "stroongdog2.netlify.app": {
+            page1: "https://stroongdog.netlify.app",
+            page2: "https://stroongdog2.netlify.app",
+          },
+        };
+        if (page1Link && page2Link) {
+          for (const key in linkMap) {
+            if (hostname.includes(key)) {
+              page1Link.href = linkMap[key].page1;
+              page2Link.href = linkMap[key].page2;
+              break;
+            }
+          }
         }
-      }
-    });
-  </script>
-  <script>
-    document
-      .getElementById("secretLink")
-      .addEventListener("click", function () {
-        window.location.href = "secret-menu.html";
       });
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const discordLink = document.getElementById("discordLink");
-      const modal = document.getElementById("popupModal");
-      const closeModal = document.getElementById("closeModal");
-
-      discordLink.addEventListener("click", function () {
-        modal.style.display = "flex";
-      });
-
-      closeModal.addEventListener("click", function () {
-        modal.style.display = "none";
-      });
-
-      window.addEventListener("click", function (event) {
-        if (event.target === modal) {
+    </script>
+    <script>
+      document
+        .getElementById("secretLink")
+        .addEventListener("click", function () {
+          window.location.href = "secret-menu.html";
+        });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const discordLink = document.getElementById("discordLink");
+        const modal = document.getElementById("popupModal");
+        const closeModal = document.getElementById("closeModal");
+        discordLink?.addEventListener("click", function () {
+          modal.style.display = "flex";
+        });
+        closeModal?.addEventListener("click", function () {
           modal.style.display = "none";
-        }
+        });
+        window.addEventListener("click", function (event) {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        });
       });
-    });
-  </script>
-  <script type="module">
-    import games from "./cards-data-test.js";
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const randomGameButton = document.getElementById("randomGame");
-
-      function handleRandomGameClick() {
-        if (games.length > 0) {
-          const randomIndex = Math.floor(Math.random() * games.length);
-          const randomGamePath = games[randomIndex].href;
-          window.location.href = randomGamePath;
-        } else {
-          console.error("No game paths available for selection.");
+    </script>
+    <script type="module">
+      import games from "./cards-data-test.js";
+      document.addEventListener("DOMContentLoaded", function () {
+        const randomGameButton = document.getElementById("randomGame");
+        function handleRandomGameClick() {
+          if (games.length > 0) {
+            const randomIndex = Math.floor(Math.random() * games.length);
+            const randomGamePath = games[randomIndex].href;
+            window.location.href = randomGamePath;
+          }
         }
-      }
-
-      // Add event listener to Random Game button
-      randomGameButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        handleRandomGameClick();
+        randomGameButton.addEventListener("click", function (event) {
+          event.preventDefault();
+          handleRandomGameClick();
+        });
       });
-    });
-  </script>
+    </script>
+  </body>
 </html>
