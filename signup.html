@@ -2,13 +2,12 @@
 <html lang="en">
   <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-0YLTCV2MMS');
-</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-0YLTCV2MMS');
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up | Strongdog</title>
@@ -25,41 +24,32 @@
         position: relative;
         overflow: hidden;
       }
-
       .blob {
         position: absolute;
         width: 350px;
         height: 350px;
-        background: radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.15),
-          transparent
-        );
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.15), transparent);
         border-radius: 50%;
         filter: blur(150px);
         animation: moveBlobs 30s infinite alternate ease-in-out;
         z-index: -1;
       }
-
       .blob:nth-child(1) {
         top: 10%;
         left: 20%;
       }
-
       .blob:nth-child(2) {
         bottom: 20%;
         right: 15%;
         width: 450px;
         height: 450px;
       }
-
       .blob:nth-child(3) {
         top: 60%;
         left: 50%;
         width: 300px;
         height: 300px;
       }
-
       @keyframes moveBlobs {
         0% {
           transform: translate(0, 0);
@@ -68,7 +58,6 @@
           transform: translate(80px, -60px);
         }
       }
-
       .form-container {
         background-color: #3c3c3c;
         padding: 30px;
@@ -78,14 +67,12 @@
         box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
         z-index: 2;
       }
-
       .form-container h2 {
         text-align: center;
         margin-bottom: 20px;
         color: #fff;
         font-size: 24px;
       }
-
       .form-container input {
         width: calc(100% - 40px);
         padding: 12px;
@@ -99,17 +86,14 @@
         vertical-align: middle;
         position: relative;
       }
-
       .password-container {
         position: relative;
       }
-
       .password-container input {
         width: calc(100% - 40px);
         margin: 10px 0;
         padding-right: 30px;
       }
-
       .show-password {
         position: absolute;
         right: 10px;
@@ -119,7 +103,6 @@
         color: #fff;
         font-size: 20px;
       }
-
       .form-container button {
         width: 100%;
         padding: 12px;
@@ -130,44 +113,27 @@
         cursor: pointer;
         font-size: 16px;
       }
-
       .form-container button:hover {
         background-color: #218838;
       }
-
       .form-container .error {
         color: #ff4d4d;
         font-size: 14px;
       }
-
       .form-container a {
         color: #28a745;
         text-align: center;
         display: block;
         margin-top: 15px;
       }
-
       .form-container a:hover {
         text-decoration: underline;
       }
     </style>
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-      import {
-        getAuth,
-        createUserWithEmailAndPassword,
-        updateProfile,
-      } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-      import {
-        getFirestore,
-        doc,
-        setDoc,
-        collection,
-        query,
-        where,
-        getDocs,
-      } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
+      import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+      import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
         authDomain: "strongdog-auth.firebaseapp.com",
@@ -175,50 +141,27 @@
         storageBucket: "strongdog-auth.appspot.com",
         messagingSenderId: "936276282572",
         appId: "1:936276282572:web:a802b7f609381ff9428669",
-        measurementId: "G-0YLTCV2MMS",
+        measurementId: "G-0YLTCV2MMS"
       };
-
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
-
-      const disallowedWords = [
-        "nigger",
-        "nigga",
-        "fuck",
-        "shit",
-        "ass",
-        "bitch",
-        "fucker",
-        "beiner",
-        "cunt",
-        "kkk",
-        "nigg@",
-        "n1gger",
-      ];
-
+      const disallowedWords = ["nigger", "nigga", "fuck", "shit", "ass", "bitch", "fucker", "beiner", "cunt", "kkk", "nigg@", "n1gger"];
       function containsDisallowedWords(username) {
         let normalizedUsername = username.toLowerCase();
-
         normalizedUsername = normalizedUsername.replace(/1/g, "i");
         normalizedUsername = normalizedUsername.replace(/3/g, "e");
         normalizedUsername = normalizedUsername.replace(/4/g, "a");
         normalizedUsername = normalizedUsername.replace(/5/g, "s");
         normalizedUsername = normalizedUsername.replace(/0/g, "o");
-
         normalizedUsername = normalizedUsername.replace(/[^a-zA-Z]/g, "");
-
-        return disallowedWords.some((word) =>
-          normalizedUsername.includes(word)
-        );
+        return disallowedWords.some((word) => normalizedUsername.includes(word));
       }
-
       async function checkUsernameAvailability(username) {
         try {
           const usernamesRef = collection(db, "usernames");
           const q = query(usernamesRef, where("username", "==", username));
           const querySnapshot = await getDocs(q);
-
           if (!querySnapshot.empty) {
             return false;
           }
@@ -228,71 +171,46 @@
           throw error;
         }
       }
-
       document.addEventListener("DOMContentLoaded", function () {
         const signupForm = document.getElementById("signup-form");
         const togglePasswordBtns = document.querySelectorAll(".show-password");
-
         signupForm.addEventListener("submit", async (e) => {
           e.preventDefault();
-
           const name = document.getElementById("name").value.trim();
           const email = document.getElementById("email").value.trim();
           const password = document.getElementById("password").value;
-          const confirmPassword =
-            document.getElementById("confirm-password").value;
-
+          const confirmPassword = document.getElementById("confirm-password").value;
           document.getElementById("error-message").textContent = "";
-
           if (name.length > 16) {
-            document.getElementById("error-message").textContent =
-              "Username cannot be longer than 16 characters.";
+            document.getElementById("error-message").textContent = "Username cannot be longer than 16 characters.";
             return;
           }
-
           if (password !== confirmPassword) {
-            document.getElementById("error-message").textContent =
-              "Passwords do not match!";
+            document.getElementById("error-message").textContent = "Passwords do not match!";
             return;
           }
-
           if (containsDisallowedWords(name)) {
-            document.getElementById("error-message").textContent =
-              "Username contains inappropriate language. Please choose another.";
+            document.getElementById("error-message").textContent = "Username contains inappropriate language. Please choose another.";
             return;
           }
-
           try {
             const isAvailable = await checkUsernameAvailability(name);
             if (!isAvailable) {
-              document.getElementById("error-message").textContent =
-                "Username is already taken. Please choose another.";
+              document.getElementById("error-message").textContent = "Username is already taken. Please choose another.";
               return;
             }
-
-            const userCredential = await createUserWithEmailAndPassword(
-              auth,
-              email,
-              password
-            );
-
-            await updateProfile(userCredential.user, {
-              displayName: name,
-            });
-
-            await setDoc(doc(db, "usernames", userCredential.user.uid), {
-              username: name,
-            });
-
-            window.location.href = "settings.html";
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await updateProfile(userCredential.user, { displayName: name });
+            await sendEmailVerification(userCredential.user);
+            alert("A verification email has been sent. Please verify your email before logging in.");
+            await setDoc(doc(db, "usernames", userCredential.user.uid), { username: name });
+            await signOut(auth);
+            window.location.href = "login.html";
           } catch (error) {
             console.error("Error during signup:", error);
-            document.getElementById(
-              "error-message"
-            ).textContent = `Error: ${error.message}`;
+            document.getElementById("error-message").textContent = `Error: ${error.message}`;
           }
         });
-
         togglePasswordBtns.forEach((btn) => {
           btn.addEventListener("click", () => {
             const input = btn.previousElementSibling;
@@ -312,31 +230,18 @@
     <div class="blob"></div>
     <div class="blob"></div>
     <div class="blob"></div>
-
     <div class="form-container">
       <h2>Sign Up</h2>
       <form id="signup-form">
         <input type="text" id="name" placeholder="Username" required />
         <input type="email" id="email" placeholder="Email" required />
         <div class="password-container">
-          <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            required
-          />
+          <input type="password" id="password" placeholder="Password" required />
           <span class="show-password" id="toggle-password">&#128065;</span>
         </div>
         <div class="password-container">
-          <input
-            type="password"
-            id="confirm-password"
-            placeholder="Confirm Password"
-            required
-          />
-          <span class="show-password" id="toggle-confirm-password"
-            >&#128065;</span
-          >
+          <input type="password" id="confirm-password" placeholder="Confirm Password" required />
+          <span class="show-password" id="toggle-confirm-password">&#128065;</span>
         </div>
         <p class="error" id="error-message"></p>
         <button type="submit">Sign Up</button>

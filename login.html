@@ -4,25 +4,15 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
+      function gtag(){dataLayer.push(arguments);}
       gtag("js", new Date());
       gtag("config", "G-0YLTCV2MMS");
     </script>
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login | StrongDogXP</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
-      rel="stylesheet"
-    />
-
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet" />
     <style>
       :root {
         --clr-bg-main: #292d32;
@@ -33,12 +23,9 @@
         --font-size-main: clamp(14px, 2vw, 18px);
         --shadow-dark-clr: #1e2124;
         --shadow-light-clr: #33373d;
-        --lg-outwards-shadow: 18px 18px 20px var(--shadow-dark-clr),
-          -18px -18px 20px var(--shadow-light-clr);
-        --sm-outward-shadow: 4px 4px 7px var(--shadow-dark-clr),
-          -4px -4px 7px var(--shadow-light-clr);
-        --sm-inward-shadow: inset 4px 4px 10px var(--shadow-dark-clr),
-          inset -4px -4px 10px var(--shadow-light-clr);
+        --lg-outwards-shadow: 18px 18px 20px var(--shadow-dark-clr), -18px -18px 20px var(--shadow-light-clr);
+        --sm-outward-shadow: 4px 4px 7px var(--shadow-dark-clr), -4px -4px 7px var(--shadow-light-clr);
+        --sm-inward-shadow: inset 4px 4px 10px var(--shadow-dark-clr), inset -4px -4px 10px var(--shadow-light-clr);
         --border-radius-lg: 40px;
         --border-radius-sm: 10px;
         --link-color: #5875e8;
@@ -164,22 +151,10 @@
         display: none;
       }
     </style>
-
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-      import {
-        getAuth,
-        signInWithEmailAndPassword,
-        GoogleAuthProvider,
-        signInWithPopup,
-        updateProfile,
-      } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-      import {
-        getFirestore,
-        doc,
-        setDoc,
-      } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
+      import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+      import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
         authDomain: "strongdog-auth.firebaseapp.com",
@@ -187,47 +162,20 @@
         storageBucket: "strongdog-auth.appspot.com",
         messagingSenderId: "936276282572",
         appId: "1:936276282572:web:a802b7f609381ff9428669",
-        measurementId: "G-0YLTCV2MMS",
+        measurementId: "G-0YLTCV2MMS"
       };
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
       const provider = new GoogleAuthProvider();
-
-      const disallowedWords = [
-        "nigger",
-        "nigga",
-        "niga",
-        "fuck",
-        "shit",
-        "ass",
-        "bitch",
-        "fucker",
-        "beiner",
-        "cunt",
-        "kkk",
-        "nigg@",
-        "n1gger",
-        "fuc",
-        "fuk",
-        "n!gger",
-        "n!gga",
-        "n!ga",
-        "n!ger",
-      ];
+      const disallowedWords = ["nigger", "nigga", "niga", "fuck", "shit", "ass", "bitch", "fucker", "beiner", "cunt", "kkk", "nigg@", "n1gger", "fuc", "fuk", "n!gger", "n!gga", "n!ga", "n!ger"];
       function containsDisallowedWords(username) {
         let normalized = username.toLowerCase();
-        normalized = normalized
-          .replace(/1/g, "i")
-          .replace(/3/g, "e")
-          .replace(/4/g, "a")
-          .replace(/5/g, "s")
-          .replace(/0/g, "o")
-          .replace(/[^a-z]/g, "");
+        normalized = normalized.replace(/1/g, "i").replace(/3/g, "e").replace(/4/g, "a").replace(/5/g, "s").replace(/0/g, "o").replace(/[^a-z]/g, "");
         return disallowedWords.some((word) => normalized.includes(word));
       }
-
       document.addEventListener("DOMContentLoaded", () => {
+        let unverifiedUser = null;
         const loginForm = document.getElementById("login-form");
         const googleSignInBtn = document.getElementById("google-signin");
         const usernamePrompt = document.getElementById("username-prompt");
@@ -236,7 +184,7 @@
         const usernameError = document.getElementById("username-error");
         const loadingAnimationContainer = document.querySelector(".loading-animation-container");
         const loadingAnimation = document.querySelector(".loading-animation");
-
+        const resendButton = document.getElementById("resend-button");
         function showLoadingAnimation() {
           loadingAnimationContainer.style.display = "grid";
           loadingAnimation.style.animation = "flip 2s ease-in-out infinite";
@@ -245,14 +193,20 @@
           loadingAnimationContainer.style.display = "none";
           loadingAnimation.style.animation = "none";
         }
-
         loginForm.addEventListener("submit", (e) => {
           e.preventDefault();
           showLoadingAnimation();
           const email = document.getElementById("email").value;
           const password = document.getElementById("password").value;
           signInWithEmailAndPassword(auth, email, password)
-            .then(() => {
+            .then((userCredential) => {
+              if (!userCredential.user.emailVerified) {
+                unverifiedUser = userCredential.user;
+                hideLoadingAnimation();
+                errorMessage.textContent = "Please verify your email address before logging in. Check your inbox for the verification link.";
+                resendButton.style.display = "block";
+                return;
+              }
               window.location.href = "index.html";
             })
             .catch((error) => {
@@ -260,14 +214,30 @@
               errorMessage.textContent = `Error: ${error.message}`;
             });
         });
-
+        resendButton.addEventListener("click", () => {
+          if (unverifiedUser) {
+            resendButton.disabled = true;
+            sendEmailVerification(unverifiedUser)
+              .then(() => {
+                alert("Verification email resent. Please check your email.");
+                signOut(auth);
+                resendButton.style.display = "none";
+                errorMessage.textContent = "";
+                unverifiedUser = null;
+                setTimeout(() => { resendButton.disabled = false; }, 60000);
+              })
+              .catch((error) => {
+                alert(`Error: ${error.message}`);
+                setTimeout(() => { resendButton.disabled = false; }, 60000);
+              });
+          }
+        });
         googleSignInBtn.addEventListener("click", () => {
           showLoadingAnimation();
           signInWithPopup(auth, provider)
             .then(async (result) => {
               const user = result.user;
               let isNewUser = false;
-
               if (result.additionalUserInfo?.isNewUser) {
                 isNewUser = true;
               }
@@ -276,7 +246,6 @@
               if (creationTime === lastSignInTime) {
                 isNewUser = true;
               }
-
               if (isNewUser) {
                 document.querySelector(".form-container").style.display = "none";
                 usernamePrompt.style.display = "block";
@@ -290,37 +259,28 @@
               errorMessage.textContent = `Error: ${error.message}`;
             });
         });
-
         usernameForm.addEventListener("submit", async (e) => {
           e.preventDefault();
           showLoadingAnimation();
           const usernameInput = document.getElementById("username");
           const usernameVal = usernameInput.value.trim();
           usernameError.textContent = "";
-
           if (usernameVal.length > 16) {
             hideLoadingAnimation();
-            usernameError.textContent =
-              "Username cannot be longer than 16 characters.";
+            usernameError.textContent = "Username cannot be longer than 16 characters.";
             return;
           }
           if (containsDisallowedWords(usernameVal)) {
             hideLoadingAnimation();
-            usernameError.textContent =
-              "Username contains inappropriate language. Please choose another.";
+            usernameError.textContent = "Username contains inappropriate language. Please choose another.";
             return;
           }
-
           try {
             const user = auth.currentUser;
             await updateProfile(user, { displayName: usernameVal });
-            await setDoc(doc(db, "usernames", user.uid), {
-              username: usernameVal,
-              userId: user.uid,
-            });
+            await setDoc(doc(db, "usernames", user.uid), { username: usernameVal, userId: user.uid });
             window.location.href = "index.html";
           } catch (error) {
-            console.error("Error during username setup:", error);
             usernameError.textContent = `Error: ${error.message}`;
           } finally {
             hideLoadingAnimation();
@@ -329,7 +289,6 @@
       });
     </script>
   </head>
-
   <body>
     <div class="form-container">
       <h1 class="title">Login</h1>
@@ -337,34 +296,21 @@
         <div class="input-container">
           <input type="email" id="email" placeholder="Email" required />
           <input type="password" id="password" placeholder="Password" required />
-          <svg
-            class="show-password-svg"
-            id="show-password-svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-          </svg>
-          <svg
-            class="show-password-svg"
-            id="hide-password-svg"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-          </svg>
+          <svg class="show-password-svg" id="show-password-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+          <svg class="show-password-svg" id="hide-password-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
         <p class="error" id="error-message"></p>
         <div class="sign-in-btns">
           <button type="submit">Login</button>
           <button id="google-signin" class="google-btn">Sign in with Google</button>
         </div>
+        <button id="resend-button" type="button" style="display: none;">Resend Verification Email</button>
       </form>
       <p class="bottom-text">
         Don't have a StrongDogXP account?
         <a href="signup.html">Sign up</a>
       </p>
     </div>
-
     <div id="username-prompt" class="username-prompt">
       <h1>Set Your Username</h1>
       <form id="username-form">
@@ -373,36 +319,29 @@
         <button type="submit">Continue</button>
       </form>
     </div>
-
     <div class="loading-animation-container">
       <div>
         <div class="loading-animation"></div>
         <h2 class="loading-text">Loading...</h2>
       </div>
     </div>
-
     <script>
       let canSeePassword = false;
       const showPasswordSvg = document.getElementById("show-password-svg");
       const hidePasswordSvg = document.getElementById("hide-password-svg");
       const passwordInputEl = document.getElementById("password");
-
       function togglePasswordVisibility() {
         canSeePassword = !canSeePassword;
         showPasswordSvg.style.display = canSeePassword ? "none" : "block";
         hidePasswordSvg.style.display = canSeePassword ? "block" : "none";
         passwordInputEl.type = canSeePassword ? "text" : "password";
       }
-
       showPasswordSvg.addEventListener("click", togglePasswordVisibility);
       hidePasswordSvg.addEventListener("click", togglePasswordVisibility);
-
       const googleSignInBtnEl = document.getElementById("google-signin");
       const word = "Google".split("");
       const googleColors = ["#4889f4", "#eb493b", "#fbbe0d", "#4889f4", "#3aab58", "#eb493b"];
-      googleSignInBtnEl.innerHTML =
-        "Sign in with " +
-        word.map((char, i) => `<span style="color: ${googleColors[i]}">${char}</span>`).join("");
+      googleSignInBtnEl.innerHTML = "Sign in with " + word.map((char, i) => `<span style="color: ${googleColors[i]}">${char}</span>`).join("");
     </script>
   </body>
 </html>
