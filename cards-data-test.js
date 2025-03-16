@@ -10,7 +10,6 @@ export default [
       { href: './html/hammer 2 reloaded/index.html', imgSrc: 'hammer 2 reloaded.jpg', name: 'hammer 2 reloaded' , 'page': 3, 'id': 963 },
       { href: './html/gun mayhem 3/index.html', imgSrc: 'gun mayhem 3.jpg', name: 'gun mayhem 3' , 'page': 3, 'id': 962 },
       { href: './html/gravity soccer/index.html', imgSrc: 'gravity soccer.jpg', name: 'gravity soccer' , 'page': 3, 'id': 961 },
-      { href: './html/google feud/index.html', imgSrc: 'google feud.jpg', name: 'google feud' , 'page': 3, 'id': 960 },
       { href: './html/golf championships/index.html', imgSrc: 'golf championships.jpg', name: 'golf championships' , 'page': 3, 'id': 959 },
       { href: './html/gold digger frvr/index.html', imgSrc: 'gold digger frvr.jpg', name: 'gold digger frvr' , 'page': 3, 'id': 958 },
       { href: './html/gobble/index.html', imgSrc: 'gobble.jpg', name: 'gobble' , 'page': 3, 'id': 957 },
