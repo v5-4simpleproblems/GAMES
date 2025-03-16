@@ -48,7 +48,6 @@ export default [
       { href: './html/doodle champion island/index.html', imgSrc: 'doodle champion island.jpg', name: 'doodle champion island' , 'page': 3, 'id': 924 },
       { href: './html/dino bros/index.html', imgSrc: 'dino bros.jpg', name: 'dino bros' , 'page': 3, 'id': 923 },
       { href: './html/decent/index.html', imgSrc: 'decent.jpg', name: 'decent' , 'page': 3, 'id': 922 },
-      { href: './html/pool club/index.html', imgSrc: 'pool club.jpg', name: 'pool club' , 'page': 3, 'id': 921 },
       { href: './html/plactions/index.html', imgSrc: 'plactions.png', name: 'plactions' , 'page': 3, 'id': 920 },
       { href: './html/ping pong/index.html', imgSrc: 'ping pong.jpg', name: 'ping pong' , 'page': 3, 'id': 919 },
       { href: './html/parkour race/index.html', imgSrc: 'parkour race.jpg', name: 'parkour race' , 'page': 3, 'id': 918 },
