@@ -1,4 +1,5 @@
 export default [
+  { href: './html/recoil/index.html', imgSrc: 'recoil.jpg', name: 'recoil' , 'page': 3, 'id': 868 },
   { href: './html/fortz/index.html', imgSrc: 'fortz.jpg', name: 'fortz' , 'page': 3, 'id': 947 },
   { href: './html/free the key/index.html', imgSrc: 'free the key.jpg', name: 'free the key' , 'page': 3, 'id': 948 },
   { href: './html/fury wars/index.html', imgSrc: 'fury wars.jpg', name: 'fury wars' , 'page': 3, 'id': 949 },
