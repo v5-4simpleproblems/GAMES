@@ -17,7 +17,6 @@ export default [
       { href: './html/g-switch 4/index.html', imgSrc: 'g-switch 4.jpg', name: 'g-switch 4' , 'page': 3, 'id': 954 },
       { href: './html/g-switch 3/index.html', imgSrc: 'g-switch 3.jpg', name: 'g-switch 3' , 'page': 3, 'id': 953 },
       { href: './html/g-switch 2/index.html', imgSrc: 'g-switch 2.jpg', name: 'g-switch 2' , 'page': 3, 'id': 952 },
-      { href: './html/g-switch/index.html', imgSrc: 'g-switch.jpg', name: 'g-switch' , 'page': 3, 'id': 951 },
       { href: './html/fz snow battle.io/index.html', imgSrc: 'fz snow battle.io.jpg', name: 'fz snow battle.io' , 'page': 3, 'id': 950 },
       { href: './html/fury wars/index.html', imgSrc: 'fury wars.jpg', name: 'fury wars' , 'page': 3, 'id': 949 },
       { href: './html/free the key/index.html', imgSrc: 'free the key.jpg', name: 'free the key' , 'page': 3, 'id': 948 },
