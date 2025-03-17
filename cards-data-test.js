@@ -2,7 +2,6 @@ export default [
       { href: './html/hills of steel/index.html', imgSrc: 'hills of steel.jpg', name: 'hills of steel' , 'page': 3, 'id': 970 },
       { href: './html/heads arena soccer all star/index.html', imgSrc: 'heads arena soccer all star.jpg', name: 'heads arena soccer all star' , 'page': 3, 'id': 965 },
       { href: './html/gravity soccer/index.html', imgSrc: 'gravity soccer.jpg', name: 'gravity soccer' , 'page': 3, 'id': 961 },
-      { href: './html/gobble/index.html', imgSrc: 'gobble.jpg', name: 'gobble' , 'page': 3, 'id': 957 },
       { href: './html/gangster contract mafia wars/index.html', imgSrc: 'gangster contract mafia wars.jpg', name: 'gangster contract mafia wars' , 'page': 3, 'id': 956 },
       { href: './html/game of farmers/index.html', imgSrc: 'game of farmers.jpg', name: 'game of farmers' , 'page': 3, 'id': 955 },
       { href: './html/g-switch 4/index.html', imgSrc: 'g-switch 4.jpg', name: 'g-switch 4' , 'page': 3, 'id': 954 },
