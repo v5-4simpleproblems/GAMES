@@ -82,7 +82,6 @@ export default [
       { href: './html/real simulator monster truck/index.html', imgSrc: 'real simulator monster truck.jpg', name: 'real simulator monster truck' , 'page': 3, 'id': 867 },
       { href: './html/rally champion/index.html', imgSrc: 'rally champion.jpg', name: 'rally champion' , 'page': 3, 'id': 866 },
       { href: './html/puppet master/index.html', imgSrc: 'puppet master.jpg', name: 'puppet master' , 'page': 3, 'id': 865 },
-      { href: './html/power badminton/index.html', imgSrc: 'power badminton.jpg', name: 'power badminton' , 'page': 3, 'id': 864 },
       { href: './html/poor bunny/index.html', imgSrc: 'poor bunny.jpg', name: 'poor bunny' , 'page': 3, 'id': 863 },
       { href: './html/truck traffic/index.html', imgSrc: 'truck traffic.jpg', name: 'truck traffic' , 'page': 3, 'id': 859 },
       { href: './html/striker dummies/index.html', imgSrc: 'striker dummies.jpg', name: 'striker dummies' , 'page': 3, 'id': 841 },
