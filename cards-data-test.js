@@ -75,7 +75,6 @@ export default [
       { href: './html/shady bears/index.html', imgSrc: 'shady bears.jpg', name: 'shady bears' , 'page': 3, 'id': 877 },
       { href: './html/scrap divers/index.html', imgSrc: 'scrap divers.jpg', name: 'scrap divers' , 'page': 3, 'id': 876 },
       { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3, 'id': 874 },
-      { href: './html/runman race around the world/index.html', imgSrc: 'runman race around the world.png', name: 'runman race around the world' , 'page': 3, 'id': 873 },
       { href: './html/rooftop snipers 2/index.html', imgSrc: 'rooftop snipers 2.jpg', name: 'rooftop snipers 2' , 'page': 3, 'id': 872 },
       { href: './html/roly poly monsters/index.html', imgSrc: 'roly poly monsters.jpg', name: 'roly poly monsters' , 'page': 3, 'id': 871 },
       { href: './html/rocket pult/index.html', imgSrc: 'rocket pult.jpg', name: 'rocket pult' , 'page': 3, 'id': 870 },
