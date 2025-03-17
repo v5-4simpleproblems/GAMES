@@ -1,5 +1,4 @@
 export default [
-      { href: './html/super mario world/index.html', imgSrc: 'super mario world.jpg', name: 'super mario world' , 'page': 3, 'id': 971 },
       { href: './html/hills of steel/index.html', imgSrc: 'hills of steel.jpg', name: 'hills of steel' , 'page': 3, 'id': 970 },
       { href: './html/highway traffic/index.html', imgSrc: 'highway traffic.jpg', name: 'highway traffic' , 'page': 3, 'id': 969 },
       { href: './html/highway rider extreme/index.html', imgSrc: 'highway rider extreme.jpg', name: 'highway rider extreme' , 'page': 3, 'id': 968 },
