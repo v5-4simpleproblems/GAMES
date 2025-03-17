@@ -1,4 +1,5 @@
 export default [
+  { href: './html/gangster contract mafia wars/index.html', imgSrc: 'gangster contract mafia wars.jpg', name: 'gangster contract mafia wars' , 'page': 3, 'id': 956 },
   { href: './html/gobble/index.html', imgSrc: 'gobble.jpg', name: 'gobble' , 'page': 3, 'id': 957 },
   { href: './html/gold digger frvr/index.html', imgSrc: 'gold digger frvr.jpg', name: 'gold digger frvr' , 'page': 3, 'id': 958 },
   { href: './html/golf championships/index.html', imgSrc: 'golf championships.jpg', name: 'golf championships' , 'page': 3, 'id': 959 },
