@@ -1,4 +1,5 @@
 export default [
+  { href: './html/fury wars/index.html', imgSrc: 'fury wars.jpg', name: 'fury wars' , 'page': 3, 'id': 949 },
   { href: './html/game of farmers/index.html', imgSrc: 'game of farmers.jpg', name: 'game of farmers' , 'page': 3, 'id': 955 },
   { href: './html/gangster contract mafia wars/index.html', imgSrc: 'gangster contract mafia wars.jpg', name: 'gangster contract mafia wars' , 'page': 3, 'id': 956 },
   { href: './html/gobble/index.html', imgSrc: 'gobble.jpg', name: 'gobble' , 'page': 3, 'id': 957 },
