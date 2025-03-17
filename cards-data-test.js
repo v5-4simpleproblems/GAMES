@@ -60,7 +60,6 @@ export default [
       { href: './html/slope city/index.html', imgSrc: 'slope city.jpg', name: 'slope city' , 'page': 3, 'id': 892 },
       { href: './html/slope 3/index.html', imgSrc: 'slope 3.jpg', name: 'slope 3' , 'page': 3, 'id': 891 },
       { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
-      { href: './html/slime road/index.html', imgSrc: 'slime road.jpg', name: 'slime road' , 'page': 3, 'id': 889 },
       { href: './html/slime laboratory/index.html', imgSrc: 'slime laboratory.jpg', name: 'slime laboratory' , 'page': 3, 'id': 888 },
       { href: './html/skiing fred/index.html', imgSrc: 'skiing fred.jpg', name: 'skiing fred' , 'page': 3, 'id': 887 },
       { href: './html/skibidi shooter/index.html', imgSrc: 'skibidi shooter.jpg', name: 'skibidi shooter' , 'page': 3, 'id': 886 },
