@@ -1,4 +1,5 @@
 export default [
+  { href: './html/dino bros/index.html', imgSrc: 'dino bros.jpg', name: 'dino bros' , 'page': 3, 'id': 923 },
   { href: './html/shoot stickman/index.html', imgSrc: 'shoot stickman.jpg', name: 'shoot stickman' , 'page': 3, 'id': 880 },
   { href: './html/rooftop snipers 2/index.html', imgSrc: 'rooftop snipers 2.jpg', name: 'rooftop snipers 2' , 'page': 3, 'id': 872 },
   { href: './html/scrap divers/index.html', imgSrc: 'scrap divers.jpg', name: 'scrap divers' , 'page': 3, 'id': 876 },
