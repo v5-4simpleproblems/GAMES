@@ -1,4 +1,5 @@
 export default [
+  { href: './html/highway rider extreme/index.html', imgSrc: 'highway rider extreme.jpg', name: 'highway rider extreme' , 'page': 3, 'id': 968 },
   { href: './html/highway traffic/index.html', imgSrc: 'highway traffic.jpg', name: 'highway traffic' , 'page': 3, 'id': 969 },
   { href: './html/g-switch 3/index.html', imgSrc: 'g-switch 3.jpg', name: 'g-switch 3' , 'page': 3, 'id': 953 },
   { href: './html/g-switch 2/index.html', imgSrc: 'g-switch 2.jpg', name: 'g-switch 2' , 'page': 3, 'id': 952 },
