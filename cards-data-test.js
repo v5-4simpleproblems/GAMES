@@ -76,7 +76,6 @@ export default [
       { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3, 'id': 874 },
       { href: './html/rooftop snipers 2/index.html', imgSrc: 'rooftop snipers 2.jpg', name: 'rooftop snipers 2' , 'page': 3, 'id': 872 },
       { href: './html/roly poly monsters/index.html', imgSrc: 'roly poly monsters.jpg', name: 'roly poly monsters' , 'page': 3, 'id': 871 },
-      { href: './html/rocket pult/index.html', imgSrc: 'rocket pult.jpg', name: 'rocket pult' , 'page': 3, 'id': 870 },
       { href: './html/rio rex/index.html', imgSrc: 'rio rex.jpg', name: 'rio rex' , 'page': 3, 'id': 869 },
       { href: './html/real simulator monster truck/index.html', imgSrc: 'real simulator monster truck.jpg', name: 'real simulator monster truck' , 'page': 3, 'id': 867 },
       { href: './html/rally champion/index.html', imgSrc: 'rally champion.jpg', name: 'rally champion' , 'page': 3, 'id': 866 },
