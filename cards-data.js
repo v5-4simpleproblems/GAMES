@@ -1,4 +1,5 @@
 export default [
+  { href: './html/fortz/index.html', imgSrc: 'fortz.jpg', name: 'fortz' , 'page': 3, 'id': 947 },
   { href: './html/free the key/index.html', imgSrc: 'free the key.jpg', name: 'free the key' , 'page': 3, 'id': 948 },
   { href: './html/fury wars/index.html', imgSrc: 'fury wars.jpg', name: 'fury wars' , 'page': 3, 'id': 949 },
   { href: './html/game of farmers/index.html', imgSrc: 'game of farmers.jpg', name: 'game of farmers' , 'page': 3, 'id': 955 },
