@@ -1,7 +1,6 @@
 export default [
       { href: './html/hills of steel/index.html', imgSrc: 'hills of steel.jpg', name: 'hills of steel' , 'page': 3, 'id': 970 },
       { href: './html/heads arena soccer all star/index.html', imgSrc: 'heads arena soccer all star.jpg', name: 'heads arena soccer all star' , 'page': 3, 'id': 965 },
-      { href: './html/gun mayhem 3/index.html', imgSrc: 'gun mayhem 3.jpg', name: 'gun mayhem 3' , 'page': 3, 'id': 962 },
       { href: './html/gravity soccer/index.html', imgSrc: 'gravity soccer.jpg', name: 'gravity soccer' , 'page': 3, 'id': 961 },
       { href: './html/golf championships/index.html', imgSrc: 'golf championships.jpg', name: 'golf championships' , 'page': 3, 'id': 959 },
       { href: './html/gold digger frvr/index.html', imgSrc: 'gold digger frvr.jpg', name: 'gold digger frvr' , 'page': 3, 'id': 958 },
