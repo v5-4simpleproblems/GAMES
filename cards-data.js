@@ -1,4 +1,5 @@
 export default [
+  { href: './html/g-switch 3/index.html', imgSrc: 'g-switch 3.jpg', name: 'g-switch 3' , 'page': 3, 'id': 953 },
   { href: './html/g-switch 2/index.html', imgSrc: 'g-switch 2.jpg', name: 'g-switch 2' , 'page': 3, 'id': 952 },
   { href: './html/g-switch/index.html', imgSrc: 'g-switch.jpg', name: 'g-switch' , 'page': 3, 'id': 951 },
   { href: './html/super mario world/index.html', imgSrc: 'super mario world.jpg', name: 'super mario world' , 'page': 3, 'id': 971 },
