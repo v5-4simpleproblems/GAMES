@@ -1,6 +1,5 @@
 export default [
       { href: './html/hills of steel/index.html', imgSrc: 'hills of steel.jpg', name: 'hills of steel' , 'page': 3, 'id': 970 },
-      { href: './html/highway bike simulator/index.html', imgSrc: 'highway bike simulator.jpg', name: 'highway bike simulator' , 'page': 3, 'id': 967 },
       { href: './html/hide and smash/index.html', imgSrc: 'hide and smash.jpg', name: 'hide and smash' , 'page': 3, 'id': 966 },
       { href: './html/heads arena soccer all star/index.html', imgSrc: 'heads arena soccer all star.jpg', name: 'heads arena soccer all star' , 'page': 3, 'id': 965 },
       { href: './html/head soccer/index.html', imgSrc: 'head soccer.jpg', name: 'head soccer' , 'page': 3, 'id': 964 },
