@@ -4,7 +4,6 @@ export default [
       { href: './html/gravity soccer/index.html', imgSrc: 'gravity soccer.jpg', name: 'gravity soccer' , 'page': 3, 'id': 961 },
       { href: './html/g-switch 4/index.html', imgSrc: 'g-switch 4.jpg', name: 'g-switch 4' , 'page': 3, 'id': 954 },
       { href: './html/fz snow battle.io/index.html', imgSrc: 'fz snow battle.io.jpg', name: 'fz snow battle.io' , 'page': 3, 'id': 950 },
-      { href: './html/free the key/index.html', imgSrc: 'free the key.jpg', name: 'free the key' , 'page': 3, 'id': 948 },
       { href: './html/fortz/index.html', imgSrc: 'fortz.jpg', name: 'fortz' , 'page': 3, 'id': 947 },
       { href: './html/football legends/index.html', imgSrc: 'football legends.jpg', name: 'football legends' , 'page': 3, 'id': 946 },
       { href: './html/foot chinko/index.html', imgSrc: 'foot chinko.jpg', name: 'foot chinko' , 'page': 3, 'id': 945 },
