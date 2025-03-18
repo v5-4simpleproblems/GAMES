@@ -404,13 +404,13 @@ h2 {
 }
 
 .alternate-link:last-child:nth-child(odd) {
-  grid-column: 1 / -1; /* If there is an odd, last child, make it take up all space */
+  grid-column: 1 / -1;
 }
 
 .status-dot,
 .spinning-dot {
   aspect-ratio: 1;
-  border-radius: 100vw; /* Same as 50% but it doesn't warp it with borders */
+  border-radius: 100vw;
   display: inline-block;
   margin-left: 10px;
   margin-right: 5px;
