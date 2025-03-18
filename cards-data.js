@@ -1,4 +1,5 @@
 export default [
+  { href: './html/skiing fred/index.html', imgSrc: 'skiing fred.jpg', name: 'skiing fred' , 'page': 3, 'id': 887 },
   { href: './html/slime laboratory/index.html', imgSrc: 'slime laboratory.jpg', name: 'slime laboratory' , 'page': 3, 'id': 888 },
   { href: './html/slope city/index.html', imgSrc: 'slope city.jpg', name: 'slope city' , 'page': 3, 'id': 892 },
   { href: './html/hypersnake/index.html', imgSrc: 'hypersnake.jpg', name: 'hypersnake' , 'page': 3, 'id': 894 },
