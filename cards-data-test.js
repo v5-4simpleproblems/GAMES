@@ -127,7 +127,6 @@ export default [
       { href: './html/idle startup tycoon/index.html', imgSrc: 'idle startup tycoon.jpg', name: 'idle startup tycoon' , 'page': 4, 'id': 897 },
       { href: './html/idle mining empire/index.html', imgSrc: 'idle mining empire.jpg', name: 'idle mining empire' , 'page': 4, 'id': 896 },
       { href: './html/idle gold miner/index.html', imgSrc: 'idle gold miner.jpg', name: 'idle gold miner' , 'page': 4, 'id': 895 },
-      { href: './html/hypersnake/index.html', imgSrc: 'hypersnake.jpg', name: 'hypersnake' , 'page': 3, 'id': 894 },
       { href: './html/horse shoing/index.html', imgSrc: 'horse shoing.jpg', name: 'horse shoing' , 'page': 3, 'id': 893 },
       { href: './html/slope city/index.html', imgSrc: 'slope city.jpg', name: 'slope city' , 'page': 3, 'id': 892 },
       { href: './html/slope 3/index.html', imgSrc: 'slope 3.jpg', name: 'slope 3' , 'page': 3, 'id': 891 },
