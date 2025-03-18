@@ -1,4 +1,5 @@
 export default [
+  { href: './html/slime laboratory/index.html', imgSrc: 'slime laboratory.jpg', name: 'slime laboratory' , 'page': 3, 'id': 888 },
   { href: './html/slope city/index.html', imgSrc: 'slope city.jpg', name: 'slope city' , 'page': 3, 'id': 892 },
   { href: './html/hypersnake/index.html', imgSrc: 'hypersnake.jpg', name: 'hypersnake' , 'page': 3, 'id': 894 },
   { href: './html/dino bros/index.html', imgSrc: 'dino bros.jpg', name: 'dino bros' , 'page': 3, 'id': 923 },
