@@ -1,4 +1,5 @@
 export default [
+  { href: './html/shootz/index.html', imgSrc: 'shootz.jpg', name: 'shootz' , 'page': 3, 'id': 881 },
   { href: './html/skibidi shooter/index.html', imgSrc: 'skibidi shooter.jpg', name: 'skibidi shooter' , 'page': 3, 'id': 886 },
   { href: './html/dyna boy/index.html', imgSrc: 'dyna boy.jpg', name: 'dyna boy' , 'page': 4, 'id': 934 },
   { href: './html/crazy cars/index.html', imgSrc: 'crazy cars.jpg', name: 'crazy cars' , 'page': 4, 'id': 1034 },
