@@ -6,7 +6,6 @@ export default [
       { href: './html/cow bay/index.html', imgSrc: 'cow bay.jpg', name: 'cow bay' , 'page': 4, 'id': 1033 },
       { href: './html/court kings 3d/index.html', imgSrc: 'court kings 3d.jpg', name: 'court kings 3d' , 'page': 4, 'id': 1032 },
       { href: './html/copter.io/index.html', imgSrc: 'copter.io.jpg', name: 'copter.io' , 'page': 4, 'id': 1031 },
-      { href: './html/color tunnel 2/index.html', imgSrc: 'color tunnel 2.jpg', name: 'color tunnel 2' , 'page': 4, 'id': 1030 },
       { href: './html/city rider/index.html', imgSrc: 'city rider.jpg', name: 'city rider' , 'page': 4, 'id': 1029 },
       { href: './html/city car driving stunt master/index.html', imgSrc: 'city car driving stunt master.jpg', name: 'city car driving stunt master' , 'page': 4, 'id': 1028 },
       { href: './html/city bike stunt 2/index.html', imgSrc: 'city bike stunt 2.jpg', name: 'city bike stunt 2' , 'page': 4, 'id': 1027 },
