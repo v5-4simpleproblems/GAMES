@@ -5,7 +5,6 @@ export default [
       { href: './html/curve ball 3d/index.html', imgSrc: 'curve ball 3d.jpg', name: 'curve ball 3d' , 'page': 4, 'id': 1039 },
       { href: './html/cubito mayhem/index.html', imgSrc: 'cubito mayhem.jpg', name: 'cubito mayhem' , 'page': 4, 'id': 1038 },
       { href: './html/cricket world cup/index.html', imgSrc: 'cricket world cup.jpg', name: 'cricket world cup' , 'page': 4, 'id': 1036 },
-      { href: './html/crazy tunnel 3d/index.html', imgSrc: 'crazy tunnel 3d.jpg', name: 'crazy tunnel 3d' , 'page': 4, 'id': 1035 },
       { href: './html/crazy cars/index.html', imgSrc: 'crazy cars.jpg', name: 'crazy cars' , 'page': 4, 'id': 1034 },
       { href: './html/cow bay/index.html', imgSrc: 'cow bay.jpg', name: 'cow bay' , 'page': 4, 'id': 1033 },
       { href: './html/court kings 3d/index.html', imgSrc: 'court kings 3d.jpg', name: 'court kings 3d' , 'page': 4, 'id': 1032 },
