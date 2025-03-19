@@ -85,7 +85,6 @@ export default [
       { href: './html/duo survival 2/index.html', imgSrc: 'duo survival 2.jpg', name: 'duo survival 2' , 'page': 4, 'id': 932 },
       { href: './html/duo survival/index.html', imgSrc: 'duo survival.jpg', name: 'duo survival' , 'page': 4, 'id': 931 },
       { href: './html/dunk perfect/index.html', imgSrc: 'dunk perfect.jpg', name: 'dunk perfect' , 'page': 4, 'id': 930 },
-      { href: './html/ducklings.io/index.html', imgSrc: 'ducklings.io.jpg', name: 'ducklings.io' , 'page': 4, 'id': 929 },
       { href: './html/dubai police parking 2/index.html', imgSrc: 'dubai police parking 2.jpg', name: 'dubai police parking 2' , 'page': 4, 'id': 928 },
       { href: './html/drunken duel/index.html', imgSrc: 'drunken duel.jpg', name: 'drunken duel' , 'page': 4, 'id': 927 },
       { href: './html/drednot.io/index.html', imgSrc: 'drednot.io.jpg', name: 'drednot.io' , 'page': 4, 'id': 926 },
