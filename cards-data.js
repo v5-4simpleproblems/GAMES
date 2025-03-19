@@ -1,4 +1,5 @@
 export default [
+  { href: './html/dyna boy/index.html', imgSrc: 'dyna boy.jpg', name: 'dyna boy' , 'page': 4, 'id': 934 },
   { href: './html/crazy cars/index.html', imgSrc: 'crazy cars.jpg', name: 'crazy cars' , 'page': 4, 'id': 1034 },
   { href: './html/curve ball 3d/index.html', imgSrc: 'curve ball 3d.jpg', name: 'curve ball 3d' , 'page': 4, 'id': 1039 },
   { href: './html/crazy tunnel 3d/index.html', imgSrc: 'crazy tunnel 3d.jpg', name: 'crazy tunnel 3d' , 'page': 4, 'id': 1035 },
