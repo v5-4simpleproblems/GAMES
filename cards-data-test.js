@@ -4,7 +4,6 @@ export default [
       { href: './html/cyber cars punk racing/index.html', imgSrc: 'cyber cars punk racing.jpg', name: 'cyber cars punk racing' , 'page': 4, 'id': 1040 },
       { href: './html/curve ball 3d/index.html', imgSrc: 'curve ball 3d.jpg', name: 'curve ball 3d' , 'page': 4, 'id': 1039 },
       { href: './html/cubito mayhem/index.html', imgSrc: 'cubito mayhem.jpg', name: 'cubito mayhem' , 'page': 4, 'id': 1038 },
-      { href: './html/cubes king/index.html', imgSrc: 'cubes king.jpg', name: 'cubes king' , 'page': 4, 'id': 1037 },
       { href: './html/cricket world cup/index.html', imgSrc: 'cricket world cup.jpg', name: 'cricket world cup' , 'page': 4, 'id': 1036 },
       { href: './html/crazy tunnel 3d/index.html', imgSrc: 'crazy tunnel 3d.jpg', name: 'crazy tunnel 3d' , 'page': 4, 'id': 1035 },
       { href: './html/crazy cars/index.html', imgSrc: 'crazy cars.jpg', name: 'crazy cars' , 'page': 4, 'id': 1034 },
