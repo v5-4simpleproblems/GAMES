@@ -81,7 +81,6 @@ export default [
       { href: './html/energy/index.html', imgSrc: 'energy.jpg', name: 'energy' , 'page': 4, 'id': 937 },
       { href: './html/electron dash/index.html', imgSrc: 'electron dash.jpg', name: 'electron dash' , 'page': 4, 'id': 936 },
       { href: './html/eggbot vs zombies/index.html', imgSrc: 'eggbot vs zombies.jpg', name: 'eggbot vs zombies' , 'page': 4, 'id': 935 },
-      { href: './html/dyna boy/index.html', imgSrc: 'dyna boy.jpg', name: 'dyna boy' , 'page': 4, 'id': 934 },
       { href: './html/duo survival 3/index.html', imgSrc: 'duo survival 3.jpg', name: 'duo survival 3' , 'page': 4, 'id': 933 },
       { href: './html/duo survival 2/index.html', imgSrc: 'duo survival 2.jpg', name: 'duo survival 2' , 'page': 4, 'id': 932 },
       { href: './html/duo survival/index.html', imgSrc: 'duo survival.jpg', name: 'duo survival' , 'page': 4, 'id': 931 },
