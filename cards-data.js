@@ -1,4 +1,5 @@
 export default [
+  { href: './html/chicky farm/index.html', imgSrc: 'chicky farm.jpg', name: 'chicky farm' , 'page': 4, 'id': 1026 },
   { href: './html/death chase/index.html', imgSrc: 'death chase.jpg', name: 'death chase' , 'page': 4, 'id': 1044 },
   { href: './html/jumping shell/index.html', imgSrc: 'jumping shell.png', name: 'jumping shell' , 'page': 4, 'id': 899 },
   { href: './html/lethal sniper 3d army soldier/index.html', imgSrc: 'lethal sniper 3d army soldier.jpg', name: 'lethal sniper 3d army soldier' , 'page': 4, 'id': 902 },
