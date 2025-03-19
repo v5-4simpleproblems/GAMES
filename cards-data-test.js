@@ -121,7 +121,6 @@ export default [
       { href: './html/ludo multiplayer/index.html', imgSrc: 'ludo multiplayer.jpg', name: 'ludo multiplayer' , 'page': 4, 'id': 903 },
       { href: './html/lands of blight/index.html', imgSrc: 'lands of blight.jpg', name: 'lands of blight' , 'page': 4, 'id': 901 },
       { href: './html/kart race/index.html', imgSrc: 'kart race.jpg', name: 'kart race' , 'page': 4, 'id': 900 },
-      { href: './html/jumping shell/index.html', imgSrc: 'jumping shell.png', name: 'jumping shell' , 'page': 4, 'id': 899 },
       { href: './html/james gun/index.html', imgSrc: 'james gun.jpg', name: 'james gun' , 'page': 4, 'id': 898 },
       { href: './html/idle startup tycoon/index.html', imgSrc: 'idle startup tycoon.jpg', name: 'idle startup tycoon' , 'page': 4, 'id': 897 },
       { href: './html/idle mining empire/index.html', imgSrc: 'idle mining empire.jpg', name: 'idle mining empire' , 'page': 4, 'id': 896 },
