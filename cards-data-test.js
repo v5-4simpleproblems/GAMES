@@ -119,7 +119,6 @@ export default [
       { href: './html/horse shoing/index.html', imgSrc: 'horse shoing.jpg', name: 'horse shoing' , 'page': 3, 'id': 893 },
       { href: './html/slope 3/index.html', imgSrc: 'slope 3.jpg', name: 'slope 3' , 'page': 3, 'id': 891 },
       { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
-      { href: './html/skibidi shooter/index.html', imgSrc: 'skibidi shooter.jpg', name: 'skibidi shooter' , 'page': 3, 'id': 886 },
       { href: './html/sketchbook 04/index.html', imgSrc: 'sketchbook 04.jpg', name: 'sketchbook 04' , 'page': 3, 'id': 885 },
       { href: './html/sink it/index.html', imgSrc: 'sink it.jpg', name: 'sink it' , 'page': 3, 'id': 884 },
       { href: './html/short ride/index.html', imgSrc: 'short ride.jpg', name: 'short ride' , 'page': 3, 'id': 883 },
