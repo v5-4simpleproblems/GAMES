@@ -1,4 +1,5 @@
 export default [
+  { href: './html/candy jump/index.html', imgSrc: 'candy jump.png', name: 'candy jump' , 'page': 4, 'id': 1012 },
   { href: './html/color tunnel 2/index.html', imgSrc: 'color tunnel 2.jpg', name: 'color tunnel 2' , 'page': 4, 'id': 1030 },
   { href: './html/cubito mayhem/index.html', imgSrc: 'cubito mayhem.jpg', name: 'cubito mayhem' , 'page': 4, 'id': 1038 },
   { href: './html/ducklings.io/index.html', imgSrc: 'ducklings.io.jpg', name: 'ducklings.io' , 'page': 4, 'id': 929 },
