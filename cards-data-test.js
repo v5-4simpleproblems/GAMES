@@ -1,6 +1,5 @@
 export default [
       { href: './html/dead paradise race shooter/index.html', imgSrc: 'dead paradise race shooter.jpg', name: 'dead paradise race shooter' , 'page': 4, 'id': 1043 },
-      { href: './html/darts pro/index.html', imgSrc: 'darts pro.jpg', name: 'darts pro' , 'page': 4, 'id': 1042 },
       { href: './html/dark runner/index.html', imgSrc: 'dark runner.jpg', name: 'dark runner' , 'page': 4, 'id': 1041 },
       { href: './html/cyber cars punk racing/index.html', imgSrc: 'cyber cars punk racing.jpg', name: 'cyber cars punk racing' , 'page': 4, 'id': 1040 },
       { href: './html/curve ball 3d/index.html', imgSrc: 'curve ball 3d.jpg', name: 'curve ball 3d' , 'page': 4, 'id': 1039 },
