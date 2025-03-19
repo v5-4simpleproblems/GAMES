@@ -22,7 +22,6 @@ export default [
       { href: './html/car drift racers 2/index.html', imgSrc: 'car drift racers 2.jpg', name: 'car drift racers 2' , 'page': 4, 'id': 1015 },
       { href: './html/car climb racing/index.html', imgSrc: 'car climb racing.jpg', name: 'car climb racing' , 'page': 4, 'id': 1014 },
       { href: './html/cannon strike/index.html', imgSrc: 'cannon strike.png', name: 'cannon strike' , 'page': 4, 'id': 1013 },
-      { href: './html/candy jump/index.html', imgSrc: 'candy jump.png', name: 'candy jump' , 'page': 4, 'id': 1012 },
       { href: './html/burnout extreme drift 2/index.html', imgSrc: 'burnout extreme drift 2.jpg', name: 'burnout extreme drift 2' , 'page': 4, 'id': 1011 },
       { href: './html/burnout drift seaport max/index.html', imgSrc: 'burnout drift seaport max.jpg', name: 'burnout drift seaport max' , 'page': 4, 'id': 1010 },
       { href: './html/burnin rubber crash n burn/index.html', imgSrc: 'burnin rubber crash n burn.jpg', name: 'burnin rubber crash n burn' , 'page': 4, 'id': 1009 },
