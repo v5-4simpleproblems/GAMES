@@ -1,5 +1,4 @@
 export default [
-      { href: './html/death chase/index.html', imgSrc: 'death chase.jpg', name: 'death chase' , 'page': 4, 'id': 1044 },
       { href: './html/dead paradise race shooter/index.html', imgSrc: 'dead paradise race shooter.jpg', name: 'dead paradise race shooter' , 'page': 4, 'id': 1043 },
       { href: './html/darts pro/index.html', imgSrc: 'darts pro.jpg', name: 'darts pro' , 'page': 4, 'id': 1042 },
       { href: './html/dark runner/index.html', imgSrc: 'dark runner.jpg', name: 'dark runner' , 'page': 4, 'id': 1041 },
