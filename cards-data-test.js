@@ -2,7 +2,6 @@ export default [
       { href: './html/dead paradise race shooter/index.html', imgSrc: 'dead paradise race shooter.jpg', name: 'dead paradise race shooter' , 'page': 4, 'id': 1043 },
       { href: './html/dark runner/index.html', imgSrc: 'dark runner.jpg', name: 'dark runner' , 'page': 4, 'id': 1041 },
       { href: './html/cyber cars punk racing/index.html', imgSrc: 'cyber cars punk racing.jpg', name: 'cyber cars punk racing' , 'page': 4, 'id': 1040 },
-      { href: './html/curve ball 3d/index.html', imgSrc: 'curve ball 3d.jpg', name: 'curve ball 3d' , 'page': 4, 'id': 1039 },
       { href: './html/cubito mayhem/index.html', imgSrc: 'cubito mayhem.jpg', name: 'cubito mayhem' , 'page': 4, 'id': 1038 },
       { href: './html/cricket world cup/index.html', imgSrc: 'cricket world cup.jpg', name: 'cricket world cup' , 'page': 4, 'id': 1036 },
       { href: './html/crazy cars/index.html', imgSrc: 'crazy cars.jpg', name: 'crazy cars' , 'page': 4, 'id': 1034 },
