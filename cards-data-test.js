@@ -98,7 +98,6 @@ export default [
       { href: './html/mystical birdlink/index.html', imgSrc: 'mystical birdlink.jpg', name: 'mystical birdlink' , 'page': 4, 'id': 909 },
       { href: './html/mob city/index.html', imgSrc: 'mob city.jpg', name: 'mob city' , 'page': 4, 'id': 908 },
       { href: './html/marble dash/index.html', imgSrc: 'marble dash.jpg', name: 'marble dash' , 'page': 4, 'id': 905 },
-      { href: './html/mafia wars/index.html', imgSrc: 'mafia wars.jpg', name: 'mafia wars' , 'page': 4, 'id': 904 },
       { href: './html/ludo multiplayer/index.html', imgSrc: 'ludo multiplayer.jpg', name: 'ludo multiplayer' , 'page': 4, 'id': 903 },
       { href: './html/lands of blight/index.html', imgSrc: 'lands of blight.jpg', name: 'lands of blight' , 'page': 4, 'id': 901 },
       { href: './html/kart race/index.html', imgSrc: 'kart race.jpg', name: 'kart race' , 'page': 4, 'id': 900 },
