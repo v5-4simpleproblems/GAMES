@@ -1,4 +1,5 @@
 export default [
+  { href: './html/decent/index.html', imgSrc: 'decent.jpg', name: 'decent' , 'page': 4, 'id': 922 },
   { href: './html/bacon may die/index.html', imgSrc: 'bacon may die.jpg', name: 'bacon may die' , 'page': 4, 'id': 972 },
   { href: './html/cow bay/index.html', imgSrc: 'cow bay.jpg', name: 'cow bay' , 'page': 4, 'id': 1033 },
   { href: './html/cricket world cup/index.html', imgSrc: 'cricket world cup.jpg', name: 'cricket world cup' , 'page': 4, 'id': 1036 },
