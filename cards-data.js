@@ -1,4 +1,5 @@
 export default [
+  { href: './html/cricket world cup/index.html', imgSrc: 'cricket world cup.jpg', name: 'cricket world cup' , 'page': 4, 'id': 1036 },
   { href: './html/dark runner/index.html', imgSrc: 'dark runner.jpg', name: 'dark runner' , 'page': 4, 'id': 1041 },
   { href: './html/mafia wars/index.html', imgSrc: 'mafia wars.jpg', name: 'mafia wars' , 'page': 4, 'id': 904 },
   { href: './html/puppet master/index.html', imgSrc: 'puppet master.jpg', name: 'puppet master' , 'page': 3, 'id': 865 },
