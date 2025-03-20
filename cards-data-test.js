@@ -80,7 +80,6 @@ export default [
       { href: './html/drednot.io/index.html', imgSrc: 'drednot.io.jpg', name: 'drednot.io' , 'page': 4, 'id': 926 },
       { href: './html/dreadhead parkour/index.html', imgSrc: 'dreadhead parkour.jpg', name: 'dreadhead parkour' , 'page': 4, 'id': 925 },
       { href: './html/doodle champion island/index.html', imgSrc: 'doodle champion island.jpg', name: 'doodle champion island' , 'page': 4, 'id': 924 },
-      { href: './html/decent/index.html', imgSrc: 'decent.jpg', name: 'decent' , 'page': 4, 'id': 922 },
       { href: './html/plactions/index.html', imgSrc: 'plactions.png', name: 'plactions' , 'page': 4, 'id': 920 },
       { href: './html/ping pong/index.html', imgSrc: 'ping pong.jpg', name: 'ping pong' , 'page': 4, 'id': 919 },
       { href: './html/parkour race/index.html', imgSrc: 'parkour race.jpg', name: 'parkour race' , 'page': 4, 'id': 918 },
