@@ -1,4 +1,5 @@
 export default [
+  { href: './html/eugenes life/index.html', imgSrc: 'eugenes life.jpg', name: 'eugenes life' , 'page': 4, 'id': 938 },
   { href: './html/energy/index.html', imgSrc: 'energy.jpg', name: 'energy' , 'page': 4, 'id': 937 },
   { href: './html/minesweeper/index.html', imgSrc: 'minesweeper.png', name: 'minesweeper' , 'page': 4, 'id': 907 },
   { href: './html/balloons.io/index.html', imgSrc: 'balloons.io.jpg', name: 'balloons.io' , 'page': 4, 'id': 975 },
