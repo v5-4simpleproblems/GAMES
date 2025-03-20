@@ -1,4 +1,5 @@
 export default [
+  { href: './html/james gun/index.html', imgSrc: 'james gun.jpg', name: 'james gun' , 'page': 4, 'id': 898 },
   { href: './html/sketchbook 04/index.html', imgSrc: 'sketchbook 04.jpg', name: 'sketchbook 04' , 'page': 3, 'id': 885 },
   { href: './html/decent/index.html', imgSrc: 'decent.jpg', name: 'decent' , 'page': 4, 'id': 922 },
   { href: './html/bacon may die/index.html', imgSrc: 'bacon may die.jpg', name: 'bacon may die' , 'page': 4, 'id': 972 },
