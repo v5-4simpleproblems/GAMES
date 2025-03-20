@@ -97,7 +97,6 @@ export default [
       { href: './html/nightpoint.io/index.html', imgSrc: 'nightpoint.io.jpg', name: 'nightpoint.io' , 'page': 4, 'id': 910 },
       { href: './html/mystical birdlink/index.html', imgSrc: 'mystical birdlink.jpg', name: 'mystical birdlink' , 'page': 4, 'id': 909 },
       { href: './html/mob city/index.html', imgSrc: 'mob city.jpg', name: 'mob city' , 'page': 4, 'id': 908 },
-      { href: './html/minecraft builder/index.html', imgSrc: 'minecraft builder.jpg', name: 'minecraft builder' , 'page': 4, 'id': 906 },
       { href: './html/marble dash/index.html', imgSrc: 'marble dash.jpg', name: 'marble dash' , 'page': 4, 'id': 905 },
       { href: './html/mafia wars/index.html', imgSrc: 'mafia wars.jpg', name: 'mafia wars' , 'page': 4, 'id': 904 },
       { href: './html/ludo multiplayer/index.html', imgSrc: 'ludo multiplayer.jpg', name: 'ludo multiplayer' , 'page': 4, 'id': 903 },
