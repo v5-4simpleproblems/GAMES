@@ -94,7 +94,6 @@ export default [
       { href: './html/orbital survival/index.html', imgSrc: 'orbital survival.jpg', name: 'orbital survival' , 'page': 4, 'id': 914 },
       { href: './html/onion boy/index.html', imgSrc: 'onion boy.jpg', name: 'onion boy' , 'page': 4, 'id': 913 },
       { href: './html/nuggetroyale.io/index.html', imgSrc: 'nuggetroyale.io.jpg', name: 'nuggetroyale.io' , 'page': 4, 'id': 912 },
-      { href: './html/noob hook/index.html', imgSrc: 'noob hook.jpg', name: 'noob hook' , 'page': 4, 'id': 911 },
       { href: './html/nightpoint.io/index.html', imgSrc: 'nightpoint.io.jpg', name: 'nightpoint.io' , 'page': 4, 'id': 910 },
       { href: './html/mystical birdlink/index.html', imgSrc: 'mystical birdlink.jpg', name: 'mystical birdlink' , 'page': 4, 'id': 909 },
       { href: './html/mob city/index.html', imgSrc: 'mob city.jpg', name: 'mob city' , 'page': 4, 'id': 908 },
