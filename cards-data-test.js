@@ -77,7 +77,6 @@ export default [
       { href: './html/drednot.io/index.html', imgSrc: 'drednot.io.jpg', name: 'drednot.io' , 'page': 4, 'id': 926 },
       { href: './html/dreadhead parkour/index.html', imgSrc: 'dreadhead parkour.jpg', name: 'dreadhead parkour' , 'page': 4, 'id': 925 },
       { href: './html/doodle champion island/index.html', imgSrc: 'doodle champion island.jpg', name: 'doodle champion island' , 'page': 4, 'id': 924 },
-      { href: './html/plactions/index.html', imgSrc: 'plactions.png', name: 'plactions' , 'page': 4, 'id': 920 },
       { href: './html/ping pong/index.html', imgSrc: 'ping pong.jpg', name: 'ping pong' , 'page': 4, 'id': 919 },
       { href: './html/paper fighter/index.html', imgSrc: 'paper fighter.jpg', name: 'paper fighter' , 'page': 4, 'id': 917 },
       { href: './html/pack a bag/index.html', imgSrc: 'pack a bag.jpg', name: 'pack a bag' , 'page': 4, 'id': 915 },
