@@ -95,7 +95,6 @@ export default [
       { href: './html/lands of blight/index.html', imgSrc: 'lands of blight.jpg', name: 'lands of blight' , 'page': 4, 'id': 901 },
       { href: './html/kart race/index.html', imgSrc: 'kart race.jpg', name: 'kart race' , 'page': 4, 'id': 900 },
       { href: './html/idle mining empire/index.html', imgSrc: 'idle mining empire.jpg', name: 'idle mining empire' , 'page': 4, 'id': 896 },
-      { href: './html/idle gold miner/index.html', imgSrc: 'idle gold miner.jpg', name: 'idle gold miner' , 'page': 4, 'id': 895 },
       { href: './html/horse shoing/index.html', imgSrc: 'horse shoing.jpg', name: 'horse shoing' , 'page': 3, 'id': 893 },
       { href: './html/slope 3/index.html', imgSrc: 'slope 3.jpg', name: 'slope 3' , 'page': 3, 'id': 891 },
       { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
