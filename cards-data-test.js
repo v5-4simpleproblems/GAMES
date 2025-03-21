@@ -62,7 +62,6 @@ export default [
       { href: './html/football legends/index.html', imgSrc: 'football legends.jpg', name: 'football legends' , 'page': 4, 'id': 946 },
       { href: './html/foot chinko/index.html', imgSrc: 'foot chinko.jpg', name: 'foot chinko' , 'page': 4, 'id': 945 },
       { href: './html/flying car simulator/index.html', imgSrc: 'flying car simulator.jpg', name: 'flying car simulator' , 'page': 4, 'id': 944 },
-      { href: './html/flip runner/index.html', imgSrc: 'flip runner.jpg', name: 'flip runner' , 'page': 4, 'id': 943 },
       { href: './html/flip bros/index.html', imgSrc: 'flip bros.jpg', name: 'flip bros' , 'page': 4, 'id': 942 },
       { href: './html/extreme off road cars/index.html', imgSrc: 'extreme off road cars.jpg', name: 'extreme off road cars' , 'page': 4, 'id': 941 },
       { href: './html/extreme car parking/index.html', imgSrc: 'extreme car parking.jpg', name: 'extreme car parking' , 'page': 4, 'id': 940 },
