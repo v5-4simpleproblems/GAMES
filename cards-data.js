@@ -1,4 +1,5 @@
 export default [
+  { href: './html/rio rex/index.html', imgSrc: 'rio rex.jpg', name: 'rio rex' , 'page': 3, 'id': 869 },
   { href: './html/plactions/index.html', imgSrc: 'plactions.png', name: 'plactions' , 'page': 4, 'id': 920 },
   { href: './html/rally champion/index.html', imgSrc: 'rally champion.jpg', name: 'rally champion' , 'page': 3, 'id': 866 },
   { href: './html/flip runner/index.html', imgSrc: 'flip runner.jpg', name: 'flip runner' , 'page': 4, 'id': 943 },
