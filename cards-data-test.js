@@ -84,7 +84,6 @@ export default [
       { href: './html/ping pong/index.html', imgSrc: 'ping pong.jpg', name: 'ping pong' , 'page': 4, 'id': 919 },
       { href: './html/parkour race/index.html', imgSrc: 'parkour race.jpg', name: 'parkour race' , 'page': 4, 'id': 918 },
       { href: './html/paper fighter/index.html', imgSrc: 'paper fighter.jpg', name: 'paper fighter' , 'page': 4, 'id': 917 },
-      { href: './html/paint strike/index.html', imgSrc: 'paint strike.jpg', name: 'paint strike' , 'page': 4, 'id': 916 },
       { href: './html/pack a bag/index.html', imgSrc: 'pack a bag.jpg', name: 'pack a bag' , 'page': 4, 'id': 915 },
       { href: './html/orbital survival/index.html', imgSrc: 'orbital survival.jpg', name: 'orbital survival' , 'page': 4, 'id': 914 },
       { href: './html/onion boy/index.html', imgSrc: 'onion boy.jpg', name: 'onion boy' , 'page': 4, 'id': 913 },
