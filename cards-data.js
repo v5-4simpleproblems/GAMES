@@ -1,4 +1,5 @@
 export default [
+  { href: './html/idle mining empire/index.html', imgSrc: 'idle mining empire.jpg', name: 'idle mining empire' , 'page': 4, 'id': 896 },
   { href: './html/idle gold miner/index.html', imgSrc: 'idle gold miner.jpg', name: 'idle gold miner' , 'page': 4, 'id': 895 },
   { href: './html/parkour race/index.html', imgSrc: 'parkour race.jpg', name: 'parkour race' , 'page': 4, 'id': 918 },
   { href: './html/paint strike/index.html', imgSrc: 'paint strike.jpg', name: 'paint strike' , 'page': 4, 'id': 916 },
