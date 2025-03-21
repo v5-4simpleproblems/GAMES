@@ -32,7 +32,6 @@ export default [
       { href: './html/blocky trials/index.html', imgSrc: 'blocky trials.jpg', name: 'blocky trials' , 'page': 4, 'id': 1000 },
       { href: './html/blocky cars/index.html', imgSrc: 'blocky cars.jpg', name: 'blocky cars' , 'page': 4, 'id': 999 },
       { href: './html/block the pig/index.html', imgSrc: 'block the pig.jpg', name: 'block the pig' , 'page': 4, 'id': 998 },
-      { href: './html/blobby clicker/index.html', imgSrc: 'blobby clicker.jpg', name: 'blobby clicker' , 'page': 4, 'id': 997 },
       { href: './html/bladers/index.html', imgSrc: 'bladers.jpg', name: 'bladers' , 'page': 4, 'id': 996 },
       { href: './html/bike trials winter 2/index.html', imgSrc: 'bike trials winter 2.jpg', name: 'bike trials winter 2' , 'page': 4, 'id': 995 },
       { href: './html/bike trials winter 1/index.html', imgSrc: 'bike trials winter 1.jpg', name: 'bike trials winter 1' , 'page': 4, 'id': 994 },
