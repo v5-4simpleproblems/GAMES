@@ -1,4 +1,5 @@
 export default [
+  { href: './html/cannon strike/index.html', imgSrc: 'cannon strike.png', name: 'cannon strike' , 'page': 4, 'id': 1013 },
   { href: './html/blobby clicker/index.html', imgSrc: 'blobby clicker.jpg', name: 'blobby clicker' , 'page': 4, 'id': 997 },
   { href: './html/idle mining empire/index.html', imgSrc: 'idle mining empire.jpg', name: 'idle mining empire' , 'page': 4, 'id': 896 },
   { href: './html/idle gold miner/index.html', imgSrc: 'idle gold miner.jpg', name: 'idle gold miner' , 'page': 4, 'id': 895 },
