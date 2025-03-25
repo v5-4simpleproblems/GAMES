@@ -46,7 +46,6 @@ export default [
       { href: './html/city car driving stunt master/index.html', imgSrc: 'city car driving stunt master.jpg', name: 'city car driving stunt master' , 'page': 4, 'id': 1028 },
       { href: './html/city bike stunt 2/index.html', imgSrc: 'city bike stunt 2.jpg', name: 'city bike stunt 2' , 'page': 4, 'id': 1027 },
       { href: './html/chess arena/index.html', imgSrc: 'chess arena.jpg', name: 'chess arena' , 'page': 4, 'id': 1025 },
-      { href: './html/cave blast/index.html', imgSrc: 'cave blast.jpg', name: 'cave blast' , 'page': 4, 'id': 1024 },
       { href: './html/cats/index.html', imgSrc: 'cats.jpg', name: 'cats' , 'page': 4, 'id': 1023 },
       { href: './html/catpad/index.html', imgSrc: 'catpad.jpg', name: 'catpad' , 'page': 4, 'id': 1022 },
       { href: './html/cat trap/index.html', imgSrc: 'cat trap.png', name: 'cat trap' , 'page': 4, 'id': 1021 },
