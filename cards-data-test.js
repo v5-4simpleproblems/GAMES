@@ -1,7 +1,6 @@
 export default [
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement 1' , 'page': 4, 'id': 1086 },
       { href: './swf/arcane weapons/index.html', imgSrc: 'arcane weapons.jpg', name: 'arcane weapons' , 'page': 4, 'id': 1085 },
-      { href: './html/Switchblade/index.html', imgSrc: 'Switchblade.jpg', name: 'Switchblade' , 'page': 4, 'id': 1084 },
       { href: './html/Ragdoll Archers/index.html', imgSrc: 'ragdoll archers.jpg', name: 'Ragdoll Archers' , 'page': 4, 'id': 1082 },
       { href: './html/Patricks parabox/index.html', imgSrc: 'patricks parabox.jpg', name: 'Patricks parabox' , 'page': 4, 'id': 1081 },
       { href: './swf/effing worms 2/index.html', imgSrc: 'effing worms 2.jpg', name: 'effing worms 2' , 'page': 4, 'id': 1079 },
