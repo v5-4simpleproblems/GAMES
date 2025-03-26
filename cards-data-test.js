@@ -5,7 +5,6 @@ export default [
       { href: './swf/effing worms 2/index.html', imgSrc: 'effing worms 2.jpg', name: 'effing worms 2' , 'page': 4, 'id': 1079 },
       { href: './html/athletics hero/index.html', imgSrc: 'athletics hero.jpg', name: 'athletics hero' , 'page': 4, 'id': 1078 },
       { href: './html/astrorace.io/index.html', imgSrc: 'astrorace.io.jpg', name: 'astrorace.io' , 'page': 4, 'id': 1077 },
-      { href: './html/astroe.io/index.html', imgSrc: 'astroe.io.jpg', name: 'astroe.io' , 'page': 4, 'id': 1076 },
       { href: './html/astrodud.io/index.html', imgSrc: 'astrodud.io.jpg', name: 'astrodud.io' , 'page': 4, 'id': 1075 },
       { href: './html/astrix.io/index.html', imgSrc: 'astrix.io.png', name: 'astrix.io' , 'page': 4, 'id': 1074 },
       { href: './html/armedforces.io/index.html', imgSrc: 'armedforces.io.jpg', name: 'armedforces.io' , 'page': 4, 'id': 1073 },
