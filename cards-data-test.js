@@ -12,7 +12,6 @@ export default [
       { href: './html/aquar.io/index.html', imgSrc: 'aquar.io.jpg', name: 'aquar.io' , 'page': 4, 'id': 1069 },
       { href: './html/aqua thrills/index.html', imgSrc: 'aqua thrills.jpg', name: 'aqua thrills' , 'page': 4, 'id': 1068 },
       { href: './html/apes.io/index.html', imgSrc: 'apes.io.jpg', name: 'apes.io' , 'page': 4, 'id': 1067 },
-      { href: './html/ape sling/index.html', imgSrc: 'ape sling.jpg', name: 'ape sling' , 'page': 4, 'id': 1066 },
       { href: './html/antwar.io/index.html', imgSrc: 'antwar.io.jpg', name: 'antwar.io' , 'page': 4, 'id': 1065 },
       { href: './html/antgame.io/index.html', imgSrc: 'antgame.io.png', name: 'antgame.io' , 'page': 4, 'id': 1064 },
       { href: './html/ant colony new war/index.html', imgSrc: 'ant colony new war.jpg', name: 'ant colony new war' , 'page': 4, 'id': 1063 },
