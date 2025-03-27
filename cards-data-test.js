@@ -2,7 +2,6 @@ export default [
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement 1' , 'page': 4, 'id': 1086 },
       { href: './swf/arcane weapons/index.html', imgSrc: 'arcane weapons.jpg', name: 'arcane weapons' , 'page': 4, 'id': 1085 },
       { href: './html/Ragdoll Archers/index.html', imgSrc: 'ragdoll archers.jpg', name: 'Ragdoll Archers' , 'page': 4, 'id': 1082 },
-      { href: './swf/effing worms 2/index.html', imgSrc: 'effing worms 2.jpg', name: 'effing worms 2' , 'page': 4, 'id': 1079 },
       { href: './html/athletics hero/index.html', imgSrc: 'athletics hero.jpg', name: 'athletics hero' , 'page': 4, 'id': 1078 },
       { href: './html/astrorace.io/index.html', imgSrc: 'astrorace.io.jpg', name: 'astrorace.io' , 'page': 4, 'id': 1077 },
       { href: './html/astrodud.io/index.html', imgSrc: 'astrodud.io.jpg', name: 'astrodud.io' , 'page': 4, 'id': 1075 },
