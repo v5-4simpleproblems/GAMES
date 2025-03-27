@@ -7,7 +7,6 @@ export default [
       { href: './html/astrorace.io/index.html', imgSrc: 'astrorace.io.jpg', name: 'astrorace.io' , 'page': 4, 'id': 1077 },
       { href: './html/astrodud.io/index.html', imgSrc: 'astrodud.io.jpg', name: 'astrodud.io' , 'page': 4, 'id': 1075 },
       { href: './html/astrix.io/index.html', imgSrc: 'astrix.io.png', name: 'astrix.io' , 'page': 4, 'id': 1074 },
-      { href: './html/armedforces.io/index.html', imgSrc: 'armedforces.io.jpg', name: 'armedforces.io' , 'page': 4, 'id': 1073 },
       { href: './html/arithmetica/index.html', imgSrc: 'arithmetica.jpg', name: 'arithmetica' , 'page': 4, 'id': 1072 },
       { href: './html/archery world tour/index.html', imgSrc: 'archery world tour.jpg', name: 'archery world tour' , 'page': 4, 'id': 1071 },
       { href: './html/archer master 3d castle defense/index.html', imgSrc: 'archery master 3d castle defense.jpg', name: 'archer master 3d castle defense' , 'page': 4, 'id': 1070 },
