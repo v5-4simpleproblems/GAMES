@@ -1,4 +1,7 @@
 export default [
+      { href: './html/territorial.io new/index.html', imgSrc: 'territorial.io new.jpg', name: 'territorial.io new' , 'page': 4, 'id': 1089 },
+      { href: './html/hexarena.io 3d/index.html', imgSrc: 'hexarena.io 3d.png', name: 'hexarena.io 3d' , 'page': 4, 'id': 1088 },
+      { href: './html/fancade/index.html', imgSrc: 'fancade.jpg', name: 'fancade' , 'page': 4, 'id': 1087 },
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement 1' , 'page': 4, 'id': 1086 },
       { href: './swf/arcane weapons/index.html', imgSrc: 'arcane weapons.jpg', name: 'arcane weapons' , 'page': 4, 'id': 1085 },
       { href: './html/Ragdoll Archers/index.html', imgSrc: 'ragdoll archers.jpg', name: 'Ragdoll Archers' , 'page': 4, 'id': 1082 },
