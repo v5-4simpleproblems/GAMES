@@ -38,7 +38,10 @@
   }
 
   function normalizeGameName(name) {
-    return name.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, "")
+      .replace(/[^a-z0-9]/g, "");
   }
 
   function hideExcludedCards(exclusionList) {
@@ -144,7 +147,10 @@
       import { siteMapping } from "./site-mapping.js";
 
       function normalizeGameName(name) {
-        return name.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
+        return name
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .replace(/[^a-z0-9]/g, "");
       }
 
       function getAdjustedUrls(href, imgSrc, page) {
@@ -170,13 +176,22 @@
             } else {
               if (page === 2) {
                 adjustedHref = `/strongdog2/${href.replace(/^\.\//, "")}`;
-                adjustedImgSrc = `/strongdog2/img/${imgSrc.replace(/^\.\//, "")}`;
+                adjustedImgSrc = `/strongdog2/img/${imgSrc.replace(
+                  /^\.\//,
+                  ""
+                )}`;
               } else if (page === 3) {
                 adjustedHref = `/strongdog3/${href.replace(/^\.\//, "")}`;
-                adjustedImgSrc = `/strongdog3/img/${imgSrc.replace(/^\.\//, "")}`;
+                adjustedImgSrc = `/strongdog3/img/${imgSrc.replace(
+                  /^\.\//,
+                  ""
+                )}`;
               } else if (page === 4) {
                 adjustedHref = `/strongdog4/${href.replace(/^\.\//, "")}`;
-                adjustedImgSrc = `/strongdog4/img/${imgSrc.replace(/^\.\//, "")}`;
+                adjustedImgSrc = `/strongdog4/img/${imgSrc.replace(
+                  /^\.\//,
+                  ""
+                )}`;
               }
             }
           } else {
@@ -197,7 +212,11 @@
 
       function getCardHTML(gameObject) {
         const { href, imgSrc, name, page } = gameObject;
-        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
+        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+          href,
+          imgSrc,
+          page
+        );
         const gameId = normalizeGameName(name);
         return `
           <div class="card-container">
@@ -219,7 +238,8 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("allGameList").innerHTML = cardsHTMLArr.join("");
+        document.getElementById("allGameList").innerHTML =
+          cardsHTMLArr.join("");
         addCardButtonListeners();
       });
 
@@ -246,7 +266,9 @@
           .httpsCallable("approveGameCallable");
         approveGameFunction({ gameName: gameName.trim() })
           .then((result) => {
-            alert(result.data.message || `Game "${gameName}" has been approved.`);
+            alert(
+              result.data.message || `Game "${gameName}" has been approved.`
+            );
             db.collection("cards")
               .add({
                 gameName: gameName,
@@ -293,7 +315,10 @@
     <script src="appscript.js"></script>
     <script>
       function normalizeGameName(name) {
-        return name.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
+        return name
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .replace(/[^a-z0-9]/g, "");
       }
       document.addEventListener("DOMContentLoaded", function () {
         const topGameList = document.getElementById("topGameList");
@@ -853,6 +878,22 @@
     </style>
   </head>
   <body style="display: none">
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
+      crossorigin="anonymous"
+    ></script>
+    <ins
+      class="adsbygoogle"
+      style="display: block"
+      data-ad-client="ca-pub-1609993827735056"
+      data-ad-slot="7006123985"
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    ></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
     <div
       id="secretLink"
       title="Secret Menu"
@@ -928,7 +969,10 @@
         <div class="credits-item">
           <div class="credits-role">CEO</div>
           <div class="credits-names">
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link"
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
               >Joshua Pettit</a
             >
           </div>
@@ -936,11 +980,17 @@
         <div class="credits-item">
           <div class="credits-role">Developers</div>
           <div class="credits-names">
-            <a href="https://github.com/JamesMeadows4" target="_blank" class="credits-link"
+            <a
+              href="https://github.com/JamesMeadows4"
+              target="_blank"
+              class="credits-link"
               >James Meadows</a
             >
             <span>|</span>
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link"
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
               >Joshua Pettit</a
             >
           </div>
@@ -948,7 +998,10 @@
         <div class="credits-item">
           <div class="credits-role">Game Downloaders</div>
           <div class="credits-names">
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link"
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
               >Joshua Pettit</a
             >
           </div>
@@ -956,23 +1009,38 @@
         <div class="credits-item">
           <div class="credits-role">Other Links</div>
           <div class="credits-names">
-            <a href="https://mathcord.netlify.app" target="_blank" class="credits-link"
+            <a
+              href="https://mathcord.netlify.app"
+              target="_blank"
+              class="credits-link"
               >mathcord.netlify.app</a
             >
             <span>|</span>
-            <a href="https://strongdog.onrender.com" target="_blank" class="credits-link"
+            <a
+              href="https://strongdog.onrender.com"
+              target="_blank"
+              class="credits-link"
               >strongdog.onrender.com</a
             >
             <span>|</span>
-            <a href="https://jman1593.github.io" target="_blank" class="credits-link"
+            <a
+              href="https://jman1593.github.io"
+              target="_blank"
+              class="credits-link"
               >jman1593.github.io</a
             >
             <span>|</span>
-            <a href="https://strongdog.netlify.app" target="_blank" class="credits-link"
+            <a
+              href="https://strongdog.netlify.app"
+              target="_blank"
+              class="credits-link"
               >strongdog.netlify.app</a
             >
             <span>|</span>
-            <a href="https://strongdog-1.vercel.app" target="_blank" class="credits-link"
+            <a
+              href="https://strongdog-1.vercel.app"
+              target="_blank"
+              class="credits-link"
               >strongdog-1.vercel.app</a
             >
             <span>|</span>
@@ -1064,9 +1132,12 @@
             } else {
               usernameElement.textContent = user.displayName || "Username";
             }
-            profilePictureElement.parentElement.addEventListener("click", () => {
-              window.location.href = "settings.html";
-            });
+            profilePictureElement.parentElement.addEventListener(
+              "click",
+              () => {
+                window.location.href = "settings.html";
+              }
+            );
             slideMenu.insertBefore(userDetailsContainer, categories);
             const logoutLink = document.createElement("a");
             logoutLink.href = "#";
@@ -1085,7 +1156,9 @@
                   console.error("Error signing out:", error);
                 });
             });
-            const favoritesLink = categories.querySelector('a[href="favs.html"]');
+            const favoritesLink = categories.querySelector(
+              'a[href="favs.html"]'
+            );
             categories.insertBefore(logoutLink, favoritesLink);
           } else {
             userDetailsContainer = document.createElement("div");
@@ -1126,7 +1199,8 @@
               window.location.href = randomGamePath;
             }
           });
-          const blockLanschoolLink = categories.querySelector("#blockLanschool");
+          const blockLanschoolLink =
+            categories.querySelector("#blockLanschool");
           blockLanschoolLink?.addEventListener("click", function (e) {
             e.preventDefault();
             var url = "https://strongdog.netlify.app";
@@ -1207,33 +1281,72 @@
                 const pageBaseURLs = siteMapping[matchedKey];
                 if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
                   const pageBaseURL = pageBaseURLs[pageIndex];
-                  adjustedHref = `${pageBaseURL}/${game.href.replace(/^\.\//, "")}`;
+                  adjustedHref = `${pageBaseURL}/${game.href.replace(
+                    /^\.\//,
+                    ""
+                  )}`;
                   adjustedImg = `${pageBaseURL}/img/${game.imgSrc.replace(
                     /^\.\//,
                     ""
                   )}`;
                 } else {
                   if (game.page === 2) {
-                    adjustedHref = `/strongdog2/${game.href.replace(/^\.\//, "")}`;
-                    adjustedImg = `/strongdog2/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                    adjustedHref = `/strongdog2/${game.href.replace(
+                      /^\.\//,
+                      ""
+                    )}`;
+                    adjustedImg = `/strongdog2/img/${game.imgSrc.replace(
+                      /^\.\//,
+                      ""
+                    )}`;
                   } else if (game.page === 3) {
-                    adjustedHref = `/strongdog3/${game.href.replace(/^\.\//, "")}`;
-                    adjustedImg = `/strongdog3/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                    adjustedHref = `/strongdog3/${game.href.replace(
+                      /^\.\//,
+                      ""
+                    )}`;
+                    adjustedImg = `/strongdog3/img/${game.imgSrc.replace(
+                      /^\.\//,
+                      ""
+                    )}`;
                   } else if (game.page === 4) {
-                    adjustedHref = `/strongdog4/${game.href.replace(/^\.\//, "")}`;
-                    adjustedImg = `/strongdog4/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                    adjustedHref = `/strongdog4/${game.href.replace(
+                      /^\.\//,
+                      ""
+                    )}`;
+                    adjustedImg = `/strongdog4/img/${game.imgSrc.replace(
+                      /^\.\//,
+                      ""
+                    )}`;
                   }
                 }
               } else {
                 if (game.page === 2) {
-                  adjustedHref = `/strongdog2/${game.href.replace(/^\.\//, "")}`;
-                  adjustedImg = `/strongdog2/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                  adjustedHref = `/strongdog2/${game.href.replace(
+                    /^\.\//,
+                    ""
+                  )}`;
+                  adjustedImg = `/strongdog2/img/${game.imgSrc.replace(
+                    /^\.\//,
+                    ""
+                  )}`;
                 } else if (game.page === 3) {
-                  adjustedHref = `/strongdog3/${game.href.replace(/^\.\//, "")}`;
-                  adjustedImg = `/strongdog3/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                  adjustedHref = `/strongdog3/${game.href.replace(
+                    /^\.\//,
+                    ""
+                  )}`;
+                  adjustedImg = `/strongdog3/img/${game.imgSrc.replace(
+                    /^\.\//,
+                    ""
+                  )}`;
                 } else if (game.page === 4) {
-                  adjustedHref = `/strongdog4/${game.href.replace(/^\.\//, "")}`;
-                  adjustedImg = `/strongdog4/img/${game.imgSrc.replace(/^\.\//, "")}`;
+                  adjustedHref = `/strongdog4/${game.href.replace(
+                    /^\.\//,
+                    ""
+                  )}`;
+                  adjustedImg = `/strongdog4/img/${game.imgSrc.replace(
+                    /^\.\//,
+                    ""
+                  )}`;
                 }
               }
             }
