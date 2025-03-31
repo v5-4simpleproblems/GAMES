@@ -43,7 +43,6 @@ export default [
       { href: './html/city car driving stunt master/index.html', imgSrc: 'city car driving stunt master.jpg', name: 'city car driving stunt master' , 'page': 4, 'id': 1028 },
       { href: './html/city bike stunt 2/index.html', imgSrc: 'city bike stunt 2.jpg', name: 'city bike stunt 2' , 'page': 4, 'id': 1027 },
       { href: './html/chess arena/index.html', imgSrc: 'chess arena.jpg', name: 'chess arena' , 'page': 4, 'id': 1025 },
-      { href: './html/cats/index.html', imgSrc: 'cats.jpg', name: 'cats' , 'page': 4, 'id': 1023 },
       { href: './html/cat trap/index.html', imgSrc: 'cat trap.png', name: 'cat trap' , 'page': 4, 'id': 1021 },
       { href: './html/cat gunner super zombie shoot/index.html', imgSrc: 'cat gunner super zombie shoot.jpg', name: 'cat gunner super zombie shoot' , 'page': 4, 'id': 1020 },
       { href: './html/cars thief tank edition/index.html', imgSrc: 'cars thief tank edition.jpg', name: 'cars thief tank edition' , 'page': 4, 'id': 1019 },
