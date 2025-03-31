@@ -1,4 +1,5 @@
 export default [
+  { href: './html/hexarena.io 3d/index.html', imgSrc: 'hexarena.io 3d.png', name: 'hexarena.io 3d' , 'page': 4, 'id': 1088 },
   { href: './html/cats/index.html', imgSrc: 'cats.jpg', name: 'cats' , 'page': 4, 'id': 1023 },
   { href: './html/catpad/index.html', imgSrc: 'catpad.jpg', name: 'catpad' , 'page': 4, 'id': 1022 },
   { href: './html/ape sling/index.html', imgSrc: 'ape sling.jpg', name: 'ape sling' , 'page': 4, 'id': 1066 },
