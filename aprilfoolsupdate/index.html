@@ -409,8 +409,8 @@
     </div>
     <div class="updates-text-container">
       <p class="updates-paragraph-text">
-        Dont forget to join the
-        <a href="https://discord.gg/pWjfQ4Sz5c">discord</a> for exclusive links!
+        April fools update! There is a 50% chance you get one of the many
+        pranks. Enjoy!
       </p>
     </div>
     <div class="modal" id="popupModal">
@@ -1331,6 +1331,533 @@
         });
       })();
     </script>
+    <script>
+      const allPranks = [
+        {
+          name: "runaway",
+          run: function () {
+            document.addEventListener("mousemove", function (e) {
+              const cards = document.querySelectorAll(
+                "#allGameList .card, #topGameList .card"
+              );
+              cards.forEach((card) => {
+                if (!card.dataset.initialLeft || !card.dataset.initialTop) {
+                  const rect = card.getBoundingClientRect();
+                  card.dataset.initialLeft = rect.left + window.scrollX;
+                  card.dataset.initialTop = rect.top + window.scrollY;
+                  card.dataset.cardWidth = rect.width;
+                  card.dataset.cardHeight = rect.height;
+                }
+                let currentX = 0,
+                  currentY = 0;
+                const currentTransform = card.style.transform;
+                if (
+                  currentTransform &&
+                  currentTransform.includes("translate(")
+                ) {
+                  const match = currentTransform.match(
+                    /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/
+                  );
+                  if (match) {
+                    currentX = parseFloat(match[1]);
+                    currentY = parseFloat(match[2]);
+                  }
+                }
+                const initialLeft = parseFloat(card.dataset.initialLeft);
+                const initialTop = parseFloat(card.dataset.initialTop);
+                const cardWidth = parseFloat(card.dataset.cardWidth);
+                const cardHeight = parseFloat(card.dataset.cardHeight);
+                const currentAbsLeft = initialLeft + currentX;
+                const currentAbsTop = initialTop + currentY;
+                const cardCenterX = currentAbsLeft + cardWidth / 2;
+                const cardCenterY = currentAbsTop + cardHeight / 2;
+                const mouseX = e.clientX + window.scrollX;
+                const mouseY = e.clientY + window.scrollY;
+                const dx = cardCenterX - mouseX;
+                const dy = cardCenterY - mouseY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const threshold = 150;
+                if (distance < threshold) {
+                  const factor = (threshold - distance) / threshold;
+                  let randomSpeed = card.getAttribute("data-random-speed");
+                  if (!randomSpeed) {
+                    randomSpeed = Math.random() * 2 + 1;
+                    card.setAttribute("data-random-speed", randomSpeed);
+                  }
+                  const moveX = (dx / distance) * factor * randomSpeed * 20;
+                  const moveY = (dy / distance) * factor * randomSpeed * 20;
+                  let newTranslationX = currentX + moveX;
+                  let newTranslationY = currentY + moveY;
+                  let newAbsLeft = initialLeft + newTranslationX;
+                  let newAbsTop = initialTop + newTranslationY;
+                  const minX = 0;
+                  const maxX = document.documentElement.scrollWidth - cardWidth;
+                  const minY = 0;
+                  const maxY =
+                    document.documentElement.scrollHeight - cardHeight;
+                  newAbsLeft = Math.max(minX, Math.min(newAbsLeft, maxX));
+                  newAbsTop = Math.max(minY, Math.min(newAbsTop, maxY));
+                  newTranslationX = newAbsLeft - initialLeft;
+                  newTranslationY = newAbsTop - initialTop;
+                  card.style.transform = `translate(${newTranslationX}px, ${newTranslationY}px)`;
+                }
+              });
+            });
+          },
+        },
+        {
+          name: "grayscale",
+          run: function () {
+            document.documentElement.style.filter = "grayscale(100%)";
+          },
+        },
+        {
+          name: "rickroll",
+          run: function () {
+            setInterval(function () {
+              if (Math.random() < 0.25) {
+                createRickrollBox();
+              }
+            }, 2000);
+
+            function createRickrollBox() {
+              const box = document.createElement("div");
+              box.style.position = "fixed";
+              box.style.zIndex = "9999";
+              box.style.width = "300px";
+              box.style.height = "200px";
+              box.style.backgroundColor = "white";
+              box.style.border = "2px solid black";
+              box.style.borderRadius = "10px";
+              box.style.overflow = "hidden";
+              box.style.display = "flex";
+              box.style.flexDirection = "column";
+
+              const width = 300;
+              const height = 200;
+              const leftPos = Math.floor(
+                Math.random() * (window.innerWidth - width)
+              );
+              const topPos = Math.floor(
+                Math.random() * (window.innerHeight - height)
+              );
+              box.style.left = leftPos + "px";
+              box.style.top = topPos + "px";
+
+              const video = document.createElement("video");
+              video.src = "./rickroll.mp4";
+              video.autoplay = true;
+              video.loop = true;
+              video.style.width = "100%";
+              video.style.height = "100%";
+
+              const closeBtn = document.createElement("div");
+              closeBtn.textContent = "X";
+              closeBtn.style.position = "absolute";
+              closeBtn.style.top = "2px";
+              closeBtn.style.right = "5px";
+              closeBtn.style.cursor = "pointer";
+              closeBtn.style.fontWeight = "bold";
+              closeBtn.style.zIndex = "10000";
+              closeBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                box.remove();
+              });
+
+              box.onmousedown = function (event) {
+                event.preventDefault();
+                let shiftX = event.clientX - box.getBoundingClientRect().left;
+                let shiftY = event.clientY - box.getBoundingClientRect().top;
+                function moveAt(x, y) {
+                  box.style.left = x - shiftX + "px";
+                  box.style.top = y - shiftY + "px";
+                }
+                function onMouseMove(e) {
+                  moveAt(e.clientX, e.clientY);
+                }
+                document.addEventListener("mousemove", onMouseMove);
+                box.onmouseup = function () {
+                  document.removeEventListener("mousemove", onMouseMove);
+                  box.onmouseup = null;
+                };
+              };
+              box.ondragstart = function () {
+                return false;
+              };
+
+              box.appendChild(closeBtn);
+              box.appendChild(video);
+              document.body.appendChild(box);
+            }
+          },
+        },
+        {
+          name: "annoyingAd",
+          run: function () {
+            let adSpawnInterval = Math.floor(Math.random() * 2000) + 3000;
+            function createAdBox() {
+              const ad = document.createElement("div");
+              ad.style.position = "fixed";
+              ad.style.zIndex = "10000";
+              const width = Math.floor(Math.random() * 150) + 150;
+              const height = Math.floor(Math.random() * 50) + 50;
+              ad.style.width = width + "px";
+              ad.style.height = height + "px";
+              ad.style.backgroundColor = "white";
+              ad.style.border = "2px solid black";
+              ad.style.borderRadius = "10px";
+              const randomTextColor =
+                "#" + Math.floor(Math.random() * 16777215).toString(16);
+              ad.style.color = randomTextColor;
+              ad.style.display = "flex";
+              ad.style.justifyContent = "center";
+              ad.style.alignItems = "center";
+              ad.style.cursor = "move";
+              ad.textContent =
+                Math.random() < 0.5 ? "(385)-352-0938" : "(385)-248-6971";
+
+              const closeBtn = document.createElement("div");
+              closeBtn.textContent = "X";
+              closeBtn.style.position = "absolute";
+              closeBtn.style.top = "2px";
+              closeBtn.style.right = "5px";
+              closeBtn.style.cursor = "pointer";
+              closeBtn.style.fontWeight = "bold";
+              closeBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                ad.remove();
+              });
+              ad.appendChild(closeBtn);
+
+              ad.style.top =
+                Math.floor(Math.random() * (window.innerHeight - height)) +
+                "px";
+              ad.style.left =
+                Math.floor(Math.random() * (window.innerWidth - width)) + "px";
+
+              ad.onmousedown = function (event) {
+                event.preventDefault();
+                let shiftX = event.clientX - ad.getBoundingClientRect().left;
+                let shiftY = event.clientY - ad.getBoundingClientRect().top;
+                function moveAt(x, y) {
+                  ad.style.left = x - shiftX + "px";
+                  ad.style.top = y - shiftY + "px";
+                }
+                function onMouseMove(e) {
+                  moveAt(e.clientX, e.clientY);
+                }
+                document.addEventListener("mousemove", onMouseMove);
+                ad.onmouseup = function () {
+                  document.removeEventListener("mousemove", onMouseMove);
+                  ad.onmouseup = null;
+                };
+              };
+              ad.ondragstart = function () {
+                return false;
+              };
+              document.body.appendChild(ad);
+            }
+            function spawnAd() {
+              createAdBox();
+              adSpawnInterval = Math.max(500, adSpawnInterval * 0.95);
+              setTimeout(spawnAd, adSpawnInterval);
+            }
+            setTimeout(spawnAd, adSpawnInterval);
+          },
+        },
+        {
+          name: "superSaturated",
+          run: function () {
+            const style = document.createElement("style");
+            style.innerHTML =
+              "html { filter: saturate(5) contrast(2) !important; }";
+            document.head.appendChild(style);
+          },
+        },
+        {
+          name: "elonMuskStickers",
+          run: function () {
+            let elonMuskInterval = Math.floor(Math.random() * 2000) + 3000;
+            function createElonSticker() {
+              const imgNumber = Math.floor(Math.random() * 10) + 1;
+              const elon = document.createElement("img");
+              elon.src = `assets/elonmusk/elonmusk${imgNumber}.jpg`;
+              elon.style.position = "absolute";
+              const docWidth = document.documentElement.scrollWidth;
+              const docHeight = document.documentElement.scrollHeight;
+              const randomLeft = Math.floor(Math.random() * (docWidth - 200));
+              const randomTop = Math.floor(Math.random() * (docHeight - 200));
+              elon.style.left = randomLeft + "px";
+              elon.style.top = randomTop + "px";
+              elon.style.width = "200px";
+              elon.style.zIndex = "9999";
+              document.body.appendChild(elon);
+            }
+            function spawnElonMusk() {
+              createElonSticker();
+              elonMuskInterval = Math.max(500, elonMuskInterval * 0.95);
+              setTimeout(spawnElonMusk, elonMuskInterval);
+            }
+            setTimeout(spawnElonMusk, elonMuskInterval);
+          },
+        },
+        {
+          name: "fontChange",
+          run: function () {
+            const fonts = [
+              {
+                name: "Comic Neue",
+                url: "https://fonts.googleapis.com/css?family=Comic+Neue&display=swap",
+              },
+              {
+                name: "Monoton",
+                url: "https://fonts.googleapis.com/css?family=Monoton&display=swap",
+              },
+              {
+                name: "Press Start 2P",
+                url: "https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap",
+              },
+              {
+                name: "Bangers",
+                url: "https://fonts.googleapis.com/css?family=Bangers&display=swap",
+              },
+              {
+                name: "Dancing Script",
+                url: "https://fonts.googleapis.com/css?family=Dancing+Script&display=swap",
+              },
+              {
+                name: "Lobster",
+                url: "https://fonts.googleapis.com/css?family=Lobster&display=swap",
+              },
+              {
+                name: "Freckle Face",
+                url: "https://fonts.googleapis.com/css?family=Freckle+Face&display=swap",
+              },
+              {
+                name: "Atomic Age",
+                url: "https://fonts.googleapis.com/css?family=Atomic+Age&display=swap",
+              },
+              {
+                name: "Erica One",
+                url: "https://fonts.googleapis.com/css?family=Erica+One&display=swap",
+              },
+              {
+                name: "Nosifer",
+                url: "https://fonts.googleapis.com/css?family=Nosifer&display=swap",
+              },
+            ];
+            const chosenFont = fonts[Math.floor(Math.random() * fonts.length)];
+
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = chosenFont.url;
+            document.head.appendChild(link);
+
+            const style = document.createElement("style");
+            style.innerHTML = `
+          html, body, * {
+            font-family: '${chosenFont.name}', sans-serif !important;
+          }
+        `;
+            document.head.appendChild(style);
+          },
+        },
+        {
+          name: "mirroredSite",
+          run: function () {
+            const style = document.createElement("style");
+            style.innerHTML =
+              "html { transform: scaleX(-1); transform-origin: center; }";
+            document.head.appendChild(style);
+          },
+        },
+        {
+          name: "constitutionOne",
+          run: function () {
+            setInterval(function () {
+              if (Math.random() < 0.5) {
+                const overlay = document.createElement("div");
+                overlay.style.position = "fixed";
+                overlay.style.top = "0";
+                overlay.style.left = "0";
+                overlay.style.width = "100%";
+                overlay.style.height = "100%";
+                overlay.style.backgroundColor = "rgba(0,0,0,0.7)";
+                overlay.style.zIndex = "10000";
+                overlay.style.display = "flex";
+                overlay.style.justifyContent = "center";
+                overlay.style.alignItems = "center";
+
+                const container = document.createElement("div");
+                container.style.position = "relative";
+                container.style.backgroundColor = "white";
+                container.style.padding = "20px";
+                container.style.borderRadius = "10px";
+
+                const img = document.createElement("img");
+                img.src = "assets/img/constitution.jpg";
+                img.style.maxWidth = "80vw";
+                img.style.maxHeight = "80vh";
+
+                const checkboxLabel = document.createElement("label");
+                checkboxLabel.textContent = " I agree to all these terms";
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.style.marginLeft = "10px";
+                checkboxLabel.insertBefore(checkbox, checkboxLabel.firstChild);
+
+                const submitButton = document.createElement("button");
+                submitButton.textContent = "Submit";
+                submitButton.disabled = true;
+                submitButton.style.display = "block";
+                submitButton.style.marginTop = "10px";
+
+                checkbox.addEventListener("change", function () {
+                  submitButton.disabled = !checkbox.checked;
+                });
+
+                submitButton.addEventListener("click", function () {
+                  document.body.removeChild(overlay);
+                });
+
+                container.appendChild(img);
+                container.appendChild(checkboxLabel);
+                container.appendChild(submitButton);
+
+                overlay.appendChild(container);
+                document.body.appendChild(overlay);
+              }
+            }, 10000);
+          },
+        },
+        {
+          name: "gramerlyAd",
+          run: function () {
+            let gramerlyInterval = Math.floor(Math.random() * 2000) + 3000;
+
+            function spawnGramerly() {
+              const choice = Math.random() < 0.5 ? "video" : "image";
+              createGramerlyBox(choice);
+              gramerlyInterval = Math.max(500, gramerlyInterval * 0.95);
+              setTimeout(spawnGramerly, gramerlyInterval);
+            }
+
+            function createGramerlyBox(type) {
+              const box = document.createElement("div");
+              box.style.position = "fixed";
+              box.style.zIndex = "9999";
+              box.style.width = "300px";
+              box.style.height = "200px";
+              box.style.backgroundColor = "white";
+              box.style.border = "2px solid black";
+              box.style.borderRadius = "10px";
+              box.style.display = "flex";
+              box.style.flexDirection = "column";
+              box.style.justifyContent = "center";
+              box.style.alignItems = "center";
+              box.style.overflow = "hidden";
+
+              const boxWidth = 300;
+              const boxHeight = 200;
+              const leftPos = Math.floor(
+                Math.random() * (window.innerWidth - boxWidth)
+              );
+              const topPos = Math.floor(
+                Math.random() * (window.innerHeight - boxHeight)
+              );
+              box.style.left = leftPos + "px";
+              box.style.top = topPos + "px";
+
+              const closeBtn = document.createElement("div");
+              closeBtn.textContent = "X";
+              closeBtn.style.position = "absolute";
+              closeBtn.style.top = "2px";
+              closeBtn.style.right = "5px";
+              closeBtn.style.cursor = "pointer";
+              closeBtn.style.fontWeight = "bold";
+              closeBtn.style.zIndex = "10000";
+              closeBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                box.remove();
+              });
+
+              box.onmousedown = function (event) {
+                event.preventDefault();
+                let shiftX = event.clientX - box.getBoundingClientRect().left;
+                let shiftY = event.clientY - box.getBoundingClientRect().top;
+                function moveAt(x, y) {
+                  box.style.left = x - shiftX + "px";
+                  box.style.top = y - shiftY + "px";
+                }
+                function onMouseMove(e) {
+                  moveAt(e.clientX, e.clientY);
+                }
+                document.addEventListener("mousemove", onMouseMove);
+                box.onmouseup = function () {
+                  document.removeEventListener("mousemove", onMouseMove);
+                  box.onmouseup = null;
+                };
+              };
+              box.ondragstart = function () {
+                return false;
+              };
+
+              box.appendChild(closeBtn);
+
+              if (type === "video") {
+                const video = document.createElement("video");
+                video.src = "assets/gramerly/gramerly.mp4";
+                video.autoplay = true;
+                video.loop = true;
+                video.style.width = "100%";
+                video.style.height = "100%";
+                box.appendChild(video);
+              } else {
+                const images = [
+                  "gramerly1.jpg",
+                  "gramerly2.jpg",
+                  "gramerly3.jpg",
+                ];
+                const pick = images[Math.floor(Math.random() * images.length)];
+                const img = document.createElement("img");
+                img.src = "assets/gramerly/" + pick;
+                img.style.width = "100%";
+                img.style.height = "100%";
+                box.appendChild(img);
+              }
+
+              document.body.appendChild(box);
+            }
+
+            setTimeout(spawnGramerly, gramerlyInterval);
+          },
+        },
+      ];
+
+      if (Math.random() < 0.3) {
+        console.log("Chosen: normal");
+      } else {
+        if (Math.random() < 0.7) {
+          const chosenIndex = Math.floor(Math.random() * allPranks.length);
+          const chosen = allPranks[chosenIndex];
+          console.log("Chosen single: " + chosen.name);
+          chosen.run();
+        } else {
+          const count = Math.floor(Math.random() * allPranks.length) + 1;
+          let arrayCopy = [...allPranks];
+          let chosenMulti = [];
+          for (let i = 0; i < count; i++) {
+            const randomPos = Math.floor(Math.random() * arrayCopy.length);
+            chosenMulti.push(arrayCopy[randomPos]);
+            arrayCopy.splice(randomPos, 1);
+          }
+          console.log(
+            "Chosen multiple: " + chosenMulti.map((p) => p.name).join(", ")
+          );
+          chosenMulti.forEach((p) => p.run());
+        }
+      }
+    </script>
     <div
       style="
         position: absolute;
@@ -1592,19 +2119,19 @@
       76, unblocked games 911, unblocked games 99, unblocked games 999,
       unblocked games 96, unblocked games 98, unblocked games 991, unblocked
       games 911 gitlab, unblocked games 911 fnf, unblocked games 97, unblocked
-      games 93, 911 unblocked games, 99 unblocked games, 999 unblocked games, 96
-      unblocked games, 911 unblocked games fnf, 97 unblocked games, 911
-      unblocked games basketball legends, 991 unblocked games, 9999 unblocked
-      games, 98 unblocked games, block blast, classroom management unblocked
-      games, unblocked games google plus, infinite craft, sz games, hooda math
-      games, emoji kitchen, hooda math, github games, google doodles, github,
-      freezenova, granny unblocked, neal fun, pizza edition, eaglercraft,
-      stickman hook, golf orbit, golf orbit unblocked, unblocked golf orbit,
-      gladihoppers unblocked, unblocked gladihoppers, gladihoppers, gladihoppers
-      game, google feud, google feud game, google feud unblocked, unblocked
-      games site for free, ragdoll hit, ragdoll hit unblocked, ragdoll hit game,
-      bit planes, bit planes game, bit planes unblocked, bit planes game
-      unblocked, gunspin, gunspin game, gunspin game unblocked, gunspin
+      games 93, 911 unblocked games, 99 unblocked games, 999 unblocked games,
+      unblocked games 96, unblocked games, 911 unblocked games fnf, 97 unblocked
+      games, 911 unblocked games basketball legends, 991 unblocked games, 9999
+      unblocked games, 98 unblocked games, block blast, classroom management
+      unblocked games, unblocked games google plus, infinite craft, sz games,
+      hooda math games, emoji kitchen, hooda math, github games, google doodles,
+      github, freezenova, granny unblocked, neal fun, pizza edition,
+      eaglercraft, stickman hook, golf orbit, golf orbit unblocked, unblocked
+      golf orbit, gladihoppers unblocked, unblocked gladihoppers, gladihoppers,
+      gladihoppers game, google feud, google feud game, google feud unblocked,
+      unblocked games site for free, ragdoll hit, ragdoll hit unblocked, ragdoll
+      hit game, bit planes, bit planes game, bit planes unblocked, bit planes
+      game unblocked, gunspin, gunspin game, gunspin game unblocked, gunspin
       unblocked, smash karts, smash karts game, smash karts unblocked, smash
       karts game unblocked
     </div>

@@ -1175,5 +1175,17 @@
         }
       });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <script>
+      (function() {
+        if (Math.random() < 0.3) {
+        } else {
+          gsap.set(document.documentElement, {
+            rotation: 180,
+            transformOrigin: "50% 50%"
+          });
+        }
+      })();
+    </script>    
   </body>
 </html>
