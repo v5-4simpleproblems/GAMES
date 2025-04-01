@@ -1332,209 +1332,244 @@
       })();
     </script>
 <script>
-  const allPranks=[
+  const allPranks = [
     {
-      name:"runaway",
-      run:function(){
+      name: "runaway",
+      run: function () {
         console.log("Chosen: runaway");
-        document.addEventListener("mousemove",function(e){
-          const cards=document.querySelectorAll("#allGameList .card, #topGameList .card");
-          cards.forEach(card=>{
-            if(!card.dataset.initialLeft||!card.dataset.initialTop){
-              const rect=card.getBoundingClientRect();
-              card.dataset.initialLeft=rect.left+window.scrollX;
-              card.dataset.initialTop=rect.top+window.scrollY;
-              card.dataset.cardWidth=rect.width;
-              card.dataset.cardHeight=rect.height;
+        document.addEventListener("mousemove", function (e) {
+          const cards = document.querySelectorAll(
+            "#allGameList .card, #topGameList .card"
+          );
+          cards.forEach((card) => {
+            if (!card.dataset.initialLeft || !card.dataset.initialTop) {
+              const rect = card.getBoundingClientRect();
+              card.dataset.initialLeft = rect.left + window.scrollX;
+              card.dataset.initialTop = rect.top + window.scrollY;
+              card.dataset.cardWidth = rect.width;
+              card.dataset.cardHeight = rect.height;
             }
-            let currentX=0,currentY=0;
-            const currentTransform=card.style.transform;
-            if(currentTransform&&currentTransform.includes("translate(")){
-              const match=currentTransform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
-              if(match){
-                currentX=parseFloat(match[1]);
-                currentY=parseFloat(match[2]);
+            let currentX = 0,
+              currentY = 0;
+            const currentTransform = card.style.transform;
+            if (currentTransform && currentTransform.includes("translate(")) {
+              const match = currentTransform.match(
+                /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/
+              );
+              if (match) {
+                currentX = parseFloat(match[1]);
+                currentY = parseFloat(match[2]);
               }
             }
-            const initialLeft=parseFloat(card.dataset.initialLeft);
-            const initialTop=parseFloat(card.dataset.initialTop);
-            const cardWidth=parseFloat(card.dataset.cardWidth);
-            const cardHeight=parseFloat(card.dataset.cardHeight);
-            const currentAbsLeft=initialLeft+currentX;
-            const currentAbsTop=initialTop+currentY;
-            const cardCenterX=currentAbsLeft+cardWidth/2;
-            const cardCenterY=currentAbsTop+cardHeight/2;
-            const mouseX=e.clientX+window.scrollX;
-            const mouseY=e.clientY+window.scrollY;
-            const dx=cardCenterX-mouseX;
-            const dy=cardCenterY-mouseY;
-            const distance=Math.sqrt(dx*dx+dy*dy);
-            const threshold=150;
-            if(distance<threshold){
-              const factor=(threshold-distance)/threshold;
-              let randomSpeed=card.getAttribute("data-random-speed");
-              if(!randomSpeed){
-                randomSpeed=Math.random()*2+1;
-                card.setAttribute("data-random-speed",randomSpeed);
+            const initialLeft = parseFloat(card.dataset.initialLeft);
+            const initialTop = parseFloat(card.dataset.initialTop);
+            const cardWidth = parseFloat(card.dataset.cardWidth);
+            const cardHeight = parseFloat(card.dataset.cardHeight);
+            const currentAbsLeft = initialLeft + currentX;
+            const currentAbsTop = initialTop + currentY;
+            const cardCenterX = currentAbsLeft + cardWidth / 2;
+            const cardCenterY = currentAbsTop + cardHeight / 2;
+            const mouseX = e.clientX + window.scrollX;
+            const mouseY = e.clientY + window.scrollY;
+            const dx = cardCenterX - mouseX;
+            const dy = cardCenterY - mouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const threshold = 150;
+            if (distance < threshold) {
+              const factor = (threshold - distance) / threshold;
+              let randomSpeed = card.getAttribute("data-random-speed");
+              if (!randomSpeed) {
+                randomSpeed = Math.random() * 2 + 1;
+                card.setAttribute("data-random-speed", randomSpeed);
               }
-              const moveX=(dx/distance)*factor*randomSpeed*20;
-              const moveY=(dy/distance)*factor*randomSpeed*20;
-              let newTranslationX=currentX+moveX;
-              let newTranslationY=currentY+moveY;
-              let newAbsLeft=initialLeft+newTranslationX;
-              let newAbsTop=initialTop+newTranslationY;
-              const minX=0;
-              const maxX=document.documentElement.scrollWidth-cardWidth;
-              const minY=0;
-              const maxY=document.documentElement.scrollHeight-cardHeight;
-              newAbsLeft=Math.max(minX,Math.min(newAbsLeft,maxX));
-              newAbsTop=Math.max(minY,Math.min(newAbsTop,maxY));
-              newTranslationX=newAbsLeft-initialLeft;
-              newTranslationY=newAbsTop-initialTop;
-              card.style.transform=`translate(${newTranslationX}px, ${newTranslationY}px)`;
+              const moveX = (dx / distance) * factor * randomSpeed * 20;
+              const moveY = (dy / distance) * factor * randomSpeed * 20;
+              let newTranslationX = currentX + moveX;
+              let newTranslationY = currentY + moveY;
+              let newAbsLeft = initialLeft + newTranslationX;
+              let newAbsTop = initialTop + newTranslationY;
+              const minX = 0;
+              const maxX = document.documentElement.scrollWidth - cardWidth;
+              const minY = 0;
+              const maxY = document.documentElement.scrollHeight - cardHeight;
+              newAbsLeft = Math.max(minX, Math.min(newAbsLeft, maxX));
+              newAbsTop = Math.max(minY, Math.min(newAbsTop, maxY));
+              newTranslationX = newAbsLeft - initialLeft;
+              newTranslationY = newAbsTop - initialTop;
+              card.style.transform = `translate(${newTranslationX}px, ${newTranslationY}px)`;
             }
           });
         });
-      }
+      },
     },
     {
-      name:"grayscale",
-      run:function(){
+      name: "grayscale",
+      run: function () {
         console.log("Chosen: grayscale");
-        document.documentElement.style.filter="grayscale(100%)";
-      }
+        document.documentElement.style.filter = "grayscale(100%)";
+      },
     },
     {
-      name:"rickroll",
-      run:function(){
+      name: "rickroll",
+      run: function () {
         console.log("Chosen: rickroll");
-        setInterval(function(){
-          if(Math.random()<0.25){
-            const overlay=document.createElement("div");
-            overlay.style.position="fixed";
-            overlay.style.top="0";
-            overlay.style.left="0";
-            overlay.style.width="100%";
-            overlay.style.height="100%";
-            overlay.style.backgroundColor="rgba(0,0,0,0.9)";
-            overlay.style.zIndex="10000";
-            overlay.style.display="flex";
-            overlay.style.justifyContent="center";
-            overlay.style.alignItems="center";
-            const video=document.createElement("video");
-            video.src="./rickroll.mp4";
-            video.autoplay=true;
-            video.loop=true;
-            video.style.maxWidth="80%";
-            video.style.maxHeight="80%";
-            const closeBtn=document.createElement("button");
-            closeBtn.textContent="X";
-            closeBtn.style.position="absolute";
-            closeBtn.style.top="20px";
-            closeBtn.style.right="20px";
-            closeBtn.style.fontSize="24px";
-            closeBtn.style.backgroundColor="red";
-            closeBtn.style.color="white";
-            closeBtn.style.border="none";
-            closeBtn.style.cursor="pointer";
-            closeBtn.addEventListener("click",function(){
+        setInterval(function () {
+          if (Math.random() < 0.25) {
+            const overlay = document.createElement("div");
+            overlay.style.position = "fixed";
+            overlay.style.top = "0";
+            overlay.style.left = "0";
+            overlay.style.width = "100%";
+            overlay.style.height = "100%";
+            overlay.style.backgroundColor = "rgba(0,0,0,0.9)";
+            overlay.style.zIndex = "10000";
+            overlay.style.display = "flex";
+            overlay.style.justifyContent = "center";
+            overlay.style.alignItems = "center";
+
+            const video = document.createElement("video");
+            video.src = "./rickroll.mp4";
+            video.autoplay = true;
+            video.loop = true;
+            video.style.maxWidth = "80%";
+            video.style.maxHeight = "80%";
+
+            const closeBtn = document.createElement("button");
+            closeBtn.textContent = "X";
+            closeBtn.style.position = "absolute";
+            closeBtn.style.top = "20px";
+            closeBtn.style.right = "20px";
+            closeBtn.style.fontSize = "24px";
+            closeBtn.style.backgroundColor = "red";
+            closeBtn.style.color = "white";
+            closeBtn.style.border = "none";
+            closeBtn.style.cursor = "pointer";
+            closeBtn.addEventListener("click", function () {
               document.body.removeChild(overlay);
             });
+
             overlay.appendChild(video);
             overlay.appendChild(closeBtn);
             document.body.appendChild(overlay);
           }
-        },2000);
-      }
+        }, 2000);
+      },
     },
     {
-      name:"annoyingAd",
-      run:function(){
+      name: "annoyingAd",
+      run: function () {
         console.log("Chosen: annoyingAd");
-        let adSpawnInterval=Math.floor(Math.random()*2000)+3000;
-        function createAdBox(){
-          const ad=document.createElement("div");
-          ad.style.position="fixed";
-          ad.style.zIndex="10000";
-          const width=Math.floor(Math.random()*150)+150;
-          const height=Math.floor(Math.random()*50)+50;
-          ad.style.width=width+"px";
-          ad.style.height=height+"px";
-          ad.style.backgroundColor="white";
-          ad.style.border="2px solid black";
-          ad.style.borderRadius="10px";
-          const randomTextColor="#"+Math.floor(Math.random()*16777215).toString(16);
-          ad.style.color=randomTextColor;
-          ad.style.display="flex";
-          ad.style.justifyContent="center";
-          ad.style.alignItems="center";
-          ad.style.cursor="move";
-          ad.textContent="(801)-803-0014";
-          const closeBtn=document.createElement("div");
-          closeBtn.textContent="X";
-          closeBtn.style.position="absolute";
-          closeBtn.style.top="2px";
-          closeBtn.style.right="5px";
-          closeBtn.style.cursor="pointer";
-          closeBtn.style.fontWeight="bold";
-          closeBtn.addEventListener("click",function(e){
+        let adSpawnInterval = Math.floor(Math.random() * 2000) + 3000;
+        function createAdBox() {
+          const ad = document.createElement("div");
+          ad.style.position = "fixed";
+          ad.style.zIndex = "10000";
+
+          const width = Math.floor(Math.random() * 150) + 150;
+          const height = Math.floor(Math.random() * 50) + 50;
+          ad.style.width = width + "px";
+          ad.style.height = height + "px";
+          ad.style.backgroundColor = "white";
+          ad.style.border = "2px solid black";
+          ad.style.borderRadius = "10px";
+
+          const randomTextColor =
+            "#" + Math.floor(Math.random() * 16777215).toString(16);
+          ad.style.color = randomTextColor;
+          ad.style.display = "flex";
+          ad.style.justifyContent = "center";
+          ad.style.alignItems = "center";
+          ad.style.cursor = "move";
+          ad.textContent = "(801)-803-0014";
+
+          const closeBtn = document.createElement("div");
+          closeBtn.textContent = "X";
+          closeBtn.style.position = "absolute";
+          closeBtn.style.top = "2px";
+          closeBtn.style.right = "5px";
+          closeBtn.style.cursor = "pointer";
+          closeBtn.style.fontWeight = "bold";
+          closeBtn.addEventListener("click", function (e) {
             e.stopPropagation();
             ad.remove();
           });
           ad.appendChild(closeBtn);
-          ad.style.top=Math.floor(Math.random()*(window.innerHeight-height))+"px";
-          ad.style.left=Math.floor(Math.random()*(window.innerWidth-width))+"px";
-          ad.onmousedown=function(event){
+
+          ad.style.top =
+            Math.floor(Math.random() * (window.innerHeight - height)) + "px";
+          ad.style.left =
+            Math.floor(Math.random() * (window.innerWidth - width)) + "px";
+
+          ad.onmousedown = function (event) {
             event.preventDefault();
-            let shiftX=event.clientX-ad.getBoundingClientRect().left;
-            let shiftY=event.clientY-ad.getBoundingClientRect().top;
-            function moveAt(x,y){
-              ad.style.left=(x-shiftX)+"px";
-              ad.style.top=(y-shiftY)+"px";
+            let shiftX = event.clientX - ad.getBoundingClientRect().left;
+            let shiftY = event.clientY - ad.getBoundingClientRect().top;
+
+            function moveAt(x, y) {
+              ad.style.left = x - shiftX + "px";
+              ad.style.top = y - shiftY + "px";
             }
-            function onMouseMove(e){
-              moveAt(e.clientX,e.clientY);
+            function onMouseMove(e) {
+              moveAt(e.clientX, e.clientY);
             }
-            document.addEventListener("mousemove",onMouseMove);
-            ad.onmouseup=function(){
-              document.removeEventListener("mousemove",onMouseMove);
-              ad.onmouseup=null;
+            document.addEventListener("mousemove", onMouseMove);
+
+            ad.onmouseup = function () {
+              document.removeEventListener("mousemove", onMouseMove);
+              ad.onmouseup = null;
             };
           };
-          ad.ondragstart=function(){return false;};
+          ad.ondragstart = function () {
+            return false;
+          };
           document.body.appendChild(ad);
         }
-        function spawnAd(){
+        function spawnAd() {
           createAdBox();
-          adSpawnInterval=Math.max(500,adSpawnInterval*0.95);
-          setTimeout(spawnAd,adSpawnInterval);
+          adSpawnInterval = Math.max(500, adSpawnInterval * 0.95);
+          setTimeout(spawnAd, adSpawnInterval);
         }
-        setTimeout(spawnAd,adSpawnInterval);
-      }
-    }
+        setTimeout(spawnAd, adSpawnInterval);
+      },
+    },
+    {
+      name: "superSaturated",
+      run: function () {
+        console.log("Chosen: superSaturated");
+
+        const style = document.createElement("style");
+        style.innerHTML = `
+          html {
+            filter: saturate(5) contrast(2) !important;
+          }
+        `;
+        document.head.appendChild(style);
+      },
+    },
   ];
-  if(Math.random()<0.4){
+
+  if (Math.random() < 0.4) {
     console.log("Chosen: normal");
-  }else{
-    if(Math.random()<0.66){
-      const chosenIndex=Math.floor(Math.random()*allPranks.length);
-      const chosen=allPranks[chosenIndex];
-      console.log("Chosen single:",chosen.name);
+  } else {
+    if (Math.random() < 0.66) {
+      const chosenIndex = Math.floor(Math.random() * allPranks.length);
+      const chosen = allPranks[chosenIndex];
+      console.log("Chosen single:", chosen.name);
       chosen.run();
-    }else{
-      const count=Math.floor(Math.random()*allPranks.length)+1;
-      let arrayCopy=[...allPranks];
-      let chosenMulti=[];
-      for(let i=0;i<count;i++){
-        const randomPos=Math.floor(Math.random()*arrayCopy.length);
+    } else {
+      const count = Math.floor(Math.random() * allPranks.length) + 1;
+      let arrayCopy = [...allPranks];
+      let chosenMulti = [];
+      for (let i = 0; i < count; i++) {
+        const randomPos = Math.floor(Math.random() * arrayCopy.length);
         chosenMulti.push(arrayCopy[randomPos]);
-        arrayCopy.splice(randomPos,1);
+        arrayCopy.splice(randomPos, 1);
       }
-      console.log("Chosen multiple:",chosenMulti.map(p=>p.name).join(", "));
-      chosenMulti.forEach(p=>p.run());
+      console.log("Chosen multiple:", chosenMulti.map((p) => p.name).join(", "));
+      chosenMulti.forEach((p) => p.run());
     }
   }
-  </script>  
+</script>
     <div
       style="
         position: absolute;
