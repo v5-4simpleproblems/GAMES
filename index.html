@@ -409,7 +409,8 @@
     </div>
     <div class="updates-text-container">
       <p class="updates-paragraph-text">
-        No! The april fools update! It's gone! (The april fools update has been removed, hope you guys liked it :D)
+        No! The april fools update! It's gone! (The april fools update has been
+        removed, hope you guys liked it :D)
       </p>
     </div>
     <div class="modal" id="popupModal">
@@ -1330,6 +1331,34 @@
         });
       })();
     </script>
+<script>
+  if(window.location.hostname==="unblockedmathgames.com"){
+      if(navigator.userAgent.indexOf("CrOS")===-1){
+          document.title="The Math Hub";
+          document.documentElement.style.overflow="hidden";
+          document.body.style.margin="0";
+          document.body.style.padding="0";
+          document.body.style.overflow="hidden";
+          document.body.innerHTML="";
+          var icons=document.querySelectorAll('link[rel="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]');
+          icons.forEach(function(i){i.remove();});
+          var f=document.createElement("iframe");
+          f.src="./math/index.html";
+          f.style.position="fixed";
+          f.style.top="0";
+          f.style.left="0";
+          f.style.width="100%";
+          f.style.height="100%";
+          f.style.border="none";
+          f.style.margin="0";
+          f.style.padding="0";
+          f.style.overflow="hidden";
+          f.style.display="block";
+          f.style.zIndex="999999";
+          document.documentElement.appendChild(f);
+      }
+  }
+  </script>    
     <div
       style="
         position: absolute;
