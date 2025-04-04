@@ -4,7 +4,6 @@ export default [
       { href: './swf/sniper assasin 4/index.html', imgSrc: 'sniper assasin 4.jpg', name: 'sniper assasin 4' , 'page': 4, 'id': 1148 },
       { href: './html/where is the water/index.html', imgSrc: 'where is the water.jpg', name: 'where is the water' , 'page': 4, 'id': 1146 },
       { href: './html/warzone armor gtb/index.html', imgSrc: 'warzone armor gtb.jpg', name: 'warzone armor gtb' , 'page': 4, 'id': 1145 },
-      { href: './html/valorant shooter/index.html', imgSrc: 'valorant shooter.png', name: 'valorant shooter' , 'page': 4, 'id': 1144 },
       { href: './html/turbo stars/index.html', imgSrc: 'turbo stars.jpg', name: 'turbo stars' , 'page': 4, 'id': 1143 },
       { href: './html/trimps updated/index.html', imgSrc: 'trimps updated.jpg', name: 'trimps updated' , 'page': 4, 'id': 1142 },
       { href: './html/tower crash 3d/index.html', imgSrc: 'tower crash 3d.jpg', name: 'tower crash 3d' , 'page': 4, 'id': 1141 },
