@@ -1,4 +1,6 @@
 export default [
+  { href: './html/short ride/index.html', imgSrc: 'short ride.jpg', name: 'short ride' , 'page': 3, 'id': 883 },
+  { href: './html/short life/index.html', imgSrc: 'short life.jpg', name: 'short life' , 'page': 3, 'id': 882 },
   { href: './html/fancade/index.html', imgSrc: 'fancade.jpg', name: 'fancade' , 'page': 4, 'id': 1087 },
   { href: './html/hexarena.io 3d/index.html', imgSrc: 'hexarena.io 3d.png', name: 'hexarena.io 3d' , 'page': 4, 'id': 1088 },
   { href: './html/cats/index.html', imgSrc: 'cats.jpg', name: 'cats' , 'page': 4, 'id': 1023 },

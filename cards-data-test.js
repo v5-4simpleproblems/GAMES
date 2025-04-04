@@ -182,8 +182,6 @@ export default [
       { href: './html/slope 3/index.html', imgSrc: 'slope 3.jpg', name: 'slope 3' , 'page': 3, 'id': 891 },
       { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
       { href: './html/sink it/index.html', imgSrc: 'sink it.jpg', name: 'sink it' , 'page': 3, 'id': 884 },
-      { href: './html/short ride/index.html', imgSrc: 'short ride.jpg', name: 'short ride' , 'page': 3, 'id': 883 },
-      { href: './html/short life/index.html', imgSrc: 'short life.jpg', name: 'short life' , 'page': 3, 'id': 882 },
       { href: './html/shark.io/index.html', imgSrc: 'shark.io.jpg', name: 'shark.io' , 'page': 3, 'id': 879 },
       { href: './html/shape fold/index.html', imgSrc: 'shape fold.jpg', name: 'shape fold' , 'page': 3, 'id': 878 },
       { href: './html/shady bears/index.html', imgSrc: 'shady bears.jpg', name: 'shady bears' , 'page': 3, 'id': 877 },
