@@ -1,6 +1,5 @@
 export default [
       { href: './swf/the binding of isaac/index.html', imgSrc: 'the binding of isaac.jpg', name: 'the binding of isaac' , 'page': 4, 'id': 1151 },
-      { href: './swf/territory war/index.html', imgSrc: 'territory war.jpg', name: 'territory war' , 'page': 4, 'id': 1150 },
       { href: './swf/stickwar/index.html', imgSrc: 'stickwar.jpg', name: 'stickwar' , 'page': 4, 'id': 1149 },
       { href: './swf/sniper assasin 4/index.html', imgSrc: 'sniper assasin 4.jpg', name: 'sniper assasin 4' , 'page': 4, 'id': 1148 },
       { href: './swf/dead tree defender/index.html', imgSrc: 'dead tree defender.jpg', name: 'dead tree defender' , 'page': 4, 'id': 1147 },
