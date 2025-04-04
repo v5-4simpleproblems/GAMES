@@ -5,7 +5,6 @@ export default [
       { href: './html/where is the water/index.html', imgSrc: 'where is the water.jpg', name: 'where is the water' , 'page': 4, 'id': 1146 },
       { href: './html/warzone armor gtb/index.html', imgSrc: 'warzone armor gtb.jpg', name: 'warzone armor gtb' , 'page': 4, 'id': 1145 },
       { href: './html/turbo stars/index.html', imgSrc: 'turbo stars.jpg', name: 'turbo stars' , 'page': 4, 'id': 1143 },
-      { href: './html/trimps updated/index.html', imgSrc: 'trimps updated.jpg', name: 'trimps updated' , 'page': 4, 'id': 1142 },
       { href: './html/tower crash 3d/index.html', imgSrc: 'tower crash 3d.jpg', name: 'tower crash 3d' , 'page': 4, 'id': 1141 },
       { href: './html/table tennis/index.html', imgSrc: 'table tennis.jpg', name: 'table tennis' , 'page': 4, 'id': 1140 },
       { href: './html/sword play/index.html', imgSrc: 'sword play.jpg', name: 'sword play' , 'page': 4, 'id': 1139 },
