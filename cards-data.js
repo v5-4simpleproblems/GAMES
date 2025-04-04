@@ -1,4 +1,5 @@
 export default [
+  { href: './html/more ore/index.html', imgSrc: 'more ore.jpg', name: 'more ore' , 'page': 4, 'id': 1125 },
   { href: './html/slice it all/index.html', imgSrc: 'slice it all.jpg', name: 'slice it all' , 'page': 4, 'id': 1131 },
   { href: './html/trimps updated/index.html', imgSrc: 'trimps updated.jpg', name: 'trimps updated' , 'page': 4, 'id': 1142 },
   { href: './html/awesome tanks 2/index.html', imgSrc: 'awesome tanks 2.png', name: 'awesome tanks 2' , 'page': 4, 'id': 1096 },
