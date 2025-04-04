@@ -1,4 +1,5 @@
 export default [
+  { href: './html/slice it all/index.html', imgSrc: 'slice it all.jpg', name: 'slice it all' , 'page': 4, 'id': 1131 },
   { href: './html/trimps updated/index.html', imgSrc: 'trimps updated.jpg', name: 'trimps updated' , 'page': 4, 'id': 1142 },
   { href: './html/awesome tanks 2/index.html', imgSrc: 'awesome tanks 2.png', name: 'awesome tanks 2' , 'page': 4, 'id': 1096 },
   { href: './html/valorant shooter/index.html', imgSrc: 'valorant shooter.png', name: 'valorant shooter' , 'page': 4, 'id': 1144 },
