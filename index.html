@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+  <link rel="stylesheet" href="./assets/styles.css">
   <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>StrongDog XP</title>
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
@@ -27,10 +34,7 @@
             "url": "https://strongdog.com/",
             "logo": "https://strongdog.com/images/logo.png",
             "description": "StrongDog XP is a gaming portal where users can access a wide variety of browser games and connect with the community through the Discord server.",
-            "founder": {
-              "@type": "Person",
-              "name": "Josh P"
-            }
+            "founder": { "@type": "Person", "name": "Josh P" }
           },
           {
             "@type": "WebSite",
@@ -83,10 +87,6 @@
       href="img/favicon.ico"
       id="faviconLink"
     />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StrongDog XP</title>
-    <link rel="stylesheet" href="assets/styles.css" />
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -112,7 +112,7 @@
         let dbList = [];
         try {
           dbList = await indexedDB.databases();
-        } catch (error) {
+        } catch (e) {
           return {};
         }
         const result = {};
@@ -125,47 +125,40 @@
       function getDataFromDatabase(dbName) {
         return new Promise((resolve, reject) => {
           const request = indexedDB.open(dbName);
-          request.onsuccess = (event) => {
-            const db = event.target.result;
-            const storeNames = Array.from(db.objectStoreNames);
-            const dbData = {};
-            let pending = storeNames.length;
-            if (pending === 0) {
-              db.close();
-              resolve(dbData);
+          (request.onsuccess = (e) => {
+            const db = e.target.result,
+              storeNames = Array.from(db.objectStoreNames),
+              dbData = {},
+              pendingCount = storeNames.length;
+            if (!pendingCount) {
+              db.close(), resolve(dbData);
               return;
             }
+            let pending = pendingCount;
             storeNames.forEach((storeName) => {
-              const transaction = db.transaction(storeName, "readonly");
-              const store = transaction.objectStore(storeName);
-              const items = [];
-              const cursorRequest = store.openCursor();
-              cursorRequest.onsuccess = (evt) => {
+              const transaction = db.transaction(storeName, "readonly"),
+                store = transaction.objectStore(storeName),
+                items = [],
+                cursorRequest = store.openCursor();
+              (cursorRequest.onsuccess = (evt) => {
                 const cursor = evt.target.result;
-                if (cursor) {
-                  items.push({ key: cursor.key, value: cursor.value });
-                  cursor.continue();
-                } else {
-                  dbData[storeName] = items;
-                  pending--;
-                  if (pending === 0) {
-                    db.close();
-                    resolve(dbData);
-                  }
+                if (cursor)
+                  items.push({ key: cursor.key, value: cursor.value }),
+                    cursor.continue();
+                else {
+                  (dbData[storeName] = items),
+                    pending--,
+                    !pending && (db.close(), resolve(dbData));
                 }
-              };
-              cursorRequest.onerror = () => {
-                pending--;
-                if (pending === 0) {
-                  db.close();
-                  resolve(dbData);
-                }
-              };
+              }),
+                (cursorRequest.onerror = () => {
+                  pending--, !pending && (db.close(), resolve(dbData));
+                });
             });
-          };
-          request.onerror = (event) => {
-            reject(event.target.error);
-          };
+          }),
+            (request.onerror = (e) => {
+              reject(e.target.error);
+            });
         });
       }
       async function setAllIndexedDBData(indexedData) {
@@ -173,48 +166,44 @@
           const storesData = indexedData[dbName];
           await new Promise((resolve) => {
             const deleteRequest = indexedDB.deleteDatabase(dbName);
-            deleteRequest.onsuccess = () => resolve();
-            deleteRequest.onerror = () => resolve();
-            deleteRequest.onblocked = () => resolve();
+            (deleteRequest.onsuccess = () => resolve()),
+              (deleteRequest.onerror = () => resolve()),
+              (deleteRequest.onblocked = () => resolve());
           });
           const openRequest = indexedDB.open(dbName, 1);
-          openRequest.onupgradeneeded = function (event) {
-            const db = event.target.result;
-            for (const storeName in storesData) {
-              if (!db.objectStoreNames.contains(storeName)) {
+          openRequest.onupgradeneeded = function (e) {
+            const db = e.target.result;
+            for (const storeName in storesData)
+              db.objectStoreNames.contains(storeName) ||
                 db.createObjectStore(storeName, { autoIncrement: false });
-              }
-            }
           };
           const dbInstance = await new Promise((resolve, reject) => {
-            openRequest.onsuccess = (event) => {
-              resolve(event.target.result);
-            };
-            openRequest.onerror = (event) => {
-              reject(event.target.error);
-            };
+            (openRequest.onsuccess = (e) => {
+              resolve(e.target.result);
+            }),
+              (openRequest.onerror = (e) => {
+                reject(e.target.error);
+              });
           });
-          for (const storeName in storesData) {
+          for (const storeName in storesData)
             await new Promise((resolve) => {
               const transaction = dbInstance.transaction(
                 storeName,
                 "readwrite"
               );
-              transaction.oncomplete = () => resolve();
-              transaction.onerror = () => resolve();
-              const store = transaction.objectStore(storeName);
-              const clearRequest = store.clear();
+              (transaction.oncomplete = () => resolve()),
+                (transaction.onerror = () => resolve());
+              const store = transaction.objectStore(storeName),
+                clearRequest = store.clear();
               clearRequest.onsuccess = async () => {
-                for (const record of storesData[storeName]) {
+                for (const record of storesData[storeName])
                   await new Promise((r) => {
                     const putRequest = store.put(record.value, record.key);
-                    putRequest.onsuccess = () => r();
-                    putRequest.onerror = () => r();
+                    (putRequest.onsuccess = () => r()),
+                      (putRequest.onerror = () => r());
                   });
-                }
               };
             });
-          }
           dbInstance.close();
         }
       }
@@ -235,26 +224,26 @@
       document.addEventListener("DOMContentLoaded", () => {
         if (!document.getElementById("autoSaveModal")) {
           const modal = document.createElement("div");
-          modal.id = "autoSaveModal";
-          modal.style.cssText =
-            "display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:3000;";
-          modal.innerHTML = `
+          (modal.id = "autoSaveModal"),
+            (modal.style.cssText =
+              "display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:3000;"),
+            (modal.innerHTML = `
             <div style="background:#333; padding:20px; border-radius:5px; text-align:center; color:#fff; max-width:90%;">
               <p>Would you like to load your auto-save?<br>If not now, you'll have to enable it manually later.</p>
               <button id="autoSaveYes" style="margin-right:10px; padding:10px 20px; background:orange; border:none; border-radius:5px;cursor:pointer;">Yes</button>
               <button id="autoSaveNo" style="padding:10px 20px; background:gray; border:none; border-radius:5px;cursor:pointer;">No</button>
             </div>
-          `;
-          document.body.appendChild(modal);
+          `),
+            document.body.appendChild(modal);
         }
         function setCookie(name, value, days) {
           const d = new Date();
-          d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-          document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`;
+          d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days),
+            (document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`);
         }
         function getCookie(name) {
-          const all = `; ${document.cookie}`;
-          const parts = all.split(`; ${name}=`);
+          const all = `; ${document.cookie}`,
+            parts = all.split(`; ${name}=`);
           if (parts.length === 2) return parts.pop().split(";")[0];
           return "";
         }
@@ -268,26 +257,28 @@
         }
         function setAllLocalStorageData(obj) {
           localStorage.clear();
-          for (const k in obj) {
-            localStorage.setItem(k, obj[k]);
-          }
+          for (const k in obj) localStorage.setItem(k, obj[k]);
         }
         function autoSaveData() {
           if (!window.currentUserId) return;
           const localData = getAllLocalStorageData();
-          getAllIndexedDBData().then((indexedData) => {
-            const docRef = window.db
-              .collection("users")
-              .doc(window.currentUserId)
-              .collection("saves")
-              .doc("slot3");
-            docRef.set({
-              title: "Auto Save",
-              description: "Auto-saved on " + new Date().toLocaleString(),
-              localStorageData: localData,
-              indexedDBBackup: indexedData,
-            });
-          });
+          getAllIndexedDBData()
+            .then((indexedData) => {
+              const docRef = window.db
+                .collection("users")
+                .doc(window.currentUserId)
+                .collection("saves")
+                .doc("slot3");
+              docRef
+                .set({
+                  title: "Auto Save",
+                  description: "Auto-saved on " + new Date().toLocaleString(),
+                  localStorageData: localData,
+                  indexedDBBackup: indexedData,
+                })
+                .catch((err) => {});
+            })
+            .catch((err) => {});
         }
         function loadAutoSave() {
           if (!window.currentUserId) return;
@@ -302,15 +293,11 @@
               if (docSnap.data().indexedDBBackup) {
                 setAllIndexedDBData(docSnap.data().indexedDBBackup)
                   .then(() => alert("Auto-save loaded!"))
-                  .catch(() =>
-                    alert("Error loading auto-save IndexedDB data!")
-                  );
-              } else {
-                alert("Auto-save loaded!");
-              }
-            } else {
-              alert("No auto-save data found in Firestore.");
-            }
+                  .catch((err) => {
+                    alert("Error loading auto-save IndexedDB data!");
+                  });
+              } else alert("Auto-save loaded!");
+            } else alert("No auto-save data found in Firestore.");
           });
         }
         function showAutoSaveModal() {
@@ -319,16 +306,15 @@
         function hideAutoSaveModal() {
           document.getElementById("autoSaveModal").style.display = "none";
         }
-        const yesBtn = document.getElementById("autoSaveYes");
-        const noBtn = document.getElementById("autoSaveNo");
+        const yesBtn = document.getElementById("autoSaveYes"),
+          noBtn = document.getElementById("autoSaveNo");
         yesBtn?.addEventListener("click", () => {
-          hideAutoSaveModal();
-          setCookie("autoSaveEnabled", "true", 9999);
-          loadAutoSave();
+          hideAutoSaveModal(),
+            setCookie("autoSaveEnabled", "true", 9999),
+            loadAutoSave();
         });
         noBtn?.addEventListener("click", () => {
-          hideAutoSaveModal();
-          setCookie("autoSaveEnabled", "false", 9999);
+          hideAutoSaveModal(), setCookie("autoSaveEnabled", "false", 9999);
         });
         window.auth.onAuthStateChanged(async (user) => {
           if (user) {
@@ -336,23 +322,21 @@
             const autoEnabled = getCookie("autoSaveEnabled");
             if (!autoEnabled) {
               const docRef = window.db
-                .collection("users")
-                .doc(user.uid)
-                .collection("saves")
-                .doc("slot3");
-              const docSnap = await docRef.get();
-              if (docSnap.exists && docSnap.data().localStorageData) {
+                  .collection("users")
+                  .doc(user.uid)
+                  .collection("saves")
+                  .doc("slot3"),
+                docSnap = await docRef.get();
+              if (docSnap.exists && docSnap.data().localStorageData)
                 showAutoSaveModal();
-              } else {
+              else {
                 setCookie("autoSaveEnabled", "true", 9999);
                 if (!getCookie("autoSaveDone")) {
-                  autoSaveData();
-                  setCookie("autoSaveDone", "true", 1);
+                  autoSaveData(), setCookie("autoSaveDone", "true", 1);
                 }
               }
             } else if (autoEnabled === "true" && !getCookie("autoSaveDone")) {
-              autoSaveData();
-              setCookie("autoSaveDone", "true", 1);
+              autoSaveData(), setCookie("autoSaveDone", "true", 1);
             }
           }
         });
@@ -379,8 +363,8 @@
     ></div>
     <script>
       window.addEventListener("load", function () {
-        const secretLink = document.getElementById("secretLink");
-        secretLink.addEventListener("click", function () {
+        const e = document.getElementById("secretLink");
+        e.addEventListener("click", function () {
           window.location.href = "secret-menu.html";
         });
       });
@@ -424,9 +408,7 @@
     </div>
     <div class="games-grid" id="favoritesGameList" style="display: none"></div>
     <div class="section-header">
-      <h2 style="text-align: center">
-        <strong>All (<span id="allGameCount"></span>)</strong>
-      </h2>
+      <h2 style="text-align: center"><strong>All</strong></h2>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -438,7 +420,7 @@
           d="M21.121 2.707a3 3 0 0 0-4.242 0l-1.68 1.68-7.906 7.906a1 1 0 0 0-.263.464l-1 4a1 1 0 0 0 1.213 1.213l4-1a1 1 0 0 0 .464-.263l7.849-7.848 1.737-1.738a3 3 0 0 0 0-4.242l-.172-.172Zm-2.828 1.414a1 1 0 0 1 1.414 0l.172.172a1 1 0 0 1 0 1.414l-1.017 1.017-1.555-1.617.986-.986Zm-2.4 2.4 1.555 1.617-6.96 6.959-2.114.529.529-2.115 6.99-6.99ZM4 8a1 1 0 0 1 1-1h5a1 1 0 1 0 0-2H5a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h11a3 3 0 0 0 3-3v-5a1 1 0 0 0-2 0v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8Z"
           fill-rule="evenodd"
           clip-rule="evenodd"
-        ></path>
+        />
       </svg>
     </div>
     <div class="games-grid" id="allGameList"></div>
@@ -512,21 +494,21 @@
     <h2 class="alternate-links-title">Alternate Links</h2>
     <div class="alternate-links-container" id="alternate-links-container"></div>
     <div class="alternate-links-key" id="alternate-links-key">
-      <span style="margin-right: 15px">
-        <span class="status-dot" style="background-color: var(--green)"></span>
-        Unblocked
-      </span>
-      <span style="margin-right: 15px">
-        <span class="status-dot" style="background-color: var(--red)"></span>
-        Blocked/Down
-      </span>
-      <span style="margin-right: 15px">
-        <span
+      <span style="margin-right: 15px"
+        ><span class="status-dot" style="background-color: var(--green)"></span
+        >Unblocked</span
+      >
+      <span style="margin-right: 15px"
+        ><span class="status-dot" style="background-color: var(--red)"></span
+        >Blocked/Down</span
+      >
+      <span style="margin-right: 15px"
+        ><span
           class="status-dot"
           style="background-color: yellow; border: 1px solid black"
-        ></span>
-        Unknown
-      </span>
+        ></span
+        >Unknown</span
+      >
     </div>
     <h2 class="alternate-links-title">
       Exclusive links available on the StrongDogXP
@@ -565,10 +547,9 @@
         <div class="slider-option" style="margin-bottom: 10px">
           <label
             for="cardSizeSlider"
-            style="color: white; display: block; margin-bottom: 5px"
+            style="color: #fff; display: block; margin-bottom: 5px"
+            >Card Size Adjustment</label
           >
-            Card Size Adjustment
-          </label>
           <input
             type="range"
             id="cardSizeSlider"
@@ -578,14 +559,14 @@
             step="1"
             style="width: 100%"
           />
-          <div style="text-align: center; color: white; margin-top: 5px">
+          <div style="text-align: center; color: #fff; margin-top: 5px">
             Size: <span id="cardSizeValue">0</span>
           </div>
         </div>
         <div class="custom-option" style="margin-bottom: 10px">
           <label
             for="customTitleInput"
-            style="color: white; display: block; margin-bottom: 5px"
+            style="color: #fff; display: block; margin-bottom: 5px"
             >Custom Title</label
           >
           <input
@@ -601,7 +582,7 @@
         <div class="custom-option" style="margin-bottom: 10px">
           <label
             for="customFaviconInput"
-            style="color: white; display: block; margin-bottom: 5px"
+            style="color: #fff; display: block; margin-bottom: 5px"
             >Custom Favicon URL</label
           >
           <input
@@ -626,15 +607,93 @@
         <button id="favoritesOkButton">OK</button>
       </div>
     </div>
+    <script>
+      const altLinksEl = document.getElementById("alternate-links-container"),
+        altLinksKeyEl = document.getElementById("alternate-links-key"),
+        altLinks = [
+          "chesstube.eu.com",
+          "gametree.net",
+          "hateroll.com",
+          "strongdogunblocked.github.io",
+          "weakcatxp.github.io",
+          "gametreexp.github.io",
+          "mathcordxp.github.io",
+          "strongdogxp.github.io",
+          "jman1593.github.io",
+          "strongdog-1.vercel.app",
+          "mathcord.com",
+          "strongdog.com",
+        ];
+      altLinks.forEach((link) => {
+        const a = document.createElement("a");
+        a.classList.add("alternate-link"),
+          (a.href = "https://" + link),
+          (a.target = "_blank");
+        const linkText = document.createElement("span");
+        linkText.textContent = link;
+        const statusDot = document.createElement("span");
+        statusDot.classList.add("spinning-dot"),
+          (statusDot.title = "Checking site availability...");
+        a.appendChild(linkText),
+          a.appendChild(statusDot),
+          altLinksEl.appendChild(a),
+          checkSiteStatus(link, statusDot);
+      });
+      async function pingSite(domain) {
+        return new Promise((resolve) => {
+          const url = `https://${domain}/ads.txt?${Date.now()}`;
+          let didTimeout = false;
+          const timeout = setTimeout(() => {
+            didTimeout = true;
+            resolve(domain.endsWith("github.io") ? "unknown" : false);
+          }, 5000);
+          fetch(url, { mode: "cors" })
+            .then((response) => response.text())
+            .then((text) => {
+              if (!didTimeout) {
+                clearTimeout(timeout);
+                domain.endsWith("github.io")
+                  ? resolve("unknown")
+                  : resolve(text.includes("f08c47fec0942fa0") ? true : false);
+              }
+            })
+            .catch(() => {
+              if (!didTimeout) {
+                clearTimeout(timeout);
+                resolve(domain.endsWith("github.io") ? "unknown" : false);
+              }
+            });
+        });
+      }
+      async function checkSiteStatus(domain, statusDot, maxRetries = 2) {
+        let retries = 0;
+        let status = await pingSite(domain);
+        while (status === false && retries < maxRetries) {
+          retries++;
+          status = await pingSite(domain);
+        }
+        statusDot.classList = "status-dot";
+        if (status === true) {
+          (statusDot.style.backgroundColor = "var(--green)"),
+            (statusDot.title = "Unblocked on this computer");
+        } else if (status === "unknown") {
+          (statusDot.style.backgroundColor = "yellow"),
+            (statusDot.title = "Unknown status (GitHub Pages)");
+        } else {
+          (statusDot.style.backgroundColor = "var(--red)"),
+            (statusDot.title = "Blocked on this computer");
+        }
+      }
+    </script>
     <script type="module">
       import games from "./cards-data.js";
       import { targetUrl } from "./appscript.js";
       function getTierAndProgressFromXP(xp) {
-        const baseXPNeeded = 50;
-        const increasePerTier = 200;
-        const exponentialMultiplier = 1.2;
-        const levelsPerTier = 5;
-        const capTier = 10;
+        const baseXPNeeded = 50,
+          increasePerTier = 200,
+          exponentialMultiplier = 1.2,
+          levelsPerTier = 5,
+          capTier = 10;
         let level = 1,
           tier = 1,
           xpNeeded = baseXPNeeded;
@@ -654,25 +713,25 @@
         }
         return { level, tier, currentXP: xp, xpNeededForNext: xpNeeded };
       }
-      const numTopGames = 20;
-      const topGameList = document.getElementById("topGameList");
+      const numTopGames = 20,
+        topGameList = document.getElementById("topGameList");
       for (let i = 0; i < numTopGames; i++) {
         const ghostCard = document.createElement("div");
-        ghostCard.classList.add("ghost-card");
-        ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`;
-        topGameList.appendChild(ghostCard);
+        ghostCard.classList.add("ghost-card"),
+          (ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`),
+          topGameList.appendChild(ghostCard);
       }
       async function fetchTopGames() {
         try {
           const response = await fetch(targetUrl);
           if (!response.ok)
-            throw new Error("Network error: " + response.statusText);
+            throw new Error("Network error:" + response.statusText);
           const data = await response.json();
           if (data && data.content) {
             const parsedData = JSON.parse(data.content);
             displayTopGames(parsedData);
           }
-        } catch {}
+        } catch (e) {}
       }
       fetchTopGames();
       function displayTopGames(topData) {
@@ -681,14 +740,14 @@
         let index = 1;
         const displayed = new Set();
         while (foundCount < numTopGames && index < topData.length) {
-          const row = topData[index];
-          const gameName = row[0];
-          const card = findMatchingCard(gameName);
+          const row = topData[index],
+            gameName = row[0],
+            card = findMatchingCard(gameName);
           if (card) {
             if (!displayed.has(gameName)) {
-              topGameList.appendChild(card.cloneNode(true));
-              displayed.add(gameName);
-              foundCount++;
+              topGameList.appendChild(card.cloneNode(true)),
+                displayed.add(gameName),
+                foundCount++;
             }
           }
           index++;
@@ -701,42 +760,33 @@
           .replace(/[^a-z0-9]/g, "");
       }
       function findMatchingCard(gameName) {
-        const normalized = normalizeGameName(gameName);
-        const allCards = document.querySelectorAll("#allGameList .card");
-        for (let card of allCards) {
-          if (card.getAttribute("data-game-id") === normalized) {
-            return card;
-          }
-        }
+        const normalized = normalizeGameName(gameName),
+          allCards = document.querySelectorAll("#allGameList .card");
+        for (let card of allCards)
+          if (card.getAttribute("data-game-id") === normalized) return card;
         return null;
       }
       function getPageNumberFromURL(url) {
-        const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
-        const match = url.match(regex);
-        if (match) {
-          return match[2] === "" ? 1 : parseInt(match[2], 10);
-        }
+        const regex = /(strongdog|mathcord|stroongdog)(\d*)/,
+          match = url.match(regex);
+        if (match) return match[2] === "" ? 1 : parseInt(match[2], 10);
         return 1;
       }
       const siteMapping = window.siteMapping || {};
       function getCurrentSiteKey() {
-        const currentURL = window.location.href;
-        const keys = Object.keys(siteMapping).sort(
-          (a, b) => b.length - a.length
-        );
-        for (const k of keys) {
-          if (currentURL.includes(k)) return k;
-        }
+        const currentURL = window.location.href,
+          keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
+        for (const k of keys) if (currentURL.includes(k)) return k;
         return null;
       }
       function getAdjustedUrls(href, imgSrc, page) {
-        let adjustedHref = href;
-        let adjustedImgSrc = `./img/${imgSrc}`;
-        const currentSiteKey = getCurrentSiteKey();
+        let adjustedHref = href,
+          adjustedImgSrc = `./img/${imgSrc}`,
+          currentSiteKey = getCurrentSiteKey();
         if (currentSiteKey) {
-          const currentSitePages = siteMapping[currentSiteKey];
-          const pageMap = {};
-          let currentPageNumber = getPageNumberFromURL(currentSiteKey);
+          const currentSitePages = siteMapping[currentSiteKey],
+            pageMap = {},
+            currentPageNumber = getPageNumberFromURL(currentSiteKey);
           pageMap[currentPageNumber] = currentSiteKey;
           if (currentSitePages) {
             currentSitePages.forEach((u) => {
@@ -746,30 +796,30 @@
           }
           if (page !== undefined && page !== currentPageNumber) {
             let newBase = pageMap[page];
-            if (!newBase)
-              newBase = window.location.origin + `/strongdog${page}`;
-            adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`;
-            adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
+            newBase || (newBase = window.location.origin + `/strongdog${page}`),
+              (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
+              (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(
+                /^\.\//,
+                ""
+              )}`);
           }
-        } else {
-          if (page !== undefined && page > 1) {
-            const origin = window.location.origin;
-            const newBase = `${origin}/strongdog${page}`;
-            adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`;
-            adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
-          }
+        } else if (page !== undefined && page > 1) {
+          const origin = window.location.origin,
+            newBase = `${origin}/strongdog${page}`;
+          (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
+            (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
         }
         return { adjustedHref, adjustedImgSrc };
       }
       function getCardHTML(game) {
-        const { href, imgSrc, name, page, id } = game;
-        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
-          href,
-          imgSrc,
-          page
-        );
-        const gameLink = `./play/?id=${id}`;
-        const normalized = normalizeGameName(name);
+        const { href, imgSrc, name, page, id } = game,
+          { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+            href,
+            imgSrc,
+            page
+          ),
+          gameLink = `./play/?id=${id}`,
+          normalized = normalizeGameName(name);
         return `
           <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
             <img src="${adjustedImgSrc}" alt="${name}">
@@ -779,177 +829,173 @@
       }
       const allGameListElement = document.getElementById("allGameList");
       allGameListElement.innerHTML = games.map((g) => getCardHTML(g)).join("");
-      document.getElementById("allGameCount").textContent = games.length;
-      const searchInput = document.getElementById("searchInput");
-      const searchResults = document.getElementById("searchResults");
+      const searchInput = document.getElementById("searchInput"),
+        searchResults = document.getElementById("searchResults");
       function updateSearchResults() {
-        const text = searchInput.value.toLowerCase();
-        const filtered = games
-          .filter((g) => g.name.toLowerCase().includes(text))
-          .slice(0, 7);
+        const text = searchInput.value.toLowerCase(),
+          filtered = games
+            .filter((g) => g.name.toLowerCase().includes(text))
+            .slice(0, 7);
         searchResults.innerHTML = "";
-        if (filtered.length === 0) {
+        if (!filtered.length) {
           searchResults.style.display = "none";
           return;
         }
         filtered.forEach((game) => {
-          const { id, imgSrc, name, page } = game;
-          const { adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page);
-          const linkEl = document.createElement("a");
-          linkEl.href = `./play/?id=${id}`;
-          linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`;
-          searchResults.appendChild(linkEl);
-        });
-        searchResults.style.display = "block";
+          const { id, imgSrc, name, page } = game,
+            { adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page),
+            linkEl = document.createElement("a");
+          (linkEl.href = `./play/?id=${id}`),
+            (linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`),
+            searchResults.appendChild(linkEl);
+        }),
+          (searchResults.style.display = "block");
       }
       if (searchInput && searchResults) {
-        searchInput.addEventListener("focus", updateSearchResults);
-        searchInput.addEventListener("input", updateSearchResults);
-        document.addEventListener("click", (ev) => {
-          if (
-            !searchInput.contains(ev.target) &&
-            !searchResults.contains(ev.target)
-          ) {
-            searchResults.style.display = "none";
-          }
-        });
+        searchInput.addEventListener("focus", updateSearchResults),
+          searchInput.addEventListener("input", updateSearchResults),
+          document.addEventListener("click", (ev) => {
+            if (
+              !searchInput.contains(ev.target) &&
+              !searchResults.contains(ev.target)
+            )
+              searchResults.style.display = "none";
+          });
       }
-      const menuIcon = document.getElementById("menuIcon");
-      const slideMenu = document.getElementById("slideMenu");
-      const categories = slideMenu.querySelector(".categories");
+      const menuIcon = document.getElementById("menuIcon"),
+        slideMenu = document.getElementById("slideMenu"),
+        categories = slideMenu.querySelector(".categories");
       menuIcon.addEventListener("click", (ev) => {
-        ev.stopPropagation();
-        slideMenu.style.transform =
-          slideMenu.style.transform === "translateX(0%)"
-            ? "translateX(-100%)"
-            : "translateX(0%)";
-      });
-      window.addEventListener("click", (ev) => {
-        if (ev.target !== menuIcon && !slideMenu.contains(ev.target)) {
-          slideMenu.style.transform = "translateX(-100%)";
-        }
-      });
+        ev.stopPropagation(),
+          (slideMenu.style.transform =
+            slideMenu.style.transform === "translateX(0%)"
+              ? "translateX(-100%)"
+              : "translateX(0%)");
+      }),
+        window.addEventListener("click", (ev) => {
+          if (ev.target !== menuIcon && !slideMenu.contains(ev.target))
+            slideMenu.style.transform = "translateX(-100%)";
+        });
       auth.onAuthStateChanged(async (user) => {
         if (user) {
-          const userId = user.uid;
-          const userDetailsContainer = document.createElement("div");
+          const userId = user.uid,
+            userDetailsContainer = document.createElement("div");
           userDetailsContainer.className = "user-details-container";
           const profileTop = document.createElement("div");
           profileTop.className = "profile-top-container";
           const picContainer = document.createElement("div");
           picContainer.className = "profile-picture-container";
           const picEl = document.createElement("img");
-          picEl.className = "profile-picture";
-          picEl.src = user.photoURL || "img/default-avatar.png";
-          picContainer.appendChild(picEl);
+          (picEl.className = "profile-picture"),
+            (picEl.src = user.photoURL || "img/default-avatar.png"),
+            picContainer.appendChild(picEl);
           const usernameDiv = document.createElement("div");
           usernameDiv.className = "username-container";
           const usernameText = document.createElement("p");
-          usernameText.className = "username-text";
-          usernameText.textContent = "Loading...";
-          usernameDiv.appendChild(usernameText);
-          profileTop.appendChild(picContainer);
-          profileTop.appendChild(usernameDiv);
-          userDetailsContainer.appendChild(profileTop);
+          (usernameText.className = "username-text"),
+            (usernameText.textContent = "Loading..."),
+            usernameDiv.appendChild(usernameText),
+            profileTop.appendChild(picContainer),
+            profileTop.appendChild(usernameDiv),
+            userDetailsContainer.appendChild(profileTop);
           try {
-            const docRef = db.collection("usernames").doc(userId);
-            const docSnap = await docRef.get();
-            if (docSnap.exists) {
-              usernameText.textContent =
-                docSnap.data().username || user.displayName || "Username";
-            } else {
-              usernameText.textContent = user.displayName || "Username";
-            }
-          } catch {
+            const docRef = db.collection("usernames").doc(userId),
+              docSnap = await docRef.get();
+            docSnap.exists
+              ? (usernameText.textContent =
+                  docSnap.data().username || user.displayName || "Username")
+              : (usernameText.textContent = user.displayName || "Username");
+          } catch (err) {
             usernameText.textContent = user.displayName || "Username";
           }
           let totalXP = 0;
           try {
-            const xpSnap = await rtdb.ref(`/users/${userId}/xp`).once("value");
-            if (xpSnap.exists()) {
-              totalXP = xpSnap.val();
-            }
-          } catch {}
+            const xpSnap = await rtdb
+              .ref("/users/" + userId + "/xp")
+              .once("value");
+            if (xpSnap.exists()) totalXP = xpSnap.val();
+          } catch (err) {}
           const { level, currentXP, xpNeededForNext } =
-            getTierAndProgressFromXP(totalXP);
-          const xpContainer = document.createElement("div");
+              getTierAndProgressFromXP(totalXP),
+            xpContainer = document.createElement("div");
           xpContainer.className = "xp-container";
           const xpLevelText = document.createElement("div");
-          xpLevelText.className = "xp-level-text";
-          xpLevelText.textContent = `Level ${level}`;
+          (xpLevelText.className = "xp-level-text"),
+            (xpLevelText.textContent = `Level ${level}`);
           const xpBar = document.createElement("div");
           xpBar.className = "xp-bar";
           const xpBarFill = document.createElement("div");
-          xpBarFill.className = "xp-bar-fill";
-          xpBarFill.style.width = `${(currentXP / xpNeededForNext) * 100}%`;
+          (xpBarFill.className = "xp-bar-fill"),
+            (xpBarFill.style.width = `${(currentXP / xpNeededForNext) * 100}%`);
           const xpBarText = document.createElement("div");
-          xpBarText.className = "xp-bar-text";
-          xpBarText.textContent = `${currentXP}/${xpNeededForNext}`;
-          xpBar.appendChild(xpBarFill);
-          xpBar.appendChild(xpBarText);
-          xpContainer.appendChild(xpLevelText);
-          xpContainer.appendChild(xpBar);
-          userDetailsContainer.appendChild(xpContainer);
-          picContainer.addEventListener("click", () => {
-            window.location.href = "settings.html";
-          });
-          slideMenu.insertBefore(userDetailsContainer, categories);
+          (xpBarText.className = "xp-bar-text"),
+            (xpBarText.textContent = `${currentXP}/${xpNeededForNext}`),
+            xpBar.appendChild(xpBarFill),
+            xpBar.appendChild(xpBarText),
+            xpContainer.appendChild(xpLevelText),
+            xpContainer.appendChild(xpBar),
+            userDetailsContainer.appendChild(xpContainer),
+            picContainer.addEventListener("click", () => {
+              window.location.href = "settings.html";
+            }),
+            slideMenu.insertBefore(userDetailsContainer, categories);
           const logoutLink = document.createElement("a");
-          logoutLink.href = "#";
-          logoutLink.className = "option-link";
-          logoutLink.textContent = "Log Out";
-          logoutLink.style.backgroundColor = "#dc3545";
-          logoutLink.style.color = "white";
-          logoutLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            auth.signOut().then(() => window.location.reload());
-          });
-          const favoritesLink = categories.querySelector('a[href="favs.html"]');
-          categories.insertBefore(logoutLink, favoritesLink);
-          db.collection("access")
-            .doc(userId)
-            .get()
-            .then((accDoc) => {
-              if (accDoc.exists && accDoc.data().tester === true) {
-                const testGamesLink = document.createElement("a");
-                testGamesLink.href = "test.html";
-                testGamesLink.className = "option-link";
-                testGamesLink.textContent = "Test Games";
-                testGamesLink.style.backgroundColor = "#28a745";
-                testGamesLink.style.color = "white";
-                testGamesLink.style.marginTop = "10px";
-                categories.insertBefore(testGamesLink, favoritesLink);
-              }
+          (logoutLink.href = "#"),
+            (logoutLink.className = "option-link"),
+            (logoutLink.textContent = "Log Out"),
+            (logoutLink.style.backgroundColor = "#dc3545"),
+            (logoutLink.style.color = "white"),
+            logoutLink.addEventListener("click", (e) => {
+              e.preventDefault(),
+                auth.signOut().then(() => window.location.reload());
             });
+          const favoritesLink = categories.querySelector('a[href="favs.html"]');
+          categories.insertBefore(logoutLink, favoritesLink),
+            db
+              .collection("access")
+              .doc(userId)
+              .get()
+              .then((accDoc) => {
+                if (accDoc.exists && accDoc.data().tester === true) {
+                  const testGamesLink = document.createElement("a");
+                  (testGamesLink.href = "test.html"),
+                    (testGamesLink.className = "option-link"),
+                    (testGamesLink.textContent = "Test Games"),
+                    (testGamesLink.style.backgroundColor = "#28a745"),
+                    (testGamesLink.style.color = "white"),
+                    (testGamesLink.style.marginTop = "10px"),
+                    categories.insertBefore(testGamesLink, favoritesLink);
+                }
+              });
         } else {
           const userDetailsContainer = document.createElement("div");
-          userDetailsContainer.className = "user-details-container";
-          userDetailsContainer.style.display = "flex";
-          userDetailsContainer.style.flexDirection = "column";
-          userDetailsContainer.style.alignItems = "center";
-          userDetailsContainer.style.paddingBlock = "20px";
+          (userDetailsContainer.className = "user-details-container"),
+            (userDetailsContainer.style.display = "flex"),
+            (userDetailsContainer.style.flexDirection = "column"),
+            (userDetailsContainer.style.alignItems = "center"),
+            (userDetailsContainer.style.paddingBlock = "20px");
           const notLoggedInContainer = document.createElement("div");
           notLoggedInContainer.className = "username-container";
           const notLoggedInText = document.createElement("p");
-          notLoggedInText.className = "username-text";
-          notLoggedInText.textContent = "Not logged in";
-          notLoggedInContainer.appendChild(notLoggedInText);
+          (notLoggedInText.className = "username-text"),
+            (notLoggedInText.textContent = "Not logged in"),
+            notLoggedInContainer.appendChild(notLoggedInText);
           const loginButton = document.createElement("button");
-          loginButton.textContent = "Log In";
-          loginButton.style.backgroundColor = "#007bff";
-          loginButton.style.color = "white";
-          loginButton.style.border = "none";
-          loginButton.style.padding = "10px 20px";
-          loginButton.style.fontSize = "16px";
-          loginButton.style.borderRadius = "5px";
-          loginButton.style.cursor = "pointer";
-          loginButton.style.marginTop = "5px";
-          loginButton.addEventListener("click", () => {
-            window.location.href = "login.html";
-          });
-          userDetailsContainer.appendChild(notLoggedInContainer);
-          userDetailsContainer.appendChild(loginButton);
-          slideMenu.insertBefore(userDetailsContainer, categories);
+          (loginButton.textContent = "Log In"),
+            (loginButton.style.backgroundColor = "#007bff"),
+            (loginButton.style.color = "#fff"),
+            (loginButton.style.border = "none"),
+            (loginButton.style.padding = "10px 20px"),
+            (loginButton.style.fontSize = "16px"),
+            (loginButton.style.borderRadius = "5px"),
+            (loginButton.style.cursor = "pointer"),
+            (loginButton.style.marginTop = "5px"),
+            loginButton.addEventListener("click", () => {
+              window.location.href = "login.html";
+            }),
+            userDetailsContainer.appendChild(notLoggedInContainer),
+            userDetailsContainer.appendChild(loginButton),
+            slideMenu.insertBefore(userDetailsContainer, categories);
         }
         const randomGameLink = categories.querySelector("#randomGame");
         randomGameLink?.addEventListener("click", (ev) => {
@@ -962,110 +1008,103 @@
         const blockLanschoolLink = categories.querySelector("#blockLanschool");
         blockLanschoolLink?.addEventListener("click", (ev) => {
           ev.preventDefault();
-          const url = window.location.href;
-          const newTab = window.open();
+          const url = window.location.href,
+            newTab = window.open();
           if (!newTab) return;
           newTab.document.write(`
             <html>
-              <body style="margin:0; height:100vh;">
-                <iframe src="${url}" style="border:none; width:100%; height:100%"></iframe>
+              <body style="margin:0;height:100vh;">
+                <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
               </body>
             </html>
-          `);
-          newTab.document.close();
+          `),
+            newTab.document.close();
         });
       });
-      const editAllButton = document.getElementById("editAllButton");
-      const customSlideMenu = document.getElementById("customSlideMenu");
+      const editAllButton = document.getElementById("editAllButton"),
+        customSlideMenu = document.getElementById("customSlideMenu");
       editAllButton.addEventListener("click", (ev) => {
-        ev.stopPropagation();
-        slideMenu.style.transform = "translateX(-100%)";
-        customSlideMenu.style.transform =
-          customSlideMenu.style.transform === "translateX(0%)"
-            ? "translateX(-100%)"
-            : "translateX(0%)";
-      });
-      window.addEventListener("click", (ev) => {
-        if (
-          ev.target !== editAllButton &&
-          !customSlideMenu.contains(ev.target) &&
-          ev.target.id !== "editAllButton"
-        ) {
-          customSlideMenu.style.transform = "translateX(-100%)";
-        }
-      });
+        ev.stopPropagation(),
+          (slideMenu.style.transform = "translateX(-100%)"),
+          (customSlideMenu.style.transform =
+            customSlideMenu.style.transform === "translateX(0%)"
+              ? "translateX(-100%)"
+              : "translateX(0%)");
+      }),
+        window.addEventListener("click", (ev) => {
+          if (
+            ev.target !== editAllButton &&
+            !customSlideMenu.contains(ev.target) &&
+            ev.target.id !== "editAllButton"
+          )
+            customSlideMenu.style.transform = "translateX(-100%)";
+        });
       function setCookie(name, val, days) {
         const d = new Date();
-        d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-        document.cookie = `${name}=${val};expires=${d.toUTCString()};path=/`;
+        d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days),
+          (document.cookie = `${name}=${val};expires=${d.toUTCString()};path=/`);
       }
       function getCookie(name) {
-        const all = `; ${document.cookie}`;
-        const parts = all.split(`; ${name}=`);
+        const all = `; ${document.cookie}`,
+          parts = all.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(";")[0];
         return "";
       }
-      const top20Toggle = document.getElementById("top20Toggle");
-      const topGameHeader = document.getElementById("topGameHeader");
+      const top20Toggle = document.getElementById("top20Toggle"),
+        topGameHeader = document.getElementById("topGameHeader");
       let top20Disabled = getCookie("top20Disabled") === "true";
-      top20Toggle.checked = !top20Disabled;
-      if (top20Disabled) {
-        topGameList.style.display = "none";
-        topGameHeader.style.display = "none";
-      }
-      top20Toggle.addEventListener("change", () => {
-        if (top20Toggle.checked) {
-          topGameList.style.display = "flex";
-          topGameHeader.style.display = "block";
-          setCookie("top20Disabled", "false", 365);
-        } else {
-          topGameList.style.display = "none";
-          topGameHeader.style.display = "none";
-          setCookie("top20Disabled", "true", 365);
-        }
-      });
-      const favoritesToggle = document.getElementById("favoritesToggle");
-      const favoritesHeader = document.getElementById("favoritesHeader");
-      const favoritesGameList = document.getElementById("favoritesGameList");
+      (top20Toggle.checked = !top20Disabled),
+        top20Disabled &&
+          ((topGameList.style.display = "none"),
+          (topGameHeader.style.display = "none")),
+        top20Toggle.addEventListener("change", () => {
+          if (top20Toggle.checked)
+            (topGameList.style.display = "flex"),
+              (topGameHeader.style.display = "block"),
+              setCookie("top20Disabled", "false", 365);
+          else
+            (topGameList.style.display = "none"),
+              (topGameHeader.style.display = "none"),
+              setCookie("top20Disabled", "true", 365);
+        });
+      const favoritesToggle = document.getElementById("favoritesToggle"),
+        favoritesHeader = document.getElementById("favoritesHeader"),
+        favoritesGameList = document.getElementById("favoritesGameList");
       let favCookie = getCookie("favoritesDisabled");
-      if (favCookie === "") favCookie = "true";
+      favCookie === "" && (favCookie = "true");
       const favoritesDisabled = favCookie === "true";
-      favoritesToggle.checked = !favoritesDisabled;
-      if (favoritesDisabled) {
-        favoritesHeader.style.display = "none";
-        favoritesGameList.style.display = "none";
-      } else {
-        favoritesHeader.style.display = "block";
-        favoritesGameList.style.display = "flex";
-      }
+      (favoritesToggle.checked = !favoritesDisabled),
+        favoritesDisabled
+          ? ((favoritesHeader.style.display = "none"),
+            (favoritesGameList.style.display = "none"))
+          : ((favoritesHeader.style.display = "block"),
+            (favoritesGameList.style.display = "flex"));
       favoritesToggle.addEventListener("change", () => {
-        if (favoritesToggle.checked) {
-          favoritesHeader.style.display = "block";
-          favoritesGameList.style.display = "flex";
-          setCookie("favoritesDisabled", "false", 365);
-          loadFavorites();
-        } else {
-          favoritesHeader.style.display = "none";
-          favoritesGameList.style.display = "none";
-          setCookie("favoritesDisabled", "true", 365);
-        }
+        if (favoritesToggle.checked)
+          (favoritesHeader.style.display = "block"),
+            (favoritesGameList.style.display = "flex"),
+            setCookie("favoritesDisabled", "false", 365),
+            loadFavorites();
+        else
+          (favoritesHeader.style.display = "none"),
+            (favoritesGameList.style.display = "none"),
+            setCookie("favoritesDisabled", "true", 365);
       });
       function loadFavorites() {
         const placeholders = 10;
         favoritesGameList.innerHTML = "";
         for (let i = 0; i < placeholders; i++) {
           const ghost = document.createElement("div");
-          ghost.classList.add("ghost-card");
-          ghost.style.animation = `pulse 2s ${i / 15}s infinite`;
-          favoritesGameList.appendChild(ghost);
+          ghost.classList.add("ghost-card"),
+            (ghost.style.animation = `pulse 2s ${i / 15}s infinite`),
+            favoritesGameList.appendChild(ghost);
         }
         auth.onAuthStateChanged((user) => {
-          if (user) {
-            fetchFavorites(user.uid);
-          } else {
-            showFavoritesPopup();
-            favoritesGameList.innerHTML =
-              '<p class="no-favorites">No favorites yet!</p>';
+          if (user) fetchFavorites(user.uid);
+          else {
+            showFavoritesPopup(),
+              (favoritesGameList.innerHTML =
+                '<p class="no-favorites">No favorites yet!</p>');
           }
         });
       }
@@ -1075,11 +1114,10 @@
           if (favDoc.exists) {
             const favData = favDoc.data();
             displayFavorites(favData);
-          } else {
+          } else
             favoritesGameList.innerHTML =
               '<p class="no-favorites">No favorites yet!</p>';
-          }
-        } catch {
+        } catch (err) {
           favoritesGameList.innerHTML =
             '<p class="no-favorites">Error loading favorites.</p>';
         }
@@ -1093,124 +1131,110 @@
               (gm) => parseInt(gm.id, 10) === parseInt(gameId, 10)
             );
             if (g) {
-              hasFavorites = true;
-              favoritesGameList.innerHTML += getCardHTML(g);
+              (hasFavorites = true),
+                (favoritesGameList.innerHTML += getCardHTML(g));
             }
           }
         });
-        if (!hasFavorites) {
+        if (!hasFavorites)
           favoritesGameList.innerHTML =
             '<p class="no-favorites">No favorites yet!</p>';
-        }
       }
       function showFavoritesPopup() {
         document
           .getElementById("favoritesPopupContainer")
-          .classList.add("active");
-        document.getElementById("favoritesOverlay").style.display = "block";
+          .classList.add("active"),
+          (document.getElementById("favoritesOverlay").style.display = "block");
       }
       function hideFavoritesPopup() {
         document
           .getElementById("favoritesPopupContainer")
-          .classList.remove("active");
-        document.getElementById("favoritesOverlay").style.display = "none";
+          .classList.remove("active"),
+          (document.getElementById("favoritesOverlay").style.display = "none");
       }
       document
         .getElementById("favoritesOkButton")
-        .addEventListener("click", hideFavoritesPopup);
-      if (favoritesToggle.checked) {
-        loadFavorites();
-      }
-      const cardSizeSlider = document.getElementById("cardSizeSlider");
-      const cardSizeValue = document.getElementById("cardSizeValue");
+        .addEventListener("click", hideFavoritesPopup),
+        favoritesToggle.checked && loadFavorites();
+      const cardSizeSlider = document.getElementById("cardSizeSlider"),
+        cardSizeValue = document.getElementById("cardSizeValue");
       function updateCardSizes() {
         const val = parseInt(cardSizeSlider.value, 10);
         cardSizeValue.textContent = val;
-        const newSize = 120 + val;
-        const newGap = Math.max(10 + val / 4, 5);
-        const newRadius = val < 0 ? Math.max(15 + val * 0.13, 2) : 15;
+        const newSize = 120 + val,
+          newGap = Math.max(10 + val / 4, 5),
+          newRadius = val < 0 ? Math.max(15 + val * 0.13, 2) : 15;
         document.querySelectorAll(".card, .ghost-card").forEach((c) => {
-          c.style.width = newSize + "px";
-          c.style.height = newSize + "px";
-          c.style.borderRadius = newRadius + "px";
-        });
-        document.querySelectorAll(".games-grid").forEach((grid) => {
-          grid.style.gap = newGap + "px";
-        });
-        setCookie("cardSize", val, 365);
+          (c.style.width = newSize + "px"),
+            (c.style.height = newSize + "px"),
+            (c.style.borderRadius = newRadius + "px");
+        }),
+          document.querySelectorAll(".games-grid").forEach((grid) => {
+            grid.style.gap = newGap + "px";
+          }),
+          setCookie("cardSize", val, 365);
       }
       cardSizeSlider.addEventListener("input", updateCardSizes);
       const savedSize = getCookie("cardSize");
-      if (savedSize !== "") {
-        cardSizeSlider.value = savedSize;
-        updateCardSizes();
-      }
+      savedSize !== "" &&
+        ((cardSizeSlider.value = savedSize), updateCardSizes());
       document.addEventListener("DOMContentLoaded", () => {
-        const page1Link = document.getElementById("page1-link");
-        const page2Link = document.getElementById("page2-link");
+        const page1Link = document.getElementById("page1-link"),
+          page2Link = document.getElementById("page2-link");
         if (!page1Link || !page2Link) return;
-        const hostname = window.location.hostname;
-        const linkMap = {
-          "jman1593.github.io": {
-            page1: "/#",
-            page2: "/strongdog2/index.html",
-          },
-        };
-        for (const key in linkMap) {
+        const hostname = window.location.hostname,
+          linkMap = {
+            "jman1593.github.io": {
+              page1: "/#",
+              page2: "/strongdog2/index.html",
+            },
+          };
+        for (const key in linkMap)
           if (hostname.includes(key)) {
-            page1Link.href = linkMap[key].page1;
-            page2Link.href = linkMap[key].page2;
+            (page1Link.href = linkMap[key].page1),
+              (page2Link.href = linkMap[key].page2);
             break;
           }
-        }
-      })(function () {
-        var defaultTitle = "StrongDog XP";
-        var defaultFavicon = "img/favicon.ico";
-        var titleInput = document.getElementById("customTitleInput");
-        var faviconInput = document.getElementById("customFaviconInput");
-        var resetTitleBtn = document.getElementById("resetTitleBtn");
-        var resetFaviconBtn = document.getElementById("resetFaviconBtn");
-        var faviconEl = document.querySelector('link[rel="icon"]');
-        if (localStorage.getItem("customTitle")) {
-          document.title = localStorage.getItem("customTitle");
-          titleInput.value = localStorage.getItem("customTitle");
-        } else {
-          titleInput.value = defaultTitle;
-        }
-        if (localStorage.getItem("customFavicon")) {
-          faviconEl.href = localStorage.getItem("customFavicon");
-          faviconInput.value = localStorage.getItem("customFavicon");
-        } else {
-          faviconInput.value = defaultFavicon;
-        }
-        titleInput.addEventListener("change", function () {
-          var newTitle = titleInput.value.trim();
-          if (newTitle === "") {
-            newTitle = defaultTitle;
-            titleInput.value = defaultTitle;
-          }
-          localStorage.setItem("customTitle", newTitle);
-          document.title = newTitle;
-        });
-        faviconInput.addEventListener("change", function () {
-          var newFavicon = faviconInput.value.trim();
-          if (newFavicon === "") {
-            newFavicon = defaultFavicon;
-            faviconInput.value = defaultFavicon;
-          }
-          localStorage.setItem("customFavicon", newFavicon);
-          faviconEl.href = newFavicon;
-        });
-        resetTitleBtn.addEventListener("click", function () {
-          localStorage.removeItem("customTitle");
-          document.title = defaultTitle;
-          titleInput.value = defaultTitle;
-        });
-        resetFaviconBtn.addEventListener("click", function () {
-          localStorage.removeItem("customFavicon");
-          faviconEl.href = defaultFavicon;
-          faviconInput.value = defaultFavicon;
-        });
+      });
+      (function () {
+        var defaultTitle = "StrongDog XP",
+          defaultFavicon = "img/favicon.ico",
+          titleInput = document.getElementById("customTitleInput"),
+          faviconInput = document.getElementById("customFaviconInput"),
+          resetTitleBtn = document.getElementById("resetTitleBtn"),
+          resetFaviconBtn = document.getElementById("resetFaviconBtn"),
+          faviconEl = document.querySelector('link[rel="icon"]');
+        localStorage.getItem("customTitle")
+          ? ((document.title = localStorage.getItem("customTitle")),
+            (titleInput.value = localStorage.getItem("customTitle")))
+          : (titleInput.value = defaultTitle),
+          localStorage.getItem("customFavicon")
+            ? ((faviconEl.href = localStorage.getItem("customFavicon")),
+              (faviconInput.value = localStorage.getItem("customFavicon")))
+            : (faviconInput.value = defaultFavicon),
+          titleInput.addEventListener("change", function () {
+            var e = titleInput.value.trim();
+            e === "" && ((e = defaultTitle), (titleInput.value = defaultTitle)),
+              localStorage.setItem("customTitle", e),
+              (document.title = e);
+          }),
+          faviconInput.addEventListener("change", function () {
+            var e = faviconInput.value.trim();
+            e === "" &&
+              ((e = defaultFavicon), (faviconInput.value = defaultFavicon)),
+              localStorage.setItem("customFavicon", e),
+              (faviconEl.href = e);
+          }),
+          resetTitleBtn.addEventListener("click", function () {
+            localStorage.removeItem("customTitle"),
+              (document.title = defaultTitle),
+              (titleInput.value = defaultTitle);
+          }),
+          resetFaviconBtn.addEventListener("click", function () {
+            localStorage.removeItem("customFavicon"),
+              (faviconEl.href = defaultFavicon),
+              (faviconInput.value = defaultFavicon);
+          });
       })();
     </script>
     <script>
@@ -1417,110 +1441,7 @@
       games uno, unblocked games ubg 76, unblocked games unblocked 76, unblocked
       games url, unblocked games ubg 67, unblocked games undertale, unblocked
       unblocked games, unblocked unblocked games 76, unblocked unblocked games
-      premium, unblocked games pod unblocked games pod, unblocked unblocked
-      games 66, unblocked games hub unblocked games hub, unblocked games
-      unblocked games 6x, unblocked games unblocked games wtf, unblocked games
-      run 3 unblocked games, unblocked games vex, unblocked games vercel.app,
-      unblocked games vevo, unblocked games vex 6, unblocked games v2, unblocked
-      games virlan, unblocked games vex 7, unblocked games vpn, vex 5 unblocked
-      games, virlan unblocked games, vex unblocked games, vex 6 unblocked games,
-      vex 4 unblocked games, vercel app unblocked games, venge io unblocked
-      games, vex 4 unblocked games 76, vex 3 unblocked games, vex 7 unblocked
-      games, wtf unblocked games, www unblocked games, what are unblocked games
-      for school, what is unblocked games 66, websites for unblocked games,
-      world unblocked games, war unblocked games, what are fun unblocked games,
-      what are the best unblocked games for school, www unblocked games premium
-      com, unblocked games x6, unblocked games x7, unblocked games x3, unblocked
-      games x76, unblocked games x2, unblocked games xg, unblocked games x6
-      cookie clicker, unblocked games x67, unblocked games xl, unblocked games
-      x30, x6 unblocked games, x6 classroom unblocked games, xbox unblocked
-      games, xtramath unblocked games, x trench run unblocked games, xyz
-      unblocked games, x ray glasses unblocked games, x class lol unblocked
-      games, xtreme drift 2 unblocked games 76, x3m unblocked games, unblocked
-      games youtube, unblocked games yohoho.io, unblocked games you can play at
-      school, unblocked games yandex, unblocked games y8, unblocked games you
-      can play, unblocked games your mom, unblocked games y6, unblocked games
-      yahoo, yohoho io unblocked games, youtube unblocked games, yohoho io
-      unblocked games 77, y8 unblocked games, yohoho io unblocked games 911,
-      yandex unblocked games, yahoo unblocked games, yohoho io unblocked games
-      67, your mom unblocked games, yu gi oh unblocked games, unblocked games
-      zone, unblocked games zombie, unblocked games zombie apocalypse 2,
-      unblocked games z plus, unblocked games z fun, unblocked games zelda,
-      unblocked games zombie shooter, unblocked games zombie apocalypse, zatoga
-      unblocked games, zombie unblocked games, zelda unblocked games 66, zombs
-      royale unblocked games, zelda unblocked games, zrist unblocked games, zaya
-      unblocked games, zombie unblocked games 76, zelda ocarina of time
-      unblocked games, zombs io unblocked games, unblocked games 0v0, unblocked
-      games 00, unblocked games 000, unblocked games 02, unblocked games 01,
-      unblocked games 09, unblocked games 001, unblocked games 0d 0a, unblocked
-      games 0001, 0v0 unblocked games, 0v0 unblocked games premium, 0v0
-      unblocked games 76, 0v0 unblocked games 6x, 00 unblocked games, 0 cookie
-      clicker unblocked games, 0v0 unblocked games 66, 0v0 2 unblocked games, 07
-      unblocked games, 0v0 unblocked games 67, unblocked games 1024, unblocked
-      games 1v1 lol, unblocked games 1v1, unblocked games 100, unblocked games
-      101, unblocked games 1000, unblocked games 10, unblocked games 11,
-      unblocked games 15x, 1v1 lol unblocked games 76, 1v1 lol unblocked games
-      66, 1v1 lol unblocked games 6x, 1v1 lol unblocked games wtf, 100 unblocked
-      games, 1v1 lol unblocked games premium, 1000 unblocked games, 1001
-      unblocked games, 123 unblocked games, unblocked games 24h, unblocked games
-      2025, unblocked games 2024, unblocked games 2 player, unblocked games 21,
-      unblocked games 200, unblocked games 23, unblocked games 22, unblocked
-      games 200.github.io, 2048 unblocked games, 23azo unblocked games, 2024
-      unblocked games, 2025 unblocked games, 2 player unblocked games 76, 21
-      unblocked games, 200 unblocked games, 27 unblocked games, unblocked games
-      30x, unblocked games 333, unblocked games 36, unblocked games 35,
-      unblocked games 34, unblocked games 3d, unblocked games 32, unblocked
-      games 3x, unblocked games 3 plus, 3d unblocked games, 3 player unblocked
-      games, 365 unblocked games, 3x unblocked games, 360 unblocked games, 36
-      unblocked games, 3d snow rider unblocked games, 3 slices unblocked games,
-      33 unblocked games, 30 unblocked games, unblocked games 44, unblocked
-      games 45, unblocked games 47, unblocked games 46, unblocked games 420,
-      unblocked games 42, unblocked games 444, unblocked games 48, unblocked
-      games 41, 42 unblocked games, 4th and goal unblocked games, 4 player
-      unblocked games, 404 unblocked games, 47 unblocked games, 44 unblocked
-      games, 46 unblocked games, 4th of july baseball unblocked games, 4th and
-      goal 2024 unblocked games, 4x unblocked games, unblocked games 5000,
-      unblocked games 56, unblocked games 55, unblocked games 500, unblocked
-      games 57, unblocked games 54, unblocked games 50, unblocked games 555,
-      unblocked games 5x, unblocked games 59, 5 tyrone's unblocked games, 56
-      unblocked games, 55 unblocked games, 50 unblocked games, 57 unblocked
-      games, 5x unblocked games, 54 unblocked games, 51 unblocked games, 5 star
-      unblocked games, 555 unblocked games, unblocked games 67, unblocked games
-      66 ez, unblocked games 6969, unblocked games 67 gitlab, unblocked games
-      69, unblocked games 68, unblocked games 67 classroom 6x, 6x unblocked
-      games, 66 unblocked games, 67 unblocked games, 6969 unblocked games, 69
-      unblocked games, 66 ez unblocked games, 64 unblocked games, 6x unblocked
-      games 1v1 lol, 66 unblocked games premium, 68 unblocked games, unblocked
-      games 77 premium, unblocked games 75, unblocked games 76 google sites,
-      unblocked games 78, unblocked games 7x, unblocked games 76 ez, unblocked
-      games 76 gitlab, unblocked games 76 retro bowl, 76 unblocked games, 77
-      unblocked games, 75 unblocked games, 76 unblocked games 1v1 lol, 76
-      unblocked games slope, 777 unblocked games, 76 unblocked games premium, 76
-      unblocked games snow rider, 7x unblocked games, 76 ez unblocked games,
-      unblocked games 88, unblocked games 8 vercel, unblocked games 86,
-      unblocked games 87, unblocked games 89, unblocked games 80, unblocked
-      games 8x, unblocked games 83, unblocked games 82, 8 ball pool unblocked
-      games, 80 unblocked games, 87 unblocked games, 88 unblocked games, 86
-      unblocked games, 89 unblocked games, 8x unblocked games, 8 bit unblocked
-      games, 8 ball pool unblocked games premium, 8 ball pool unblocked games
-      76, unblocked games 911, unblocked games 99, unblocked games 999,
-      unblocked games 96, unblocked games 98, unblocked games 991, unblocked
-      games 911 gitlab, unblocked games 911 fnf, unblocked games 97, unblocked
-      games 93, 911 unblocked games, 99 unblocked games, 999 unblocked games, 96
-      unblocked games, 911 unblocked games fnf, 97 unblocked games, 911
-      unblocked games basketball legends, 991 unblocked games, 9999 unblocked
-      games, 98 unblocked games, block blast, classroom management unblocked
-      games, unblocked games google plus, infinite craft, sz games, hooda math
-      games, emoji kitchen, hooda math, github games, google doodles, github,
-      freezenova, granny unblocked, neal fun, pizza edition, eaglercraft,
-      stickman hook, golf orbit, golf orbit unblocked, unblocked golf orbit,
-      gladihoppers unblocked, unblocked gladihoppers, gladihoppers, gladihoppers
-      game, google feud, google feud game, google feud unblocked, unblocked
-      games site for free, ragdoll hit, ragdoll hit unblocked, ragdoll hit game,
-      bit planes, bit planes game, bit planes unblocked, bit planes game
-      unblocked, gunspin, gunspin game, gunspin game unblocked, gunspin
-      unblocked, smash karts, smash karts game, smash karts unblocked, smash
-      karts game unblocked
+      premium, unblocked games pod unblocked games pod, unblocked un
     </div>
   </body>
 </html>
