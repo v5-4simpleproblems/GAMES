@@ -20,7 +20,6 @@ export default [
       { href: './html/race master 3d/index.html', imgSrc: 'race master 3d.jpg', name: 'race master 3d' , 'page': 4, 'id': 1128 },
       { href: './html/parking rush/index.html', imgSrc: 'parking rush.jpg', name: 'parking rush' , 'page': 4, 'id': 1127 },
       { href: './html/pac man superfast/index.html', imgSrc: 'pac man superfast.jpg', name: 'pac man superfast' , 'page': 4, 'id': 1126 },
-      { href: './html/more ore/index.html', imgSrc: 'more ore.jpg', name: 'more ore' , 'page': 4, 'id': 1125 },
       { href: './html/mob control/index.html', imgSrc: 'mob control.jpg', name: 'mob control' , 'page': 4, 'id': 1124 },
       { href: './html/Melon Sandbox/index.html', imgSrc: 'Melon Sandbox.jpg', name: 'Melon Sandbox' , 'page': 4, 'id': 1123 },
       { href: './html/magic tiles 3/index.html', imgSrc: 'magic tiles 3.jpg', name: 'magic tiles 3' , 'page': 4, 'id': 1122 },
