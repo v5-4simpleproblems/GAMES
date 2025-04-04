@@ -51,7 +51,6 @@ export default [
       { href: './html/basketball frvr/index.html', imgSrc: 'basketball frvr.jpg', name: 'basketball frvr' , 'page': 4, 'id': 1099 },
       { href: './html/basket battle/index.html', imgSrc: 'basket battle.jpg', name: 'basket battle' , 'page': 4, 'id': 1098 },
       { href: './html/ball blast/index.html', imgSrc: 'ball blast.jpg', name: 'ball blast' , 'page': 4, 'id': 1097 },
-      { href: './html/awesome tanks 2/index.html', imgSrc: 'awesome tanks 2.png', name: 'awesome tanks 2' , 'page': 4, 'id': 1096 },
       { href: './html/attack hole/index.html', imgSrc: 'attack hole.jpg', name: 'attack hole' , 'page': 4, 'id': 1095 },
       { href: './html/archery world tour/index.html', imgSrc: 'archery world tour.jpg', name: 'archery world tour' , 'page': 4, 'id': 1094 },
       { href: './html/amaze/index.html', imgSrc: 'amaze.jpg', name: 'amaze' , 'page': 4, 'id': 1093 },
