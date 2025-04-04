@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/dead tree defender/index.html', imgSrc: 'dead tree defender.jpg', name: 'dead tree defender' , 'page': 4, 'id': 1147 },
   { href: './swf/territory war/index.html', imgSrc: 'territory war.jpg', name: 'territory war' , 'page': 4, 'id': 1150 },
   { href: './html/short ride/index.html', imgSrc: 'short ride.jpg', name: 'short ride' , 'page': 3, 'id': 883 },
   { href: './html/short life/index.html', imgSrc: 'short life.jpg', name: 'short life' , 'page': 3, 'id': 882 },
