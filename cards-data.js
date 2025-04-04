@@ -1,4 +1,5 @@
 export default [
+  { href: './html/awesome tanks 2/index.html', imgSrc: 'awesome tanks 2.png', name: 'awesome tanks 2' , 'page': 4, 'id': 1096 },
   { href: './html/valorant shooter/index.html', imgSrc: 'valorant shooter.png', name: 'valorant shooter' , 'page': 4, 'id': 1144 },
   { href: './swf/dead tree defender/index.html', imgSrc: 'dead tree defender.jpg', name: 'dead tree defender' , 'page': 4, 'id': 1147 },
   { href: './swf/territory war/index.html', imgSrc: 'territory war.jpg', name: 'territory war' , 'page': 4, 'id': 1150 },
