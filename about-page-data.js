@@ -33,6 +33,13 @@ export const updates = [
 	{ date: "5/12/24", content: "Added About section" },
 ];
 
+export const refusedGamesData = [
+	{ name: "Mario Kart", reason: "File too big" },
+	{ name: "Sword Masters", reason: "Backend unavailable" },
+	{ name: "Schedule 1", reason: "Unable to play through browser" },
+	// Add more here, this is just for now
+];
+
 // This holds all of the color themes for light/dark mode
 export const modes = [
 	{
