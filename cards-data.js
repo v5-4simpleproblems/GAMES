@@ -1,4 +1,5 @@
 export default [
+  { href: './html/valorant shooter/index.html', imgSrc: 'valorant shooter.png', name: 'valorant shooter' , 'page': 4, 'id': 1144 },
   { href: './swf/dead tree defender/index.html', imgSrc: 'dead tree defender.jpg', name: 'dead tree defender' , 'page': 4, 'id': 1147 },
   { href: './swf/territory war/index.html', imgSrc: 'territory war.jpg', name: 'territory war' , 'page': 4, 'id': 1150 },
   { href: './html/short ride/index.html', imgSrc: 'short ride.jpg', name: 'short ride' , 'page': 3, 'id': 883 },
