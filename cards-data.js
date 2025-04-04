@@ -1,4 +1,5 @@
 export default [
+  { href: './html/among us online edition/index.html', imgSrc: 'among us online edition.jpg', name: 'among us online edition' , 'page': 4, 'id': 1060 },
   { href: './html/8bit fiesta/index.html', imgSrc: '8bit fiesta.jpg', name: '8bit fiesta' , 'page': 4, 'id': 1048 },
   { href: './html/more ore/index.html', imgSrc: 'more ore.jpg', name: 'more ore' , 'page': 4, 'id': 1125 },
   { href: './html/slice it all/index.html', imgSrc: 'slice it all.jpg', name: 'slice it all' , 'page': 4, 'id': 1131 },
