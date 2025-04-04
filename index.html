@@ -113,7 +113,6 @@
         try {
           dbList = await indexedDB.databases();
         } catch (error) {
-          console.error("Error fetching IndexedDB databases:", error);
           return {};
         }
         const result = {};
@@ -123,7 +122,6 @@
         }
         return result;
       }
-
       function getDataFromDatabase(dbName) {
         return new Promise((resolve, reject) => {
           const request = indexedDB.open(dbName);
@@ -156,7 +154,7 @@
                   }
                 }
               };
-              cursorRequest.onerror = (evt) => {
+              cursorRequest.onerror = () => {
                 pending--;
                 if (pending === 0) {
                   db.close();
@@ -170,7 +168,6 @@
           };
         });
       }
-
       async function setAllIndexedDBData(indexedData) {
         for (const dbName in indexedData) {
           const storesData = indexedData[dbName];
@@ -278,23 +275,19 @@
         function autoSaveData() {
           if (!window.currentUserId) return;
           const localData = getAllLocalStorageData();
-          getAllIndexedDBData()
-            .then((indexedData) => {
-              const docRef = window.db
-                .collection("users")
-                .doc(window.currentUserId)
-                .collection("saves")
-                .doc("slot3");
-              docRef
-                .set({
-                  title: "Auto Save",
-                  description: "Auto-saved on " + new Date().toLocaleString(),
-                  localStorageData: localData,
-                  indexedDBBackup: indexedData,
-                })
-                .catch((err) => console.error("Auto-save error:", err));
-            })
-            .catch((err) => console.error("Error saving IndexedDB data:", err));
+          getAllIndexedDBData().then((indexedData) => {
+            const docRef = window.db
+              .collection("users")
+              .doc(window.currentUserId)
+              .collection("saves")
+              .doc("slot3");
+            docRef.set({
+              title: "Auto Save",
+              description: "Auto-saved on " + new Date().toLocaleString(),
+              localStorageData: localData,
+              indexedDBBackup: indexedData,
+            });
+          });
         }
         function loadAutoSave() {
           if (!window.currentUserId) return;
@@ -309,10 +302,9 @@
               if (docSnap.data().indexedDBBackup) {
                 setAllIndexedDBData(docSnap.data().indexedDBBackup)
                   .then(() => alert("Auto-save loaded!"))
-                  .catch((err) => {
-                    console.error("Error loading IndexedDB data:", err);
-                    alert("Error loading auto-save IndexedDB data!");
-                  });
+                  .catch(() =>
+                    alert("Error loading auto-save IndexedDB data!")
+                  );
               } else {
                 alert("Auto-save loaded!");
               }
@@ -432,8 +424,9 @@
     </div>
     <div class="games-grid" id="favoritesGameList" style="display: none"></div>
     <div class="section-header">
-      <h2 style="text-align: center"><strong>All</strong></h2>
-      <!-- Edit icon SVG -->
+      <h2 style="text-align: center">
+        <strong>All (<span id="allGameCount"></span>)</strong>
+      </h2>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -535,7 +528,6 @@
         Unknown
       </span>
     </div>
-
     <h2 class="alternate-links-title">
       Exclusive links available on the StrongDogXP
       <a href="https://discord.gg/pWjfQ4Sz5c" style="color: #007bff"
@@ -634,98 +626,6 @@
         <button id="favoritesOkButton">OK</button>
       </div>
     </div>
-    <script>
-      const altLinksEl = document.getElementById("alternate-links-container");
-      const altLinksKeyEl = document.getElementById("alternate-links-key");
-      const altLinks = [
-        "chesstube.eu.com",
-        "gametree.net",
-        "hateroll.com",
-        "strongdogunblocked.github.io",
-        "weakcatxp.github.io",
-        "gametreexp.github.io",
-        "mathcordxp.github.io",
-        "strongdogxp.github.io",
-        "jman1593.github.io",
-        "strongdog-1.vercel.app",
-        "mathcord.com",
-        "strongdog.com",
-      ];
-      altLinks.forEach((link) => {
-        const a = document.createElement("a");
-        a.classList.add("alternate-link");
-        a.href = "https://" + link;
-        a.target = "_blank";
-
-        const linkText = document.createElement("span");
-        linkText.textContent = link;
-
-        const statusDot = document.createElement("span");
-        statusDot.classList.add("spinning-dot");
-        statusDot.title = "Checking site availability...";
-
-        a.appendChild(linkText);
-        a.appendChild(statusDot);
-        altLinksEl.appendChild(a);
-
-        checkSiteStatus(link, statusDot);
-      });
-      async function pingSite(domain) {
-        return new Promise((resolve) => {
-          const url = `https://${domain}/ads.txt?${Date.now()}`;
-          let didTimeout = false;
-          const timeout = setTimeout(() => {
-            didTimeout = true;
-            resolve(domain.endsWith("github.io") ? "unknown" : false);
-          }, 5000);
-
-          fetch(url, { mode: "cors" })
-            .then((response) => response.text())
-            .then((text) => {
-              if (!didTimeout) {
-                clearTimeout(timeout);
-                if (domain.endsWith("github.io")) {
-                  resolve("unknown");
-                } else {
-                  resolve(text.includes("f08c47fec0942fa0") ? true : false);
-                }
-              }
-            })
-            .catch(() => {
-              if (!didTimeout) {
-                clearTimeout(timeout);
-                resolve(domain.endsWith("github.io") ? "unknown" : false);
-              }
-            });
-        });
-      }
-
-      async function checkSiteStatus(domain, statusDot, maxRetries = 2) {
-        let retries = 0;
-        let status = await pingSite(domain);
-
-        while (status === false && retries < maxRetries) {
-          retries++;
-          console.log(
-            `Retrying ${domain} (Attempt ${retries + 1}/${maxRetries + 1})`
-          );
-          status = await pingSite(domain);
-        }
-
-        statusDot.classList = "status-dot";
-
-        if (status === true) {
-          statusDot.style.backgroundColor = "var(--green)";
-          statusDot.title = "Unblocked on this computer";
-        } else if (status === "unknown") {
-          statusDot.style.backgroundColor = "yellow";
-          statusDot.title = "Unknown status (GitHub Pages)";
-        } else {
-          statusDot.style.backgroundColor = "var(--red)";
-          statusDot.title = "Blocked on this computer";
-        }
-      }
-    </script>
     <script type="module">
       import games from "./cards-data.js";
       import { targetUrl } from "./appscript.js";
@@ -770,14 +670,9 @@
           const data = await response.json();
           if (data && data.content) {
             const parsedData = JSON.parse(data.content);
-            console.log("Parsed data:", parsedData);
             displayTopGames(parsedData);
-          } else {
-            console.error("Invalid data format:", data);
           }
-        } catch (err) {
-          console.error("Error fetching top games:", err);
-        }
+        } catch {}
       }
       fetchTopGames();
       function displayTopGames(topData) {
@@ -795,8 +690,6 @@
               displayed.add(gameName);
               foundCount++;
             }
-          } else {
-            console.warn(`Card for "${gameName}" not found, skipping.`);
           }
           index++;
         }
@@ -886,6 +779,7 @@
       }
       const allGameListElement = document.getElementById("allGameList");
       allGameListElement.innerHTML = games.map((g) => getCardHTML(g)).join("");
+      document.getElementById("allGameCount").textContent = games.length;
       const searchInput = document.getElementById("searchInput");
       const searchResults = document.getElementById("searchResults");
       function updateSearchResults() {
@@ -966,8 +860,7 @@
             } else {
               usernameText.textContent = user.displayName || "Username";
             }
-          } catch (err) {
-            console.error("Error reading username doc:", err);
+          } catch {
             usernameText.textContent = user.displayName || "Username";
           }
           let totalXP = 0;
@@ -976,9 +869,7 @@
             if (xpSnap.exists()) {
               totalXP = xpSnap.val();
             }
-          } catch (err) {
-            console.error("Error reading XP from Realtime Database:", err);
-          }
+          } catch {}
           const { level, currentXP, xpNeededForNext } =
             getTierAndProgressFromXP(totalXP);
           const xpContainer = document.createElement("div");
@@ -1029,8 +920,7 @@
                 testGamesLink.style.marginTop = "10px";
                 categories.insertBefore(testGamesLink, favoritesLink);
               }
-            })
-            .catch((err) => console.error("Error checking 'access' doc:", err));
+            });
         } else {
           const userDetailsContainer = document.createElement("div");
           userDetailsContainer.className = "user-details-container";
@@ -1074,10 +964,7 @@
           ev.preventDefault();
           const url = window.location.href;
           const newTab = window.open();
-          if (!newTab) {
-            console.warn("Popup blocked—please allow popups!");
-            return;
-          }
+          if (!newTab) return;
           newTab.document.write(`
             <html>
               <body style="margin:0; height:100vh;">
@@ -1187,14 +1074,12 @@
           const favDoc = await db.collection("favs").doc(userId).get();
           if (favDoc.exists) {
             const favData = favDoc.data();
-            console.log("Favorites data retrieved:", favData);
             displayFavorites(favData);
           } else {
             favoritesGameList.innerHTML =
               '<p class="no-favorites">No favorites yet!</p>';
           }
-        } catch (err) {
-          console.error("Error fetching favorites:", err);
+        } catch {
           favoritesGameList.innerHTML =
             '<p class="no-favorites">Error loading favorites.</p>';
         }
@@ -1210,8 +1095,6 @@
             if (g) {
               hasFavorites = true;
               favoritesGameList.innerHTML += getCardHTML(g);
-            } else {
-              console.warn(`Game with ID ${gameId} not found in games data.`);
             }
           }
         });
@@ -1280,8 +1163,7 @@
             break;
           }
         }
-      });
-      (function () {
+      })(function () {
         var defaultTitle = "StrongDog XP";
         var defaultFavicon = "img/favicon.ico";
         var titleInput = document.getElementById("customTitleInput");
@@ -1331,34 +1213,38 @@
         });
       })();
     </script>
-<script>
-  if(window.location.hostname==="unblockedmathgames.com"){
-      if(navigator.userAgent.indexOf("CrOS")===-1){
-          document.title="The Math Hub";
-          document.documentElement.style.overflow="hidden";
-          document.body.style.margin="0";
-          document.body.style.padding="0";
-          document.body.style.overflow="hidden";
-          document.body.innerHTML="";
-          var icons=document.querySelectorAll('link[rel="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]');
-          icons.forEach(function(i){i.remove();});
-          var f=document.createElement("iframe");
-          f.src="./math/index.html";
-          f.style.position="fixed";
-          f.style.top="0";
-          f.style.left="0";
-          f.style.width="100%";
-          f.style.height="100%";
-          f.style.border="none";
-          f.style.margin="0";
-          f.style.padding="0";
-          f.style.overflow="hidden";
-          f.style.display="block";
-          f.style.zIndex="999999";
+    <script>
+      if (window.location.hostname === "unblockedmathgames.com") {
+        if (navigator.userAgent.indexOf("CrOS") === -1) {
+          document.title = "The Math Hub";
+          document.documentElement.style.overflow = "hidden";
+          document.body.style.margin = "0";
+          document.body.style.padding = "0";
+          document.body.style.overflow = "hidden";
+          document.body.innerHTML = "";
+          var icons = document.querySelectorAll(
+            'link[rel="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]'
+          );
+          icons.forEach(function (i) {
+            i.remove();
+          });
+          var f = document.createElement("iframe");
+          f.src = "./math/index.html";
+          f.style.position = "fixed";
+          f.style.top = "0";
+          f.style.left = "0";
+          f.style.width = "100%";
+          f.style.height = "100%";
+          f.style.border = "none";
+          f.style.margin = "0";
+          f.style.padding = "0";
+          f.style.overflow = "hidden";
+          f.style.display = "block";
+          f.style.zIndex = "999999";
           document.documentElement.appendChild(f);
+        }
       }
-  }
-  </script>    
+    </script>
     <div
       style="
         position: absolute;
