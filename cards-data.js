@@ -5,7 +5,6 @@ export default [
   { href: './html/slice it all/index.html', imgSrc: 'slice it all.jpg', name: 'slice it all' , 'page': 4, 'id': 1131 },
   { href: './html/trimps updated/index.html', imgSrc: 'trimps updated.jpg', name: 'trimps updated' , 'page': 4, 'id': 1142 },
   { href: './html/awesome tanks 2/index.html', imgSrc: 'awesome tanks 2.png', name: 'awesome tanks 2' , 'page': 4, 'id': 1096 },
-  { href: './html/valorant shooter/index.html', imgSrc: 'valorant shooter.png', name: 'valorant shooter' , 'page': 4, 'id': 1144 },
   { href: './swf/dead tree defender/index.html', imgSrc: 'dead tree defender.jpg', name: 'dead tree defender' , 'page': 4, 'id': 1147 },
   { href: './swf/territory war/index.html', imgSrc: 'territory war.jpg', name: 'territory war' , 'page': 4, 'id': 1150 },
   { href: './html/short ride/index.html', imgSrc: 'short ride.jpg', name: 'short ride' , 'page': 3, 'id': 883 },
