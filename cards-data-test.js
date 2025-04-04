@@ -15,7 +15,6 @@ export default [
       { href: './html/spacewaves/index.html', imgSrc: 'spacewaves.jpg', name: 'spacewaves' , 'page': 4, 'id': 1134 },
       { href: './html/solar smash/index.html', imgSrc: 'solar smash.jpg', name: 'solar smash' , 'page': 4, 'id': 1133 },
       { href: './html/slice master/index.html', imgSrc: 'slice master.jpg', name: 'slice master' , 'page': 4, 'id': 1132 },
-      { href: './html/slice it all/index.html', imgSrc: 'slice it all.jpg', name: 'slice it all' , 'page': 4, 'id': 1131 },
       { href: './html/scrap metal/index.html', imgSrc: 'scrap metal.jpg', name: 'scrap metal' , 'page': 4, 'id': 1130 },
       { href: './html/scooter xtreme/index.html', imgSrc: 'scooter xtreme.jpg', name: 'scooter xtreme' , 'page': 4, 'id': 1129 },
       { href: './html/race master 3d/index.html', imgSrc: 'race master 3d.jpg', name: 'race master 3d' , 'page': 4, 'id': 1128 },
