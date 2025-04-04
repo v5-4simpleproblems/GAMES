@@ -1,4 +1,5 @@
 export default [
+  { href: './html/8bit fiesta/index.html', imgSrc: '8bit fiesta.jpg', name: '8bit fiesta' , 'page': 4, 'id': 1048 },
   { href: './html/more ore/index.html', imgSrc: 'more ore.jpg', name: 'more ore' , 'page': 4, 'id': 1125 },
   { href: './html/slice it all/index.html', imgSrc: 'slice it all.jpg', name: 'slice it all' , 'page': 4, 'id': 1131 },
   { href: './html/trimps updated/index.html', imgSrc: 'trimps updated.jpg', name: 'trimps updated' , 'page': 4, 'id': 1142 },
