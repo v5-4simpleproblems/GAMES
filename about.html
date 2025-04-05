@@ -273,14 +273,7 @@
 			    }
 			}
 
-			#report-bug > p {
-			    margin-top: 0;
-			    margin-bottom: 30px;
-			}
 
-			#report-bug > h1 {
-			    margin-bottom: 10px;
-			}
 
 			input[type="text"], input[type="email"], textarea {
 			    font-family: inherit;
@@ -358,6 +351,16 @@
 			        transform: translate(-10px, -30px) rotate(170deg);
 			    }
 			}
+
+			#refused-games > p {
+				margin: 0;
+				padding: 15px;
+			}
+
+			#refused-games > p:nth-child(even) {
+				background: rgba(0, 0, 0, 0.1);
+				border-radius: 10px;
+			}
 		</style>
 	</head>
 	<body>
@@ -423,9 +426,12 @@
 				<input type="email" id="game-email" name="email" required /><br />
 				<label for="game-description">Game Link And Description:</label><br />
 				<textarea id="game-description" name="description" rows="4" required></textarea><br />
+				<p>Please check <a href="#" onclick="showSection('refused-games')">this menu</a> to see if your game you want to add has already been considered and cannot be added!</p>
 				<button type="submit">Submit Game Request</button>
 			</form>
 		</div>
+
+		<div class="content" id="refused-games" style="display: none;"></div>
 
 		<div class="loading-container" style="display: none;">
 			<div class="bars">
@@ -438,13 +444,21 @@
 			<h3>Submitting form</h3>
 		</div>
 		<script type="module">
-			import { updates } from "./about-page-data.js";
+			import { updates, refusedGamesData } from "./about-page-data.js";
 			let updatesHTMLArray = ["<h1>Updates / Changelog</h1>"];
 			for (let i = 0; i < updates.length; ++i) {
 				updatesHTMLArray.push(`<p>${updates[i].date}: ${updates[i].content}</p>`);
 			}
 			const updatesHTMLStr = updatesHTMLArray.join("");
 			document.querySelector("#patches").innerHTML = updatesHTMLStr;
+			
+			let refusedGamesHTMLArray = ["<h1>Games That Will Not Be Added</h1>"];
+			for (let i = 0; i < refusedGamesData.length; ++i) {
+				const game = refusedGamesData[i];
+				refusedGamesHTMLArray.push(`<p>${game.name} : ${game.reason}</p>`);
+			}
+			const refusedGamesHTMLStr = refusedGamesHTMLArray.join("");
+			document.querySelector("#refused-games").innerHTML = refusedGamesHTMLStr;
 		</script>
 		<script type="module">
 			import { modes } from "./about-page-data.js";
