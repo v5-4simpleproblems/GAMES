@@ -1,5 +1,5 @@
-# Ads.txt last updated on: 2025/04/05 01:58:01.156403 by MONUMETRIC
-OWNERDOMAIN=strongdog.com
+google.com, pub-1609993827735056, DIRECT, f08c47fec0942fa0OWNERDOMAIN=strongdog.com
+
 MANAGERDOMAIN=monumetric.com
 CONTACT=support@monumetric.com
 
