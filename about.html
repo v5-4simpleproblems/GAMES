@@ -24,6 +24,7 @@
 			    --frosted-glass-border-color: rgba(255, 255, 255, 0.2);
 			    --text-color: rgba(255, 255, 255, 0.9);
 			    --link-color: #9178ff;
+				--dark-color: rgba(0, 0, 0, 0.6);
 			}
 
 			body {
@@ -36,6 +37,10 @@
 			    background-attachment: fixed;
 			    color: var(--text-color);
 			    transition: 0.5s background;
+			}
+
+			h1 {
+				margin: 0;
 			}
 
 			a {
@@ -273,8 +278,6 @@
 			    }
 			}
 
-
-
 			input[type="text"], input[type="email"], textarea {
 			    font-family: inherit;
 			    width: 100%;
@@ -304,7 +307,7 @@
 			}
 
 			button {
-			    background-color: rgba(0, 0, 0, 0.6);
+			    background-color: var(--dark-color);
 			    display: flex;
 			    justify-content: center;
 			    align-items: center;
@@ -355,11 +358,18 @@
 			#refused-games > p {
 				margin: 0;
 				padding: 15px;
+				display: flex;
+				justify-content: space-between;
 			}
 
-			#refused-games > p:nth-child(even) {
+			#refused-games > p:nth-child(odd) {
 				background: rgba(0, 0, 0, 0.1);
 				border-radius: 10px;
+			}
+
+			#refused-games > p:first-of-type {
+				opacity: 0.5;
+				user-select: none;
 			}
 		</style>
 	</head>
@@ -426,7 +436,7 @@
 				<input type="email" id="game-email" name="email" required /><br />
 				<label for="game-description">Game Link And Description:</label><br />
 				<textarea id="game-description" name="description" rows="4" required></textarea><br />
-				<p>Please check <a href="#" onclick="showSection('refused-games')">this menu</a> to see if your game you want to add has already been considered and cannot be added!</p>
+				<p><strong>Please</strong> check <a href="#" onclick="showSection('refused-games')">this menu</a> to see if the game you want added has already been reviewed and declined!</p>
 				<button type="submit">Submit Game Request</button>
 			</form>
 		</div>
@@ -455,7 +465,7 @@
 			let refusedGamesHTMLArray = ["<h1>Games That Will Not Be Added</h1>"];
 			for (let i = 0; i < refusedGamesData.length; ++i) {
 				const game = refusedGamesData[i];
-				refusedGamesHTMLArray.push(`<p>${game.name} : ${game.reason}</p>`);
+				refusedGamesHTMLArray.push(`<p>${game.name} <span>${game.reason}</span></p>`);
 			}
 			const refusedGamesHTMLStr = refusedGamesHTMLArray.join("");
 			document.querySelector("#refused-games").innerHTML = refusedGamesHTMLStr;

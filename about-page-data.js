@@ -37,7 +37,7 @@ export const refusedGamesData = [
 	{ name: "Mario Kart", reason: "File too big" },
 	{ name: "Sword Masters", reason: "Backend unavailable" },
 	{ name: "Schedule 1", reason: "Unable to play through browser" },
-	// Add more here, this is just for now
+	// { name: "Red Dead Redemption", reason: "" },
 ];
 
 // This holds all of the color themes for light/dark mode
