@@ -462,7 +462,7 @@
 			const updatesHTMLStr = updatesHTMLArray.join("");
 			document.querySelector("#patches").innerHTML = updatesHTMLStr;
 			
-			let refusedGamesHTMLArray = ["<h1>Games That Will Not Be Added</h1>"];
+			let refusedGamesHTMLArray = ["<h1>Games That Will Not Be Added</h1><p>Game name <span>Reason</span></p>"];
 			for (let i = 0; i < refusedGamesData.length; ++i) {
 				const game = refusedGamesData[i];
 				refusedGamesHTMLArray.push(`<p>${game.name} <span>${game.reason}</span></p>`);
