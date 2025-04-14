@@ -54,7 +54,6 @@ export default [
       { href: './html/airline tycoon idle/index.html', imgSrc: 'airline tycoon idle.unknown', name: 'airline tycoon idle' , 'page': 4, 'id': 1092 },
       { href: './html/99 balls 3d/index.html', imgSrc: '99 balls 3d.jpg', name: '99 balls 3d' , 'page': 4, 'id': 1091 },
       { href: './html/1080 snowboarding/index.html', imgSrc: '1080 snowboarding.jpg', name: '1080 snowboarding' , 'page': 4, 'id': 1090 },
-      { href: './html/territorial.io new/index.html', imgSrc: 'territorial.io new.jpg', name: 'territorial.io new' , 'page': 4, 'id': 1089 },
       { href: './swf/ragdoll achievement/index.html', imgSrc: 'ragdoll achievement.jpg', name: 'ragdoll achievement 1' , 'page': 4, 'id': 1086 },
       { href: './swf/arcane weapons/index.html', imgSrc: 'arcane weapons.jpg', name: 'arcane weapons' , 'page': 4, 'id': 1085 },
       { href: './html/Ragdoll Archers/index.html', imgSrc: 'ragdoll archers.jpg', name: 'Ragdoll Archers' , 'page': 4, 'id': 1082 },
