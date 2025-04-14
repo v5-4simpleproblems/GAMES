@@ -2,364 +2,425 @@
 <html lang="en">
 	<head>
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-0YLTCV2MMS');
-</script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() { dataLayer.push(arguments); }
+			gtag("js", new Date());
+			gtag("config", "G-0YLTCV2MMS");
+		</script>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<!-- <link href="index.css" rel="stylesheet"> Only for Scrimba Dev - James Meadows -->
 		<title>About - StrongDogXP</title>
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+		/>
 		<style>
 			:root {
-			    --body-background-gradient: linear-gradient(30deg, #010101, #000000);
-			    --blob-1-gradient: linear-gradient(72deg, #ff2079, #0400eb);
-			    --blob-2-gradient: linear-gradient(0deg, #440bd4, #e92efb);
-			    --blob-3-gradient: linear-gradient(220deg, #ff2079, #0400eb);
-			    --frosted-glass-color: rgba(255, 255, 255, 0.05);
-			    --frosted-glass-border-color: rgba(255, 255, 255, 0.2);
-			    --text-color: rgba(255, 255, 255, 0.9);
-			    --link-color: #9178ff;
+				--body-background-gradient: linear-gradient(30deg, #010101, #000000);
+				--blob-1-gradient: linear-gradient(72deg, #ff2079, #0400eb);
+				--blob-2-gradient: linear-gradient(0deg, #440bd4, #e92efb);
+				--blob-3-gradient: linear-gradient(220deg, #ff2079, #0400eb);
+				--frosted-glass-color: rgba(255, 255, 255, 0.05);
+				--frosted-glass-border-color: rgba(255, 255, 255, 0.2);
+				--input-bg: rgba(0, 0, 0, 0.3);
+				--input-bg-hover: rgba(0, 0, 0, 0.4);
+				--text-color: rgba(255, 255, 255, 0.9);
+				--link-color: #9178ff;
+				--dark-color: rgba(0, 0, 0, 0.6);
 			}
 
 			body {
-			    margin: 0;
-			    padding: 0;
-			    font-family: 'Outfit', Tahoma, Geneva, Verdana, sans-serif;
-			    background: var(--body-background-gradient);
-			    background-repeat: no-repeat;
-			    background-size: cover;
-			    background-attachment: fixed;
-			    color: var(--text-color);
-			    transition: 0.5s background;
+				margin: 0;
+				padding: 0;
+				font-family: 'Outfit', Tahoma, Geneva, Verdana, sans-serif;
+				background: var(--body-background-gradient);
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-attachment: fixed;
+				color: var(--text-color);
+				transition: 0.5s background;
+			}
+
+			h1 {
+				margin: 0;
 			}
 
 			a {
-			    color: var(--link-color);
+				color: var(--link-color);
 			}
 
 			.background-blobs {
-			    width: 100%;
-			    height: 100%;
-			    position: absolute;
-			    z-index: -1;
-			    overflow: hidden;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				z-index: -1;
+				overflow: hidden;
 			}
 
 			.blob-1 {
-			    filter: blur(140px);
-			    width: 44%;
-			    height: 57%;
-			    border-radius: 60% 20% 43% 46%;
-			    background-image: var(--blob-1-gradient);
-			    position: absolute;
-			    top: -5%;
-			    left: 0;
-			    animation: move linear 15s infinite;
+				filter: blur(140px);
+				width: 44%;
+				height: 57%;
+				border-radius: 60% 20% 43% 46%;
+				background-image: var(--blob-1-gradient);
+				position: absolute;
+				top: -5%;
+				left: 0;
+				animation: move linear 15s infinite;
 			}
 
 			.blob-2 {
-			    filter: blur(140px);
-			    width: 62%;
-			    height: 55%;
-			    border-radius: 70% 30% 53% 23%;
-			    background-image: var(--blob-2-gradient);
-			    position: absolute;
-			    right: 20%;
-			    bottom: -5%;
-			    animation: move linear 15s infinite;
+				filter: blur(140px);
+				width: 62%;
+				height: 55%;
+				border-radius: 70% 30% 53% 23%;
+				background-image: var(--blob-2-gradient);
+				position: absolute;
+				right: 20%;
+				bottom: -5%;
+				animation: move linear 15s infinite;
 			}
 
 			.blob-3 {
-			    filter: blur(140px);
-			    width: 50%;
-			    height: 70%;
-			    border-radius: 60% 30% 50% 70% / 70% 40% 60% 50%;
-			    background-image: var(--blob-3-gradient);
-			    transform: rotate(180deg);
-			    position: absolute;
-			    right: 2%;
-			    top: 10%;
-			    animation: move-2 linear 15s infinite;
+				filter: blur(140px);
+				width: 50%;
+				height: 70%;
+				border-radius: 60% 30% 50% 70% / 70% 40% 60% 50%;
+				background-image: var(--blob-3-gradient);
+				transform: rotate(180deg);
+				position: absolute;
+				right: 2%;
+				top: 10%;
+				animation: move-2 linear 15s infinite;
 			}
 			.logo {
-			    color: var(--text-color);
-			    font-weight: bold;
-			    font-size: 1.8rem;
-			    cursor: pointer;
+				color: var(--text-color);
+				font-weight: bold;
+				font-size: 1.8rem;
+				cursor: pointer;
 			}
 			.logo > .xp {
-			    margin-left: -3px;
-			    color: #ff8c00; /* Orange color for XP */
+				margin-left: -3px;
+				color: #ff8c00; /* Orange color for XP */
 			}
 			nav {
-			    display: flex;
-			    padding: 20px 40px;
-			    justify-content: space-between;
-			    align-items: center;
-			    background-color: var(--frosted-glass-color);
-			    border-bottom: 2px solid var(--frosted-glass-border-color);
-			    margin-bottom: 20px;
+				display: flex;
+				padding: 20px 40px;
+				justify-content: space-between;
+				align-items: center;
+				background-color: var(--frosted-glass-color);
+				border-bottom: 2px solid var(--frosted-glass-border-color);
+				margin-bottom: 20px;
 			}
 			nav a {
-			    font-size: 1.2rem;
-			    text-decoration: none;
-			    padding: 15px;
-			    background-color: var(--frosted-glass-color);
-			    color: var(--text-color);
-			    border-radius: 10px;
-			    border: 2px solid var(--frosted-glass-border-color);
-			    transition: background-color 0.3s ease;
+				font-size: 1.2rem;
+				text-decoration: none;
+				padding: 15px;
+				background-color: var(--frosted-glass-color);
+				color: var(--text-color);
+				border-radius: 10px;
+				border: 2px solid var(--frosted-glass-border-color);
+				transition: background-color 0.3s ease;
 			}
 			nav a:hover {
-			    background-color: rgba(255, 255, 255, 0.2);
+				background-color: rgba(255, 255, 255, 0.2);
 			}
 
 			#checkbox {
-			    display: none;
+				display: none;
 			}
 
 			.dark-mode-toggle {
-			    padding: 0 4px;
-			    width: 80px;
-			    background-color: var(--frosted-glass-border-color);
-			    border-radius: 20px;
-			    height: 40px;
-			    display: flex;
-			    align-items: center;
-			    cursor: pointer;
+				padding: 0 4px;
+				width: 80px;
+				background-color: var(--frosted-glass-border-color);
+				border-radius: 20px;
+				height: 40px;
+				display: flex;
+				align-items: center;
+				cursor: pointer;
 			}
 			.slider {
-			    cursor: pointer;
-			    width: 90px;
-			    height: 45px;
-			    border-radius: 23px;
-			    background-color: var(--frosted-glass-border-color);
-			    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-			    position: relative;
+				cursor: pointer;
+				width: 90px;
+				height: 45px;
+				border-radius: 23px;
+				background-color: var(--frosted-glass-border-color);
+				box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+				position: relative;
 			}
 			.slider::after {
-			    content: "";
-			    width: 37px;
-			    height: 37px;
-			    border-radius: 50%;
-			    background-image: var(--blob-3-gradient);
-			    position: absolute;
-			    left: 4px;
-			    top: 50%;
-			    transform: translateY(-50%);
-			    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-			    transition: 0.1s left ease;
+				content: "";
+				width: 37px;
+				height: 37px;
+				border-radius: 50%;
+				background-image: var(--blob-3-gradient);
+				position: absolute;
+				left: 4px;
+				top: 50%;
+				transform: translateY(-50%);
+				box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+				transition: 0.1s left ease;
 			}
 			#checkbox:checked ~ .slider::after {
-			    left: calc(100% - 41px);
+				left: calc(100% - 41px);
 			}
 			.links {
-			    display: flex;
-			    gap: 0.6rem;
-			    align-items: center;
+				display: flex;
+				gap: 0.6rem;
+				align-items: center;
 			}
 			.links > a {
-			    text-align: center;
+				text-align: center;
 			}
 			.content {
-			    max-width: 80%;
+				max-width: 80%;
 				max-height: calc(100vh - 200px); /* - 200px because the height of the nav bar is around 200px */
-			    padding: 20px;
-			    background-color: var(--frosted-glass-color);
-			    border: 2px solid var(--frosted-glass-border-color);
-			    border-radius: 10px;
-			    margin-left: auto;
-			    margin-right: auto;
-			    overflow: auto; /* Enables scrolling */
-			    -ms-overflow-style: none;  /* Hide scrollbars in Internet Explorer and Edge */
-			    scrollbar-width: none;
+				padding: 20px;
+				background-color: var(--frosted-glass-color);
+				border: 2px solid var(--frosted-glass-border-color);
+				border-radius: 10px;
+				margin-left: auto;
+				margin-right: auto;
+				overflow: auto; /* Enables scrolling */
+				-ms-overflow-style: none;  /* Hide scrollbars in Internet Explorer and Edge */
+				scrollbar-width: none;
 			}
 			.content::-webkit-scrollbar {
-			    display: none;
+				display: none;
 			}
 			p {
-			    font-size: 20px;
-			    line-height: 1.4;
+				font-size: 20px;
+				line-height: 1.4;
 			}
 			form {
-			    margin-top: 20px;
-			    padding: 20px;
-			    border-radius: 10px;
-			    background-color: var(--frosted-glass-color);
-			    border: 2px solid var(--frosted-glass-border-color);
+				margin-top: 20px;
+				padding: 20px;
+				border-radius: 10px;
+				background-color: var(--frosted-glass-color);
+				border: 2px solid var(--frosted-glass-border-color);
 			}
 
 			.loading-container {
-			    position: absolute;
-			    top: 0;
-			    display: flex;
-			    flex-direction: column;
-			    width: 100%;
-			    height: 100%;
-			    justify-content: center;
-			    align-items: center;
+				position: absolute;
+				top: 0;
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				height: 100%;
+				justify-content: center;
+				align-items: center;
 			}
 			.bars {
-			    display: flex;
-			    align-items: center;
+				display: flex;
+				align-items: center;
 			}
 
 			h3 {
-			    color: var(--text-color);
+				color: var(--text-color);
 			}
 
 			h3::after {
-			    content: "";
-			    animation: animate-periods 4s infinite;
+				content: "";
+				animation: animate-periods 4s infinite;
 			}
 
 			.bar {
-			    background-color: rgba(255, 255, 255, 0.3);
-			    width: 20px;
-			    height: 40px;
-			    margin-right: 5px;
-			    border-radius: 10px;
-			    animation: load ease infinite 5s;
+				background-color: rgba(255, 255, 255, 0.3);
+				width: 20px;
+				height: 40px;
+				margin-right: 5px;
+				border-radius: 10px;
+				animation: load ease infinite 5s;
 			}
 
 			.bar-2, .bar-4 {
-			    height: 50px;
+				height: 50px;
 			}
 
 			.bar-2 {
-			    animation-delay: 0.1s;
+				animation-delay: 0.1s;
 			}
 
 			.bar-3 {
-			    height: 60px;
-			    animation-delay: 0.2s;
+				height: 60px;
+				animation-delay: 0.2s;
 			}
 
 			.bar-4 {
-			    animation-delay: 0.3s;
+				animation-delay: 0.3s;
 			}
 
 			.bar-5 {
-			    animation-delay: 0.4s;
+				animation-delay: 0.4s;
 			}
 
 			@keyframes load {
-			    0%, 100% {
-			        transform: rotate(0deg);
-			    }
-			    50% {
-			        transform: rotate(720deg) rotateX(180deg);
-			    }
+				0%, 100% {
+					transform: rotate(0deg);
+				}
+				50% {
+					transform: rotate(720deg) rotateX(180deg);
+				}
 			}
 
 			@keyframes animate-periods {
-			    0% {
-			        content: "";
-			        color: white;
-			    }
-			    25% {
-			        content: ".";
-			    }
-			    50% {
-			        content: "..";
-			    }
-			    75% {
-			        content: "...";
-			    }
+				0% {
+					content: "";
+					color: white;
+				}
+				25% {
+					content: ".";
+				}
+				50% {
+					content: "..";
+				}
+				75% {
+					content: "...";
+				}
 			}
 
-
-
-			input[type="text"], input[type="email"], textarea {
-			    font-family: inherit;
-			    width: 100%;
-			    padding: 13px 13px;
-			    margin: 10px 0;
-			    box-sizing: border-box;
-			    border: none;
-			    background-color: rgba(0, 0, 0, 0.3);
-			    color: inherit;
-			    transition: background-color 0.3s ease;
-			    border-radius: 10px;
+			.form-input, textarea {
+				font-family: inherit;
+				width: 100%;
+				padding: 13px 13px;
+				margin: 10px 0;
+				box-sizing: border-box;
+				border: none;
+				background-color: var(--input-bg);
+				color: inherit;
+				transition: background-color 0.3s ease;
+				border-radius: 10px;
 				font-size: 1rem;
 			}
 
-			input:hover, textarea:hover {
-			    background-color: rgba(0, 0, 0, 0.4);
+			.form-input:hover, textarea:hover {
+				background-color: var(--input-bg-hover);
 			}
 
-			input:focus, textarea:focus {
-			    outline: 3px solid rgba(0, 0, 0, 0.1);
+			.form-input:focus, textarea:focus {
+				outline: 3px solid rgba(0, 0, 0, 0.1);
 			}
 
 			textarea {
-			    overflow: auto;
-			    resize: none;
-			    line-height: 1.2;
+				overflow: auto;
+				resize: none;
+				line-height: 1.2;
 			}
 
 			button {
-			    background-color: rgba(0, 0, 0, 0.6);
-			    display: flex;
-			    justify-content: center;
-			    align-items: center;
-			    font-family: inherit;
-			    border: none;
-			    padding: 13px 20px;
-			    color: white;
-			    border-radius: 10px;
-			    cursor: pointer;
-			    transition: background-color 0.3s ease;
+				background-color: var(--dark-color);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-family: inherit;
+				border: none;
+				padding: 13px 20px;
+				color: white;
+				border-radius: 10px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
 				font-size: 1rem;
 			}
 
 			button:hover {
-			    background-color: rgba(0, 0, 0, 0.8);
+				background-color: rgba(0, 0, 0, 0.8);
 			}
 
 			@keyframes move {
-			    0%, 100% {
-			        transform: rotate(0deg) translate(0px, 0);
-			    }
-			    25% {
-			        transform: rotate(20deg) translate(140px, 0);
-			    }
-			    50% {
-			        transform: rotate(50deg) translate(130px, 45px);
-			    }
-			    75% {
-			        transform: rotate(35deg) translate(-60px, 145px);
-			    }
+				0%, 100% {
+					transform: rotate(0deg) translate(0px, 0);
+				}
+				25% {
+					transform: rotate(20deg) translate(140px, 0);
+				}
+				50% {
+					transform: rotate(50deg) translate(130px, 45px);
+				}
+				75% {
+					transform: rotate(35deg) translate(-60px, 145px);
+				}
 			}
 
 			@keyframes move-2 {
-			    0%, 100% {
-			        transform: rotate(180deg) translate(0, 0);
-			    }
-			    25% {
-			        transform: translate(-60px, 0) rotate(200deg);
-			    }
-			    50% {
-			        transform: translate(-40px, -80px) rotate(190deg)
-			    }
-			    75% {
-			        transform: translate(-10px, -30px) rotate(170deg);
-			    }
+				0%, 100% {
+					transform: rotate(180deg) translate(0, 0);
+				}
+				25% {
+					transform: translate(-60px, 0) rotate(200deg);
+				}
+				50% {
+					transform: translate(-40px, -80px) rotate(190deg)
+				}
+				75% {
+					transform: translate(-10px, -30px) rotate(170deg);
+				}
 			}
 
-			#refused-games > p {
+			#refused-games p {
 				margin: 0;
 				padding: 15px;
+				display: flex;
+				justify-content: space-between;
 			}
 
-			#refused-games > p:nth-child(even) {
-				background: rgba(0, 0, 0, 0.1);
+			#refused-games-list p:nth-child(odd) {
+				background: rgba(0, 0, 0.1);
 				border-radius: 10px;
+			}
+
+			.list-header {
+				opacity: 0.5;
+				user-select: none;
+			}
+
+			.search-svg {
+				width: 25px;
+				transform: translateY(6px);
+				cursor: pointer;
+			}
+
+			.filter-results {
+				background: transparent;
+				border: none;
+				font-family: inherit;
+				color: inherit;
+				font-size: 20px;
+				height: 100%;
+				padding-bottom: 5px;
+				padding-left: 2px;
+			}
+
+			.filter-results:focus {
+				outline: none;
+			}
+
+			.search-container:has(.filter-results:focus) { /* I smort */
+				opacity: 1;
+			}
+
+			.filter-results::placeholder {
+				color: inherit;
+				opacity: 0.6;
+			}
+
+			.search-container {
+				float: right;
+				position: relative;
+				opacity: 0.6;
+				transition: opacity 0.2s;
+			}
+
+			.search-container::after {
+				content: '';
+				width: 91%;
+				height: 3px;
+				border-radius: 100vw;
+				background: var(--text-color);
+				position: absolute;
+				bottom: 0;
+				right: 0;
 			}
 		</style>
 	</head>
@@ -384,13 +445,21 @@
 				<a href="#" onclick="showSection('patches')">Updates</a>
 				<a href="#" onclick="showSection('report-bug')">Report a Bug</a>
 				<a href="#" onclick="showSection('request-game')">Request a Game</a>
+				<a href="#" onclick="showSection('refused-games')" title="See games that will not be added">Declined Games</a>
 			</div>
 		</nav>
 
 		<div class="content" id="about">
 			<h1>About</h1>
 			<p>
-				Welcome to StrongDogXP, your gateway to browser gaming! Founded by CEO Joshua Pettit, with developer James Meadows, our mission is to provide seamless access to your favorite games, anytime, anywhere. Explore our curated Top 20, manage your favorites, create a free account to save your game progress across devices, or dive into our comprehensive game library. Join our vibrant community on <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">Discord</a> to share ideas, request new games, and connect with fellow gamers and creators. At StrongDog XP, we believe in unrestricted fun and a community-driven experience!
+				Welcome to StrongDogXP, your gateway to browser gaming! Founded by CEO Joshua
+				Pettit, with developer James Meadows, our mission is to provide seamless access to
+				your favorite games, anytime, anywhere. Explore our curated and dynamic Top 20, manage your
+				favorites, create a free account to save your game progress across devices, or dive
+				into our comprehensive game library with over 1000 games. Join our vibrant community on
+				<a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">Discord</a> to share ideas,
+				request new games, and connect with fellow gamers and creators. At StrongDogXP, we
+				believe in unrestricted fun and a community-driven experience!
 			</p>
 		</div>
 
@@ -399,14 +468,14 @@
 		<div class="content" id="report-bug" style="display:none;">
 			<h1>Report a Bug</h1>
 			<p>
-				If you've encountered a problem while using our site, please let us know! Fill out the form below to
-				report an issue.
+				If you've encountered a problem while using our site, please let us know! Fill out
+				the form below to report an issue.
 			</p>
 			<form id="bugReportForm">
 				<label for="name">Your Name:</label><br />
-				<input type="text" id="name" name="name" required /><br />
+				<input class="form-input" type="text" id="name" name="name" required /><br />
 				<label for="email">Your Email:</label><br />
-				<input type="email" id="email" name="email" required /><br />
+				<input class="form-input" type="email" id="email" name="email" required /><br />
 				<label for="description">Bug Description:</label><br />
 				<textarea id="description" name="description" rows="4" required></textarea><br />
 				<button type="submit">Submit Bug Report</button>
@@ -416,22 +485,66 @@
 		<div class="content" id="request-game" style="display:none;">
 			<h1>Request a Game</h1>
 			<p>
-				If you'd like to see a particular game added to our site, please let us know! Fill out the form below to
-				request a game.
+				If you'd like to see a particular game added to our site, please let us know! Fill
+				out the form below to request a game.
 			</p>
 			<form id="gameRequestForm">
 				<label for="game-name">Your Name:</label><br />
-				<input type="text" id="game-name" name="name" required /><br />
+				<input class="form-input" type="text" id="game-name" name="name" required /><br />
 				<label for="game-email">Your Email:</label><br />
-				<input type="email" id="game-email" name="email" required /><br />
+				<input
+					class="form-input"
+					type="email"
+					id="game-email"
+					name="email"
+					required
+				/><br />
 				<label for="game-description">Game Link And Description:</label><br />
-				<textarea id="game-description" name="description" rows="4" required></textarea><br />
-				<p>Please check <a href="#" onclick="showSection('refused-games')">this menu</a> to see if your game you want to add has already been considered and cannot be added!</p>
+				<textarea id="game-description" name="description" rows="4" required></textarea
+				><br />
+				<p>
+					<strong>Please</strong> check
+					<a href="#" onclick="showSection('refused-games')">this menu</a> to see if the
+					game you want to add has already been reviewed and declined!
+				</p>
 				<button type="submit">Submit Game Request</button>
 			</form>
 		</div>
 
-		<div class="content" id="refused-games" style="display: none;"></div>
+		<div class="content" id="refused-games" style="display: none;">
+			<div class="search-container">
+				<label for="filter-input">
+					<!-- Magnifying glass SVG -->
+					<svg
+						class="search-svg"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+					>
+						<path
+							d="M14.954 14.946 21 21m-4-11a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+							stroke="var(--text-color)"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2.5"
+						/>
+					</svg>
+				</label>
+				<input
+					class="filter-results"
+					type="text"
+					placeholder="Search games..."
+					maxlength="100"
+					spellcheck="false"
+					id="filter-input"
+				/>
+			</div>
+
+			<h1>Games That Will Not Be Added</h1>
+			<p class="list-header">Game name <span>Reason</span></p>
+
+			<div id="refused-games-list"></div>
+		</div>
 
 		<div class="loading-container" style="display: none;">
 			<div class="bars">
@@ -445,20 +558,55 @@
 		</div>
 		<script type="module">
 			import { updates, refusedGamesData } from "./about-page-data.js";
+
+			// DOM elements
+			const filterInput = document.getElementById("filter-input");
+			const refusedGamesList = document.getElementById("refused-games-list");
+			const updatesSection = document.getElementById("patches");
+
+			// Populating the updates section
 			let updatesHTMLArray = ["<h1>Updates / Changelog</h1>"];
 			for (let i = 0; i < updates.length; ++i) {
-				updatesHTMLArray.push(`<p>${updates[i].date}: ${updates[i].content}</p>`);
+				const { date, content } = updates[i];
+				updatesHTMLArray.push(`<p><strong>${date}</strong> - ${content}</p>`);
 			}
 			const updatesHTMLStr = updatesHTMLArray.join("");
-			document.querySelector("#patches").innerHTML = updatesHTMLStr;
-			
-			let refusedGamesHTMLArray = ["<h1>Games That Will Not Be Added</h1>"];
-			for (let i = 0; i < refusedGamesData.length; ++i) {
-				const game = refusedGamesData[i];
-				refusedGamesHTMLArray.push(`<p>${game.name} : ${game.reason}</p>`);
+			updatesSection.innerHTML = updatesHTMLStr;
+
+			// Refused games section code starts here
+
+			// Function to create game HTML
+			const createRefusedGame = game => `<p>${game.name} <span>${game.reason}</span></p>`;
+
+			// Function to update the list of games
+			function updateGames(gameData) {
+				const gamesHTMLArray = gameData.map(createRefusedGame);
+
+				if (gamesHTMLArray.length) {
+					refusedGamesList.innerHTML = gamesHTMLArray.join("");
+				} else {
+					refusedGamesList.innerHTML = `
+                        <p style="display: block; background: none; text-align: center;">
+                            No results for "${filterInput.value.trim()}"
+                        </p>
+                    `;
+				}
 			}
-			const refusedGamesHTMLStr = refusedGamesHTMLArray.join("");
-			document.querySelector("#refused-games").innerHTML = refusedGamesHTMLStr;
+
+			// Initialize the placeholder of the input
+			filterInput.placeholder = `Search ${refusedGamesData.length} games...`;
+
+			// Event listener for filtering games
+			filterInput.addEventListener("input", () => {
+				const query = filterInput.value.trim().toLowerCase();
+				const filteredGames = refusedGamesData.filter(game =>
+					game.name.toLowerCase().includes(query)
+				);
+				updateGames(filteredGames);
+			});
+
+			// Initial population of games
+			updateGames(refusedGamesData);
 		</script>
 		<script type="module">
 			import { modes } from "./about-page-data.js";
@@ -495,12 +643,11 @@
 			}
 		</script>
 		<script>
+			// Switching between sections via the links in the nav bar
+			const sections = document.querySelectorAll(".content");
 			function showSection(sectionId) {
-				let sections = document.querySelectorAll(".content");
 				sections.forEach(section => {
-					section.id === sectionId
-						? (document.getElementById(sectionId).style.display = "block")
-						: (section.style.display = "none");
+					section.style.display = section.id === sectionId ? "block" : "none";
 				});
 			}
 		</script>
