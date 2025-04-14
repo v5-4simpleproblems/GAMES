@@ -4,6 +4,14 @@ OWNERDOMAIN=strongdog.com
 MANAGERDOMAIN=monumetric.com
 CONTACT=support@monumetric.com
 
+taurusx.com, 80632, DIRECT
+smartadserver.com, 4524, RESELLER, 060d053dcf45cbf3
+smartyads.com, 217, RESELLER, fd2bde0ff2e62c5d
+trustedstack.com, ts931xq4d, DIRECT
+opera.com, pub8150359888640, DIRECT, 55a0c5fd61378de3
+iqzone.com, iq190, RESELLER
+krushmedia.com, ajxf6r537a9m6catvk, RESELLER
+visiblemeasures.com, 1041, DIRECT
 monumetric.com, 4b83ce85-6077-474b-b427-b0eb646767b3, DIRECT 
 appnexus.com, 11924, RESELLER, f5ab79cb980f11d1
 appnexus.com, 3153, RESELLER, f5ab79cb980f11d1
