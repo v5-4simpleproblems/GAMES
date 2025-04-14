@@ -1252,20 +1252,13 @@
         window.location.hostname === "unblockedmathgames.com" ||
         window.location.hostname === "mathhub.de.com" ||
         window.location.hostname === "mathgames.de.com"
+
       ) {
         if (navigator.userAgent.indexOf("CrOS") === -1) {
-          document.title = "The Math Hub";
+          document.documentElement.innerHTML = "";
           document.documentElement.style.overflow = "hidden";
-          document.body.style.margin = "0";
-          document.body.style.padding = "0";
-          document.body.style.overflow = "hidden";
-          document.body.innerHTML = "";
-          var icons = document.querySelectorAll(
-            'link[rel="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]'
-          );
-          icons.forEach(function (i) {
-            i.remove();
-          });
+          document.title = "The Math Hub";
+
           var f = document.createElement("iframe");
           f.src = "./math/index.html";
           f.style.position = "fixed";
@@ -1279,6 +1272,7 @@
           f.style.overflow = "hidden";
           f.style.display = "block";
           f.style.zIndex = "999999";
+
           document.documentElement.appendChild(f);
         }
       }
