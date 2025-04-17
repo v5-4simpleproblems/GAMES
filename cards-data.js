@@ -1,4 +1,5 @@
 export default [
+  { href: './swf/the binding of isaac/index.html', imgSrc: 'the binding of isaac.jpg', name: 'the binding of isaac' , 'page': 4, 'id': 1151 },
   { href: './html/territorial.io new/index.html', imgSrc: 'territorial.io new.jpg', name: 'territorial.io new' , 'page': 4, 'id': 1089 },
   { href: './html/among us online edition/index.html', imgSrc: 'among us online edition.jpg', name: 'among us online edition' , 'page': 4, 'id': 1060 },
   { href: './html/8bit fiesta/index.html', imgSrc: '8bit fiesta.jpg', name: '8bit fiesta' , 'page': 4, 'id': 1048 },
