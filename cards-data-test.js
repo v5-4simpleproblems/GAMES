@@ -126,7 +126,6 @@ export default [
       { href: './html/battleclub.io/index.html', imgSrc: 'battleclub.io.jpg', name: 'battleclub.io' , 'page': 4, 'id': 983 },
       { href: './html/battleboats.io/index.html', imgSrc: 'battleboats.io.jpg', name: 'battleboats.io' , 'page': 4, 'id': 982 },
       { href: './html/battle wheels/index.html', imgSrc: 'battle wheels.jpg', name: 'battle wheels' , 'page': 4, 'id': 981 },
-      { href: './html/battle golf/index.html', imgSrc: 'battle golf.png', name: 'battle golf' , 'page': 4, 'id': 980 },
       { href: './html/basketball line/index.html', imgSrc: 'basketball line.png', name: 'basketball line' , 'page': 4, 'id': 979 },
       { href: './html/basketball frvr/index.html', imgSrc: 'basketball frvr.jpg', name: 'basketball frvr' , 'page': 4, 'id': 978 },
       { href: './html/basket swooshes/index.html', imgSrc: 'basket swooshes.jpg', name: 'basket swooshes' , 'page': 4, 'id': 977 },
