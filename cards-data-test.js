@@ -41,7 +41,6 @@ export default [
       { href: './html/bowmasters/index.html', imgSrc: 'bowmasters.jpg', name: 'bowmasters' , 'page': 4, 'id': 1104 },
       { href: './html/bottle jump 3d/index.html', imgSrc: 'bottle jump 3d.jpg', name: 'bottle jump 3d' , 'page': 4, 'id': 1103 },
       { href: './html/bolly beat/index.html', imgSrc: 'bolly beat.jpg', name: 'bolly beat' , 'page': 4, 'id': 1102 },
-      { href: './html/blumgi ball/index.html', imgSrc: 'blumgi ball.jpg', name: 'blumgi ball' , 'page': 4, 'id': 1101 },
       { href: './html/bazooka boy/index.html', imgSrc: 'bazooka boy.jpg', name: 'bazooka boy' , 'page': 4, 'id': 1100 },
       { href: './html/basketball frvr/index.html', imgSrc: 'basketball frvr.jpg', name: 'basketball frvr' , 'page': 4, 'id': 1099 },
       { href: './html/basket battle/index.html', imgSrc: 'basket battle.jpg', name: 'basket battle' , 'page': 4, 'id': 1098 },
