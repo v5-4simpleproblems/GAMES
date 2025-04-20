@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Movie Title - StrongDogMovies</title>
+    <style>
+      body {
+        margin: 0;
+        background-color: #000;
+        color: #fff;
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .navbar {
+        background-color: #111;
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      }
+      .navbar .logo {
+        font-size: 1.875rem;
+        font-weight: bold;
+        color: #fff;
+        text-decoration: none;
+        transition: transform 0.2s;
+      }
+      .navbar .logo:hover {
+        transform: scale(1.05);
+      }
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .video-container {
+        width: 90vw;
+        max-width: 1400px;
+        aspect-ratio: 16/9;
+        max-height: 80vh;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+      }
+      .video-container iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .movie-title {
+        margin-top: 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="../index.html" class="logo">
+        StrongDog<span style="color: #f97316">Movies</span>
+      </a>
+    </nav>
+    <div class="content">
+      <div class="video-container">
+        <iframe id="player" allowfullscreen></iframe>
+      </div>
+      <div id="movieTitle" class="movie-title">Movie Title</div>
+    </div>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get("id");
+      if (!movieId) {
+        console.error("No movie ID in querystring!");
+      }
+
+      fetch("../movies.json")
+        .then((res) => res.json())
+        .then((movies) => {
+          const movie = movies.find((m) => m.id === movieId);
+          if (!movie) {
+            console.error(`Movie with id="${movieId}" not found in JSON`);
+            return;
+          }
+          document.getElementById("movieTitle").textContent = movie.name;
+          document.title = `${movie.name} - StrongDogMovies`;
+
+          document.getElementById(
+            "player"
+          ).src = `./movie.html?id=${encodeURIComponent(movie.id)}`;
+        })
+        .catch((err) => console.error(err));
+    </script>
+  </body>
+</html>

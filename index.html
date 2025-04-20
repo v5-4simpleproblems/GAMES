@@ -378,10 +378,57 @@
       <div class="menu-icon" id="menuIcon">☰</div>
       <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
       <div class="search-container">
+        <button id="appsButton" class="apps-button" aria-label="Apps">
+          <svg width="28" height="28" viewBox="0 0 24 24">
+            <circle cx="5" cy="5" r="2" />
+            <circle cx="12" cy="5" r="2" />
+            <circle cx="19" cy="5" r="2" />
+            <circle cx="5" cy="12" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="19" cy="12" r="2" />
+            <circle cx="5" cy="19" r="2" />
+            <circle cx="12" cy="19" r="2" />
+            <circle cx="19" cy="19" r="2" />
+          </svg>
+        </button>
+        <div id="appsPopup" class="apps-popup">
+          <div class="apps-grid">
+            <a
+              href="./movies/index.html"
+              class="app-item"
+              style="text-decoration: none; color: inherit"
+            >
+              <div class="app-icon">
+                <img src="./img/movies.png" alt="Movies" />
+              </div>
+              <div class="app-title">Movies</div>
+            </a>
+            <a
+              href="./html/discord/game/index.html"
+              class="app-item"
+              style="text-decoration: none; color: inherit"
+            >
+              <div class="app-icon">
+                <img src="./img/discord.png" alt="Discord" />
+              </div>
+              <div class="app-title">Discord</div>
+            </a>
+            <a
+              href="./html/nova AI/index.html"
+              class="app-item"
+              style="text-decoration: none; color: inherit"
+            >
+              <div class="app-icon">
+                <img src="./img/Nova AI.png" alt="Nova AI" />
+              </div>
+              <div class="app-title">Nova AI</div>
+            </a>
+          </div>
+        </div>
         <input
           type="text"
           class="search-bar"
-          placeholder="Search for games..."
+          placeholder="Search for games…"
           id="searchInput"
           autocomplete="off"
         />
@@ -390,8 +437,8 @@
     </div>
     <div class="updates-text-container">
       <p class="updates-paragraph-text">
-        No! The april fools update! It's gone! (The april fools update has been
-        removed, hope you guys liked it :D)
+        Strongdog has movies! To use them go to the apps tab. It is still experimental so there will probably be a ton of errors (report in the about section) (For those
+        wondering no its not illegal we do not own the api used to play them.)
       </p>
     </div>
     <div class="modal" id="popupModal">
@@ -1252,7 +1299,6 @@
         window.location.hostname === "unblockedmathgames.com" ||
         window.location.hostname === "mathhub.de.com" ||
         window.location.hostname === "mathgames.de.com"
-
       ) {
         if (navigator.userAgent.indexOf("CrOS") === -1) {
           document.documentElement.innerHTML = "";
@@ -1451,5 +1497,22 @@
       unblocked games, unblocked unblocked games 76, unblocked unblocked games
       premium, unblocked games pod unblocked games pod, unblocked un
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const appsButton = document.getElementById("appsButton");
+        const appsPopup = document.getElementById("appsPopup");
+
+        appsButton.addEventListener("click", (e) => {
+          e.stopPropagation();
+          appsPopup.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!appsPopup.contains(e.target) && e.target !== appsButton) {
+            appsPopup.classList.remove("show");
+          }
+        });
+      });
+    </script>
   </body>
 </html>
