@@ -1,7 +1,8 @@
-// All of the updates and their corresponding dates that will be dynamically added in the updates section on about page 
+// All of the updates and their corresponding dates that will be dynamically added in the updates section on about page
 // Josh - please keep them specific to page system/ui updates and not added games, thanks
 export const updates = [
-	{ date: "4/6/25", content: "Added \"Declined Games\" menu in about section, fixed minor about section styling issues" },
+	{ date: "4/19/25", content: "Added StrongDog Movies and waffle menu on the homepage navigation bar" },
+	{ date: "4/6/25", content: 'Added "Declined Games" menu in about section, fixed minor about section styling issues' },
 	{ date: "4/1/25", content: "Added April Fool's update, removed the next day" },
 	{ date: "2/24/25", content: "Added a card size slider to the main menu" },
 	{ date: "2/10/25", content: "Added block lanschool 3.0 to secret menu" },
@@ -12,14 +13,43 @@ export const updates = [
 	{ date: "7/27/24", content: "Added cirkul bottle giveaway" },
 	{ date: "5/14/24", content: "Removed tabs on page 1; improved About section" },
 	{ date: "5/13/24", content: "Optimized top 10 load speed; added loading icons; improved styling" },
-	{ date: "5/12/24", content: "Added About section" }
+	{ date: "5/12/24", content: "Added About section" },
 ];
 
 export const refusedGamesData = [
-	{ name: "Mario Kart", reason: "File too big" },
-	{ name: "Sword Masters", reason: "Backend unavailable" },
-	{ name: "Schedule 1", reason: "Unable to play through browser" },
-	// { name: "Red Dead Redemption", reason: "" },
+	{ name: "Mario Kart", reason: "File size exceeds limit" },
+	{ name: "Sword Masters", reason: "Incompatible backend architecture" },
+	{ name: "Pung.io", reason: "Unspecified technical issue" },
+	{ name: "Schedule 1", reason: "Lacks necessary web port, incurs costs, and is legally restricted" },
+	{ name: "Red Dead Redemption 1", reason: "Legally restricted content" },
+	{ name: "Fears to Fathom", reason: "Lacks necessary web port" },
+	{ name: "AI Minecraft", reason: "Incompatible with proxy server" },
+	{ name: "Super Smash Bros", reason: "Unspecified technical issue" },
+	{ name: "Playstore App", reason: "Installation impossible with only frontend access" },
+	{ name: "What Beats Rock", reason: "Application malfunction" },
+	{ name: "Web Searcher Proxy", reason: "Functionality is web searching" },
+	{ name: "Battle Cats", reason: "Lacks necessary web port" },
+	{ name: "Roblox", reason: "Previously attempted without success" },
+	{ name: "Moomoo.io", reason: "Functionality is not working" },
+	{ name: "Hello Neighbor", reason: "No functional web port available" },
+	{ name: "Xbox App", reason: "Functionality is not working" },
+	{ name: "Xbox Cloud Gaming", reason: "Functionality is not working" },
+	{ name: "Tetr.io", reason: "Game flags connection as potentially fraudulent" },
+	{ name: "Spotify", reason: "Incompatible with proxy server" },
+	{ name: "Streaming Services", reason: "Unspecified technical issue" },
+	{ name: "Bean Royal", reason: "Requires payment for access" },
+	{ name: "OvO", reason: "Sitelock cannot be bypassed" },
+	{ name: "Escape Road", reason: "Unable to download" },
+	{ name: "Slope 3", reason: "Functionality is not working" },
+	{ name: "Pokemon Showdown", reason: "Unspecified technical issue" },
+	{ name: "TikTok", reason: "Blocked due to a past incident similar to YouTube's" },
+	{ name: "Reddit", reason: "Blocked due to a past incident similar to YouTube's" },
+	{ name: "Vencord", reason: "Unable to install extensions via the proxy" },
+	{ name: "Unblocked Google", reason: "Blocked due to a past incident similar to YouTube's" },
+	{ name: "Infinite Craft", reason: "Application malfunction" },
+	{ name: "Soundboard", reason: "Unspecified technical issue" },
+	{ name: "Space Flight Simulator", reason: "Only available on now.gg, which does not allow downloads" },
+	{ name: "Balatro", reason: "Requires payment for access and is legally restricted" },
 ];
 
 // This holds all of the color themes for light/dark mode
@@ -34,7 +64,7 @@ export const modes = [
 			"--blob-3-gradient": "linear-gradient(0deg, #c8e6c9, #81c784)",
 			"--link-color": "#7152ff",
 			"--input-bg": "rgba(0, 0, 0, 0.2)",
-			"--input-bg-hover": "rgba(0, 0, 0, 0.3)"
+			"--input-bg-hover": "rgba(0, 0, 0, 0.3)",
 		},
 	},
 	{
@@ -47,7 +77,7 @@ export const modes = [
 			"--blob-3-gradient": "linear-gradient(220deg, #ff2079, #0400eb)",
 			"--link-color": "#9178ff",
 			"--input-bg": "rgba(0, 0, 0, 0.3)",
-			"--input-bg-hover": "rgba(0, 0, 0, 0.4)"
+			"--input-bg-hover": "rgba(0, 0, 0, 0.4)",
 		},
 	},
 ];

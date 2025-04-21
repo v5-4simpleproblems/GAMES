@@ -358,7 +358,7 @@
 				}
 			}
 
-			#refused-games p {
+			#refused-games-list p, .list-header {
 				margin: 0;
 				padding: 15px;
 				display: flex;
@@ -366,7 +366,7 @@
 			}
 
 			#refused-games-list p:nth-child(odd) {
-				background: rgba(0, 0, 0.1);
+				background: rgba(0, 0, 0, 0.1);
 				border-radius: 10px;
 			}
 
@@ -544,6 +544,12 @@
 			<p class="list-header">Game name <span>Reason</span></p>
 
 			<div id="refused-games-list"></div>
+			<p style="margin-bottom:0;text-align:center;">
+				If you have a question about a declined game, please contact us 
+				<a target="_blank" href="mailto:help@strongdog.com?subject=Question%20About%20a%20Declined%20Game&body=Game%20name:%C2%A0%0ARelated%20question:%C2%A0">
+					here
+				</a>.
+			</p>
 		</div>
 
 		<div class="loading-container" style="display: none;">
