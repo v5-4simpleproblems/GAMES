@@ -81,26 +81,67 @@
     <script>
       const params = new URLSearchParams(window.location.search);
       const movieId = params.get("id");
-      if (!movieId) {
-        console.error("No movie ID in querystring!");
+      if (!movieId) console.error("No movie ID in querystring!");
+      function getProgress() {
+        const c = document.cookie
+          .split("; ")
+          .find((r) => r.startsWith("progress="));
+        if (!c) return {};
+        try {
+          return JSON.parse(decodeURIComponent(c.split("=")[1]));
+        } catch {
+          return {};
+        }
       }
-
+      function setProgressObj(o) {
+        document.cookie =
+          "progress=" +
+          encodeURIComponent(JSON.stringify(o)) +
+          ";path=/;max-age=" +
+          60 * 60 * 24 * 365;
+      }
+      function clearMovie(id) {
+        const o = getProgress();
+        delete o[id];
+        setProgressObj(o);
+      }
+      function fmt(s) {
+        const m = Math.floor(s / 60),
+          sec = Math.floor(s % 60);
+        return m + ":" + (sec < 10 ? "0" : "") + sec;
+      }
+      const playerFrame = document.getElementById("player");
       fetch("../movies.json")
         .then((res) => res.json())
         .then((movies) => {
           const movie = movies.find((m) => m.id === movieId);
-          if (!movie) {
-            console.error(`Movie with id="${movieId}" not found in JSON`);
-            return;
-          }
+          if (!movie)
+            return console.error(
+              `Movie with id="${movieId}" not found in JSON`
+            );
           document.getElementById("movieTitle").textContent = movie.name;
           document.title = `${movie.name} - StrongDogMovies`;
-
-          document.getElementById(
-            "player"
-          ).src = `./movie.html?id=${encodeURIComponent(movie.id)}`;
+          playerFrame.src = `./movie.html?id=${encodeURIComponent(movie.id)}`;
         })
         .catch((err) => console.error(err));
+      playerFrame.addEventListener("load", () => {
+        const v = playerFrame.contentWindow.document.getElementById("video");
+        if (!v) return;
+        const p = getProgress()[movieId];
+        v.addEventListener("loadedmetadata", () => {
+          if (p && p < v.duration - 30) {
+            if (confirm("Continue from " + fmt(p) + "?")) v.currentTime = p;
+          }
+        });
+        v.addEventListener("timeupdate", () => {
+          if (v.currentTime > v.duration - 30) clearMovie(movieId);
+          else {
+            const o = getProgress();
+            o[movieId] = v.currentTime;
+            setProgressObj(o);
+          }
+        });
+      });
     </script>
   </body>
 </html>
