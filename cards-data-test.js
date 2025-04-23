@@ -1,5 +1,4 @@
 export default [
-      { href: './html/crazy cattle 3d/index.html', imgSrc: 'crazy cattle 3d.png', name: 'crazy cattle 3d' , 'page': 4, 'id': 1153 },
       { href: './html/1v1.lol/index.html', imgSrc: '1v1.lol.unknown', name: '1v1.lol' , 'page': 4, 'id': 1152 },
       { href: './swf/stickwar/index.html', imgSrc: 'stickwar.jpg', name: 'stickwar' , 'page': 4, 'id': 1149 },
       { href: './swf/sniper assasin 4/index.html', imgSrc: 'sniper assasin 4.jpg', name: 'sniper assasin 4' , 'page': 4, 'id': 1148 },
