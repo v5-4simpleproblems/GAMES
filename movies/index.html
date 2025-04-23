@@ -181,17 +181,9 @@
   <body>
     <div id="secretLink"></div>
     <nav class="navbar">
-      <a href="../" class="logo"
-        >StrongDog<span style="color: #f97316">Movies</span></a
-      >
+      <a href="../" class="logo">StrongDog<span style="color: #f97316">Movies</span></a>
       <div class="search-container">
-        <input
-          id="searchInput"
-          class="search-input"
-          type="text"
-          placeholder="Search for movies..."
-          autocomplete="off"
-        />
+        <input id="searchInput" class="search-input" type="text" placeholder="Search for movies..." autocomplete="off" />
         <div id="searchResults" class="search-results"></div>
       </div>
     </nav>
@@ -203,25 +195,18 @@
           const movieList = document.getElementById("movieList");
           const searchInput = document.getElementById("searchInput");
           const searchResults = document.getElementById("searchResults");
+          function linkParam(m) {
+            return m.type === 'show' ? 'showId' : 'id';
+          }
           function cardHTML(m) {
             return (
-              '<a href="./play/index.html?id=' +
-              m.id +
-              '" class="movie-card"><img src="' +
-              m.imgSrc +
-              '" alt="' +
-              m.name +
-              '"><div class="title-overlay"><p>' +
-              m.name +
-              "</p></div></a>"
+              '<a href="./play/index.html?' + linkParam(m) + '=' + m.id + '" class="movie-card"><img src="' + m.imgSrc + '" alt="' + m.name + '"><div class="title-overlay"><p>' + m.name + "</p></div></a>"
             );
           }
           movieList.innerHTML = movies.map(cardHTML).join("");
           function updateResults() {
             const text = searchInput.value.toLowerCase();
-            const filtered = movies
-              .filter((m) => m.name.toLowerCase().includes(text))
-              .slice(0, 5);
+            const filtered = movies.filter((m) => m.name.toLowerCase().includes(text)).slice(0, 5);
             searchResults.innerHTML = "";
             if (!filtered.length) {
               searchResults.classList.remove("visible");
@@ -229,16 +214,9 @@
             }
             filtered.forEach((m) => {
               const a = document.createElement("a");
-              a.href = "./play/index.html?id=" + m.id;
+              a.href = "./play/index.html?" + linkParam(m) + "=" + m.id;
               a.className = "result-item";
-              a.innerHTML =
-                '<img src="' +
-                m.imgSrc +
-                '" alt="' +
-                m.name +
-                '"><span>' +
-                m.name +
-                "</span>";
+              a.innerHTML = '<img src="' + m.imgSrc + '" alt="' + m.name + '"><span>' + m.name + "</span>";
               searchResults.appendChild(a);
             });
             searchResults.classList.add("visible");
@@ -246,18 +224,13 @@
           searchInput.addEventListener("focus", updateResults);
           searchInput.addEventListener("input", updateResults);
           document.addEventListener("click", (e) => {
-            if (
-              !searchInput.contains(e.target) &&
-              !searchResults.contains(e.target)
-            ) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
               searchResults.classList.remove("visible");
             }
           });
-          document
-            .getElementById("secretLink")
-            .addEventListener("click", () => {
-              window.location.href = "secret-menu.html";
-            });
+          document.getElementById("secretLink").addEventListener("click", () => {
+            window.location.href = "secret-menu.html";
+          });
         });
     </script>
   </body>

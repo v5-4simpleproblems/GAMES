@@ -1,4 +1,5 @@
 [
+{"id": "house","name": "House MD","imgSrc": "./img/house.jpg", "type": "show"},
 {"id": "minecraft_movie_325","name": "A Minecraft Movie (unrendered)","imgSrc": "./img/a minecraft movie.jpg"},
 {"id": "antman_and_the_wasp_quantumania","name": "Antman And The Wasp Quantumania","imgSrc": "./img/antman_and_the_wasp.jpg"},
 {"id": "avengers_age_of_ultron","name": "Avengers Age Of Ultron","imgSrc": "./img/avengers_age_of_ultron.jpg"},

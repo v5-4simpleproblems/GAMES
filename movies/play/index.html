@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Movie Title - StrongDogMovies</title>
+    <title>StrongDogMovies</title>
     <style>
       body {
         margin: 0;
@@ -58,8 +58,22 @@
         height: 100%;
         border: none;
       }
+      .show-controls {
+        display: none;
+        margin: 1rem 0;
+        gap: 1rem;
+      }
+      .show-controls select {
+        background-color: #111;
+        color: #fff;
+        border: 1px solid #333;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        min-width: 150px;
+      }
       .movie-title {
-        margin-top: 1.5rem;
+        margin-top: 1rem;
         font-size: 1.5rem;
         font-weight: 600;
         text-align: center;
@@ -76,72 +90,127 @@
       <div class="video-container">
         <iframe id="player" allowfullscreen></iframe>
       </div>
+      <div id="showControls" class="show-controls">
+        <select id="seasonSelector"></select>
+        <select id="episodeSelector"></select>
+      </div>
       <div id="movieTitle" class="movie-title">Movie Title</div>
     </div>
     <script>
       const params = new URLSearchParams(window.location.search);
       const movieId = params.get("id");
-      if (!movieId) console.error("No movie ID in querystring!");
-      function getProgress() {
+      const showId = params.get("showId");
+      const player = document.getElementById("player");
+      const controls = document.getElementById("showControls");
+      const seasonSel = document.getElementById("seasonSelector");
+      const epiSel = document.getElementById("episodeSelector");
+      let progKey = null;
+      function getCookie(name) {
         const c = document.cookie
           .split("; ")
-          .find((r) => r.startsWith("progress="));
-        if (!c) return {};
+          .find((r) => r.startsWith(name + "="));
+        if (!c) return null;
+        return decodeURIComponent(c.split("=")[1]);
+      }
+      function setCookie(name, val) {
+        document.cookie =
+          name +
+          "=" +
+          encodeURIComponent(val) +
+          ";path=/;max-age=" +
+          60 * 60 * 24 * 365;
+      }
+      function getJSONCookie(name) {
+        const v = getCookie(name);
         try {
-          return JSON.parse(decodeURIComponent(c.split("=")[1]));
+          return v ? JSON.parse(v) : {};
         } catch {
           return {};
         }
       }
-      function setProgressObj(o) {
-        document.cookie =
-          "progress=" +
-          encodeURIComponent(JSON.stringify(o)) +
-          ";path=/;max-age=" +
-          60 * 60 * 24 * 365;
+      function fmt(t) {
+        const m = Math.floor(t / 60),
+          s = Math.floor(t % 60);
+        return m + ":" + (s < 10 ? "0" : "") + s;
       }
-      function clearMovie(id) {
-        const o = getProgress();
-        delete o[id];
-        setProgressObj(o);
-      }
-      function fmt(s) {
-        const m = Math.floor(s / 60),
-          sec = Math.floor(s % 60);
-        return m + ":" + (sec < 10 ? "0" : "") + sec;
-      }
-      const playerFrame = document.getElementById("player");
-      fetch("../movies.json")
-        .then((res) => res.json())
-        .then((movies) => {
-          const movie = movies.find((m) => m.id === movieId);
-          if (!movie)
-            return console.error(
-              `Movie with id="${movieId}" not found in JSON`
-            );
-          document.getElementById("movieTitle").textContent = movie.name;
-          document.title = `${movie.name} - StrongDogMovies`;
-          playerFrame.src = `./movie.html?id=${encodeURIComponent(movie.id)}`;
-        })
-        .catch((err) => console.error(err));
-      playerFrame.addEventListener("load", () => {
-        const v = playerFrame.contentWindow.document.getElementById("video");
-        if (!v) return;
-        const p = getProgress()[movieId];
-        v.addEventListener("loadedmetadata", () => {
-          if (p && p < v.duration - 30) {
-            if (confirm("Continue from " + fmt(p) + "?")) v.currentTime = p;
-          }
+      player.addEventListener("load", () => {
+        const vEl = player.contentWindow.document.getElementById("video");
+        if (!vEl || !progKey) return;
+        const p = getJSONCookie("progress")[progKey];
+        vEl.addEventListener("loadedmetadata", () => {
+          if (p && p < vEl.duration - 30)
+            if (confirm("Continue from " + fmt(p) + "?")) vEl.currentTime = p;
         });
-        v.addEventListener("timeupdate", () => {
-          if (v.currentTime > v.duration - 30) clearMovie(movieId);
-          else {
-            const o = getProgress();
-            o[movieId] = v.currentTime;
-            setProgressObj(o);
+        vEl.addEventListener("timeupdate", () => {
+          const prog = getJSONCookie("progress");
+          if (vEl.currentTime > vEl.duration - 30) {
+            delete prog[progKey];
+            setCookie("progress", JSON.stringify(prog));
+          } else {
+            prog[progKey] = vEl.currentTime;
+            setCookie("progress", JSON.stringify(prog));
           }
         });
       });
+      function loadMovie(id) {
+        fetch("../movies.json")
+          .then((r) => r.json())
+          .then((a) => {
+            const m = a.find((x) => x.id === id);
+            document.getElementById("movieTitle").textContent = m.name;
+            document.title = m.name + " - StrongDogMovies";
+            player.src = `./movie.html?id=${encodeURIComponent(id)}`;
+            progKey = id;
+          });
+      }
+      function loadShow(id) {
+        fetch("../movies.json")
+          .then((r) => r.json())
+          .then((a) => {
+            const s = a.find((x) => x.id === id).name;
+            document.getElementById("movieTitle").textContent = s;
+            document.title = s + " - StrongDogShows";
+          });
+        fetch(`./shows/${encodeURIComponent(id)}.json`)
+          .then((r) => r.json())
+          .then((data) => {
+            controls.style.display = "flex";
+            const saved = getJSONCookie("showPos")[id] || {};
+            Object.keys(data).forEach((se) => {
+              const o = new Option(se, se);
+              seasonSel.add(o);
+            });
+            seasonSel.value = saved.season || seasonSel.options[0].value;
+            function populate() {
+              epiSel.innerHTML = "";
+              const num = seasonSel.value.split(" ")[1];
+              Object.keys(data[seasonSel.value] || {}).forEach((ep) => {
+                const name = data[seasonSel.value][ep];
+                epiSel.add(new Option(`${ep} - ${name}`, ep));
+              });
+              epiSel.value = saved.episode || epiSel.options[0].value;
+              play();
+            }
+            function play() {
+              const sn = seasonSel.value.split(" ")[1];
+              const ep = epiSel.value;
+              progKey = `${id}_${sn}_${ep}`;
+              player.src = `./movie.html?showId=${encodeURIComponent(
+                id
+              )}&season=${encodeURIComponent(sn)}&episode=${encodeURIComponent(
+                ep
+              )}`;
+              const sp = getJSONCookie("showPos");
+              sp[id] = { season: seasonSel.value, episode: ep };
+              setCookie("showPos", JSON.stringify(sp));
+            }
+            seasonSel.addEventListener("change", populate);
+            epiSel.addEventListener("change", play);
+            populate();
+          });
+      }
+      if (showId) loadShow(showId);
+      else if (movieId) loadMovie(movieId);
     </script>
   </body>
 </html>
