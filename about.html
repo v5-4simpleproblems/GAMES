@@ -419,7 +419,7 @@
 				border-radius: 100vw;
 				background: var(--text-color);
 				position: absolute;
-				bottom: 0;
+				bottom: -2px;
 				right: 0;
 			}
 		</style>
@@ -445,7 +445,7 @@
 				<a href="#" onclick="showSection('patches')">Updates</a>
 				<a href="#" onclick="showSection('report-bug')">Report a Bug</a>
 				<a href="#" onclick="showSection('request-game')">Request a Game</a>
-				<a href="#" onclick="showSection('refused-games')" title="See games that will not be added">Declined Games</a>
+				<a href="#" onclick="showSection('refused-games')" title="See games that will not be added">Declined Games/Services</a>
 			</div>
 		</nav>
 
@@ -485,8 +485,8 @@
 		<div class="content" id="request-game" style="display:none;">
 			<h1>Request a Game</h1>
 			<p>
-				If you'd like to see a particular game added to our site, please let us know! Fill
-				out the form below to request a game.
+				If you'd like to see a particular game or service added to our site, please let us know! Fill
+				out the form below to request it.
 			</p>
 			<form id="gameRequestForm">
 				<label for="game-name">Your Name:</label><br />
@@ -503,9 +503,9 @@
 				<textarea id="game-description" name="description" rows="4" required></textarea
 				><br />
 				<p>
-					<strong>Please</strong> check
+					Before you submit, <strong>please</strong> check
 					<a href="#" onclick="showSection('refused-games')">this menu</a> to see if the
-					game you want to add has already been reviewed and declined!
+					game or service you want to add has already been reviewed and declined!
 				</p>
 				<button type="submit">Submit Game Request</button>
 			</form>
@@ -540,15 +540,13 @@
 				/>
 			</div>
 
-			<h1>Games That Will Not Be Added</h1>
-			<p class="list-header">Game name <span>Reason</span></p>
+			<h1>Games/Services That Will Not Be Added</h1>
+			<p class="list-header">Name<span>Reason</span></p>
 
 			<div id="refused-games-list"></div>
 			<p style="margin-bottom:0;text-align:center;">
-				If you have a question about a declined game, please contact us 
-				<a target="_blank" href="mailto:help@strongdog.com?subject=Question%20About%20a%20Declined%20Game&body=Game%20name:%C2%A0%0ARelated%20question:%C2%A0">
-					here
-				</a>.
+				If you have a question about a declined game or service, please contact us 
+				<a target="_blank" href="mailto:help@strongdog.com?subject=Question%20About%20a%20Declined%20Game&body=Game%20name:%C2%A0%0ARelated%20question:%C2%A0">here</a>.
 			</p>
 		</div>
 
@@ -593,7 +591,7 @@
 				} else {
 					refusedGamesList.innerHTML = `
                         <p style="display: block; background: none; text-align: center;">
-                            No results for "${filterInput.value.trim()}"
+                            No results for "${filterInput.value.trim()}," go ahead and request it!
                         </p>
                     `;
 				}

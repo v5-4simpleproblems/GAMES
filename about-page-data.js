@@ -16,7 +16,8 @@ export const updates = [
 	{ date: "5/12/24", content: "Added About section" },
 ];
 
-export const refusedGamesData = [
+// **This will be exported down below alphabetically sorted** //
+const rawRefusedGamesData = [
 	{ name: "Mario Kart", reason: "File size exceeds limit" },
 	{ name: "Sword Masters", reason: "Incompatible backend architecture" },
 	{ name: "Pung.io", reason: "Unspecified technical issue" },
@@ -27,30 +28,32 @@ export const refusedGamesData = [
 	{ name: "Super Smash Bros", reason: "Unspecified technical issue" },
 	{ name: "Playstore App", reason: "Installation impossible with only frontend access" },
 	{ name: "What Beats Rock", reason: "Application malfunction" },
-	{ name: "Web Searcher Proxy", reason: "Functionality is web searching" },
+	{ name: "Web Searcher Proxy", reason: "Could bring up ethical/safety issues similar to the YouTube incident" },
 	{ name: "Battle Cats", reason: "Lacks necessary web port" },
 	{ name: "Roblox", reason: "Previously attempted without success" },
 	{ name: "Moomoo.io", reason: "Functionality is not working" },
 	{ name: "Hello Neighbor", reason: "No functional web port available" },
-	{ name: "Xbox App", reason: "Functionality is not working" },
-	{ name: "Xbox Cloud Gaming", reason: "Functionality is not working" },
+	{ name: "Xbox App", reason: "Currently will not work" },
+	{ name: "Xbox Cloud Gaming", reason: "Currently will not work" },
 	{ name: "Tetr.io", reason: "Game flags connection as potentially fraudulent" },
-	{ name: "Spotify", reason: "Incompatible with proxy server" },
+	{ name: "Spotify", reason: "Incompatible with proxy server, YouTube incident" },
 	{ name: "Streaming Services", reason: "Unspecified technical issue" },
 	{ name: "Bean Royal", reason: "Requires payment for access" },
 	{ name: "OvO", reason: "Sitelock cannot be bypassed" },
 	{ name: "Escape Road", reason: "Unable to download" },
 	{ name: "Slope 3", reason: "Functionality is not working" },
 	{ name: "Pokemon Showdown", reason: "Unspecified technical issue" },
-	{ name: "TikTok", reason: "Blocked due to a past incident similar to YouTube's" },
-	{ name: "Reddit", reason: "Blocked due to a past incident similar to YouTube's" },
+	{ name: "TikTok", reason: "Blocked due to a past safety/ethical incident similar to YouTube's" },
+	{ name: "Reddit", reason: "Blocked due to a past safety/ethical incident similar to YouTube's" },
 	{ name: "Vencord", reason: "Unable to install extensions via the proxy" },
-	{ name: "Unblocked Google", reason: "Blocked due to a past incident similar to YouTube's" },
+	{ name: "Unblocked Google", reason: "Blocked due to a past safety/ethical incident similar to YouTube's" },
 	{ name: "Infinite Craft", reason: "Application malfunction" },
 	{ name: "Soundboard", reason: "Unspecified technical issue" },
 	{ name: "Space Flight Simulator", reason: "Only available on now.gg, which does not allow downloads" },
 	{ name: "Balatro", reason: "Requires payment for access and is legally restricted" },
 ];
+// Here is the actual export of the refused game data
+export const refusedGamesData = rawRefusedGamesData.sort((a, b) => a.name.localeCompare(b.name));
 
 // This holds all of the color themes for light/dark mode
 export const modes = [
