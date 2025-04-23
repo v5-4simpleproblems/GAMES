@@ -80,7 +80,6 @@
         transition: width 0.1s linear;
       }
       .progress:hover .progress-filled {
-        background: #f40612;
         height: 7px;
         top: -1px;
       }
@@ -129,7 +128,7 @@
   </head>
   <body>
     <div class="player-wrapper">
-      <video id="video" muted autoplay playsinline></video>
+      <video id="video" preload="auto" muted autoplay playsinline></video>
       <div class="loading" id="loading"><div class="loading-circle"></div></div>
       <div class="controls" id="controls">
         <div class="progress" id="progress">
@@ -184,23 +183,28 @@
         fill = document.getElementById("progress-filled"),
         timeLbl = document.getElementById("time"),
         controls = document.getElementById("controls");
-      let hls, token, hideControlsTimeout;
+      let hls, hideControlsTimeout;
+
       function fmt(s) {
         const m = Math.floor(s / 60),
           sec = Math.floor(s % 60);
         return m + ":" + (sec < 10 ? "0" : "") + sec;
       }
+
       function updateUI() {
         if (!video.duration) return;
         fill.style.width = (video.currentTime / video.duration) * 100 + "%";
         timeLbl.textContent =
           fmt(video.currentTime) + " / " + fmt(video.duration);
-        playBtn.firstElementChild.querySelector("#play-icon").style.display =
-          video.paused ? "block" : "none";
-        playBtn.firstElementChild.querySelector("#pause-icon").style.display =
-          video.paused ? "none" : "block";
+        playBtn.querySelector("#play-icon").style.display = video.paused
+          ? "block"
+          : "none";
+        playBtn.querySelector("#pause-icon").style.display = video.paused
+          ? "none"
+          : "block";
         loading.style.display = video.readyState < 3 ? "block" : "none";
       }
+
       ["timeupdate", "play", "pause", "loadedmetadata"].forEach((e) =>
         video.addEventListener(e, updateUI)
       );
@@ -209,6 +213,7 @@
         () => (loading.style.display = "block")
       );
       video.addEventListener("playing", () => (loading.style.display = "none"));
+
       playBtn.onclick = () => (video.paused ? video.play() : video.pause());
       rewBtn.onclick = () =>
         (video.currentTime = Math.max(0, video.currentTime - 10));
@@ -225,48 +230,55 @@
         document.fullscreenElement
           ? document.exitFullscreen()
           : document.documentElement.requestFullscreen();
-      async function start(id) {
-        const r = await fetch(
-            "https://flicksyproxy-s8qzm.ondigitalocean.app/login",
-            { method: "POST" }
-          ),
-          d = await r.json();
-        token = d.token;
-        const src = `https://flicksyproxy-s8qzm.ondigitalocean.app/stream/${id}/index.m3u8`;
+
+      function start() {
+        const params = new URLSearchParams(location.search),
+          showId = params.get("showId"),
+          season = params.get("season"),
+          episode = params.get("episode");
+        let src;
+        if (showId && season && episode) {
+          const seasonDir = `season ${season}`;
+          src = `https://flicksyproxy-s8qzm.ondigitalocean.app/proxy/stream/${encodeURIComponent(
+            showId
+          )}/${encodeURIComponent(seasonDir)}/${encodeURIComponent(
+            episode
+          )}/index.m3u8`;
+        } else {
+          const id =
+            params.get("id") || params.get("movieId") || params.get("movieid");
+          src = `https://flicksyproxy-s8qzm.ondigitalocean.app/proxy/stream/${encodeURIComponent(
+            id
+          )}/index.m3u8`;
+        }
+
         if (Hls.isSupported()) {
           if (hls) hls.destroy();
-          hls = new Hls({
-            fetchSetup: (_ctx, init) => {
-              init.headers = init.headers || {};
-              init.headers["Authorization"] = `Bearer ${token}`;
-              return init;
-            },
-            xhrSetup: (x) =>
-              x.setRequestHeader("Authorization", `Bearer ${token}`),
-          });
+          hls = new Hls();
           hls.attachMedia(video);
           hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(src));
-          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            hls.startLoad(0);
+            video.play();
+          });
         } else {
           video.src = src;
           video.addEventListener("loadedmetadata", () => video.play());
         }
+
         video.muted = false;
       }
-      const id =
-        new URLSearchParams(location.search).get("id") ||
-        new URLSearchParams(location.search).get("movieId") ||
-        new URLSearchParams(location.search).get("movieid");
-      if (id) start(id).then(() => video.play().catch(() => {}));
-      function resetControlsTimer() {
+
+      start();
+
+      document.addEventListener("mousemove", () => {
         clearTimeout(hideControlsTimeout);
         controls.style.opacity = "1";
-        hideControlsTimeout = setTimeout(() => {
-          controls.style.opacity = "0";
-        }, 5000);
-      }
-      document.addEventListener("mousemove", resetControlsTimer);
-      resetControlsTimer();
+        hideControlsTimeout = setTimeout(
+          () => (controls.style.opacity = "0"),
+          5000
+        );
+      });
     </script>
   </body>
 </html>
