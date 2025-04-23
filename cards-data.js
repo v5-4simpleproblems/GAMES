@@ -1,5 +1,4 @@
 export default [
-  { href: './html/crazy cattle 3d/index.html', imgSrc: 'crazy cattle 3d.png', name: 'crazy cattle 3d' , 'page': 4, 'id': 1153 }, 
   { href: './html/blumgi ball/index.html', imgSrc: 'blumgi ball.jpg', name: 'blumgi ball' , 'page': 4, 'id': 1101 },
   { href: './html/alien invaders io/index.html', imgSrc: 'alien invaders.io.jpg', name: 'alien invaders.io' , 'page': 4, 'id': 1057 },
   { href: './html/clash of tanks/index.html', imgSrc: 'clash of tanks.jpg', name: 'clash of tanks' , 'page': 4, 'id': 1107 },
