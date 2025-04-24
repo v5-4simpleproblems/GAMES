@@ -2323,6 +2323,25 @@
         }
       }
     </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const link = document.createElement('a');
+        link.href = './privacy-policy.html';
+        link.textContent = 'Privacy Policy';
+        link.style.cssText = `
+          display: block;
+          text-align: center;
+          margin: 16px 0;
+          font-size: 0.875rem;
+          color: #007bff;
+          text-decoration: none;
+          font-family: sans-serif;
+        `;
+        link.addEventListener('mouseenter', () => link.style.textDecoration = 'underline');
+        link.addEventListener('mouseleave', () => link.style.textDecoration = 'none');
+        document.body.appendChild(link);
+      });
+      </script>      
     <div
       style="
         position: absolute;

@@ -1,6 +1,7 @@
 [
+{"id": "avatar_the_last_airbender","name": "Avatar The Last Airbender","imgSrc": "./img/avatar.jpeg", "type": "show"},
 {"id": "house","name": "House MD","imgSrc": "./img/house.jpg", "type": "show"},
-{"id": "minecraft_movie_325","name": "A Minecraft Movie (unrendered)","imgSrc": "./img/a minecraft movie.jpg"},
+{"id": "minecraft_movie_325","name": "A Minecraft Movie","imgSrc": "./img/a minecraft movie.jpg"},
 {"id": "antman_and_the_wasp_quantumania","name": "Antman And The Wasp Quantumania","imgSrc": "./img/antman_and_the_wasp.jpg"},
 {"id": "avengers_age_of_ultron","name": "Avengers Age Of Ultron","imgSrc": "./img/avengers_age_of_ultron.jpg"},
 {"id": "avengers_endgame","name": "Avengers Endgame","imgSrc": "./img/avengers_endgame.jpg"},
