@@ -1770,8 +1770,10 @@
         }
         return { level, tier, currentXP: xp, xpNeededForNext: xpNeeded };
       }
-      const numTopGames = 20,
-        topGameList = document.getElementById("topGameList");
+
+      const numTopGames = 20;
+      const topGameList = document.getElementById("topGameList");
+
       for (let i = 0; i < numTopGames; i++) {
         const ghostCard = document.createElement("div");
         ghostCard.classList.add("ghost-card"),
@@ -1788,7 +1790,7 @@
             const parsedData = JSON.parse(data.content);
             displayTopGames(parsedData);
           }
-        } catch (e) {}
+        } catch (e) { console.error(`Error while fetching games: ${e}`); }
       }
       fetchTopGames();
       function displayTopGames(topData) {
@@ -1886,8 +1888,12 @@
       }
       const allGameListElement = document.getElementById("allGameList");
       allGameListElement.innerHTML = games.map((g) => getCardHTML(g)).join("");
-      const searchInput = document.getElementById("searchInput"),
-        searchResults = document.getElementById("searchResults");
+
+      const searchInput = document.getElementById("searchInput");
+      searchInput.placeholder = `Search ${games.length} games...`;
+      
+      const searchResults = document.getElementById("searchResults");
+
       function updateSearchResults() {
         const text = searchInput.value.toLowerCase(),
           filtered = games
@@ -2160,8 +2166,7 @@
           if (user) fetchFavorites(user.uid);
           else {
             showFavoritesPopup(),
-              (favoritesGameList.innerHTML =
-                '<p class="no-favorites">No favorites yet!</p>');
+              (favoritesGameList.innerHTML = '<p class="no-favorites">No favorites yet!</p>');
           }
         });
       }
