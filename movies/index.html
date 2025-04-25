@@ -189,48 +189,63 @@
     </nav>
     <div id="movieList" class="movie-grid"></div>
     <script>
+      // DOM Elements //
+      const movieList = document.getElementById("movieList");
+      const searchInput = document.getElementById("searchInput");
+      const searchResults = document.getElementById("searchResults");
+      const secretLink = document.getElementById("secretLink");
+      
+      // Functions //
+      function linkParam(m) {
+        return m.type === 'show' ? 'showId' : 'id';
+      }
+      const cardHTML = (m) => (
+        `<a href="./play/index.html?${linkParam(m)}=${m.id}" class="movie-card">
+          <img src="${m.imgSrc}" alt="${m.name}">
+          <div class="title-overlay">
+            <p>${m.name}</p>
+          </div>
+        </a>`
+      );
+
+      function updateResults(movies) {
+        const text = searchInput.value.toLowerCase();
+        const filtered = movies.filter((m) => m.name.toLowerCase().includes(text)).slice(0, 5);
+        searchResults.innerHTML = "";
+        if (!filtered.length) {
+          searchResults.classList.remove("visible");
+          return;
+        }
+        filtered.forEach((m) => {
+          const a = document.createElement("a");
+          a.href = `./play/index.html?${linkParam(m)}=${m.id}`;
+          a.className = "result-item";
+          a.innerHTML = `<img src="${m.imgSrc}" alt="${m.name}"><span>${m.name}</span>`;
+          searchResults.appendChild(a);
+        });
+        searchResults.classList.add("visible");
+      }
+
+      function setupEventListeners(movies) {
+        searchInput.addEventListener("focus", () => updateResults(movies));
+        searchInput.addEventListener("input", () => updateResults(movies));
+        
+        document.addEventListener("click", (e) => {
+          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.classList.remove("visible");
+          }
+        });
+
+        secretLink.addEventListener("click", () => {
+          window.location.href = "secret-menu.html";
+        });
+      }
+
       fetch("./movies.json")
         .then((r) => r.json())
         .then((movies) => {
-          const movieList = document.getElementById("movieList");
-          const searchInput = document.getElementById("searchInput");
-          const searchResults = document.getElementById("searchResults");
-          function linkParam(m) {
-            return m.type === 'show' ? 'showId' : 'id';
-          }
-          function cardHTML(m) {
-            return (
-              '<a href="./play/index.html?' + linkParam(m) + '=' + m.id + '" class="movie-card"><img src="' + m.imgSrc + '" alt="' + m.name + '"><div class="title-overlay"><p>' + m.name + "</p></div></a>"
-            );
-          }
           movieList.innerHTML = movies.map(cardHTML).join("");
-          function updateResults() {
-            const text = searchInput.value.toLowerCase();
-            const filtered = movies.filter((m) => m.name.toLowerCase().includes(text)).slice(0, 5);
-            searchResults.innerHTML = "";
-            if (!filtered.length) {
-              searchResults.classList.remove("visible");
-              return;
-            }
-            filtered.forEach((m) => {
-              const a = document.createElement("a");
-              a.href = "./play/index.html?" + linkParam(m) + "=" + m.id;
-              a.className = "result-item";
-              a.innerHTML = '<img src="' + m.imgSrc + '" alt="' + m.name + '"><span>' + m.name + "</span>";
-              searchResults.appendChild(a);
-            });
-            searchResults.classList.add("visible");
-          }
-          searchInput.addEventListener("focus", updateResults);
-          searchInput.addEventListener("input", updateResults);
-          document.addEventListener("click", (e) => {
-            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-              searchResults.classList.remove("visible");
-            }
-          });
-          document.getElementById("secretLink").addEventListener("click", () => {
-            window.location.href = "secret-menu.html";
-          });
+          setupEventListeners(movies);
         });
     </script>
   </body>
