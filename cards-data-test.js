@@ -113,7 +113,6 @@ export default [
       { href: './html/bike trials winter 1/index.html', imgSrc: 'bike trials winter 1.jpg', name: 'bike trials winter 1' , 'page': 4, 'id': 994 },
       { href: './html/bike trials offroad 1/index.html', imgSrc: 'bike trials offroad 1.jpg', name: 'bike trials offroad 1' , 'page': 4, 'id': 993 },
       { href: './html/bigmonsterz.io/index.html', imgSrc: 'bigmonsterz.io.jpg', name: 'bigmonsterz.io' , 'page': 4, 'id': 992 },
-      { href: './html/big tall small/index.html', imgSrc: 'big tall small.png', name: 'big tall small' , 'page': 4, 'id': 991 },
       { href: './html/big shot boxing/index.html', imgSrc: 'big shot boxing.jpg', name: 'big shot boxing' , 'page': 4, 'id': 990 },
       { href: './html/betrayal.io/index.html', imgSrc: 'betrayal.io.jpg', name: 'betrayal.io' , 'page': 4, 'id': 989 },
       { href: './html/bellum.io/index.html', imgSrc: 'bellum.io.jpg', name: 'bellum.io' , 'page': 4, 'id': 988 },
