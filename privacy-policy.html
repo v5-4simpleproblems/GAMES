@@ -6,23 +6,41 @@
   <title>Privacy Policy</title>
   <style>
     /* Base Styles */
+    :root {
+      --bg: #f9f9f9;
+      --text: #333;
+      --headers: #222;
+      --container: #fff;
+      --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    /* For devices with a dark theme */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #222;
+        --text: #e3e3e3;
+        --headers: #f7f7f7;
+        --container: #333;
+        --box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+    }
     body {
       font-family: Arial, sans-serif;
       line-height: 1.6;
-      background-color: #f9f9f9;
-      color: #333;
+      background-color: var(--bg);
+      color: var(--text);
       margin: 0;
       padding: 0;
     }
     .container {
       max-width: 900px;
       margin: 30px auto;
-      background-color: #fff;
+      background-color: var(--container);
       padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: var(--box-shadow);
+      border-radius: 20px;
     }
     h1, h2, h3 {
-      color: #222;
+      color: var(--headers);
     }
     p {
       margin: 15px 0;
@@ -43,13 +61,14 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background-color: #333;
-      color: #fff;
+      background-color: var(--text);
+      color: var(--container);
       padding: 10px 15px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       display: none;
+      box-shadow: var(--box-shadow);
     }
   </style>
 </head>
@@ -152,25 +171,23 @@
 
     <h2>13. Contact Information</h2>
     <p>
-      If you have any questions or concerns about this Privacy Policy, please contact us at:
+      If you have any questions or concerns about this Privacy Policy, please contact us at 
+      <a href="mailto:help@strongdog.com?subject=Question%20Concerning%20the%20Privacy%20Policy">help@strongdog.com</a>
     </p>
     <p>
       <br>
-      This Site is affiliated with Monumetric (dba for The Blogger Network, LLC) for the purposes of placing advertising on the Site, and Monumetric will collect and use certain data for advertising purposes. To learn more about Monumetric's data usage, click here: https://www.monumetric.com/publisher-advertising-privacy     </p>    </p>
+      This Site is affiliated with Monumetric (dba for The Blogger Network, LLC) for the purposes of placing advertising on the Site, and Monumetric will collect and use certain data for advertising purposes. To learn more about Monumetric's data usage, click here: <a href="https://www.monumetric.com/publisher-advertising-privacy">www.monumetric.com/publisher-advertising-privacy</a>
+    </p></p>
   </div>
 
   <button class="back-to-top" onclick="scrollToTop()">Back to Top</button>
 
   <script>
     // Display the "Back to Top" button after scrolling
-    window.onscroll = function() {
-      var btn = document.querySelector('.back-to-top');
-      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-        btn.style.display = "block";
-      } else {
-        btn.style.display = "none";
-      }
-    };
+    const btn = document.querySelector('.back-to-top');
+    window.addEventListener("scroll", () => {
+      btn.style.display = document.documentElement.scrollTop > 200 ? 'block' : 'none';
+    });
 
     // Smooth scroll to the top of the page
     function scrollToTop() {
