@@ -18,6 +18,8 @@ export const updates = [
 
 // **This will be exported down below alphabetically sorted** //
 const rawRefusedGamesData = [
+	{ name: "Uptoplay online", reason: "Provides access to explicit material" },
+	{ name: "Donkey Kong", reason: "File size exceeds limit" },
 	{ name: "Mario Kart", reason: "File size exceeds limit" },
 	{ name: "Sword Masters", reason: "Incompatible backend architecture" },
 	{ name: "Pung.io", reason: "Unspecified technical issue" },
