@@ -39,7 +39,7 @@
     ></div>
 
     <script type="module">
-      import games from "./cards-data.js";
+      import games from "../../cards-data.js";
 
       const BATCH_SIZE = 50;
       const SCROLL_THRESHOLD = 800;
@@ -64,8 +64,8 @@
         const p = parseInt(page, 10);
         const match = window.location.pathname.match(/strongdog(\\d+)/);
         const currentPage = match ? parseInt(match[1], 10) : 1;
-        if (!p || p === 1 || p === currentPage) return `./img/${imgSrc}`;
-        return `./strongdog${p}/img/${imgSrc}`;
+        if (!p || p === 1 || p === currentPage) return `../../img/${imgSrc}`;
+        return `../../strongdog${p}/img/${imgSrc}`;
       }
 
       function appendCards(list) {
