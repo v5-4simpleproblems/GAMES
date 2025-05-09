@@ -1,6 +1,8 @@
 // All of the updates and their corresponding dates that will be dynamically added in the updates section on about page
 // Josh - please keep them specific to page system/ui updates and not added games, thanks
 export const updates = [
+	// NEED A DATE FOR THIS
+	// { date: "", content: "Removed StrongDog Movies to ensure compliance with school district standards and copyright laws" },
 	{ date: "4/19/25", content: "Added StrongDog Movies and waffle menu on the homepage navigation bar" },
 	{ date: "4/6/25", content: 'Added "Declined Games" menu in about section, fixed minor about section styling issues' },
 	{ date: "4/1/25", content: "Added April Fool's update, removed the next day" },
@@ -18,7 +20,8 @@ export const updates = [
 
 // **This will be exported down below alphabetically sorted** //
 const rawRefusedGamesData = [
-	{ name: "Uptoplay online", reason: "Provides access to explicit material" },
+	{ name: "Movies", reason: "Does not align with school district policies and legal standards" },
+	{ name: "Uptoplay Online", reason: "Provides access to explicit material" },
 	{ name: "Donkey Kong", reason: "File size exceeds limit" },
 	{ name: "Mario Kart", reason: "File size exceeds limit" },
 	{ name: "Sword Masters", reason: "Incompatible backend architecture" },
