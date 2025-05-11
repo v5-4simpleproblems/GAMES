@@ -544,7 +544,7 @@
 				<input
 					class="filter-results"
 					type="text"
-					placeholder="Search games..."
+					placeholder="Search items..."
 					maxlength="100"
 					spellcheck="false"
 					id="filter-input"
@@ -602,14 +602,14 @@
 				} else {
 					refusedGamesList.innerHTML = `
                         <p style="display: block; background: none; text-align: center;">
-                            No results for "${filterInput.value.trim()}," go ahead and request it!
+                            No results for "${filterInput.value.trim()}" 😢
                         </p>
                     `;
 				}
 			}
 
 			// Initialize the placeholder of the input
-			filterInput.placeholder = `Search ${refusedGamesData.length} games...`;
+			filterInput.placeholder = `Search ${refusedGamesData.length} items...`;
 
 			// Event listener for filtering games
 			filterInput.addEventListener("input", () => {
