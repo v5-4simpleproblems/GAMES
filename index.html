@@ -1780,7 +1780,7 @@
 					normalized = normalizeGameName(name);
 				return `
           <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
-            <img src="${adjustedImgSrc}" alt="${name}">
+            <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
             <figcaption>${name}</figcaption>
           </a>
         `;
