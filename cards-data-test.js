@@ -62,7 +62,6 @@ export default [
       { href: './html/archery world tour/index.html', imgSrc: 'archery world tour.jpg', name: 'archery world tour' , 'page': 4, 'id': 1071 },
       { href: './html/archer master 3d castle defense/index.html', imgSrc: 'archery master 3d castle defense.jpg', name: 'archer master 3d castle defense' , 'page': 4, 'id': 1070 },
       { href: './html/aquar.io/index.html', imgSrc: 'aquar.io.jpg', name: 'aquar.io' , 'page': 4, 'id': 1069 },
-      { href: './html/aqua thrills/index.html', imgSrc: 'aqua thrills.jpg', name: 'aqua thrills' , 'page': 4, 'id': 1068 },
       { href: './html/apes.io/index.html', imgSrc: 'apes.io.jpg', name: 'apes.io' , 'page': 4, 'id': 1067 },
       { href: './html/antwar.io/index.html', imgSrc: 'antwar.io.jpg', name: 'antwar.io' , 'page': 4, 'id': 1065 },
       { href: './html/antgame.io/index.html', imgSrc: 'antgame.io.png', name: 'antgame.io' , 'page': 4, 'id': 1064 },
