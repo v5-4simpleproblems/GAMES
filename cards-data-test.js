@@ -38,7 +38,6 @@ export default [
       { href: './html/color match/index.html', imgSrc: 'color match.jpg', name: 'color match' , 'page': 4, 'id': 1109 },
       { href: './html/color burst 3d/index.html', imgSrc: 'color burst 3d.jpg', name: 'color burst 3d' , 'page': 4, 'id': 1108 },
       { href: './html/cannon balls 3d/index.html', imgSrc: 'cannon balls 3d.jpg', name: 'cannon balls 3d' , 'page': 4, 'id': 1106 },
-      { href: './html/bridge race/index.html', imgSrc: 'bridge race.jpg', name: 'bridge race' , 'page': 4, 'id': 1105 },
       { href: './html/bowmasters/index.html', imgSrc: 'bowmasters.jpg', name: 'bowmasters' , 'page': 4, 'id': 1104 },
       { href: './html/bottle jump 3d/index.html', imgSrc: 'bottle jump 3d.jpg', name: 'bottle jump 3d' , 'page': 4, 'id': 1103 },
       { href: './html/bolly beat/index.html', imgSrc: 'bolly beat.jpg', name: 'bolly beat' , 'page': 4, 'id': 1102 },
