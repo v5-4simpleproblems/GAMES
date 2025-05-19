@@ -154,7 +154,6 @@ export default [
       { href: './html/horse shoing/index.html', imgSrc: 'horse shoing.jpg', name: 'horse shoing' , 'page': 3, 'id': 893 },
       { href: './html/slope 3/index.html', imgSrc: 'slope 3.jpg', name: 'slope 3' , 'page': 3, 'id': 891 },
       { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
-      { href: './html/sink it/index.html', imgSrc: 'sink it.jpg', name: 'sink it' , 'page': 3, 'id': 884 },
       { href: './html/shark.io/index.html', imgSrc: 'shark.io.jpg', name: 'shark.io' , 'page': 3, 'id': 879 },
       { href: './html/shady bears/index.html', imgSrc: 'shady bears.jpg', name: 'shady bears' , 'page': 3, 'id': 877 },
       { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3, 'id': 874 },
