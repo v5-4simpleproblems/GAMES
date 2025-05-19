@@ -1,4 +1,5 @@
 export default [
+  { href: './html/arithmetica/index.html', imgSrc: 'arithmetica.jpg', name: 'arithmetica' , 'page': 4, 'id': 1072 },
   { href: './html/athletics hero/index.html', imgSrc: 'athletics hero.jpg', name: 'athletics hero' , 'page': 4, 'id': 1078 },
   { href: './html/blocky trials/index.html', imgSrc: 'blocky trials.jpg', name: 'blocky trials' , 'page': 4, 'id': 1000 },
   { href: './html/air hockey championship deluxe/index.html', imgSrc: 'air hockey championship deluxe.jpg', name: 'air hockey championship deluxe' , 'page': 4, 'id': 1055 },
