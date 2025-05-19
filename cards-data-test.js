@@ -166,7 +166,6 @@ export default [
       { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3, 'id': 874 },
       { href: './html/roly poly monsters/index.html', imgSrc: 'roly poly monsters.jpg', name: 'roly poly monsters' , 'page': 3, 'id': 871 },
       { href: './html/real simulator monster truck/index.html', imgSrc: 'real simulator monster truck.jpg', name: 'real simulator monster truck' , 'page': 3, 'id': 867 },
-      { href: './html/poor bunny/index.html', imgSrc: 'poor bunny.jpg', name: 'poor bunny' , 'page': 3, 'id': 863 },
       { href: './html/truck traffic/index.html', imgSrc: 'truck traffic.jpg', name: 'truck traffic' , 'page': 3, 'id': 859 },
       { href: './html/striker dummies/index.html', imgSrc: 'striker dummies.jpg', name: 'striker dummies' , 'page': 3, 'id': 841 },
       { href: './html/boxing physics 2/index.html', imgSrc: 'boxing physics 2.jpg', name: 'boxing physics 2' , 'page': 3, 'id': 813 },
