@@ -132,7 +132,6 @@ export default [
       { href: './html/drednot.io/index.html', imgSrc: 'drednot.io.jpg', name: 'drednot.io' , 'page': 4, 'id': 926 },
       { href: './html/dreadhead parkour/index.html', imgSrc: 'dreadhead parkour.jpg', name: 'dreadhead parkour' , 'page': 4, 'id': 925 },
       { href: './html/doodle champion island/index.html', imgSrc: 'doodle champion island.jpg', name: 'doodle champion island' , 'page': 4, 'id': 924 },
-      { href: './html/paper fighter/index.html', imgSrc: 'paper fighter.jpg', name: 'paper fighter' , 'page': 4, 'id': 917 },
       { href: './html/pack a bag/index.html', imgSrc: 'pack a bag.jpg', name: 'pack a bag' , 'page': 4, 'id': 915 },
       { href: './html/nuggetroyale.io/index.html', imgSrc: 'nuggetroyale.io.jpg', name: 'nuggetroyale.io' , 'page': 4, 'id': 912 },
       { href: './html/nightpoint.io/index.html', imgSrc: 'nightpoint.io.jpg', name: 'nightpoint.io' , 'page': 4, 'id': 910 },
