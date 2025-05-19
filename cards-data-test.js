@@ -141,7 +141,6 @@ export default [
       { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
       { href: './html/shark.io/index.html', imgSrc: 'shark.io.jpg', name: 'shark.io' , 'page': 3, 'id': 879 },
       { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3, 'id': 874 },
-      { href: './html/roly poly monsters/index.html', imgSrc: 'roly poly monsters.jpg', name: 'roly poly monsters' , 'page': 3, 'id': 871 },
       { href: './html/real simulator monster truck/index.html', imgSrc: 'real simulator monster truck.jpg', name: 'real simulator monster truck' , 'page': 3, 'id': 867 },
       { href: './html/truck traffic/index.html', imgSrc: 'truck traffic.jpg', name: 'truck traffic' , 'page': 3, 'id': 859 },
       { href: './html/striker dummies/index.html', imgSrc: 'striker dummies.jpg', name: 'striker dummies' , 'page': 3, 'id': 841 },
