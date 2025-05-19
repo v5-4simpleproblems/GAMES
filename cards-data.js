@@ -1,4 +1,5 @@
 export default [
+  { href: './html/bolly beat/index.html', imgSrc: 'bolly beat.jpg', name: 'bolly beat' , 'page': 4, 'id': 1102 },
   { href: './html/eggbot vs zombies/index.html', imgSrc: 'eggbot vs zombies.jpg', name: 'eggbot vs zombies' , 'page': 4, 'id': 935 },
   { href: './html/aqua thrills/index.html', imgSrc: 'aqua thrills.jpg', name: 'aqua thrills' , 'page': 4, 'id': 1068 },
   { href: './html/bridge race/index.html', imgSrc: 'bridge race.jpg', name: 'bridge race' , 'page': 4, 'id': 1105 },
