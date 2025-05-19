@@ -87,7 +87,6 @@ export default [
       { href: './html/burnout drift seaport max/index.html', imgSrc: 'burnout drift seaport max.jpg', name: 'burnout drift seaport max' , 'page': 4, 'id': 1010 },
       { href: './html/burnin rubber crash n burn/index.html', imgSrc: 'burnin rubber crash n burn.jpg', name: 'burnin rubber crash n burn' , 'page': 4, 'id': 1009 },
       { href: './html/burger bounty/index.html', imgSrc: 'burger bounty.jpg', name: 'burger bounty' , 'page': 4, 'id': 1008 },
-      { href: './html/bumper cars soccer/index.html', imgSrc: 'bumper cars soccer.jpg', name: 'bumper cars soccer' , 'page': 4, 'id': 1007 },
       { href: './html/bullet force/index.html', imgSrc: 'bullet force.jpg', name: 'bullet force' , 'page': 4, 'id': 1006 },
       { href: './html/brutalmania.io/index.html', imgSrc: 'brutalmania.io.jpg', name: 'brutalmania.io' , 'page': 4, 'id': 1005 },
       { href: './html/bouncy basketball/index.html', imgSrc: 'bouncy basketball.jpg', name: 'bouncy basketball' , 'page': 4, 'id': 1001 },
