@@ -1,4 +1,5 @@
 export default [
+  { href: './html/foot chinko/index.html', imgSrc: 'foot chinko.jpg', name: 'foot chinko' , 'page': 4, 'id': 945 },
   { href: './html/shady bears/index.html', imgSrc: 'shady bears.jpg', name: 'shady bears' , 'page': 3, 'id': 877 },
   { href: './html/paper fighter/index.html', imgSrc: 'paper fighter.jpg', name: 'paper fighter' , 'page': 4, 'id': 917 },
   { href: './html/electron dash/index.html', imgSrc: 'electron dash.jpg', name: 'electron dash' , 'page': 4, 'id': 936 },
