@@ -95,7 +95,6 @@ export default [
       { href: './html/bullet force/index.html', imgSrc: 'bullet force.jpg', name: 'bullet force' , 'page': 4, 'id': 1006 },
       { href: './html/brutalmania.io/index.html', imgSrc: 'brutalmania.io.jpg', name: 'brutalmania.io' , 'page': 4, 'id': 1005 },
       { href: './html/bouncy basketball/index.html', imgSrc: 'bouncy basketball.jpg', name: 'bouncy basketball' , 'page': 4, 'id': 1001 },
-      { href: './html/blocky trials/index.html', imgSrc: 'blocky trials.jpg', name: 'blocky trials' , 'page': 4, 'id': 1000 },
       { href: './html/blocky cars/index.html', imgSrc: 'blocky cars.jpg', name: 'blocky cars' , 'page': 4, 'id': 999 },
       { href: './html/block the pig/index.html', imgSrc: 'block the pig.jpg', name: 'block the pig' , 'page': 4, 'id': 998 },
       { href: './html/bladers/index.html', imgSrc: 'bladers.jpg', name: 'bladers' , 'page': 4, 'id': 996 },
