@@ -142,7 +142,6 @@ export default [
       { href: './html/marble dash/index.html', imgSrc: 'marble dash.jpg', name: 'marble dash' , 'page': 4, 'id': 905 },
       { href: './html/ludo multiplayer/index.html', imgSrc: 'ludo multiplayer.jpg', name: 'ludo multiplayer' , 'page': 4, 'id': 903 },
       { href: './html/lands of blight/index.html', imgSrc: 'lands of blight.jpg', name: 'lands of blight' , 'page': 4, 'id': 901 },
-      { href: './html/kart race/index.html', imgSrc: 'kart race.jpg', name: 'kart race' , 'page': 4, 'id': 900 },
       { href: './html/horse shoing/index.html', imgSrc: 'horse shoing.jpg', name: 'horse shoing' , 'page': 3, 'id': 893 },
       { href: './html/slope 3/index.html', imgSrc: 'slope 3.jpg', name: 'slope 3' , 'page': 3, 'id': 891 },
       { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
