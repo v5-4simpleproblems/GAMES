@@ -111,7 +111,6 @@ export default [
       { href: './html/basketball frvr/index.html', imgSrc: 'basketball frvr.jpg', name: 'basketball frvr' , 'page': 4, 'id': 978 },
       { href: './html/basket swooshes/index.html', imgSrc: 'basket swooshes.jpg', name: 'basket swooshes' , 'page': 4, 'id': 977 },
       { href: './html/basket champs/index.html', imgSrc: 'basket champs.jpg', name: 'basket champs' , 'page': 4, 'id': 976 },
-      { href: './html/ballhit.io/index.html', imgSrc: 'ballhit.io.jpg', name: 'ballhit.io' , 'page': 4, 'id': 974 },
       { href: './html/bad dolls/index.html', imgSrc: 'bad dolls.jpg', name: 'bad dolls' , 'page': 4, 'id': 973 },
       { href: './html/hills of steel/index.html', imgSrc: 'hills of steel.jpg', name: 'hills of steel' , 'page': 3, 'id': 970 },
       { href: './html/heads arena soccer all star/index.html', imgSrc: 'heads arena soccer all star.jpg', name: 'heads arena soccer all star' , 'page': 3, 'id': 965 },
