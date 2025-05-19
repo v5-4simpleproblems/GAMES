@@ -63,7 +63,6 @@ export default [
       { href: './html/antgame.io/index.html', imgSrc: 'antgame.io.png', name: 'antgame.io' , 'page': 4, 'id': 1064 },
       { href: './html/ant colony new war/index.html', imgSrc: 'ant colony new war.jpg', name: 'ant colony new war' , 'page': 4, 'id': 1063 },
       { href: './html/all star blast/index.html', imgSrc: 'all star blast.jpg', name: 'all star blast' , 'page': 4, 'id': 1059 },
-      { href: './html/aliens nest/index.html', imgSrc: 'aliens nest.jpg', name: 'aliens nest' , 'page': 4, 'id': 1058 },
       { href: './html/air toons/index.html', imgSrc: 'air toons.jpg', name: 'air toons' , 'page': 4, 'id': 1056 },
       { href: './html/agma.io/index.html', imgSrc: 'agma.io.jpg', name: 'agma.io' , 'page': 4, 'id': 1054 },
       { href: './html/age of war 2/index.html', imgSrc: 'age of war 2.jpg', name: 'age of war 2' , 'page': 4, 'id': 1053 },
