@@ -1,4 +1,5 @@
 export default [
+  { href: './html/duo survival 3/index.html', imgSrc: 'duo survival 3.jpg', name: 'duo survival 3' , 'page': 4, 'id': 933 },
   { href: './html/duo survival 2/index.html', imgSrc: 'duo survival 2.jpg', name: 'duo survival 2' , 'page': 4, 'id': 932 },
   { href: './html/sink it/index.html', imgSrc: 'sink it.jpg', name: 'sink it' , 'page': 3, 'id': 884 },
   { href: './html/drunken duel/index.html', imgSrc: 'drunken duel.jpg', name: 'drunken duel' , 'page': 4, 'id': 927 },
