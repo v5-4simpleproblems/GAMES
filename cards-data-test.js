@@ -72,7 +72,6 @@ export default [
       { href: './html/age of war 2/index.html', imgSrc: 'age of war 2.jpg', name: 'age of war 2' , 'page': 4, 'id': 1053 },
       { href: './html/age of war/index.html', imgSrc: 'age of war.jpg', name: 'age of war' , 'page': 4, 'id': 1052 },
       { href: './html/adversator/index.html', imgSrc: 'adversator.jpg', name: 'adversator' , 'page': 4, 'id': 1051 },
-      { href: './html/a small world cup/index.html', imgSrc: 'a small world cup.jpg', name: 'a small world cup' , 'page': 4, 'id': 1050 },
       { href: './html/4x4 drive offroad/index.html', imgSrc: '4x4 drive offroad.jpg', name: '4x4 drive offroad' , 'page': 4, 'id': 1047 },
       { href: './html/3d moto simulator 2/index.html', imgSrc: '3d moto simulator 2.jpg', name: '3d moto simulator 2' , 'page': 4, 'id': 1046 },
       { href: './html/3d car simulator/index.html', imgSrc: '3d car simulator.jpg', name: '3d car simulator' , 'page': 4, 'id': 1045 },
