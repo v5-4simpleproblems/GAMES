@@ -1,4 +1,5 @@
 export default [
+  { href: './html/running fred/index.html', imgSrc: 'running fred.jpg', name: 'running fred' , 'page': 3, 'id': 874 },
   { href: './html/block the pig/index.html', imgSrc: 'block the pig.jpg', name: 'block the pig' , 'page': 4, 'id': 998 },
   { href: './html/ballhit.io/index.html', imgSrc: 'ballhit.io.jpg', name: 'ballhit.io' , 'page': 4, 'id': 974 },
   { href: './html/roly poly monsters/index.html', imgSrc: 'roly poly monsters.jpg', name: 'roly poly monsters' , 'page': 3, 'id': 871 },
