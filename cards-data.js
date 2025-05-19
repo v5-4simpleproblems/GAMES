@@ -1,4 +1,5 @@
 export default [
+  { href: './html/paper fighter/index.html', imgSrc: 'paper fighter.jpg', name: 'paper fighter' , 'page': 4, 'id': 917 },
   { href: './html/electron dash/index.html', imgSrc: 'electron dash.jpg', name: 'electron dash' , 'page': 4, 'id': 936 },
   { href: './html/kart race/index.html', imgSrc: 'kart race.jpg', name: 'kart race' , 'page': 4, 'id': 900 },
   { href: './html/age of war 2/index.html', imgSrc: 'age of war 2.jpg', name: 'age of war 2' , 'page': 4, 'id': 1053 },
