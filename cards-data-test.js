@@ -65,7 +65,6 @@ export default [
       { href: './html/all star blast/index.html', imgSrc: 'all star blast.jpg', name: 'all star blast' , 'page': 4, 'id': 1059 },
       { href: './html/air toons/index.html', imgSrc: 'air toons.jpg', name: 'air toons' , 'page': 4, 'id': 1056 },
       { href: './html/agma.io/index.html', imgSrc: 'agma.io.jpg', name: 'agma.io' , 'page': 4, 'id': 1054 },
-      { href: './html/age of war 2/index.html', imgSrc: 'age of war 2.jpg', name: 'age of war 2' , 'page': 4, 'id': 1053 },
       { href: './html/age of war/index.html', imgSrc: 'age of war.jpg', name: 'age of war' , 'page': 4, 'id': 1052 },
       { href: './html/adversator/index.html', imgSrc: 'adversator.jpg', name: 'adversator' , 'page': 4, 'id': 1051 },
       { href: './html/4x4 drive offroad/index.html', imgSrc: '4x4 drive offroad.jpg', name: '4x4 drive offroad' , 'page': 4, 'id': 1047 },
