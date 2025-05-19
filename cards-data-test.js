@@ -126,7 +126,6 @@ export default [
       { href: './html/extreme off road cars/index.html', imgSrc: 'extreme off road cars.jpg', name: 'extreme off road cars' , 'page': 4, 'id': 941 },
       { href: './html/extreme car parking/index.html', imgSrc: 'extreme car parking.jpg', name: 'extreme car parking' , 'page': 4, 'id': 940 },
       { href: './html/extreme car driving simulator/index.html', imgSrc: 'extreme car driving simulator.jpg', name: 'extreme car driving simulator' , 'page': 4, 'id': 939 },
-      { href: './html/electron dash/index.html', imgSrc: 'electron dash.jpg', name: 'electron dash' , 'page': 4, 'id': 936 },
       { href: './html/duo survival/index.html', imgSrc: 'duo survival.jpg', name: 'duo survival' , 'page': 4, 'id': 931 },
       { href: './html/dunk perfect/index.html', imgSrc: 'dunk perfect.jpg', name: 'dunk perfect' , 'page': 4, 'id': 930 },
       { href: './html/dubai police parking 2/index.html', imgSrc: 'dubai police parking 2.jpg', name: 'dubai police parking 2' , 'page': 4, 'id': 928 },
