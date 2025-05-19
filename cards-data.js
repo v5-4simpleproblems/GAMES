@@ -1,4 +1,5 @@
 export default [
+  { href: './html/a small world cup/index.html', imgSrc: 'a small world cup.jpg', name: 'a small world cup' , 'page': 4, 'id': 1050 },
   { href: './html/a pretty odd bunny/index.html', imgSrc: 'a pretty odd bunny.jpg', name: 'a pretty odd bunny' , 'page': 4, 'id': 1049 },
   { href: './html/cat trap/index.html', imgSrc: 'cat trap.png', name: 'cat trap' , 'page': 4, 'id': 1021 },
   { href: './html/onion boy/index.html', imgSrc: 'onion boy.jpg', name: 'onion boy' , 'page': 4, 'id': 913 },
