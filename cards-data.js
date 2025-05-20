@@ -1,4 +1,5 @@
 export default [
+  { href: './html/bearsus/index.html', imgSrc: 'bearsus.jpg', name: 'bearsus' , 'page': 4, 'id': 987 },
   { href: './html/basket champs/index.html', imgSrc: 'basket champs.jpg', name: 'basket champs' , 'page': 4, 'id': 976 },
   { href: './html/city rider/index.html', imgSrc: 'city rider.jpg', name: 'city rider' , 'page': 4, 'id': 1029 },
   { href: './html/3d car simulator/index.html', imgSrc: '3d car simulator.jpg', name: '3d car simulator' , 'page': 4, 'id': 1045 },
