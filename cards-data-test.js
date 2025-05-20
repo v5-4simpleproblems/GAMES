@@ -99,7 +99,6 @@ export default [
       { href: './html/basketball line/index.html', imgSrc: 'basketball line.png', name: 'basketball line' , 'page': 4, 'id': 979 },
       { href: './html/basketball frvr/index.html', imgSrc: 'basketball frvr.jpg', name: 'basketball frvr' , 'page': 4, 'id': 978 },
       { href: './html/basket swooshes/index.html', imgSrc: 'basket swooshes.jpg', name: 'basket swooshes' , 'page': 4, 'id': 977 },
-      { href: './html/bad dolls/index.html', imgSrc: 'bad dolls.jpg', name: 'bad dolls' , 'page': 4, 'id': 973 },
       { href: './html/hills of steel/index.html', imgSrc: 'hills of steel.jpg', name: 'hills of steel' , 'page': 3, 'id': 970 },
       { href: './html/heads arena soccer all star/index.html', imgSrc: 'heads arena soccer all star.jpg', name: 'heads arena soccer all star' , 'page': 3, 'id': 965 },
       { href: './html/gravity soccer/index.html', imgSrc: 'gravity soccer.jpg', name: 'gravity soccer' , 'page': 4, 'id': 961 },
