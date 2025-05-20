@@ -111,7 +111,6 @@ export default [
       { href: './html/extreme car driving simulator/index.html', imgSrc: 'extreme car driving simulator.jpg', name: 'extreme car driving simulator' , 'page': 4, 'id': 939 },
       { href: './html/duo survival/index.html', imgSrc: 'duo survival.jpg', name: 'duo survival' , 'page': 4, 'id': 931 },
       { href: './html/dunk perfect/index.html', imgSrc: 'dunk perfect.jpg', name: 'dunk perfect' , 'page': 4, 'id': 930 },
-      { href: './html/dubai police parking 2/index.html', imgSrc: 'dubai police parking 2.jpg', name: 'dubai police parking 2' , 'page': 4, 'id': 928 },
       { href: './html/drednot.io/index.html', imgSrc: 'drednot.io.jpg', name: 'drednot.io' , 'page': 4, 'id': 926 },
       { href: './html/doodle champion island/index.html', imgSrc: 'doodle champion island.jpg', name: 'doodle champion island' , 'page': 4, 'id': 924 },
       { href: './html/nuggetroyale.io/index.html', imgSrc: 'nuggetroyale.io.jpg', name: 'nuggetroyale.io' , 'page': 4, 'id': 912 },
