@@ -130,7 +130,6 @@ export default [
       { href: './html/lands of blight/index.html', imgSrc: 'lands of blight.jpg', name: 'lands of blight' , 'page': 4, 'id': 901 },
       { href: './html/horse shoing/index.html', imgSrc: 'horse shoing.jpg', name: 'horse shoing' , 'page': 3, 'id': 893 },
       { href: './html/slope 3/index.html', imgSrc: 'slope 3.jpg', name: 'slope 3' , 'page': 3, 'id': 891 },
-      { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
       { href: './html/shark.io/index.html', imgSrc: 'shark.io.jpg', name: 'shark.io' , 'page': 3, 'id': 879 },
       { href: './html/real simulator monster truck/index.html', imgSrc: 'real simulator monster truck.jpg', name: 'real simulator monster truck' , 'page': 3, 'id': 867 },
       { href: './html/truck traffic/index.html', imgSrc: 'truck traffic.jpg', name: 'truck traffic' , 'page': 3, 'id': 859 },
