@@ -1,4 +1,5 @@
 export default [
+  { href: './html/sling drift/index.html', imgSrc: 'sling drift.jpg', name: 'sling drift' , 'page': 3, 'id': 890 },
   { href: './html/bearsus/index.html', imgSrc: 'bearsus.jpg', name: 'bearsus' , 'page': 4, 'id': 987 },
   { href: './html/basket champs/index.html', imgSrc: 'basket champs.jpg', name: 'basket champs' , 'page': 4, 'id': 976 },
   { href: './html/city rider/index.html', imgSrc: 'city rider.jpg', name: 'city rider' , 'page': 4, 'id': 1029 },
