@@ -75,7 +75,6 @@ export default [
       { href: './html/chess arena/index.html', imgSrc: 'chess arena.jpg', name: 'chess arena' , 'page': 4, 'id': 1025 },
       { href: './html/cat gunner super zombie shoot/index.html', imgSrc: 'cat gunner super zombie shoot.jpg', name: 'cat gunner super zombie shoot' , 'page': 4, 'id': 1020 },
       { href: './html/car drift racers 2/index.html', imgSrc: 'car drift racers 2.jpg', name: 'car drift racers 2' , 'page': 4, 'id': 1015 },
-      { href: './html/burnin rubber crash n burn/index.html', imgSrc: 'burnin rubber crash n burn.jpg', name: 'burnin rubber crash n burn' , 'page': 4, 'id': 1009 },
       { href: './html/burger bounty/index.html', imgSrc: 'burger bounty.jpg', name: 'burger bounty' , 'page': 4, 'id': 1008 },
       { href: './html/bullet force/index.html', imgSrc: 'bullet force.jpg', name: 'bullet force' , 'page': 4, 'id': 1006 },
       { href: './html/brutalmania.io/index.html', imgSrc: 'brutalmania.io.jpg', name: 'brutalmania.io' , 'page': 4, 'id': 1005 },
