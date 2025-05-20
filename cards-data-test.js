@@ -95,7 +95,6 @@ export default [
       { href: './html/big shot boxing/index.html', imgSrc: 'big shot boxing.jpg', name: 'big shot boxing' , 'page': 4, 'id': 990 },
       { href: './html/betrayal.io/index.html', imgSrc: 'betrayal.io.jpg', name: 'betrayal.io' , 'page': 4, 'id': 989 },
       { href: './html/bellum.io/index.html', imgSrc: 'bellum.io.jpg', name: 'bellum.io' , 'page': 4, 'id': 988 },
-      { href: './html/bearsus/index.html', imgSrc: 'bearsus.jpg', name: 'bearsus' , 'page': 4, 'id': 987 },
       { href: './html/battlestick/index.html', imgSrc: 'battlestick.jpg', name: 'battlestick' , 'page': 4, 'id': 986 },
       { href: './html/battlefields.io/index.html', imgSrc: 'battlefields.io.jpg', name: 'battlefields.io' , 'page': 4, 'id': 985 },
       { href: './html/battledudes.io/index.html', imgSrc: 'battledudes.io.jpg', name: 'battledudes.io' , 'page': 4, 'id': 984 },
