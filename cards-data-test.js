@@ -99,7 +99,6 @@ export default [
       { href: './html/g-switch 4/index.html', imgSrc: 'g-switch 4.jpg', name: 'g-switch 4' , 'page': 4, 'id': 954 },
       { href: './html/fz snow battle.io/index.html', imgSrc: 'fz snow battle.io.jpg', name: 'fz snow battle.io' , 'page': 4, 'id': 950 },
       { href: './html/flying car simulator/index.html', imgSrc: 'flying car simulator.jpg', name: 'flying car simulator' , 'page': 4, 'id': 944 },
-      { href: './html/extreme off road cars/index.html', imgSrc: 'extreme off road cars.jpg', name: 'extreme off road cars' , 'page': 4, 'id': 941 },
       { href: './html/extreme car parking/index.html', imgSrc: 'extreme car parking.jpg', name: 'extreme car parking' , 'page': 4, 'id': 940 },
       { href: './html/extreme car driving simulator/index.html', imgSrc: 'extreme car driving simulator.jpg', name: 'extreme car driving simulator' , 'page': 4, 'id': 939 },
       { href: './html/duo survival/index.html', imgSrc: 'duo survival.jpg', name: 'duo survival' , 'page': 4, 'id': 931 },
