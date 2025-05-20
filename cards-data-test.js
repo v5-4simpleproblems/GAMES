@@ -79,7 +79,6 @@ export default [
       { href: './html/car rush/index.html', imgSrc: 'car rush.jpg', name: 'car rush' , 'page': 4, 'id': 1016 },
       { href: './html/car drift racers 2/index.html', imgSrc: 'car drift racers 2.jpg', name: 'car drift racers 2' , 'page': 4, 'id': 1015 },
       { href: './html/burnout extreme drift 2/index.html', imgSrc: 'burnout extreme drift 2.jpg', name: 'burnout extreme drift 2' , 'page': 4, 'id': 1011 },
-      { href: './html/burnout drift seaport max/index.html', imgSrc: 'burnout drift seaport max.jpg', name: 'burnout drift seaport max' , 'page': 4, 'id': 1010 },
       { href: './html/burnin rubber crash n burn/index.html', imgSrc: 'burnin rubber crash n burn.jpg', name: 'burnin rubber crash n burn' , 'page': 4, 'id': 1009 },
       { href: './html/burger bounty/index.html', imgSrc: 'burger bounty.jpg', name: 'burger bounty' , 'page': 4, 'id': 1008 },
       { href: './html/bullet force/index.html', imgSrc: 'bullet force.jpg', name: 'bullet force' , 'page': 4, 'id': 1006 },
