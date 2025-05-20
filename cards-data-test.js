@@ -117,7 +117,6 @@ export default [
       { href: './html/dubai police parking 2/index.html', imgSrc: 'dubai police parking 2.jpg', name: 'dubai police parking 2' , 'page': 4, 'id': 928 },
       { href: './html/drednot.io/index.html', imgSrc: 'drednot.io.jpg', name: 'drednot.io' , 'page': 4, 'id': 926 },
       { href: './html/doodle champion island/index.html', imgSrc: 'doodle champion island.jpg', name: 'doodle champion island' , 'page': 4, 'id': 924 },
-      { href: './html/pack a bag/index.html', imgSrc: 'pack a bag.jpg', name: 'pack a bag' , 'page': 4, 'id': 915 },
       { href: './html/nuggetroyale.io/index.html', imgSrc: 'nuggetroyale.io.jpg', name: 'nuggetroyale.io' , 'page': 4, 'id': 912 },
       { href: './html/nightpoint.io/index.html', imgSrc: 'nightpoint.io.jpg', name: 'nightpoint.io' , 'page': 4, 'id': 910 },
       { href: './html/mystical birdlink/index.html', imgSrc: 'mystical birdlink.jpg', name: 'mystical birdlink' , 'page': 4, 'id': 909 },
