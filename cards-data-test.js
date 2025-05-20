@@ -83,7 +83,6 @@ export default [
       { href: './html/bullet force/index.html', imgSrc: 'bullet force.jpg', name: 'bullet force' , 'page': 4, 'id': 1006 },
       { href: './html/brutalmania.io/index.html', imgSrc: 'brutalmania.io.jpg', name: 'brutalmania.io' , 'page': 4, 'id': 1005 },
       { href: './html/blocky cars/index.html', imgSrc: 'blocky cars.jpg', name: 'blocky cars' , 'page': 4, 'id': 999 },
-      { href: './html/bladers/index.html', imgSrc: 'bladers.jpg', name: 'bladers' , 'page': 4, 'id': 996 },
       { href: './html/bike trials winter 2/index.html', imgSrc: 'bike trials winter 2.jpg', name: 'bike trials winter 2' , 'page': 4, 'id': 995 },
       { href: './html/bike trials winter 1/index.html', imgSrc: 'bike trials winter 1.jpg', name: 'bike trials winter 1' , 'page': 4, 'id': 994 },
       { href: './html/bike trials offroad 1/index.html', imgSrc: 'bike trials offroad 1.jpg', name: 'bike trials offroad 1' , 'page': 4, 'id': 993 },
