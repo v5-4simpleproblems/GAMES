@@ -70,7 +70,6 @@ export default [
       { href: './html/dead paradise race shooter/index.html', imgSrc: 'dead paradise race shooter.jpg', name: 'dead paradise race shooter' , 'page': 4, 'id': 1043 },
       { href: './html/cyber cars punk racing/index.html', imgSrc: 'cyber cars punk racing.jpg', name: 'cyber cars punk racing' , 'page': 4, 'id': 1040 },
       { href: './html/copter.io/index.html', imgSrc: 'copter.io.jpg', name: 'copter.io' , 'page': 4, 'id': 1031 },
-      { href: './html/city rider/index.html', imgSrc: 'city rider.jpg', name: 'city rider' , 'page': 4, 'id': 1029 },
       { href: './html/city car driving stunt master/index.html', imgSrc: 'city car driving stunt master.jpg', name: 'city car driving stunt master' , 'page': 4, 'id': 1028 },
       { href: './html/city bike stunt 2/index.html', imgSrc: 'city bike stunt 2.jpg', name: 'city bike stunt 2' , 'page': 4, 'id': 1027 },
       { href: './html/chess arena/index.html', imgSrc: 'chess arena.jpg', name: 'chess arena' , 'page': 4, 'id': 1025 },
