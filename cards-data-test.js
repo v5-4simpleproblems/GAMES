@@ -74,7 +74,6 @@ export default [
       { href: './html/city bike stunt 2/index.html', imgSrc: 'city bike stunt 2.jpg', name: 'city bike stunt 2' , 'page': 4, 'id': 1027 },
       { href: './html/chess arena/index.html', imgSrc: 'chess arena.jpg', name: 'chess arena' , 'page': 4, 'id': 1025 },
       { href: './html/cat gunner super zombie shoot/index.html', imgSrc: 'cat gunner super zombie shoot.jpg', name: 'cat gunner super zombie shoot' , 'page': 4, 'id': 1020 },
-      { href: './html/cars thief tank edition/index.html', imgSrc: 'cars thief tank edition.jpg', name: 'cars thief tank edition' , 'page': 4, 'id': 1019 },
       { href: './html/cars thief/index.html', imgSrc: 'cars thief.jpg', name: 'cars thief' , 'page': 4, 'id': 1018 },
       { href: './html/car simulator arena/index.html', imgSrc: 'car simulator arena.jpg', name: 'car simulator arena' , 'page': 4, 'id': 1017 },
       { href: './html/car rush/index.html', imgSrc: 'car rush.jpg', name: 'car rush' , 'page': 4, 'id': 1016 },
