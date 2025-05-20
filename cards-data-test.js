@@ -117,7 +117,6 @@ export default [
       { href: './html/doodle champion island/index.html', imgSrc: 'doodle champion island.jpg', name: 'doodle champion island' , 'page': 4, 'id': 924 },
       { href: './html/nuggetroyale.io/index.html', imgSrc: 'nuggetroyale.io.jpg', name: 'nuggetroyale.io' , 'page': 4, 'id': 912 },
       { href: './html/nightpoint.io/index.html', imgSrc: 'nightpoint.io.jpg', name: 'nightpoint.io' , 'page': 4, 'id': 910 },
-      { href: './html/mob city/index.html', imgSrc: 'mob city.jpg', name: 'mob city' , 'page': 4, 'id': 908 },
       { href: './html/marble dash/index.html', imgSrc: 'marble dash.jpg', name: 'marble dash' , 'page': 4, 'id': 905 },
       { href: './html/ludo multiplayer/index.html', imgSrc: 'ludo multiplayer.jpg', name: 'ludo multiplayer' , 'page': 4, 'id': 903 },
       { href: './html/lands of blight/index.html', imgSrc: 'lands of blight.jpg', name: 'lands of blight' , 'page': 4, 'id': 901 },
