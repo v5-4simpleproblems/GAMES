@@ -1,20 +1,15 @@
 // All of the updates and their corresponding dates that will be dynamically added in the updates section on about page
 // Josh - please keep them specific to page system/ui updates and not added games, thanks
 export const updates = [
-	// NEED A DATE FOR THIS
-	// { date: "", content: "Removed StrongDog Movies to ensure compliance with school district standards and copyright laws" },
-	{ date: "4/19/25", content: "Added StrongDog Movies and waffle menu on the homepage navigation bar" },
-	{ date: "4/6/25", content: 'Added "Declined Games" menu in about section, fixed minor about section styling issues' },
+	{ date: "4/19/25", content: "Added waffle menu on the homepage navigation bar" },
+	{ date: "4/6/25", content: 'Added "Declined Games" menu in about section' },
 	{ date: "4/1/25", content: "Added April Fool's update, removed the next day" },
 	{ date: "2/24/25", content: "Added a card size slider to the main menu" },
-	{ date: "2/10/25", content: "Added block lanschool 3.0 to secret menu" },
 	{ date: "10/21/24", content: "Updated login page UI" },
 	{ date: "10/20/24", content: "Restored Strongdog chat, added StrongDogXP accounts, Halloween update" },
-	{ date: "10/10/24", content: "Cleaned up About page" },
-	{ date: "9/20/24", content: "Added block lanschool 2.0 to secret games" },
 	{ date: "7/27/24", content: "Added cirkul bottle giveaway" },
-	{ date: "5/14/24", content: "Removed tabs on page 1; improved About section" },
-	{ date: "5/13/24", content: "Optimized top 10 load speed; added loading icons; improved styling" },
+	{ date: "5/14/24", content: "Removed tabs/pagination on page 1" },
+	{ date: "5/13/24", content: "Optimized top 10 load speed; added loading icons" },
 	{ date: "5/12/24", content: "Added About section" },
 ];
 
