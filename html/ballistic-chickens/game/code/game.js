@@ -2,6 +2,12 @@ const STUFF = getData('save', {
   money: 0,
   upgrades: [0,0,0,0,0,0],
   achievements: [],
+  stats: {
+    trampoline: 0,
+    birds: 0,
+    stars: 0,
+    totalDist: 0,
+  },
 });
 
 var debugMode = false;
@@ -30,8 +36,13 @@ function achieve(x) {
 scene('game', () => {
   if (STUFF.achievements == undefined)
     STUFF.achievements = [];
-
-  console.log(STUFF)
+  if (STUFF.stats == undefined)
+    STUFF.stats = {
+      trampoline: 0,
+      birds: 0,
+      stars: 0,
+      totalDist: 0,
+    };
   
   const Z = {
     bg:        0,
@@ -343,6 +354,7 @@ scene('game', () => {
 
   onCollide('chicken', 'star', (c,s) => {
     score += s.value;
+    STUFF.stats.stars++;
     destroy(s);
   });
 
@@ -351,6 +363,23 @@ scene('game', () => {
       t.used = true;
       score += 5;
       chicken.yv = Math.abs(0.9 * chicken.yv);
+      STUFF.stats.trampoline++;
+      let sst = STUFF.stats.trampoline;
+      if (sst >= 1) {
+      if (sst >= 10) {
+      if (sst >= 100) {
+      if (sst >= 1000) {
+        achieve('t4');
+      } else {
+        achieve('t3');
+      }; 
+      } else {
+        achieve('t2');
+      }; 
+      } else {
+        achieve('t1');
+      };
+      };
       add([
         text('+5', {
           size: SCALE*0.6,
@@ -460,7 +489,7 @@ scene('game', () => {
       every('maxAltitudeText', (m) => { m.text = `Top Altitude: ${shortNum(maxAltitude)}m`; });
 
       every('velocityText', (v) => { 
-        let val = (velocityMach >= 0.8 ? `Mach ${parseFloat(velocityMach).toFixed(1)}` : `${shortNum(velocity)} m/s`);
+        let val = (velocityMach >= 0.8 ? `Mach ${parseFloat(velocityMach).toFixed(2)}` : `${shortNum(velocity)} m/s`);
         v.text = `Velocity: ${val}`;
       });
 
@@ -473,7 +502,69 @@ scene('game', () => {
       ));
 
       
-     // if (distance >=)
+      if (distance >= 500) {
+      if (distance >= 1000) {
+      if (distance >= 5000) {
+      if (distance >= 10000) {
+      if (distance >= 50000) {
+      if (distance >= 100000) {
+      if (distance >= 500000) {
+      if (distance >= 1000000) {
+      if (distance >= 5000000) {
+      if (distance >= 1000000000) {
+        achieve('d10');
+      } else {
+        achieve('d9');
+      }; 
+      } else {
+        achieve('d8');
+      }; 
+      } else {
+        achieve('d7');
+      };
+      } else {
+        achieve('d6');
+      };  
+      } else {
+        achieve('d5');
+      };  
+      } else {
+        achieve('d4');
+      }; 
+      } else {
+        achieve('d3');
+      };  
+      } else {
+        achieve('d2');
+      }; 
+      } else {
+        achieve('d1');
+      }; 
+      };
+
+
+      if (altitude >= 100000)
+        achieve('a1');
+
+      if (velocityMach >= 1) {
+      if (velocityMach >= 5) {
+      if (velocityMach >= 10) {
+      if (velocityMach >= 20) {
+      if (velocityMach >= 50) {
+        achieve('v5');
+      } else {
+        achieve('v4');
+      }; 
+      } else {
+        achieve('v3');
+      }; 
+      } else {
+        achieve('v2');
+      };
+      } else {
+        achieve('v1');
+      };
+      };
 
 
       // STARS (and more) SPAWNING MESS
@@ -503,17 +594,32 @@ scene('game', () => {
                   'skyObject',
                 ]);
               } else {
-                add([
-                  sprite('collectables', { frame: current.frame }),
-                  scale(TILE * collectableSizes[current.frame]),
-                  origin('center'),
-                  area(),
-                  pos((distance+10+i)*SCALE, height()- SCALE*starHeight),
-                  z(Z.game),
-                  'star',
-                  'skyObject',
-                  { value: current.value },
-                ]);
+                if (/*rand(1, 1000) < 200 && altitude > 1000 && altitude < 10000*/false) {
+                  add([
+                    sprite('evilBird'),
+                    scale(TILE),
+                    origin('center'),
+                    area(),
+                    pos((distance+10+i)*SCALE, height()- SCALE*starHeight),
+                    z(Z.game),
+                    move(180, SCALE*2),
+                    'evilBird',
+                    'skyObject',
+                  ]);
+                  
+                } else {
+                  add([
+                    sprite('collectables', { frame: current.frame }),
+                    scale(TILE * collectableSizes[current.frame]),
+                    origin('center'),
+                    area(),
+                    pos((distance+10+i)*SCALE, height()- SCALE*starHeight),
+                    z(Z.game),
+                    'star',
+                    'skyObject',
+                    { value: current.value },
+                  ]);
+                };
               };
             };
           };
@@ -845,6 +951,8 @@ scene('game', () => {
             'endUI',
           ]);
         };
+
+        STUFF.stats.totalDist += parseFloat(distanceF);
   
         add([
           text(`Distance: \nApogee: \nPoints: \nMoney Gained: \n\nBalance:`, {

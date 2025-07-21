@@ -113,6 +113,15 @@ scene('shop', () => {
     "retry",
     "navButton",
   ]);
+  add([
+    sprite('achieveBtn'),
+    scale(TILE * 2/3),
+    pos(SCALE*1.5, SCALE/10),
+    z(Z.top),
+    area(),
+    "achieve",
+    "navButton",
+  ]);
 
 
   for (let i = 0; i < 9; i++) {
@@ -342,6 +351,49 @@ scene('shop', () => {
     if (truePrice(selectedOffer) <= STUFF.money) {
       STUFF.money -= truePrice(selectedOffer);
       STUFF.upgrades[selectedOffer]++;
+      let minUpgr = 15431534;
+      for (let i = 0; i < 6; i++) {
+        minUpgr = Math.min(minUpgr, STUFF.upgrades[i]);
+      };
+      if (minUpgr >= 1) {
+      if (minUpgr >= 5) {
+      if (minUpgr >= 10) {
+      if (minUpgr >= 15) {
+      if (minUpgr >= 20) {
+      if (minUpgr >= 25) {
+      if (minUpgr >= 30) {
+      if (minUpgr >= 35) {
+      if (minUpgr >= 40) {
+      if (minUpgr >= 50) {
+        achieve('u10');
+      } else {
+        achieve('u9');
+      }; 
+      } else {
+        achieve('u8');
+      }; 
+      } else {
+        achieve('u7');
+      };
+      } else {
+        achieve('u6');
+      };  
+      } else {
+        achieve('u5');
+      };  
+      } else {
+        achieve('u4');
+      }; 
+      } else {
+        achieve('u3');
+      };  
+      } else {
+        achieve('u2');
+      }; 
+      } else {
+        achieve('u1');
+      }; 
+      };
       updateShop();
     };
   });
@@ -353,6 +405,10 @@ scene('shop', () => {
   onClick('retry', (m) => {
     fadeOut();
     setTimeout(() => { go('retry'); }, FADE_TIME);
+  });
+  onClick('achieve', (m) => {
+    fadeOut();
+    setTimeout(() => { go('achievements'); }, FADE_TIME);
   });
 
   onUpdate(() => {

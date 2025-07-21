@@ -96,6 +96,18 @@ scene('menu', () => {
     ]);
   };
 
+  const wipeBtn = add([
+    text('Wipe Save', {
+      size: SCALE*0.25,
+      font: 'rubik',
+    }),
+    color(BLACK),
+    pos(SCALE/10, height()-SCALE/10),
+    origin('botleft'),
+    area(),
+    'wipe'
+  ]);
+
   every('button', (r) => {
     r.radius = SCALE/5;
   });
@@ -130,6 +142,25 @@ scene('menu', () => {
     ));
   };
 
+  onClick('wipe', () => {
+    let doublecheck = prompt('Type "chicken" to wipe your save...');
+    if (doublecheck == 'chicken') {
+      setData('save', {
+        money: 0,
+        upgrades: [0,0,0,0,0,0],
+        achievements: [],
+        stats: {
+          trampoline: 0,
+          birds: 0,
+          stars: 0,
+          totalDist: 0,
+        },
+      });
+      alert('Wiped D:');
+      location.reload();
+    };
+  });
+
   onUpdate(() => {
     if (rand(0,100) < 6) {
       let speed = rand(15,22);
@@ -156,10 +187,7 @@ scene('menu', () => {
       ));
     };
 
-    onKeyPress('a', () => {
-      go('achievements');
-    });
-    
+    wipeBtn.color = wipeBtn.isHovering() ? rgb(170,0,0) : BLACK;
   });
 });
 

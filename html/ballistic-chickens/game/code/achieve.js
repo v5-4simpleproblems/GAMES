@@ -112,6 +112,41 @@ scene('achievements', () => {
   ]);
 
 
+
+  let descPos = vec2(width()/2, height()-SCALE*0.7);
+
+  const descRect = add([
+    rect(SCALE*7, SCALE*0.6),
+    pos(descPos),
+    color(BLACK),
+    opacity(0),
+    origin('center'),
+    z(Z.top),
+    'desc',
+    {
+      defOpacity: 0.7,
+    }
+  ]);
+
+  const descText = add([
+    text('amog sus', {
+      size: SCALE*0.3,
+      font: 'ubuntu',
+    }),
+    pos(descPos),
+    color(WHITE),
+    origin('center'),
+    z(Z.top + 1),
+    opacity(0),
+    'desc',
+    {
+      defOpacity: 1,
+    }
+  ]);
+
+  descRect.radius = SCALE/5;
+
+
   /*
   EEEEEE
   EEEEEEEEEEE
@@ -138,9 +173,26 @@ scene('achievements', () => {
             origin('center'),
             scale(TILE*0.8),
             z(Z.main + l),
+            area(),
             "scrollable",
+            `hover`,
             {
               startY: sy,
+              iddd: achKeys[i],
+            }
+          ]);
+
+          add([
+            sprite(['banner', 'achievements'][l], { frame: (ACHIEVEMENTS[achKeys[i]].icon[1-l]) }),
+            pos(SCALE*(1.15 + 1.1*(i % rowMod)), sy),
+            origin('center'),
+            scale(TILE*0.8),
+            z(Z.main -1),
+            color(BLACK),
+            opacity(0.2),
+            "scrollable",
+            {
+              startY: sy + SCALE/16,
             }
           ]);
         };
@@ -197,6 +249,17 @@ scene('achievements', () => {
     });
     every('scrollable', (s) => {
       s.pos.y = s.startY - mainScroll*SCALE;
+    });
+    let hov = 'no';
+    every('hover', (h) => {
+      if (h.isHovering())
+        hov = h.iddd ;
+    });
+    
+    descText.text = hov == 'no' ? '' : ACHIEVEMENTS[hov].description;
+
+    every('desc', (d) => {
+      d.opacity = hov == 'no' ? 0 : d.defOpacity;
     });
   });
   

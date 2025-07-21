@@ -103,7 +103,7 @@ loadSpriteAtlas('update1dot1.png', {
     width: SIZE*6, height: SIZE,
     sliceX: 6,
   },
-  'evilBird': {
+  'achieveBtn': {
     x: SIZE*15, y: 0,
     width: SIZE, height: SIZE,
   },

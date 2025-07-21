@@ -132,10 +132,10 @@ const ACHIEVEMENTS = {
     'description': 'Fly at Mach 50',
   },
   // birb
-  'b1': {
+  /*'b1': {
     'icon': [5, -1],
     'description': 'Smack into an evil bird',
-  },
+  },*/
 };
 
 // 6 basic stars
