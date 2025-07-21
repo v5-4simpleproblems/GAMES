@@ -252,7 +252,7 @@ scene('game', () => {
     let yOff = Math.cos( (Math.PI * i) /4 ) *border;
     if (i == 0) { xOff = 0; yOff = 0; };
     add([
-      text(`Velocity: 0 m/s`, {
+      text(`Speed: 0 m/s`, {
         size: SCALE*0.18,
         font: 'ubuntu',
       }),
@@ -490,7 +490,7 @@ scene('game', () => {
 
       every('velocityText', (v) => { 
         let val = (velocityMach >= 0.8 ? `Mach ${parseFloat(velocityMach).toFixed(2)}` : `${shortNum(velocity)} m/s`);
-        v.text = `Velocity: ${val}`;
+        v.text = `Speed: ${val}`;
       });
 
       every('scoreText', (s) => { s.text = score; });
