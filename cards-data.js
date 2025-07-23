@@ -762,7 +762,6 @@ export default [
   { href: "./swf/tastyplanetdinotime/base.html", imgSrc: "tastyplanetdinotime.jpg", name: "Tasty Planet Dinotime" , 'id': 253, tags: ['']},
   { href: "./swf/truckloader/base.html", imgSrc: "truckloader.jpg", name: "Truck Loader" , 'id': 252, tags: ['']},
   { href: "./swf/workingstiffs/base.html", imgSrc: "workingstiffs.jpg", name: "Working Stiffs" , 'id': 251, tags: ['']},
-  { href: "./html/eaglecraft/game/Offline_Download_Version.html", imgSrc: "minecraft.jpeg", name: "Minecraft (1.5.2 Eaglercraft)" , 'id': 250, tags: ['']},
   { href: "./html/sm64/index.html", imgSrc: "sm64.jpg", name: "Super Mario 64" , 'id': 249, tags: ['']},
   { href: "./html/rocket league/index.html", imgSrc: "rocketleague.jpg", name: "Rocket League" , 'id': 248, tags: ['']},
   { href: "./html/google-snake/index.html", imgSrc: "googlesnake.jpg", name: "Google Snake" , 'id': 247, tags: ['']},
