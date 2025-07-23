@@ -516,15 +516,16 @@
 		}
 
 		.updates-paragraph-text {
-		  color: white;
+		  color: black;
 		  background-color: #a83632;
+		  background: linear-gradient(120deg, orange, #da2020);
 		  padding: 20px;
 		  border-radius: 15px;
-		  box-shadow: 0 5px 25px rgba(255, 255, 255, 0.05);
-		  margin-bottom: 30px;
+		  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
 		  font-size: 1.1rem;
 		  text-align: center;
-		  max-width: 800px;
+		  max-width: 850px;
+		  margin: 0 10px;
 		}
 
 		.updates-text-container {
@@ -968,11 +969,6 @@
 		    font-size: 0.9rem;
 		  }
 
-		  .updates-paragraph-text {
-		    margin: 0 10px;
-		    font-size: 1rem;
-		  }
-
 		  .alternate-links-container {
 		    grid-template-columns: 1fr;
 		    padding: 10px;
@@ -1353,15 +1349,8 @@
 				justify-content: center;
 				z-index: 1000;
 			"
+			onclick="window.location.href = 'secret-menu.html';"
 		></div>
-		<script>
-			window.addEventListener("load", function () {
-				const e = document.getElementById("secretLink");
-				e.addEventListener("click", function () {
-					window.location.href = "secret-menu.html";
-				});
-			});
-		</script>
 		<div class="navbar">
 			<div class="menu-icon" id="menuIcon">☰</div>
 			<a href="index.html" class="logo">strongdog<span class="xp">XP</span></a>
@@ -1420,7 +1409,14 @@
 
 			<p class="updates-paragraph-text">
 				<strong>TO ALL STRONGDOG USERS</strong><br>
-				The end of last year was rough with the movies, the scam ad service, and just the overwhelming amount of bug reports, we are starting to try to fix all these bug reports again and we will bring back game requests when they are all done. The bad ad service SHOULD be removed, please contact us if it ever shows those ads again. Thank you all for sticking with us for so long even throuh these big issues and if you have any issues with the site feel free to make a bug report or message us at help@strongdog.com, again sorry about all the issues and bugs and we can't wait to see you later this year when school starts again!<br>UPDATE: We have resolved all the bugs reported so game requests are now back!
+				Last year was tough. We had buggy features, scam ads, and movie issues, but we're working to 
+				make things better. The faulty ad service should be gone, and if it reappears, please let us know. 
+				Bug reports are welcome anytime at 
+				<a target="_blank" href="mailto:help@strongdog.com?subject=Bug%20Report&body=Describe%20the%20issue:%C2%A0%0AWhere%20did%20it%20occur%20(site%20url%2Fpage%2Fgame):%C2%A0%0ADevice%20and%20browser%20used:%C2%A0%0ASteps%20to%20reproduce%20(optional):%C2%A0">help@strongdog.com</a>
+ 				or on the <a href="about.html">about</a> page.
+				<br><br>
+				Thanks for sticking with us through it all! We genuinely appreciate all of you. <br>
+				UPDATE: All bugs are resolved, and game requests are back! We can't wait to see you again when school starts!
 			</p>
 
 		</div>
