@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4SP - STRONGDOGXP</title>
+    <title>4SP - GN-GAMES</title>
 
-    <link rel="icon" type="image/png" href="../images/favicon.png">
-    <link rel="apple-touch-icon" href="../images/favicon.png">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
 
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -17,7 +18,20 @@
     <script src="panic-key.js"></script>
     <script src="url-changer.js"></script>
 
-    <meta name="keywords" content="4sp, 4simpleproblems">
+    <script src="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/gnmath.js"></script>
+
+    <meta name="description"
+        content="Play unblocked games via GN-Math on the 4SP platform. Fast, free, no downloads—perfect for school or home.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://4simpleproblems.github.io/GN-GAMES/index.html">
+    <meta property="og:title" content="4SP - GN-Math Games">
+    <meta property="og:description" content="Play unblocked games via GN-Math on the 4SP platform.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://4simpleproblems.github.io/GN-GAMES/index.html">
+    <meta name="twitter:title" content="4SP - GN-Math Games">
+    <meta name="twitter:description" content="Play unblocked games via GN-Math on the 4SP platform.">
+    <meta name="keywords"
+        content="unblocked games, 4sp, gn-math, browser games, school games, html5 games, free games, play games, online games, gaming">
 
     <style>
         :root {
@@ -37,83 +51,20 @@
         }
 
         body.dashboard-page {
-            display: flex; flex-direction: column; min-height: 100vh;
-            margin: 0; font-family: var(--v4-font-primary);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: var(--v4-font-primary);
             background: var(--v4-bg-gradient);
         }
-        .dashboard-container { display: flex; flex: 1; overflow: hidden; }
 
-        .sidebar {
-            width: 200px; background: linear-gradient(180deg, #333 0%, #2a2a2a 100%);
-            color: #fff; padding: 20px 10px; display: flex; flex-direction: column;
-            border-right: 1px solid #444; transition: width 0.5s ease-in-out;
-            position: relative; box-shadow: 2px 0 10px rgba(0,0,0,0.1); flex-shrink: 0;
-            z-index: 1001;
-        }
-        .sidebar.collapsed { width: 85px; }
-        #toggleSidebar {
-            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-            background: none; border: none; color: #fff; font-size: 1.2em;
-            cursor: pointer; padding: 4px; transition: transform 0.5s ease-in-out;
-        }
-        .sidebar.collapsed #toggleSidebar { transform: translateX(-50%) rotate(180deg); }
-
-        .user-info {
-            text-align: center; margin: 60px 0 30px;
-            border-bottom: 1px solid #555; padding-bottom: 20px;
-            overflow: visible;
-        }
-        
-        .marquee-container {
+        .dashboard-container {
+            display: flex;
+            flex: 1;
             overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            width: 100%;
-            height: 1.8em;
-            line-height: 1.8em;
-        }
-        .marquee-content {
-            display: inline-block;
-            padding-left: 100%;
-            transform: translateX(0);
-            animation: none;
-            line-height: 1.8em;
-        }
-        .marquee-content.sidebar-marquee-active {
-            animation: scroll-left 12s linear infinite;
-        }
-        @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
         }
 
-        .user-info .username { 
-            font-family: var(--v4-font-primary);
-            font-size: 1.3em; 
-            margin-bottom: 8px; 
-            line-height: 0.2em;
-            font-weight: bold;
-        }
-        .user-info .email { 
-            font-family: var(--v4-font-secondary);
-            font-size: 0.9em; 
-            color: #bbb; 
-        }
-        .sidebar nav ul { list-style: none; padding: 0; margin: 60px 0 0; }
-        .sidebar nav li { margin-bottom: 10px; }
-        .sidebar nav a {
-            display: flex; align-items: center; padding: 12px 15px; color: #fff;
-            text-decoration: none; border-radius: 8px; transition: all 0.3s ease;
-            font-family: var(--v4-font-primary); text-transform: uppercase;
-            position: relative; overflow: hidden; font-size: 1em;
-        }
-        .sidebar nav a:hover, .sidebar nav a.active {
-            background: var(--v4-purple-gradient); transform: translateX(5px); color: #fff;
-        }
-        .sidebar nav a .icon { font-size: 1.2em; width: 24px; text-align: center;}
-        .sidebar nav a .label { margin-left: 10px; white-space: nowrap;}
-        .sidebar.collapsed nav a .label { display: none; }
-        
         .main-content {
             flex: 1;
             padding: 30px;
@@ -122,71 +73,114 @@
             flex-direction: column;
             background: linear-gradient(135deg, #f0f2f5 0%, #e8eaf0 100%);
         }
-        
+
         .page-header-v4 {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; background: var(--v4-card-bg);
-            padding: 20px 30px; border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--v4-card-bg);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
+
         .page-title-v4 {
-            margin: 0; font-size: 2.2em; font-weight: bold;
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: bold;
             background: var(--v4-purple-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; font-family: var(--v4-font-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: var(--v4-font-primary);
         }
 
         .game-controls {
-            background-color: var(--v4-card-bg); padding: 15px 20px;
-            border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.07);
-            margin-bottom: 25px; display: flex; gap: 15px;
-            align-items: center; flex-wrap: wrap;
+            background-color: var(--v4-card-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .game-controls .search-container { display: flex; gap: 10px; align-items: center; flex-grow: 1; }
-        .game-controls input[type="text"], .game-controls select, .game-controls button {
-            padding: 10px 15px; border: 1px solid var(--v4-input-border);
-            border-radius: 8px; font-family: var(--v4-font-secondary);
-            background-color: var(--v4-input-bg); color: var(--v4-text-primary);
+
+        .game-controls .search-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .game-controls input[type="text"],
+        .game-controls select,
+        .game-controls button {
+            padding: 10px 15px;
+            border: 1px solid var(--v4-input-border);
+            border-radius: 8px;
+            font-family: var(--v4-font-secondary);
+            background-color: var(--v4-input-bg);
+            color: var(--v4-text-primary);
             font-size: 0.95em;
         }
-        #showFavoritesBtn, #creditsBtn {
+
+        #showFavoritesBtn {
             background: var(--v4-purple-gradient);
             color: white;
             border-color: var(--v4-purple-accent);
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        #showFavoritesBtn:hover, #creditsBtn:hover {
+
+        #showFavoritesBtn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(103, 32, 189, 0.3);
         }
 
-        #gameCount {
-            margin-bottom: 20px; font-family: var(--v4-font-secondary);
-            color: var(--v4-text-primary); font-size: 1.1em;
-            padding: 12px 15px; background-color: var(--v4-input-bg);
-            border-radius: 8px; text-align: left;
+        #zoneCount {
+            margin-bottom: 20px;
+            font-family: var(--v4-font-secondary);
+            color: var(--v4-text-primary);
+            font-size: 1.1em;
+            padding: 12px 15px;
+            background-color: var(--v4-input-bg);
+            border-radius: 8px;
+            text-align: left;
             border: 1px solid var(--v4-border-softer);
         }
+
         #container {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px; padding-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            padding-bottom: 20px;
         }
-        .game-card {
-            background-color: var(--v4-card-bg); border: 1px solid var(--v4-border-softer);
+
+        #container .zone-item {
+            background-color: var(--v4-card-bg);
+            border: 1px solid var(--v4-border-softer);
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            text-align: center; display: flex; flex-direction: column;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
             position: relative;
-            text-decoration: none;
         }
-        .game-card:hover {
-            transform: translateY(-4px); box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+
+        #container .zone-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
             border-color: var(--v4-purple-accent);
         }
-        .game-card img {
+
+        #container .zone-item img {
             width: 100%;
             height: 180px;
             object-fit: cover;
@@ -206,96 +200,210 @@
             position: relative;
             z-index: 5;
         }
-        .title-content-wrapper { display: flex; width: fit-content; }
-        .title-content { white-space: nowrap; padding: 0 15px; }
+
+        .title-content-wrapper {
+            display: flex;
+            width: fit-content;
+        }
+
+        .title-content {
+            white-space: nowrap;
+            padding: 0 15px;
+        }
+
         .title-container.card-marquee-active .title-content-wrapper {
             animation: scroll-constant 20s linear infinite;
             will-change: transform;
         }
+
         @keyframes scroll-constant {
-            from { transform: translateX(0%); }
-            to { transform: translateX(-50%); } 
+            from {
+                transform: translateX(0%);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
         }
 
-        .card-play-btn, .favorite-btn {
-            position: absolute; top: 8px; width: 36px; height: 36px;
-            border-radius: 10px; background-color: rgba(30, 30, 30, 0.3);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2); font-size: 18px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s ease; z-index: 10; color: #fff;
+        .card-play-btn,
+        .favorite-btn {
+            position: absolute;
+            top: 8px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background-color: rgba(30, 30, 30, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
         }
-        .card-play-btn { right: 52px; }
-        .favorite-btn { right: 8px; color: #ccc; }
-        .card-play-btn:hover, .favorite-btn:hover {
-            transform: scale(1.15); background: rgba(0, 0, 0, 0.5);
+
+        .card-play-btn {
+            right: 52px;
+            color: #fff;
         }
+
+        .favorite-btn {
+            right: 8px;
+            color: #ccc;
+        }
+
+        .card-play-btn:hover,
+        .favorite-btn:hover {
+            transform: scale(1.15);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
         .favorite-btn.favorited {
-            color: #ffc107; text-shadow: 0 0 12px rgba(255, 193, 7, 0.9);
+            color: #ffc107;
+            text-shadow: 0 0 12px rgba(255, 193, 7, 0.9);
         }
-        .hidden { display: none !important; }
 
-        .credits-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7); z-index: 3000;
-            justify-content: center; align-items: center;
+        #zoneViewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            flex-direction: column;
         }
-        .credits-popup {
-            background: #2e2e2e; color: white; padding: 30px; border-radius: 15px;
-            width: 90%; max-width: 500px; text-align: left;
-            position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-            font-family: var(--v4-font-secondary);
+
+        #zoneViewer .zone-header {
+            background-color: var(--v4-card-bg);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--v4-border-light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
         }
-        .close-credits-btn {
-            position: absolute; top: 10px; right: 15px; background: none; border: none;
-            color: white; font-size: 2rem; cursor: pointer; line-height: 1;
+
+        #zoneViewer .zone-header .zone-title h2 {
+            margin: 0;
+            font-size: 1.3em;
+            color: var(--v4-text-primary);
+            font-family: var(--v4-font-primary);
         }
-        .credits-popup h3 { 
-            font-family: var(--v4-font-primary); font-size: 1.8rem; margin-top: 0; text-align: center;
-            border-bottom: 2px solid orange; padding-bottom: 10px; margin-bottom: 20px;
+
+        #zoneViewer .zone-header .zone-controls button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            background: var(--v4-purple-gradient);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: var(--v4-font-primary);
+            font-size: 0.9em;
         }
-        .credits-popup p { font-size: 1rem; line-height: 1.6; }
-        .credits-popup p strong { color: orange; }
-        .credits-popup hr { border: 0; border-top: 1px solid #555; margin: 20px 0; }
-        .credits-popup a {
-            display: block; text-align: center; color: #4fa7ff; text-decoration: none;
-            font-weight: bold; transition: color 0.3s;
+
+        #zoneViewer iframe {
+            flex-grow: 1;
+            border: none;
+            background-color: #000;
         }
-        .credits-popup a:hover { color: #ff8433; }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .main-header {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-header .logo img {
+            height: 40px;
+        }
+
+        .main-header .auth-buttons .btn {
+            background: var(--v4-purple-gradient);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .credits-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .credits-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .credits-modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .credits-modal-close:hover,
+        .credits-modal-close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body class="dashboard-page">
 
     <header class="main-header">
         <div class="container">
             <div class="logo">
-                <a href="https://4simpleproblems.github.io/index.html"><img src="../images/logo-dark.png" alt="4SP Logo" style="cursor:pointer;"></a>
+                <a href="index.html"><img src="images/logo-dark.png" alt="4SP Logo" style="cursor:pointer;"></a>
             </div>
             <div class="auth-buttons">
-                <button class="btn btn-login" onclick="window.location.href='https://4simpleproblems.github.io/index.html'">HOME</button>
-                <button id="logoutBtn" class="btn btn-login">LOG OUT</button>
+                <button class="btn btn-login"
+                    onclick="window.location.href='https://4simpleproblems.github.io/logged-in/dashboard.html'">Back to
+                    4SP</button>
+                <button id="creditsBtn" class="btn">Credits</button>
             </div>
         </div>
     </header>
 
     <div class="dashboard-container">
-        <aside class="sidebar" id="sidebar">
-            <button id="toggleSidebar">☰</button>
-            <nav>
-                <ul>
-                    <li><a href="https://4simpleproblems.github.io/logged-in/dashboard.html"><span class="icon">🏠</span><span class="label">Dashboard</span></a></li>
-                    <li><a href="https://4simpleproblems.github.io/logged-in/soundboard.html"><span class="icon">🎵</span><span class="label">Soundboard</span></a></li>
-                    <li><a href="https://4simpleproblems.github.io/logged-in/games.html" class="active"><span class="icon">🎮</span><span class="label">Games</span></a></li>
-                    <li><a href="https://4simpleproblems.github.io/logged-in/others.html"><span class="icon">✨</span><span class="label">Others</span></a></li>
-                    <li><a href="https://4simpleproblems.github.io/logged-in/settings.html"><span class="icon">⚙️</span><span class="label">Settings</span></a></li>
-                    <li><a href="#" id="signOutLink"><span class="icon">🔒</span><span class="label">LOG OUT</span></a></li>
-                </ul>
-            </nav>
-        </aside>
-
         <main class="main-content">
             <div class="page-header-v4">
-                <h2 class="page-title-v4">StrongdogXP Games</h2>
+                <h2 class="page-title-v4">GN-Math Games</h2>
             </div>
 
             <div class="game-controls">
@@ -304,188 +412,320 @@
                     <select id="sortOptions" aria-label="Sort games by">
                         <option value="name">Sort by Name (A-Z)</option>
                         <option value="id">Sort by Date (Newest First)</option>
+                        <option value="popular">Sort by Popularity</option>
                     </select>
                 </div>
                 <button id="showFavoritesBtn">⭐ Show Favorites</button>
-                <button id="creditsBtn">Credits</button>
             </div>
 
-            <div id="gameCount">Loading games...</div>
+            <div id="zoneCount">Loading games...</div>
             <div id="container"></div>
         </main>
     </div>
 
-    <div id="creditsOverlay" class="credits-overlay">
-      <div id="creditsPopup" class="credits-popup">
-        <button id="closeCreditsBtn" class="close-credits-btn">&times;</button>
-        <h3>Credits</h3>
-        <p><strong>Josh P:</strong> Creator of the original Strongdog XP. He found, compiled, and uploaded the vast library of games available on the platform.</p>
-        <p><strong>4SP:</strong> Redesigned the user interface and re-engineered the game and image loading logic to function within this sub-repository.</p>
-        <hr>
-        <a href="https://discord.gg/ea4x95f7cH" target="_blank">Join the StrongdogXP Discord!</a>
-      </div>
+    <div id="zoneViewer" class="hidden" aria-modal="true" role="dialog">
+        <div class="zone-header">
+            <div class="zone-title">
+                <h2 id="zoneNameEl">Game Title</h2>
+            </div>
+            <div class="zone-controls">
+                <button id="fullscreenBtnZone">Fullscreen</button>
+                <button id="newTabBtnZone">New Tab</button>
+                <button id="closeBtnZone">Close</button>
+            </div>
+        </div>
+        <iframe id="zoneFrame" title="Game Content" allowfullscreen></iframe>
     </div>
-    
-    <script type="module">
-    import games from '../cards-data.js';
 
-    // --- Firebase & Auth ---
-    firebase.auth().onAuthStateChanged(user => {
-        if (!user) {
-            window.location.href = 'https://4simpleproblems.github.io/login.html';
-        }
-    });
-    document.getElementById('logoutBtn')?.addEventListener('click', () => firebase.auth().signOut());
-    document.getElementById('signOutLink')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        firebase.auth().signOut();
-    });
+    <div id="creditsModal" class="credits-modal">
+        <div class="credits-modal-content">
+            <span class="credits-modal-close">&times;</span>
+            <h2>Credits</h2>
+            <p>Josh P found, compiled, and created StrongdogXP.</p>
+            <p>I redesigned it and made it fluid with my website.</p>
+        </div>
+    </div>
 
-    // --- DOM Elements ---
-    const container = document.getElementById('container');
-    const searchBar = document.getElementById('searchBar');
-    const sortOptions = document.getElementById('sortOptions');
-    const gameCountEl = document.getElementById('gameCount');
-    const showFavoritesBtn = document.getElementById('showFavoritesBtn');
-    
-    // --- State Variables ---
-    const FAVORITES_KEY = 'strongdogGameFavorites_v1';
-    let isShowingFavorites = false;
 
-    // --- Favorites Logic ---
-    const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
-    const saveFavorites = (favs) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
-    
-    function toggleFavorite(gameId, starElement) {
-        let favorites = getFavorites();
-        const gameIdStr = String(gameId);
-        const index = favorites.indexOf(gameIdStr);
+    <script>
+        const dbRef = () => firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
 
-        if (index > -1) {
-            favorites.splice(index, 1);
-            starElement.classList.remove('favorited');
-        } else {
-            favorites.push(gameIdStr);
-            starElement.classList.add('favorited');
-        }
-        saveFavorites(favorites);
-        if (isShowingFavorites) {
-            updateDisplayedGames();
-        }
-    }
-    
-    // --- Game Display Logic ---
-    function displayGames(gamesToRender) {
-        const favorites = getFavorites();
-        
-        if (gamesToRender.length === 0) {
-            container.innerHTML = "<p>No games found matching your criteria.</p>";
-            gameCountEl.textContent = "0 Games Found";
-            return;
-        }
-
-        container.innerHTML = gamesToRender.map(game => {
-            const isFavorited = favorites.includes(String(game.id));
-            return `
-            <a class="game-card" href="../play/?id=${game.id}" data-game-id="${game.id}">
-                <img src="../img/${game.imgSrc}" alt="${game.name}" loading="lazy" onerror="this.onerror=null; this.src='../images/favicon.png'; this.style.objectFit='contain';">
-                <button class="card-play-btn" data-game-id="${game.id}">▶</button>
-                <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" data-game-id="${game.id}">★</button>
-                <div class="title-container">
-                    <div class="title-content-wrapper">
-                        <span class="title-content">${game.name}</span>
-                    </div>
-                </div>
-            </a>`;
-        }).join('');
-
-        // Add event listeners after rendering
-        container.querySelectorAll('.favorite-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleFavorite(btn.dataset.gameId, btn);
-            });
-        });
-        
-        gameCountEl.textContent = `Showing: ${gamesToRender.length} Game(s)`;
-        setTimeout(initializeTitleMarquees, 50); // For marquee effect on long titles
-    }
-    
-    function updateDisplayedGames() {
-        let gamesToProcess = [...games];
-        
-        // Filter by favorites if toggled
-        if (isShowingFavorites) {
-            const favorites = getFavorites();
-            gamesToProcess = gamesToProcess.filter(game => favorites.includes(String(game.id)));
-        }
-
-        // Filter by search query
-        const query = searchBar.value.toLowerCase().trim();
-        if (query) {
-            gamesToProcess = gamesToProcess.filter(game => game.name.toLowerCase().includes(query));
-        }
-
-        // Sort the results
-        const sortBy = sortOptions.value;
-        if (sortBy === 'name') {
-            gamesToProcess.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortBy === 'id') {
-            gamesToProcess.sort((a, b) => parseInt(b.id) - parseInt(a.id));
-        }
-        
-        displayGames(gamesToProcess);
-    }
-    
-    // --- Event Listeners ---
-    searchBar.addEventListener('input', updateDisplayedGames);
-    sortOptions.addEventListener('change', updateDisplayedGames);
-    showFavoritesBtn.addEventListener('click', () => {
-        isShowingFavorites = !isShowingFavorites;
-        showFavoritesBtn.textContent = isShowingFavorites ? "Show All" : "⭐ Show Favorites";
-        updateDisplayedGames();
-    });
-
-    // --- Sidebar & UI ---
-    document.getElementById('toggleSidebar')?.addEventListener('click', () => {
-        document.getElementById('sidebar').classList.toggle('collapsed');
-        setTimeout(initializeTitleMarquees, 550);
-    });
-    
-    function initializeTitleMarquees() {
-        document.querySelectorAll('#container .title-container').forEach(container => {
-            const wrapper = container.querySelector('.title-content-wrapper');
-            const content = container.querySelector('.title-content');
-            if (!wrapper || !content) return;
-
-            container.classList.remove('card-marquee-active');
-            wrapper.querySelectorAll('.title-content[aria-hidden="true"]').forEach(n => n.remove());
-
-            if (content.scrollWidth > container.clientWidth) {
-                container.classList.add('card-marquee-active');
-                const duplicate = content.cloneNode(true);
-                duplicate.setAttribute('aria-hidden', 'true');
-                wrapper.appendChild(duplicate);
+        firebase.auth().onAuthStateChanged(async user => {
+            if (user) {
+                if (typeof listZones === 'function') listZones();
+            } else {
+                // For this version, we don't redirect, just load games
+                if (typeof listZones === 'function') listZones();
             }
         });
-    }
-    window.addEventListener('resize', initializeTitleMarquees);
 
-    // --- Credits Popup ---
-    const creditsBtn = document.getElementById('creditsBtn');
-    const creditsOverlay = document.getElementById('creditsOverlay');
-    const closeCreditsBtn = document.getElementById('closeCreditsBtn');
-    creditsBtn.addEventListener('click', () => { creditsOverlay.style.display = 'flex'; });
-    closeCreditsBtn.addEventListener('click', () => { creditsOverlay.style.display = 'none'; });
-    creditsOverlay.addEventListener('click', (e) => {
-        if (e.target === creditsOverlay) {
-            creditsOverlay.style.display = 'none';
+        function initializeTitleMarquees() {
+            document.querySelectorAll('#container .title-container').forEach(container => {
+                const wrapper = container.querySelector('.title-content-wrapper');
+                const content = container.querySelector('.title-content');
+                if (!wrapper || !content) return;
+
+                const isOverflowing = content.scrollWidth > container.clientWidth;
+
+                container.classList.remove('card-marquee-active');
+                const duplicate = wrapper.querySelector('.title-content[aria-hidden="true"]');
+                if (duplicate) {
+                    duplicate.remove();
+                }
+
+                if (isOverflowing) {
+                    container.classList.add('card-marquee-active');
+                    const newDuplicate = content.cloneNode(true);
+                    newDuplicate.setAttribute('aria-hidden', 'true');
+                    wrapper.appendChild(newDuplicate);
+                }
+            });
         }
-    });
+        window.addEventListener('resize', initializeTitleMarquees);
 
-    // --- Initial Load ---
-    updateDisplayedGames();
+        const gnContainer = document.getElementById('container');
+        const gnSearchBar = document.getElementById('searchBar');
+        const gnSortOptions = document.getElementById('sortOptions');
+        const gnZoneCount = document.getElementById('zoneCount');
+        const showFavoritesBtn = document.getElementById('showFavoritesBtn');
+
+        const ZONES_URL = "https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json";
+        const COVER_URL_BASE = "https://cdn.jsdelivr.net/gh/gn-math/covers@main";
+        const HTML_URL_BASE = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
+        const FAVORITES_KEY = 'gnGameFavorites_v1';
+
+        let masterZoneList = [];
+        let popularityData = {};
+        let isShowingFavorites = false;
+
+        const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
+        const saveFavorites = (favs) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
+        function toggleFavorite(gameId, starElement) {
+            let favorites = getFavorites();
+            if (favorites.includes(gameId)) {
+                favorites = favorites.filter(id => id !== gameId);
+                starElement.classList.remove('favorited');
+            } else {
+                favorites.push(gameId);
+                starElement.classList.add('favorited');
+            }
+            saveFavorites(favorites);
+            if (isShowingFavorites) sortAndDisplayZones();
+        }
+
+        async function listZones() {
+            gnZoneCount.textContent = "Loading games, please wait...";
+            try {
+                const response = await fetch(`${ZONES_URL}?t=${Date.now()}`);
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                masterZoneList = await response.json();
+
+                masterZoneList.forEach(zone => { popularityData[zone.id] = Math.floor(Math.random() * 1000) + 1; });
+                sortAndDisplayZones();
+            } catch (error) {
+                console.error("Error loading zones:", error);
+                gnContainer.innerHTML = `<p style="color:red;">Error loading games. Please try refreshing.</p>`;
+                gnZoneCount.textContent = "Failed to load games.";
+            }
+        }
+
+        function sortAndDisplayZones() {
+            let zonesToProcess = [...masterZoneList];
+            const sortBy = gnSortOptions.value;
+
+            if (sortBy === 'name') zonesToProcess.sort((a, b) => a.name.localeCompare(b.name));
+            else if (sortBy === 'id') zonesToProcess.sort((a, b) => (parseInt(b.id) || 0) - (parseInt(a.id) || 0));
+            else if (sortBy === 'popular') zonesToProcess.sort((a, b) => (popularityData[b.id] || 0) - (popularityData[a.id] || 0));
+
+            filterAndRenderZones(zonesToProcess);
+        }
+
+        function filterAndRenderZones(sortedZones) {
+            const query = gnSearchBar.value.toLowerCase().trim();
+            let finalZones = sortedZones;
+
+            if (isShowingFavorites) {
+                const favorites = getFavorites();
+                finalZones = finalZones.filter(zone => favorites.includes(zone.id));
+            }
+
+            if (query) {
+                finalZones = finalZones.filter(zone => zone.name.toLowerCase().includes(query) || (zone.tags && zone.tags.some(tag => tag.toLowerCase().includes(query))));
+            }
+
+            renderGameCards(finalZones);
+        }
+
+        function renderGameCards(zonesToRender) {
+            gnContainer.innerHTML = "";
+            const favorites = getFavorites();
+
+            if (zonesToRender.length === 0) {
+                gnContainer.innerHTML = "<p>No games found matching your criteria.</p>";
+                gnZoneCount.textContent = "0 Games Found";
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            zonesToRender.forEach(file => {
+                const zoneItem = document.createElement("div");
+                zoneItem.className = "zone-item";
+                zoneItem.dataset.zoneId = file.id;
+                zoneItem.addEventListener('click', (e) => {
+                    if (e.target.closest('button')) return;
+                    openZone(file);
+                });
+
+                const img = document.createElement("img");
+                img.src = file.cover.replace("{COVER_URL}", COVER_URL_BASE).replace("{HTML_URL}", HTML_URL_BASE);
+                img.alt = file.name;
+                img.loading = "lazy";
+                img.onerror = () => { img.src = 'images/favicon.png'; img.style.objectFit = 'contain'; };
+                zoneItem.appendChild(img);
+
+                const playButton = document.createElement("button");
+                playButton.className = "card-play-btn";
+                playButton.innerHTML = "▶";
+                playButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openZone(file);
+                });
+                zoneItem.appendChild(playButton);
+
+                const favoriteButton = document.createElement("button");
+                favoriteButton.className = "favorite-btn";
+                favoriteButton.innerHTML = "★";
+                if (favorites.includes(file.id)) favoriteButton.classList.add('favorited');
+                favoriteButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFavorite(file.id, favoriteButton);
+                });
+                zoneItem.appendChild(favoriteButton);
+
+                const titleContainer = document.createElement("div");
+                titleContainer.className = "title-container";
+                const titleWrapper = document.createElement("div");
+                titleWrapper.className = "title-content-wrapper";
+
+                const titleContent1 = document.createElement("span");
+                titleContent1.className = "title-content";
+                titleContent1.textContent = file.name;
+                titleWrapper.appendChild(titleContent1);
+
+                titleContainer.appendChild(titleWrapper);
+                zoneItem.appendChild(titleContainer);
+
+                fragment.appendChild(zoneItem);
+            });
+            gnContainer.appendChild(fragment);
+            gnZoneCount.textContent = `Showing: ${zonesToRender.length} Game(s)`;
+
+            setTimeout(initializeTitleMarquees, 50);
+        }
+
+        gnSearchBar.addEventListener('input', sortAndDisplayZones);
+        gnSortOptions.addEventListener('change', sortAndDisplayZones);
+        showFavoritesBtn.addEventListener('click', () => {
+            isShowingFavorites = !isShowingFavorites;
+            if (isShowingFavorites) {
+                showFavoritesBtn.textContent = "Show All";
+            } else {
+                showFavoritesBtn.textContent = "⭐ Show Favorites";
+            }
+            sortAndDisplayZones();
+        });
+
+        function openZone(file) {
+            if (!file || !file.url) {
+                alert("Could not load game: Invalid game data provided.");
+                return;
+            }
+
+            const gameUrl = file.url.replace("{HTML_URL}", HTML_URL_BASE);
+            const zoneViewer = document.getElementById('zoneViewer');
+            const zoneFrame = document.getElementById('zoneFrame');
+            const zoneNameEl = document.getElementById('zoneNameEl');
+
+            zoneNameEl.textContent = file.name;
+            zoneFrame.src = 'about:blank';
+
+            fetch(`${gameUrl}?t=${Date.now()}`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    const doc = zoneFrame.contentWindow.document;
+                    doc.open();
+                    doc.write(html);
+                    doc.close();
+                    zoneViewer.style.display = "flex";
+                    zoneViewer.classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error("Failed to load zone:", file.name, error);
+                    alert(`Failed to load game "${file.name}": ${error.message}.`);
+                    closeZoneViewer();
+                });
+        }
+
+        function closeZoneViewer() {
+            const zoneViewer = document.getElementById('zoneViewer');
+            const zoneFrame = document.getElementById('zoneFrame');
+            zoneViewer.style.display = "none";
+            zoneViewer.classList.add('hidden');
+            if (zoneFrame) {
+                zoneFrame.src = 'about:blank';
+            }
+        }
+
+        document.getElementById('fullscreenBtnZone')?.addEventListener('click', () => {
+            const zoneFrame = document.getElementById('zoneFrame');
+            if (zoneFrame?.requestFullscreen) {
+                zoneFrame.requestFullscreen();
+            }
+        });
+
+        document.getElementById('newTabBtnZone')?.addEventListener('click', () => {
+            const zoneNameEl = document.getElementById('zoneNameEl');
+            const file = masterZoneList.find(z => z.name === zoneNameEl.textContent);
+            if (!file) return;
+
+            const gameUrl = file.url.replace("{HTML_URL}", HTML_URL_BASE);
+            const newWindow = window.open("about:blank", "_blank");
+            if (newWindow) {
+                fetch(`${gameUrl}?t=${Date.now()}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        newWindow.document.open();
+                        newWindow.document.write(html);
+                        newWindow.document.close();
+                    }).catch(err => {
+                        console.error("Error opening in new tab:", err);
+                        newWindow.close();
+                    });
+            }
+        });
+
+        document.getElementById('closeBtnZone')?.addEventListener('click', closeZoneViewer);
+
+        // Credits Modal Logic
+        var modal = document.getElementById("creditsModal");
+        var btn = document.getElementById("creditsBtn");
+        var span = document.getElementsByClassName("credits-modal-close")[0];
+
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
+
 </html>
