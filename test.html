@@ -1,1470 +1,2122 @@
 <!DOCTYPE html>
-<script type="module">
-  const overlay = document.createElement("div");
-  overlay.style.position = "fixed";
-  overlay.style.top = 0;
-  overlay.style.left = 0;
-  overlay.style.width = "100%";
-  overlay.style.height = "100%";
-  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-  overlay.style.display = "flex";
-  overlay.style.alignItems = "center";
-  overlay.style.justifyContent = "center";
-  overlay.style.zIndex = "10000";
-  overlay.innerHTML =
-    '<div style="color: white; font-size: 2em;">Loading games...</div>';
-  document.body.appendChild(overlay);
-
-  function fetchExclusionList() {
-    return new Promise((resolve, reject) => {
-      const callbackName = "jsonpCallback_" + Date.now();
-      window[callbackName] = function (data) {
-        delete window[callbackName];
-        script.parentNode.removeChild(script);
-        resolve(data);
-      };
-      const url =
-        "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec?callback=" +
-        callbackName;
-      const script = document.createElement("script");
-      script.src = url;
-      script.onerror = function (error) {
-        delete window[callbackName];
-        script.parentNode.removeChild(script);
-        reject(new Error("JSONP request failed: " + error.message));
-      };
-      document.body.appendChild(script);
-    });
-  }
-
-  function normalizeGameName(name) {
-    return name
-      .toLowerCase()
-      .replace(/\s+/g, "")
-      .replace(/[^a-z0-9]/g, "");
-  }
-
-  function hideExcludedCards(exclusionList) {
-    const normalizedExclusionList = exclusionList.map((name) =>
-      normalizeGameName(name)
-    );
-    const cards = document.querySelectorAll(".card-container");
-    cards.forEach((cardContainer) => {
-      const card = cardContainer.querySelector(".card");
-      const figcaption = card.querySelector("figcaption");
-      const gameName = figcaption.textContent.trim();
-      const normalizedGameName = normalizeGameName(gameName);
-      if (normalizedExclusionList.includes(normalizedGameName)) {
-        cardContainer.style.display = "none";
-      }
-    });
-  }
-
-  function fetchExclusionListFromFirestore() {
-    return window.db
-      .collection("cards")
-      .get()
-      .then((querySnapshot) => {
-        const exclusionList = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          exclusionList.push(data.gameName);
-        });
-        return exclusionList;
-      });
-  }
-
-  Promise.all([
-    new Promise((resolve) => {
-      document.addEventListener("DOMContentLoaded", resolve);
-    }),
-    fetchExclusionListFromFirestore(),
-  ])
-    .then(([_, exclusionList]) => {
-      hideExcludedCards(exclusionList);
-      overlay.parentNode.removeChild(overlay);
-    })
-    .catch((error) => {
-      overlay.parentNode.removeChild(overlay);
-    });
-</script>
-
-<script
-  async
-  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
-  crossorigin="anonymous"
-></script>
 <html lang="en">
-  <head>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-functions-compat.js"></script>
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
-        authDomain: "strongdog-auth.firebaseapp.com",
-        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
-        projectId: "strongdog-auth",
-        storageBucket: "strongdog-auth.appspot.com",
-        messagingSenderId: "936276282572",
-        appId: "1:936276282572:web:a802b7f609381ff9428669",
-        measurementId: "G-0YLTCV2MMS",
-      };
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
-      const functions = firebase.functions();
-      window.auth = auth;
-      window.db = db;
-      window.functions = functions;
-    </script>
-    <script>
-      auth.onAuthStateChanged((user) => {
-        if (!user) {
-          window.location.href = "login.html";
-        } else {
-          const userId = user.uid;
-          db.collection("access")
-            .doc(userId)
-            .get()
-            .then((doc) => {
-              if (doc.exists && doc.data().tester === true) {
-                document.body.style.display = "block";
-              } else {
-                window.location.href = "index.html";
-              }
-            })
-            .catch(() => {
-              window.location.href = "index.html";
-            });
-        }
-      });
-    </script>
-    <script type="module">
-      import games from "./cards-data-test.js";
-      import { siteMapping } from "./site-mapping.js";
-
-      function normalizeGameName(name) {
-        return name
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .replace(/[^a-z0-9]/g, "");
-      }
-
-      function getAdjustedUrls(href, imgSrc, page) {
-        let adjustedHref = href;
-        let adjustedImgSrc = `./img/${imgSrc}`;
-        if (page >= 2) {
-          let matchedKey = null;
-          for (const key in siteMapping) {
-            if (window.location.hostname.includes(key)) {
-              matchedKey = key;
-              break;
-            }
-          }
-          if (matchedKey) {
-            const pageIndex = page - 2;
-            const pageBaseURLs = siteMapping[matchedKey];
-            if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
-              const pageBaseURL = pageBaseURLs[pageIndex];
-              const newHref = href.replace(/^\.\//, "");
-              const newImg = imgSrc.replace(/^\.\//, "");
-              adjustedHref = `${pageBaseURL}/${newHref}`;
-              adjustedImgSrc = `${pageBaseURL}/img/${newImg}`;
-            } else {
-              if (page === 2) {
-                adjustedHref = `/strongdog2/${href.replace(/^\.\//, "")}`;
-                adjustedImgSrc = `/strongdog2/img/${imgSrc.replace(
-                  /^\.\//,
-                  ""
-                )}`;
-              } else if (page === 3) {
-                adjustedHref = `/strongdog3/${href.replace(/^\.\//, "")}`;
-                adjustedImgSrc = `/strongdog3/img/${imgSrc.replace(
-                  /^\.\//,
-                  ""
-                )}`;
-              } else if (page === 4) {
-                adjustedHref = `/strongdog4/${href.replace(/^\.\//, "")}`;
-                adjustedImgSrc = `/strongdog4/img/${imgSrc.replace(
-                  /^\.\//,
-                  ""
-                )}`;
-              }
-            }
-          } else {
-            if (page === 2) {
-              adjustedHref = `/strongdog2/${href.replace(/^\.\//, "")}`;
-              adjustedImgSrc = `/strongdog2/img/${imgSrc.replace(/^\.\//, "")}`;
-            } else if (page === 3) {
-              adjustedHref = `/strongdog3/${href.replace(/^\.\//, "")}`;
-              adjustedImgSrc = `/strongdog3/img/${imgSrc.replace(/^\.\//, "")}`;
-            } else if (page === 4) {
-              adjustedHref = `/strongdog4/${href.replace(/^\.\//, "")}`;
-              adjustedImgSrc = `/strongdog4/img/${imgSrc.replace(/^\.\//, "")}`;
-            }
-          }
-        }
-        return { adjustedHref, adjustedImgSrc };
-      }
-
-      function getCardHTML(gameObject) {
-        const { href, imgSrc, name, page } = gameObject;
-        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
-          href,
-          imgSrc,
-          page
-        );
-        const gameId = normalizeGameName(name);
-        return `
-          <div class="card-container">
-            <a href="${adjustedHref}" class="card" data-game-id="${gameId}">
-              <img src="${adjustedImgSrc}" alt="${name}">
-              <figcaption>${name}</figcaption>
-            </a>
-            <div class="card-buttons">
-              <button class="btn-check" data-game-name="${name}" title="Add Game">&#10003;</button>
-              <button class="btn-delete" data-game-name="${name}" title="Report Issue">&#10005;</button>
+	<style>
+		:root {
+		  --red: rgb(220, 53, 69);
+		  --green: rgb(40, 167, 69);
+		  --ff: 'Nunito', Arial, sans-serif;
+		  --bg: #2e2e2e;
+		}
+		body {
+		  font-family: var(--ff);
+		  margin: 0;
+		  padding: 0;
+		  background-color: var(--bg);
+		  overflow-x: hidden;
+		}
+		.navbar {
+		  background-color: rgba(50, 50, 50, 0.9);
+		  backdrop-filter: blur(10px);
+		  color: white;
+		  padding: 15px 30px;
+		  display: flex;
+		  align-items: center;
+		  justify-content: space-between;
+		  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+		  position: sticky;
+		  top: 0;
+		  z-index: 1000;
+		  position: relative;
+		}
+		.search-container {
+		  display: flex;
+		  align-items: center;
+		  position: relative;
+		}
+		.apps-button {
+		  background: none;
+		  border: none;
+		  cursor: pointer;
+		  margin-right: 12px;
+		  width: 40px;
+		  height: 40px;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		}
+		.apps-button svg {
+		  width: 100%;
+		  height: 100%;
+		}
+		.apps-button svg circle {
+		  fill: white;
+		  transition: fill 0.3s ease;
+		}
+		.apps-button:hover svg circle {
+		  fill: orange;
+		}
+		.logo {
+		  position: absolute;
+		  left: 50%;
+		  transform: translateX(-50%);
+		  font-weight: 700;
+		  font-size: 2.5rem;
+		  letter-spacing: 1px;
+		  transition: transform 0.3s ease;
+		  text-decoration: none;
+		  color: white;
+		}
+		.logo:hover {
+		  transform: translateX(-50%) scale(1.025);
+		  text-decoration: none;
+		}
+		.logo .xp {
+		  color: orange;
+		  text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+		}
+		.menu-icon {
+		  font-size: 2.5rem;
+		  cursor: pointer;
+		  color: white;
+		  transition: transform 0.3s ease, color 0.3s ease;
+		}
+		.menu-icon:hover {
+		  transform: scale(1.2);
+		  color: white;
+		}
+		.slide-menu {
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  height: 100vh;
+		  width: 400px;
+		  backdrop-filter: blur(10px);
+		  color: white;
+		  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+		  z-index: 1003;
+		  transition: transform 0.5s ease;
+		  transform: translateX(-100%);
+		  padding: 20px;
+		  overflow-y: auto;
+		  box-sizing: border-box;
+		  scrollbar-width: none;
+		  -ms-overflow-style: none;
+		  background: linear-gradient(
+		    to bottom right,
+		    rgba(43, 43, 43, 0.599),
+		    rgba(53, 53, 53, 0.599),
+		    rgba(80, 80, 80, 0.599)
+		  );
+		}
+		.slide-menu::-webkit-scrollbar {
+		  display: none;
+		}
+		.slide-menu[style*="translateX(0%)"] {
+		  transform: translateX(0);
+		}
+		.profile-picture-container {
+		  border-radius: 50%;
+		  width: 120px;
+		  aspect-ratio: 1;
+		  overflow: hidden;
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+		  transition: all 0.4s ease;
+		  cursor: pointer;
+		  border: 3px solid orange;
+		}
+		.profile-picture-container:hover {
+		  transform: scale(1.1) rotate(5deg);
+		  box-shadow: 0 0 35px rgba(255, 165, 0, 0.5);
+		}
+		.profile-picture {
+		  width: 100%;
+		  height: 100%;
+		  object-fit: cover;
+		}
+		.user-details-container {
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  padding: 30px 0;
+		  gap: 15px;
+		}
+		.profile-top-container {
+		  display: flex;
+		  align-items: center;
+		  gap: 20px;
+		}
+		.username-container {
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		}
+		.username-text {
+		  font-size: 1.8rem;
+		  color: white;
+		  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+		}
+		.categories {
+		  display: flex;
+		  flex-direction: column;
+		  gap: 15px;
+		}
+		.categories > a {
+		  padding: 17px;
+		  background: linear-gradient(45deg, #333, #444);
+		  border-radius: 15px;
+		  text-decoration: none;
+		  color: white;
+		  transition: transform 0.4s ease;
+		  text-align: center;
+		  font-size: 1.2rem;
+		  position: relative;
+		  overflow: hidden;
+		  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+		}
+		.categories > a:hover {
+		  background: linear-gradient(45deg, #ffa500, #ff8433);
+		  box-shadow: 0 6px 20px rgba(255, 98, 0, 0.5);
+		}
+		.categories > a::after {
+		  content: "";
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  transform: translate(-50%, -50%);
+		  border-radius: 50%;
+		  width: 0;
+		  height: 0;
+		  background: rgba(0, 0, 0, 0.1);
+		  transition: all 0.5s ease;
+		}
+		.categories > a:hover::after {
+		  width: 500px;
+		  height: 500px;
+		}
+		span.new-feature-tag {
+		  background: orange;
+		  border-radius: 50px;
+		  padding: 0.3rem 0.6rem;
+		  margin-left: 1rem;
+		  font-size: 0.7rem;
+		  color: black;
+		  text-transform: uppercase;
+		  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+		}
+		.search-bar {
+		  padding: 0.8rem 1.2rem;
+		  font-size: 1rem;
+		  border-radius: 15px;
+		  width: 275px;
+		  border: none;
+		  background-color: rgba(0, 0, 0, 0.4);
+		  color: white;
+		  transition: all 0.3s ease;
+		  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+		}
+		.search-bar::placeholder {
+		  color: rgba(255, 255, 255, 0.6);
+		}
+		.search-bar:focus {
+		  outline: none;
+		  background-color: rgba(0, 0, 0, 0.6);
+		}
+		.games-grid {
+		  display: flex;
+		  flex-wrap: wrap;
+		  padding: 20px;
+		  justify-content: center;
+		  gap: 10px;
+		}
+		.ghost-card {
+		  background: #3e3e3e;
+		  animation: pulse 1.5s infinite ease-in-out;
+		}
+		@keyframes pulse {
+		  0%,
+		  100% { background: #3e3e3e; }
+		  50% { background: #5e5e5e; }
+		}
+		.card,
+		.ghost-card {
+		  border-radius: 15px;
+		  width: 120px;
+		  aspect-ratio: 1;
+		  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+		  transition: all 0.4s ease;
+		}
+		.card {
+		  background: transparent;
+		  position: relative;
+		  overflow: hidden;
+		}
+		.card:hover {
+		  transform: scale(1.1) translateY(-10px);
+		  box-shadow: 0 10px 30px rgba(255, 98, 0, 0.4);
+		}
+		.card img {
+		  width: 100%;
+		  height: 100%;
+		  object-fit: cover;
+		  transition: transform 0.4s ease;
+		}
+		.card:hover img {
+		  transform: scale(1.05);
+		}
+		.card figcaption {
+		  position: absolute;
+		  bottom: 0;
+		  left: 0;
+		  width: 100%;
+		  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+		  color: #ffffff;
+		  padding: 10px 0;
+		  transition: all 0.4s ease;
+		  transform: translateY(100%);
+		  opacity: 0;
+		  text-align: center;
+		  font-weight: 600;
+		  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+		}
+		.card:hover figcaption {
+		  transform: translateY(1px);
+		  opacity: 1;
+		}
+		.search-results {
+		  position: absolute;
+		  right: 0;
+		  top: 71px;
+		  background-color: rgba(30, 30, 30, 0.9);
+		  backdrop-filter: blur(5px);
+		  border-radius: 15px;
+		  width: 313px;
+		  display: none;
+		  overflow: hidden;
+		  z-index: 1000;
+		  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+		}
+		.search-results a {
+		  display: flex;
+		  align-items: center;
+		  text-decoration: none;
+		  color: white;
+		  padding: 10px;
+		  transition: all 0.3s ease;
+		  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+		}
+		.search-results a:focus,
+		.search-results a:hover {
+		  outline: none;
+		  background: rgba(50, 50, 50, 0.7);
+		  padding-left: 15px;
+		}
+		.search-results img {
+		  width: 60px;
+		  height: 60px;
+		  object-fit: cover;
+		  margin-right: 15px;
+		  border-radius: 10px;
+		  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+		}
+		.search-results a:last-child {
+		  border-bottom: none;
+		}
+		.news-container {
+		  margin: 30px auto;
+		  padding: 30px;
+		  max-width: 900px;
+		  background-color: #444444;
+		  border-radius: 20px;
+		  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+		}
+		.news {
+		  color: white;
+		}
+		.credits-title {
+		  font-size: 2rem;
+		  margin-bottom: 20px;
+		  color: white;
+		  border-bottom: 3px solid #ddd;
+		  padding-bottom: 10px;
+		  text-shadow: none;
+		}
+		.credits-item {
+		  display: flex;
+		  justify-content: space-between;
+		  margin-bottom: 20px;
+		}
+		.credits-role {
+		  font-weight: 700;
+		  color: white;
+		  font-size: 1.2rem;
+		}
+		.credits-names {
+		  display: flex;
+		  flex-wrap: wrap;
+		  gap: 15px;
+		  align-items: center;
+		}
+		.credits-link {
+		  color: #4fa7ff;
+		  text-decoration: none;
+		  font-weight: 600;
+		  transition: all 0.3s ease;
+		}
+		.credits-link:hover {
+		  text-decoration: underline;
+		}
+		.credits-names span {
+		  color: #c4c4c4;
+		}
+		h2 {
+		  text-align: center;
+		  color: white;
+		  margin: 40px 0;
+		  font-size: 2.5rem;
+		  text-shadow: none;
+		}
+		.alternate-links-container {
+		  padding: 20px;
+		  display: grid;
+		  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		  gap: 15px;
+		  margin: 0 auto;
+		  max-width: 900px;
+		  background-color: #444444;
+		  border-radius: 20px;
+		  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+		}
+		.alternate-link:last-child:nth-child(odd) {
+		  grid-column: 1 / -1;
+		}
+		.status-dot,
+		.spinning-dot {
+		  aspect-ratio: 1;
+		  border-radius: 100vw;
+		  display: inline-block;
+		  margin-left: 10px;
+		  margin-right: 5px;
+		}
+		.status-dot {
+		  width: 15px;
+		  background-color: var(--red);
+		}
+		.spinning-dot {
+		  width: 12px;
+		  border: 3px solid transparent;
+		  border-top: 3px solid black;
+		  animation: spinning-dot-spin infinite 500ms linear;
+		}
+		@keyframes spinning-dot-spin {
+		  to { transform: rotate(1turn); }
+		}
+		.alternate-link {
+		  display: flex;
+		  align-items: center;
+		  justify-content: space-between;
+		  padding: 10px 15px;
+		  text-decoration: none;
+		  color: #007bff;
+		  background-color: #4e4e4e;
+		  border-radius: 10px;
+		  transition: all 0.3s ease;
+		  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+		}
+		.alternate-link:hover {
+		  background-color: #444;
+		  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+		}
+		.alternate-link span:first-child {
+		  overflow: hidden;
+		  text-overflow: ellipsis;
+		  white-space: nowrap;
+		  flex-grow: 1;
+		  font-size: 1.1rem;
+		  font-weight: 600;
+		  margin-right: 10px;
+		}
+		.alternate-links-key {
+		  text-align: center;
+		  margin-top: 15px;
+		  font-size: 14px;
+		  color: #aaa;
+		}
+		.updates-paragraph-text {
+		  color: black;
+		  background-color: #a83632;
+		  background: linear-gradient(156deg, #ae8625, #f7ef8a, #d1ac47, #edc967);
+		  padding: 20px;
+		  border-radius: 15px;
+		  box-shadow: 0 10px 25px #d1ac4780;
+		  font-size: 1.1rem;
+		  text-align: center;
+		  max-width: 850px;
+		  margin-block: 20px;
+		}
+		.updates-text-container {
+		  margin: 0 20%;
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		}
+		#topGameList {
+		  max-width: 1600px;
+		  margin: 0 auto;
+		}
+		.modal {
+		  display: none;
+		  position: fixed;
+		  z-index: 1000;
+		  left: 0;
+		  top: 0;
+		  width: 100%;
+		  height: 100%;
+		  background-color: rgba(0, 0, 0, 0.5);
+		  justify-content: center;
+		  align-items: center;
+		}
+		.modal-content {
+		  background-color: #757575;
+		  padding: 30px;
+		  border-radius: 20px;
+		  width: 90%;
+		  max-width: 450px;
+		  text-align: center;
+		  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+		  color: white;
+		}
+		.modal-close {
+		  color: #aaa;
+		  float: right;
+		  font-size: 32px;
+		  font-weight: bold;
+		  cursor: pointer;
+		  transition: all 0.3s ease;
+		}
+		.modal-close:hover,
+		.modal-close:focus {
+		  color: #000;
+		  transform: scale(1.2);
+		}
+		.modal-link {
+		  color: blue;
+		  text-decoration: underline;
+		  cursor: pointer;
+		  transition: all 0.3s ease;
+		}
+		.modal-link:hover {
+		  color: #ff8433;
+		}
+		.xp-container {
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  margin: 20px auto;
+		  width: 90%;
+		}
+		.xp-level-text {
+		  color: white;
+		  font-size: 1.3rem;
+		  margin-bottom: 10px;
+		  text-shadow: none;
+		}
+		.xp-bar {
+		  position: relative;
+		  width: 100%;
+		  height: 25px;
+		  background: black;
+		  border-radius: 15px;
+		  overflow: hidden;
+		}
+		.xp-bar-fill {
+		  height: 100%;
+		  background: linear-gradient(to right, #47fced, #0af);
+		  width: 0%;
+		  transition: width 0.7s ease;
+		}
+		.xp-bar-text {
+		  position: absolute;
+		  width: 100%;
+		  text-align: center;
+		  color: white;
+		  font-size: 0.9rem;
+		  top: 50%;
+		  transform: translateY(-50%);
+		  pointer-events: none;
+		  text-shadow: none;
+		}
+		.section-header {
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		  gap: 10px;
+		}
+		.edit-button {
+		  width: 30px;
+		  cursor: pointer;
+		  fill: #999;
+		  transition: transform 0.3s ease;
+		}
+		.edit-button:hover {
+		  transform: scale(1.2);
+		}
+		.custom-slide-menu {
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  height: 100vh;
+		  width: 400px;
+		  background-color: #202020;
+		  color: white;
+		  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+		  z-index: 1003;
+		  transition: transform 0.5s ease;
+		  transform: translateX(-100%);
+		  padding: 20px;
+		  overflow-y: auto;
+		  box-sizing: border-box;
+		}
+		.custom-slide-menu[style*="translateX(0%)"] {
+		  transform: translateX(0);
+		}
+		.custom-options {
+		  display: flex;
+		  flex-direction: column;
+		  gap: 20px;
+		  padding: 20px 0;
+		}
+		.toggle-option {
+		  display: flex;
+		  justify-content: space-between;
+		  align-items: center;
+		  padding: 10px;
+		  background: #333333;
+		  border-radius: 10px;
+		}
+		.toggle-option label {
+		  font-size: 1.2rem;
+		  color: white;
+		}
+		.toggle-option input[type="checkbox"] {
+		  appearance: none;
+		  width: 50px;
+		  height: 25px;
+		  background: #555555;
+		  border-radius: 25px;
+		  position: relative;
+		  cursor: pointer;
+		  outline: none;
+		  transition: background 0.3s ease;
+		}
+		.toggle-option input[type="checkbox"]:checked {
+		  background: #007bff;
+		}
+		.toggle-option input[type="checkbox"]::before {
+		  content: "";
+		  position: absolute;
+		  width: 21px;
+		  height: 21px;
+		  background: white;
+		  border-radius: 50%;
+		  top: 2px;
+		  left: 2px;
+		  transition: transform 0.3s ease;
+		}
+		.toggle-option input[type="checkbox"]:checked::before {
+		  transform: translateX(25px);
+		}
+		input[type="range"] {
+		  appearance: none;
+		  width: 100%;
+		  margin: 10px 0;
+		  background: transparent;
+		}
+		input[type="range"]::-webkit-slider-runnable-track {
+		  height: 8px;
+		  background: #ccc;
+		  border-radius: 5px;
+		}
+		input[type="range"]::-webkit-slider-thumb {
+		  appearance: none;
+		  height: 20px;
+		  width: 20px;
+		  background: #fff;
+		  border: 1px solid #777;
+		  border-radius: 50%;
+		  cursor: pointer;
+		  margin-top: -6px;
+		}
+		.overlay {
+		  display: none;
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  background-color: rgba(0, 0, 0, 0.5);
+		  z-index: 1000;
+		}
+		.popup-container {
+		  display: none;
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  justify-content: center;
+		  align-items: center;
+		  z-index: 1001;
+		}
+		.popup-container.active {
+		  display: flex;
+		}
+		.popup {
+		  background-color: #333;
+		  color: white;
+		  padding: 20px;
+		  border-radius: 10px;
+		  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+		  max-width: 90%;
+		  width: 300px;
+		  text-align: center;
+		}
+		.popup button {
+		  margin-top: 20px;
+		  padding: 10px 20px;
+		  background-color: #ff8c00;
+		  border: none;
+		  color: white;
+		  font-size: 14px;
+		  border-radius: 5px;
+		  cursor: pointer;
+		}
+		.popup button:hover {
+		  background-color: #ff6a00;
+		}
+		#customSlideMenu .custom-options {
+		  padding: 20px !important;
+		}
+		#customSlideMenu .custom-option {
+		  margin-bottom: 20px !important;
+		}
+		#customSlideMenu label {
+		  color: white;
+		  display: block;
+		  margin-bottom: 10px;
+		  font-size: 1.1rem;
+		  font-weight: 600;
+		}
+		#customSlideMenu input[type="text"] {
+		  width: 100% !important;
+		  padding: 10px !important;
+		  border: 1px solid #444 !important;
+		  border-radius: 5px !important;
+		  font-size: 1rem !important;
+		  background-color: #333 !important;
+		  color: white !important;
+		  box-sizing: border-box !important;
+		}
+		#customSlideMenu input[type="text"]::placeholder {
+		  color: #bbb !important;
+		}
+		#customSlideMenu button {
+		  margin-top: 10px !important;
+		  padding: 10px 15px !important;
+		  border: none !important;
+		  border-radius: 5px !important;
+		  background-color: #ff8c00 !important;
+		  color: white !important;
+		  cursor: pointer !important;
+		  font-size: 1rem !important;
+		  transition: background-color 0.3s ease !important;
+		}
+		#customSlideMenu button:hover {
+		  background-color: #ff6a00 !important;
+		}
+		.apps-popup {
+		  display: none;
+		  position: absolute;
+		  top: calc(100% + 8px);
+		  left: -123px;
+		  background: #333;
+		  border-radius: 12px;
+		  padding: 12px;
+		  z-index: 1001;
+      	  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+		}
+		.apps-popup.show {
+		  display: grid;
+		  /* change the number of times it repeats for number of items in the waffle menu (2 right now) */
+		  grid-template-columns: repeat(2, 1fr);
+		}
+		.apps-grid { display: contents; }
+		.app-item {
+		  width: 72px;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  justify-content: center;
+		  padding: 8px;
+		  border-radius: 12px;
+		  transition: background 0.2s, transform 0.2s;
+		  cursor: pointer;
+		}
+		.app-item:hover {
+		  background: #404040;
+		  transform: scale(1.06);
+		}
+		.app-icon img {
+		  width: 50px;
+		  height: 50px;
+		  border-radius: 10%;
+		}
+		svg.movie-svg {
+		  width: 60px;
+		  margin: -5px;
+		}
+		.app-title {
+		  margin-top: 6px;
+		  font-size: 0.75rem;
+		  color: #fff;
+		  text-align: center;
+		  white-space: nowrap;
+		}
+		@media (max-width: 768px) {
+		  .navbar {
+		    flex-wrap: wrap;
+		    padding: 10px 15px;
+		  }
+		  .menu-icon {
+		    font-size: 2rem;
+		    margin-bottom: 10px;
+		  }
+		  .logo {
+		    font-size: 1.8rem;
+		    left: 50%;
+		    transform: translateX(-50%);
+		  }
+		  .search-container {
+		    display: flex;
+		    align-items: center;
+		    position: relative;
+		  }
+		  .search-bar {
+		    width: 90%;
+		    font-size: 0.9rem;
+		  }
+		  .slide-menu,
+		  .custom-slide-menu {
+		    width: 250px;
+		  }
+		  .profile-picture-container {
+		    width: 80px;
+		    aspect-ratio: 1;
+		  }
+		  .username-text { font-size: 1.3rem; }
+		  .categories > a {
+		    font-size: 1rem;
+		    padding: 15px;
+		  }
+		  .games-grid {
+		    gap: 8px;
+		    padding: 10px;
+		  }
+		  .card,
+		  .ghost-card {
+		    width: 100px;
+		    aspect-ratio: 1;
+		  }
+		  .card figcaption { font-size: 0.9rem; }
+		  .alternate-links-container {
+		    grid-template-columns: 1fr;
+		    padding: 10px;
+		    margin: 0 10px;
+		  }
+		  .alternate-link span:first-child { font-size: 1rem; }
+		  .news-container {
+		    margin: 20px;
+		    padding: 20px;
+		  }
+		  .profile-top-container {
+		    flex-direction: column;
+		    gap: 10px;
+		  }
+		  .xp-container { width: 100%; }
+		  .xp-level-text { font-size: 1.1rem; }
+		  .xp-bar { height: 20px; }
+		  .edit-button { width: 25px; }
+		}
+	</style>
+	<head>
+		<title>StrongDog XP</title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+		<script>
+			async
+			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
+			crossorigin="anonymous"
+		</script>
+		<meta name="keywords" content="educational platform, learning resources, academic tools, educational games, student resources, school-friendly content, learning tools, interactive education, student access"/>
+		<link rel="canonical" href="https://65s.org/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:description" content="Unblocked Educational Games At School And Home for free"/>
+		<meta property="og:image" content="strongdog.webp" />
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@graph": [
+					{
+						"@type": "Organization",
+						"name": "strongdogXP LLC",
+						"url": "https://65s.org/",
+						"logo": "https://65s.org/images/logo.png",
+						"description": "strongdog XP is a gaming portal where users can access a wide variety of browser games and connect with the community through the Discord server.",
+						"founder": { "@type": "Person", "name": "Josh P" }
+					},
+					{
+						"@type": "WebSite",
+						"url": "https://65s.org/",
+						"name": "strongdog XP"
+					},
+					{
+						"@type": "WebPage",
+						"url": "https://65s.org/",
+						"name": "Home",
+						"description": "Browse a wide variety of browser games and join the strongdogXP community.",
+						"inLanguage": "en-US"
+					},
+					{
+						"@type": "BreadcrumbList",
+						"itemListElement": [
+							{
+								"@type": "ListItem",
+								"position": 1,
+								"name": "Home",
+								"item": "https://65s.org/"
+							}
+						]
+					}
+				]
+			}
+		</script>
+		<script data-grow-initializer="">
+			!(function () {
+				window.growMe ||
+					((window.growMe = function (e) {
+						window.growMe._.push(e);
+					}),
+					(window.growMe._ = []));
+				var e = document.createElement("script");
+				(e.type = "text/javascript"),
+					(e.src = "https://faves.grow.me/main.js"),
+					(e.defer = !0),
+					e.setAttribute(
+						"data-grow-faves-site-id",
+						"U2l0ZTo3YjgwNWM2Ny1kNzYzLTQ2MjktODk3Yi00ZWQ3OWE3OThmYWM="
+					);
+				var t = document.getElementsByTagName("script")[0];
+				t.parentNode.insertBefore(e, t);
+			})();
+		</script>
+		<link rel="icon" type="image/x-icon" href="img/favicon.ico" id="faviconLink" />
+		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+		<script>
+			const firebaseConfig = {
+				apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
+				authDomain: "strongdog-auth.firebaseapp.com",
+				projectId: "strongdog-auth",
+				storageBucket: "strongdog-auth.appspot.com",
+				messagingSenderId: "936276282572",
+				appId: "1:936276282572:web:a802b7f609381ff9428669",
+				measurementId: "G-0YLTCV2MMS",
+			};
+			firebase.initializeApp(firebaseConfig);
+			window.auth = firebase.auth();
+			window.db = firebase.firestore();
+			window.rtdb = firebase.database();
+		</script>
+		<script>
+			async function getAllIndexedDBData() {
+				if (!indexedDB.databases) return {};
+				let dbList = [];
+				try {
+					dbList = await indexedDB.databases();
+				} catch (e) {
+					return {};
+				}
+				const result = {};
+				for (const dbInfo of dbList) {
+					if (!dbInfo.name) continue;
+					result[dbInfo.name] = await getDataFromDatabase(dbInfo.name);
+				}
+				return result;
+			}
+			function getDataFromDatabase(dbName) {
+				return new Promise((resolve, reject) => {
+					const request = indexedDB.open(dbName);
+					(request.onsuccess = e => {
+						const db = e.target.result,
+							storeNames = Array.from(db.objectStoreNames),
+							dbData = {},
+							pendingCount = storeNames.length;
+						if (!pendingCount) {
+							db.close(), resolve(dbData);
+							return;
+						}
+						let pending = pendingCount;
+						storeNames.forEach(storeName => {
+							const transaction = db.transaction(storeName, "readonly"),
+								store = transaction.objectStore(storeName),
+								items = [],
+								cursorRequest = store.openCursor();
+							(cursorRequest.onsuccess = evt => {
+								const cursor = evt.target.result;
+								if (cursor)
+									items.push({ key: cursor.key, value: cursor.value }),
+										cursor.continue();
+								else {
+									(dbData[storeName] = items),
+										pending--,
+										!pending && (db.close(), resolve(dbData));
+								}
+							}),
+								(cursorRequest.onerror = () => {
+									pending--, !pending && (db.close(), resolve(dbData));
+								});
+						});
+					}),
+						(request.onerror = e => {
+							reject(e.target.error);
+						});
+				});
+			}
+			async function setAllIndexedDBData(indexedData) {
+				for (const dbName in indexedData) {
+					const storesData = indexedData[dbName];
+					await new Promise(resolve => {
+						const deleteRequest = indexedDB.deleteDatabase(dbName);
+						(deleteRequest.onsuccess = () => resolve()),
+							(deleteRequest.onerror = () => resolve()),
+							(deleteRequest.onblocked = () => resolve());
+					});
+					const openRequest = indexedDB.open(dbName, 1);
+					openRequest.onupgradeneeded = function (e) {
+						const db = e.target.result;
+						for (const storeName in storesData)
+							db.objectStoreNames.contains(storeName) ||
+								db.createObjectStore(storeName, { autoIncrement: false });
+					};
+					const dbInstance = await new Promise((resolve, reject) => {
+						(openRequest.onsuccess = e => {
+							resolve(e.target.result);
+						}),
+							(openRequest.onerror = e => {
+								reject(e.target.error);
+							});
+					});
+					for (const storeName in storesData)
+						await new Promise(resolve => {
+							const transaction = dbInstance.transaction(storeName, "readwrite");
+							(transaction.oncomplete = () => resolve()),
+								(transaction.onerror = () => resolve());
+							const store = transaction.objectStore(storeName),
+								clearRequest = store.clear();
+							clearRequest.onsuccess = async () => {
+								for (const record of storesData[storeName])
+									await new Promise(r => {
+										const putRequest = store.put(record.value, record.key);
+										(putRequest.onsuccess = () => r()),
+											(putRequest.onerror = () => r());
+									});
+							};
+						});
+					dbInstance.close();
+				}
+			}
+		</script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-D88TDDVPGJ"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
+			gtag("config", "G-D88TDDVPGJ");
+		</script>
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				if (!document.getElementById("autoSaveModal")) {
+					const modal = document.createElement("div");
+					(modal.id = "autoSaveModal"),
+						(modal.style.cssText =
+							"display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); align-items:center; justify-content:center; z-index:3000;"),
+						(modal.innerHTML = `
+            <div style="background:#333; padding:20px; border-radius:5px; text-align:center; color:#fff; max-width:90%;">
+              <p>Would you like to load your auto-save?<br>If not now, you'll have to enable it manually later.</p>
+              <button id="autoSaveYes" style="margin-right:10px; padding:10px 20px; background:orange; border:none; border-radius:5px;cursor:pointer;">Yes</button>
+              <button id="autoSaveNo" style="padding:10px 20px; background:gray; border:none; border-radius:5px;cursor:pointer;">No</button>
             </div>
-          </div>
-        `;
-      }
+          `),
+						document.body.appendChild(modal);
+				}
+				function setCookie(name, value, days) {
+					const d = new Date();
+					d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days),
+						(document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`);
+				}
+				function getCookie(name) {
+					const all = `; ${document.cookie}`,
+						parts = all.split(`; ${name}=`);
+					if (parts.length === 2) return parts.pop().split(";")[0];
+					return "";
+				}
+				function getAllLocalStorageData() {
+					const data = {};
+					for (let i = 0; i < localStorage.length; i++) {
+						const k = localStorage.key(i);
+						data[k] = localStorage.getItem(k);
+					}
+					return data;
+				}
+				function setAllLocalStorageData(obj) {
+					localStorage.clear();
+					for (const k in obj) localStorage.setItem(k, obj[k]);
+				}
+				function autoSaveData() {
+					if (!window.currentUserId) return;
+					const localData = getAllLocalStorageData();
+					getAllIndexedDBData()
+						.then(indexedData => {
+							const docRef = window.db
+								.collection("users")
+								.doc(window.currentUserId)
+								.collection("saves")
+								.doc("slot3");
+							docRef
+								.set({
+									title: "Auto Save",
+									description: "Auto-saved on " + new Date().toLocaleString(),
+									localStorageData: localData,
+									indexedDBBackup: indexedData,
+								})
+								.catch(err => {});
+						})
+						.catch(err => {});
+				}
+				function loadAutoSave() {
+					if (!window.currentUserId) return;
+					const docRef = window.db
+						.collection("users")
+						.doc(window.currentUserId)
+						.collection("saves")
+						.doc("slot3");
+					docRef.get().then(docSnap => {
+						if (docSnap.exists && docSnap.data().localStorageData) {
+							setAllLocalStorageData(docSnap.data().localStorageData);
+							if (docSnap.data().indexedDBBackup) {
+								setAllIndexedDBData(docSnap.data().indexedDBBackup)
+									.then(() => alert("Auto-save loaded!"))
+									.catch(err => {
+										alert("Error loading auto-save IndexedDB data!");
+									});
+							} else alert("Auto-save loaded!");
+						} else alert("No auto-save data found in Firestore.");
+					});
+				}
+				function showAutoSaveModal() {
+					document.getElementById("autoSaveModal").style.display = "flex";
+				}
+				function hideAutoSaveModal() {
+					document.getElementById("autoSaveModal").style.display = "none";
+				}
+				const yesBtn = document.getElementById("autoSaveYes"),
+					noBtn = document.getElementById("autoSaveNo");
+				yesBtn?.addEventListener("click", () => {
+					hideAutoSaveModal(), setCookie("autoSaveEnabled", "true", 9999), loadAutoSave();
+				});
+				noBtn?.addEventListener("click", () => {
+					hideAutoSaveModal(), setCookie("autoSaveEnabled", "false", 9999);
+				});
+				window.auth.onAuthStateChanged(async user => {
+					if (user) {
+						window.currentUserId = user.uid;
+						const autoEnabled = getCookie("autoSaveEnabled");
+						if (!autoEnabled) {
+							const docRef = window.db
+									.collection("users")
+									.doc(user.uid)
+									.collection("saves")
+									.doc("slot3"),
+								docSnap = await docRef.get();
+							if (docSnap.exists && docSnap.data().localStorageData)
+								showAutoSaveModal();
+							else {
+								setCookie("autoSaveEnabled", "true", 9999);
+								if (!getCookie("autoSaveDone")) {
+									autoSaveData(), setCookie("autoSaveDone", "true", 1);
+								}
+							}
+						} else if (autoEnabled === "true" && !getCookie("autoSaveDone")) {
+							autoSaveData(), setCookie("autoSaveDone", "true", 1);
+						}
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div
+			id="secretLink"
+			title="Secret Menu"
+			style="
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				width: 10px;
+				height: 10px;
+				cursor: pointer;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 1000;
+			"
+			onclick="window.location.href = 'secret-menu.html';"
+		></div>
+		<div class="navbar">
+			<div class="menu-icon" id="menuIcon">☰</div>
+			<a href="index.html" class="logo">strongdog<span class="xp">XP</span></a>
+			<div class="search-container">
+				<button id="appsButton" class="apps-button" aria-label="Apps">
+					<svg width="28" height="28" viewBox="0 0 24 24">
+						<circle cx="5" cy="5" r="2" />
+						<circle cx="12" cy="5" r="2" />
+						<circle cx="19" cy="5" r="2" />
+						<circle cx="5" cy="12" r="2" />
+						<circle cx="12" cy="12" r="2" />
+						<circle cx="19" cy="12" r="2" />
+						<circle cx="5" cy="19" r="2" />
+						<circle cx="12" cy="19" r="2" />
+						<circle cx="19" cy="19" r="2" />
+					</svg>
+				</button>
+				<div id="appsPopup" class="apps-popup">
+					<div class="apps-grid">
+            			<a
+							href="./html/discord/game/index.html"
+							class="app-item"
+							style="text-decoration: none; color: inherit"
+						>
+							<div class="app-icon">
+								<img src="./img/discord.png" alt="Discord" />
+							</div>
+							<div class="app-title">Discord</div>
+						</a>
 
-      let cardsHTMLArr = [];
-      for (let i = 0; i < games.length; i++) {
-        cardsHTMLArr.push(getCardHTML(games[i]));
-      }
-
-      document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("allGameList").innerHTML =
-          cardsHTMLArr.join("");
-        addCardButtonListeners();
-      });
-
-      function addCardButtonListeners() {
-        const checkButtons = document.querySelectorAll(".btn-check");
-        const deleteButtons = document.querySelectorAll(".btn-delete");
-        checkButtons.forEach((button) => {
-          button.addEventListener("click", handleCheckClick);
-        });
-        deleteButtons.forEach((button) => {
-          button.addEventListener("click", handleDeleteClick);
-        });
-      }
-
-      function handleCheckClick(event) {
-        const gameName = event.target.getAttribute("data-game-name");
-        if (!gameName) {
-          alert("Game name is missing.");
-          return;
-        }
-        alert(`${gameName} is being submitted for approval. Please wait...`);
-        const approveGameFunction = firebase
-          .functions()
-          .httpsCallable("approveGameCallable");
-        approveGameFunction({ gameName: gameName.trim() })
-          .then((result) => {
-            alert(
-              result.data.message || `Game "${gameName}" has been approved.`
-            );
-            db.collection("cards")
-              .add({
-                gameName: gameName,
-                disable: true,
-              })
-              .then(() => {
-                event.target.closest(".card-container").remove();
-              });
-          })
-          .catch((error) => {
-            alert(`Error approving game: ${error.message}`);
-          });
-      }
-
-      function handleDeleteClick(event) {
-        const gameName = event.target.getAttribute("data-game-name");
-        const issue = prompt(`What was the issue with ${gameName}?`);
-        if (issue) {
-          alert(`${gameName} is now under review.`);
-          sendIssueToGoogleSheetWithIssue(gameName, issue);
-          db.collection("cards")
-            .add({
-              gameName: gameName,
-              disable: true,
-            })
-            .then(() => {});
-        }
-      }
-
-      function sendIssueToGoogleSheetWithIssue(gameName, issue) {
-        const scriptURL =
-          "https://script.google.com/macros/s/AKfycbxif7cZdOCWutbiue1m9sSYrH6VKY9VIVnEQDKnZOnJEsSO_cPi1pAU60mxPW8VWpzO/exec";
-        const timestamp = new Date().toISOString();
-        fetch(scriptURL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ timestamp, gameName, issue }),
-        });
-      }
-    </script>
-    <script src="appscript.js"></script>
-    <script>
-      function normalizeGameName(name) {
-        return name
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .replace(/[^a-z0-9]/g, "");
-      }
-      document.addEventListener("DOMContentLoaded", function () {
-        const topGameList = document.getElementById("topGameList");
-        const loadingContainerEl = document.createElement("div");
-        loadingContainerEl.className = "loading-container";
-        loadingContainerEl.innerHTML = `
-			<div class="bars">
-			  <div class="bar bar-1"></div>
-			  <div class="bar bar-2"></div>
-			  <div class="bar bar-3"></div>
-			  <div class="bar bar-4"></div>
-			  <div class="bar bar-5"></div>
+            			<a
+							href="./html/nova AI/index.html"
+							class="app-item"
+							style="text-decoration: none; color: inherit"
+						>
+							<div class="app-icon">
+								<img src="./img/Nova AI.png" alt="Nova AI" />
+							</div>
+							<div class="app-title">Nova AI</div>
+						</a>
+					</div>
+				</div>
+				<input
+					type="text"
+					class="search-bar"
+					placeholder="Search for games…"
+					id="searchInput"
+					autocomplete="off"
+				/>
+				<div class="search-results" id="searchResults"></div>
 			</div>
-		  `;
-        topGameList.appendChild(loadingContainerEl);
-        function fetchTopGames() {
-          fetch(targetUrl, {
-            method: "GET",
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(
-                  "Network response was not ok " + response.statusText
-                );
-              }
-              return response.json();
-            })
-            .then((data) => {
-              if (data && data.content) {
-                const parsedData = JSON.parse(data.content);
-                displayTopGames(parsedData);
-              }
-            })
-            .catch(() => {})
-            .finally(() => {
-              loadingContainerEl.style.display = "none";
-            });
-        }
-        function displayTopGames(games) {
-          if (!topGameList) return;
-          topGameList.innerHTML = "";
-          games.slice(1).forEach((game) => {
-            const gameName = game[0];
-            const matchingCard = findMatchingCard(gameName);
-            if (matchingCard) {
-              topGameList.appendChild(matchingCard.cloneNode(true));
-            }
-          });
-        }
-        function findMatchingCard(gameName) {
-          const formattedGameName = normalizeGameName(gameName);
-          const cards = document.querySelectorAll("#allGameList .card");
-          for (let card of cards) {
-            const cardGameId = card.getAttribute("data-game-id");
-            if (cardGameId === formattedGameName) {
-              return card;
-            }
-          }
-          return null;
-        }
-        (function () {
-          loadingContainerEl.style.display = "flex";
-          fetchTopGames();
-        })();
-      });
-    </script>
-    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StrongDog XP</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #2e2e2e;
-      }
-      .navbar {
-        background-color: #333;
-        color: white;
-        padding: 10px 20px;
-        display: flex;
-        align-items: center;
-        position: relative;
-        justify-content: space-between;
-      }
-      .logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        color: white;
-        font-weight: bold;
-      }
-      .menu-icon {
-        font-size: 2rem;
-        cursor: pointer;
-        margin-left: 20px;
-        color: white;
-        position: relative;
-        z-index: 1001;
-      }
-      .slide-menu {
-        position: fixed;
-        top: 0;
-        height: 100%;
-        width: 350px;
-        background-color: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(10px);
-        color: white;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-        z-index: 1003;
-        transition: transform 0.4s ease;
-        overflow-y: auto;
-        transform: translateX(-100%);
-      }
-      .profile-picture {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .profile-picture-container {
-        border-radius: 50%;
-        width: 100px;
-        aspect-ratio: 1;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      }
-      .user-details-container {
-        display: flex;
-        width: 100%;
-        justify-content: center;
-        gap: 20px;
-        padding-block: 40px;
-      }
-      .username-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .username-text {
-        font-size: 1.5rem;
-      }
-      .categories {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .categories > a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 20px;
-        text-decoration: none;
-        color: white;
-        transition: all 0.3s ease;
-        margin-left: 20px;
-        margin-right: 20px;
-        text-align: center;
-        font-size: 1.1rem;
-        position: relative;
-        overflow: hidden;
-      }
-      .categories > a::after {
-        content: "";
-        background: rgba(255, 255, 255, 0.1);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        width: 0;
-        height: 0;
-        transition: 0.4s ease-out;
-      }
-      .categories > a:hover::after {
-        width: 400px;
-        height: 400px;
-      }
-      .categories > a:hover {
-        transform: scale(0.95);
-      }
-      span.new-feature-tag {
-        background: orange;
-        border-radius: 100vw;
-        padding: 0.2rem 0.4rem;
-        margin-left: 1rem;
-        font-size: 0.6rem;
-        color: black;
-        text-transform: uppercase;
-      }
-      .navbar .logo {
-        color: white;
-        font-weight: bold;
-      }
-      .navbar .logo .xp {
-        color: orange;
-      }
-      .navbar a,
-      .navbar a:visited,
-      .navbar .logo span {
-        text-decoration: none;
-        margin-right: 20px;
-      }
-      .search-bar {
-        padding: 7px;
-        padding-top: 10px;
-        font-size: 1em;
-        border-radius: 20%;
-        width: 100%;
-        border: none;
-        border-bottom: 5px solid gray;
-        background-color: transparent;
-        color: white;
-      }
-      .search-bar:focus {
-        outline: none;
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-      .games-grid {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 10px;
-        justify-content: center;
-      }
-      .card {
-        display: block;
-        width: 120px;
-        height: 120px;
-        background-color: #fff;
-        border-radius: 10px;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.29);
-      }
-      .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-      }
-      .card:hover img {
-        transform: scale(1.02);
-      }
-      .card figcaption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: rgba(95, 95, 95, 0.8);
-        color: black;
-        padding: 5px 0;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        transform: translateY(100%);
-        opacity: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-shadow: 0 0 2px white;
-        font-weight: 550;
-        border-radius: 10px;
-      }
-      .card:hover figcaption {
-        height: 30px;
-        background-color: rgba(95, 95, 95, 0.8);
-        transform: translateY(0);
-        opacity: 1;
-      }
-      .card::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.3) 50%,
-          rgba(255, 255, 255, 0) 100%
-        );
-        transform: rotate(30deg) translate(-50%, -50%);
-        transition: transform 0.5s, opacity 0.5s;
-        opacity: 0;
-        pointer-events: none;
-      }
-      .card:hover::before {
-        transform: rotate(30deg) translate(100%, -50%);
-        opacity: 1;
-      }
-      .search-results {
-        position: absolute;
-        right: 20px;
-        top: 60px;
-        background-color: white;
-        color: black;
-        border: 1px solid #ccc;
-        width: 250px;
-        display: none;
-        z-index: 1000;
-        transform-origin: left;
-        transition: transform 0.3s ease, background-color 0.3s ease;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      }
-      .search-results a {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: black;
-        border-bottom: 1px solid #eee;
-        padding: 5px;
-        transition: all 0.3s ease;
-      }
-      .search-results img {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        margin-right: 10px;
-        border-radius: 5px;
-      }
-      .search-results a:last-child {
-        border-bottom: none;
-      }
-      .news-container {
-        margin: 20px auto;
-        padding: 20px;
-        background-color: #444444;
-        border-radius: 8px;
-        max-width: 800px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      .news {
-        color: #ffffff;
-      }
-      .credits-title {
-        font-size: 1.5em;
-        margin-bottom: 15px;
-        color: #ffffff;
-        border-bottom: 2px solid #ddd;
-        padding-bottom: 5px;
-      }
-      .credits-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
-      }
-      .credits-role {
-        font-weight: bold;
-        color: #ffffff;
-      }
-      .credits-names {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        align-items: center;
-      }
-      .credits-link {
-        color: #0073e6;
-        text-decoration: none;
-        font-weight: bold;
-      }
-      .credits-link:hover {
-        text-decoration: underline;
-      }
-      .credits-names span {
-        color: #c4c4c4;
-      }
-      .credits-item:last-child .credits-names {
-        gap: 16px;
-      }
-      .credits-item:last-child .credits-link {
-        color: #00b3b3;
-      }
-      .credits-item:last-child .credits-link:hover {
-        text-decoration: underline;
-        color: #00cccc;
-      }
-      h2 {
-        text-align: center;
-        color: white;
-        margin: 20px 0;
-        font-size: 1.5em;
-      }
-      .card figcaption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: rgba(95, 95, 95, 0.8);
-        color: black;
-        padding: 5px 0;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        transform: translateY(100%);
-        opacity: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-shadow: 0 0 2px white;
-        font-weight: 550;
-        border-radius: 10px;
-      }
-      .card:hover figcaption {
-        height: 30px;
-        background-color: rgba(95, 95, 95, 0.8);
-        transform: translateY(0);
-        opacity: 1;
-      }
-      .updates-paragraph-text {
-        color: white;
-        background-color: #a83632;
-        padding: 15px 10px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.05);
-        margin-bottom: 30px;
-      }
-      .updates-text-container {
-        margin-left: 30%;
-        margin-right: 30%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .loading-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-      .bars {
-        display: flex;
-        align-items: center;
-      }
-      .bar {
-        background-color: rgba(255, 255, 255, 0.3);
-        width: 20px;
-        height: 40px;
-        margin-right: 5px;
-        border-radius: 10px;
-        animation: load ease infinite 5s;
-      }
-      .bar-2,
-      .bar-4 {
-        height: 50px;
-      }
-      .bar-2 {
-        animation-delay: 0.1s;
-      }
-      .bar-3 {
-        height: 60px;
-        animation-delay: 0.2s;
-      }
-      .bar-4 {
-        animation-delay: 0.3s;
-      }
-      .bar-5 {
-        animation-delay: 0.4s;
-      }
-      @keyframes load {
-        0%,
-        100% {
-          transform: rotate(0deg);
-        }
-        50% {
-          transform: rotate(720deg) rotateX(180deg);
-        }
-      }
-      #topGameList {
-        position: relative;
-      }
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-      }
-      .modal-content {
-        background-color: #757575;
-        padding: 20px;
-        border-radius: 10px;
-        width: 90%;
-        max-width: 400px;
-        text-align: center;
-      }
-      .modal-close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      .modal-close:hover,
-      .modal-close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-      }
-      .modal-link {
-        color: blue;
-        text-decoration: underline;
-        cursor: pointer;
-      }
-      .card-buttons {
-        display: flex;
-        justify-content: center;
-        margin-top: 5px;
-      }
-      .card-container {
-        position: relative;
-        display: inline-block;
-        margin: 10px;
-      }
-      .card-buttons button {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        font-size: 1.2em;
-        margin: 0 5px;
-        transition: transform 0.2s, color 0.2s;
-      }
-      .card-buttons button:hover {
-        transform: scale(1.2);
-      }
-      .btn-check {
-        color: green;
-      }
-      .btn-delete {
-        color: red;
-      }
-      .btn-check,
-      .btn-delete {
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    </style>
-  </head>
-  <body style="display: none">
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
-      crossorigin="anonymous"
-    ></script>
-    <ins
-      class="adsbygoogle"
-      style="display: block"
-      data-ad-client="ca-pub-1609993827735056"
-      data-ad-slot="7006123985"
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    ></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-    <div
-      id="secretLink"
-      title="Secret Menu"
-      style="
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 10px;
-        height: 10px;
-        cursor: pointer;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-      "
-    ></div>
-    <script>
-      window.addEventListener("load", function () {
-        const secretLink = document.getElementById("secretLink");
-        secretLink.addEventListener("click", function () {
-          window.location.href = "secret-menu.html";
-        });
-      });
-    </script>
-    <div class="navbar">
-      <div class="menu-icon" id="menuIcon">&#9776;</div>
-      <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
-      <div class="search-container">
-        <input
-          type="text"
-          class="search-bar"
-          placeholder="Search for games..."
-          id="searchInput"
-          autocomplete="off"
-        />
-        <div class="search-results" id="searchResults"></div>
-      </div>
-    </div>
-    <div class="updates-text-container">
-      <p class="updates-paragraph-text">
-        All games from StrongDog page 1 and 2 have been merged together! If you
-        find bugs, please report them
-        <a href="/about.html">here</a>!
-      </p>
-    </div>
-    <div class="modal" id="popupModal">
-      <div class="modal-content">
-        <span class="modal-close" id="closeModal">&times;</span>
-        <p>
-          The strongdog discord server is a place for strongdog users to chill,
-          play games together, request ideas, and have fun!
-        </p>
-        <p>
-          If you want to help on strongdog, there is a chat where you can get
-          help downloading games, and you can upload games YOU download to add
-          to strongdog! (and yes, you will get credit for downloading games)
-        </p>
-        <p>
-          Ready to join? Click
-          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to
-          join the Discord server!
-        </p>
-      </div>
-    </div>
+		</div>
+		<div class="updates-text-container">
 
-    <h2 style="text-align: center"><strong>All</strong></h2>
-    <div class="games-grid" id="allGameList"></div>
+			<p class="updates-paragraph-text">
+				<strong>TO ALL STRONGDOG USERS</strong><br>
+				School has started (for most of you guys) so we have made a few new links that you can see in the links section at the bottom of this page (and there is a discord exclusive)<br>UPDATE: We have resolved all the bugs reported so game requests are now back!
+			</p>
 
-    <h2 style="text-align: center"><strong>StrongDogXP LLC</strong></h2>
-    <div class="news-container">
-      <div class="news">
-        <div class="credits-item">
-          <div class="credits-role">CEO</div>
-          <div class="credits-names">
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
-              >Joshua Pettit</a
-            >
-          </div>
-        </div>
-        <div class="credits-item">
-          <div class="credits-role">Developers</div>
-          <div class="credits-names">
-            <a
-              href="https://github.com/JamesMeadows4"
-              target="_blank"
-              class="credits-link"
-              >James Meadows</a
-            >
-            <span>|</span>
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
-              >Joshua Pettit</a
-            >
-          </div>
-        </div>
-        <div class="credits-item">
-          <div class="credits-role">Game Downloaders</div>
-          <div class="credits-names">
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
-              >Joshua Pettit</a
-            >
-          </div>
-        </div>
-        <div class="credits-item">
-          <div class="credits-role">Other Links</div>
-          <div class="credits-names">
-            <a
-              href="https://mathcord.netlify.app"
-              target="_blank"
-              class="credits-link"
-              >mathcord.netlify.app</a
-            >
-            <span>|</span>
-            <a
-              href="https://strongdog.onrender.com"
-              target="_blank"
-              class="credits-link"
-              >strongdog.onrender.com</a
-            >
-            <span>|</span>
-            <a
-              href="https://jman1593.github.io"
-              target="_blank"
-              class="credits-link"
-              >jman1593.github.io</a
-            >
-            <span>|</span>
-            <a
-              href="https://strongdog.netlify.app"
-              target="_blank"
-              class="credits-link"
-              >strongdog.netlify.app</a
-            >
-            <span>|</span>
-            <a
-              href="https://strongdog-1.vercel.app"
-              target="_blank"
-              class="credits-link"
-              >strongdog-1.vercel.app</a
-            >
-            <span>|</span>
-            <a href="https://mathcord.com" target="_blank" class="credits-link"
-              >mathcord.com</a
-            >
-            <span>|</span>
-            <a href="https://strongdog.com" target="_blank" class="credits-link"
-              >strongdog.com</a
-            >
-          </div>
-        </div>
-        <div class="credits-item">
-          <div class="credits-role">MORE UNBLOCKED LINKS ON THE DISCORD</div>
-        </div>
-      </div>
-    </div>
-    <div class="slide-menu" id="slideMenu">
-      <div class="user-details-container">
-        <div class="profile-picture-container">
-          <a href="settings.html">
-            <img class="profile-picture" src="img/default-avatar.png" />
+		</div>
+		<div class="modal" id="popupModal">
+			<div class="modal-content">
+				<span class="modal-close" id="closeModal">×</span>
+				<p>
+					The strongdog Discord server is a place for strongdog users to chill, request
+					ideas, talk with developers, and have fun!
+					<a href="https://discord.gg/ea4x95f7cH" target="_blank">Join here</a>.
+				</p>
+			</div>
+		</div>
+		<h2 id="topGameHeader" style="text-align: center">
+			<strong>Top 20</strong>
+		</h2>
+		<div class="games-grid" id="topGameList"></div>
+		<div class="section-header" id="favoritesHeader" style="display: none">
+			<h2 style="text-align: center"><strong>Favorites</strong></h2>
+		</div>
+		<div class="games-grid" id="favoritesGameList" style="display: none"></div>
+		<div class="section-header">
+			<h2 style="text-align: center"><strong>All</strong></h2>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				id="editAllButton"
+				class="edit-button"
+			>
+				<path
+					d="M21.121 2.707a3 3 0 0 0-4.242 0l-1.68 1.68-7.906 7.906a1 1 0 0 0-.263.464l-1 4a1 1 0 0 0 1.213 1.213l4-1a1 1 0 0 0 .464-.263l7.849-7.848 1.737-1.738a3 3 0 0 0 0-4.242l-.172-.172Zm-2.828 1.414a1 1 0 0 1 1.414 0l.172.172a1 1 0 0 1 0 1.414l-1.017 1.017-1.555-1.617.986-.986Zm-2.4 2.4 1.555 1.617-6.96 6.959-2.114.529.529-2.115 6.99-6.99ZM4 8a1 1 0 0 1 1-1h5a1 1 0 1 0 0-2H5a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h11a3 3 0 0 0 3-3v-5a1 1 0 0 0-2 0v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8Z"
+					fill-rule="evenodd"
+					clip-rule="evenodd"
+				/>
+			</svg>
+		</div>
+		<div class="games-grid" id="allList"></div>
+		<h2 style="text-align: center"><strong>strongdogXP LLC</strong></h2>
+		<h2 class="alternate-links-title">Alternate Links</h2>
+		<div class="alternate-links-container" id="alternate-links-container"></div>
+		<div class="alternate-links-key" id="alternate-links-key">
+			<span style="margin-right: 15px"
+				><span class="status-dot" style="background-color: var(--green)"></span
+				>Unblocked</span
+			>
+			<span style="margin-right: 15px"
+				><span class="status-dot" style="background-color: var(--red)"></span
+				>Blocked/Down</span
+			>
+			<span style="margin-right: 15px"
+				><span
+					class="status-dot"
+					style="background-color: yellow; border: 1px solid black"
+				></span
+				>Unknown</span
+			>
+		</div>
+		<h2 class="alternate-links-title">
+			Exclusive links available on the strongdogXP
+			<a href="https://discord.gg/ea4x95f7cH" style="color: #007bff">Discord server</a>!
+		</h2>
+		<div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
+			<div class="categories">
+				<a href="favs.html" class="option-link">Favorites</a>
+				<a href="#" id="randomGame" class="option-link">Random</a>
+				<a href="#" id="blockLanschool" class="option-link">Open in about:blank</a>
+				<a href="about.html" class="option-link">About | Bugs | Request Games</a>
+				<a href="./save/index.html" class="option-link">Save manager</a>
+				<a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
+			</div>
+		</div>
+		<div class="custom-slide-menu" id="customSlideMenu" style="transform: translateX(-100%)">
+			<div class="custom-options" style="padding: 20px">
+				<div class="toggle-option" style="margin-bottom: 10px">
+					<label for="top20Toggle">Show Top 20</label>
+					<input type="checkbox" id="top20Toggle" checked />
+				</div>
+				<div class="toggle-option" style="margin-bottom: 10px">
+					<label for="favoritesToggle">Show Favorites</label>
+					<input type="checkbox" id="favoritesToggle" />
+				</div>
+				<div class="slider-option" style="margin-bottom: 10px">
+					<label
+						for="cardSizeSlider"
+						style="color: #fff; display: block; margin-bottom: 5px"
+						>Card Size Adjustment</label
+					>
+					<input
+						type="range"
+						id="cardSizeSlider"
+						min="-100"
+						max="100"
+						value="0"
+						step="1"
+						style="width: 100%"
+					/>
+					<div style="text-align: center; color: #fff; margin-top: 5px">
+						Size: <span id="cardSizeValue">0</span>
+					</div>
+				</div>
+				<div class="custom-option" style="margin-bottom: 10px">
+					<label
+						for="customTitleInput"
+						style="color: #fff; display: block; margin-bottom: 5px"
+						>Custom Title</label
+					>
+					<input
+						type="text"
+						id="customTitleInput"
+						style="width: 100%; padding: 5px"
+						value="strongdog XP"
+					/>
+					<button id="resetTitleBtn" style="margin-top: 5px; padding: 5px 10px">
+						Reset Title
+					</button>
+				</div>
+				<div class="custom-option" style="margin-bottom: 10px">
+					<label
+						for="customFaviconInput"
+						style="color: #fff; display: block; margin-bottom: 5px"
+						>Custom Favicon URL</label
+					>
+					<input
+						type="text"
+						id="customFaviconInput"
+						style="width: 100%; padding: 5px"
+						value="img/favicon.ico"
+					/>
+					<button id="resetFaviconBtn" style="margin-top: 5px; padding: 5px 10px">
+						Reset Favicon
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="overlay" id="favoverlay"></div>
+		<div class="popup-container" id="favoritesPopupContainer">
+			<div class="popup" id="favoritesPopup">
+				<p>You need to sign in to view your favorites.</p>
+				<button id="favoritesOkButton">OK</button>
+			</div>
+		</div>
+		<script>
+			const altLinksEl = document.getElementById("alternate-links-container"),
+				altLinksKeyEl = document.getElementById("alternate-links-key"),
+				altLinks = [
+					"wishlink.net",
+					"betterlives.info",
+					"itsmart.info",
+					"strongdog.de.com",
+					"mathcord.de.com",
+					"mathgames.de.com",
+					"unblockedmathgames.com",
+					"colute.net",
+					"chesstube.eu.com",
+					"hateroll.com",
+					"strongdogunblocked.github.io",
+					"weakcatxp.github.io",
+					"gametreexp.github.io",
+					"mathcordxp.github.io",
+					"strongdogxp.github.io",
+					"jman1593.github.io",
+					"strongdog-1.vercel.app",
+					"mathcord.com",
+					"strongdog.com",
+				];
+			altLinks.forEach(link => {
+				const a = document.createElement("a");
+				a.classList.add("alternate-link"),
+					(a.href = "https://" + link),
+					(a.target = "_blank");
+				const linkText = document.createElement("span");
+				linkText.textContent = link;
+				const statusDot = document.createElement("span");
+				statusDot.classList.add("spinning-dot"),
+					(statusDot.title = "Checking site availability...");
+				a.appendChild(linkText),
+					a.appendChild(statusDot),
+					altLinksEl.appendChild(a),
+					checkSiteStatus(link, statusDot);
+			});
+			async function pingSite(domain) {
+				return new Promise(resolve => {
+					const url = `https://${domain}/ads.txt?${Date.now()}`;
+					let didTimeout = false;
+					const timeout = setTimeout(() => {
+						didTimeout = true;
+						resolve(domain.endsWith("github.io") ? "unknown" : false);
+					}, 5000);
+					fetch(url, { mode: "cors" })
+						.then(response => response.text())
+						.then(text => {
+							if (!didTimeout) {
+								clearTimeout(timeout);
+								domain.endsWith("github.io")
+									? resolve("unknown")
+									: resolve(text.includes("f08c47fec0942fa0") ? true : false);
+							}
+						})
+						.catch(() => {
+							if (!didTimeout) {
+								clearTimeout(timeout);
+								resolve(domain.endsWith("github.io") ? "unknown" : false);
+							}
+						});
+				});
+			}
+			async function checkSiteStatus(domain, statusDot, maxRetries = 2) {
+				let retries = 0;
+				let status = await pingSite(domain);
+				while (status === false && retries < maxRetries) {
+					retries++;
+					status = await pingSite(domain);
+				}
+				statusDot.classList = "status-dot";
+				if (status === true) {
+					(statusDot.style.backgroundColor = "var(--green)"),
+						(statusDot.title = "Unblocked on this computer");
+				} else if (status === "unknown") {
+					(statusDot.style.backgroundColor = "yellow"),
+						(statusDot.title = "Unknown status (GitHub Pages)");
+				} else {
+					(statusDot.style.backgroundColor = "var(--red)"),
+						(statusDot.title = "Blocked on this computer");
+				}
+			}
+		</script>
+		<script type="module">
+			import games from "./cards-data.js";
+			import { targetUrl } from "./appscript.js";
+			function getTierAndProgressFromXP(xp) {
+				const baseXPNeeded = 50,
+					increasePerTier = 200,
+					exponentialMultiplier = 1.2,
+					levelsPerTier = 5,
+					capTier = 10;
+				let level = 1,
+					tier = 1,
+					xpNeeded = baseXPNeeded;
+				while (xp >= xpNeeded) {
+					xp -= xpNeeded;
+					if (tier < capTier) {
+						if (level % levelsPerTier === 0) {
+							tier++;
+							xpNeeded = Math.round(xpNeeded * exponentialMultiplier);
+						}
+					} else {
+						if (level % levelsPerTier === 0) {
+							xpNeeded += increasePerTier;
+						}
+					}
+					level++;
+				}
+				return { level, tier, currentXP: xp, xpNeededForNext: xpNeeded };
+			}
+
+			const numTopGames = 20;
+			const topGameList = document.getElementById("topGameList");
+
+			for (let i = 0; i < numTopGames; i++) {
+				const ghostCard = document.createElement("div");
+				ghostCard.classList.add("ghost-card"),
+					(ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`),
+					topGameList.appendChild(ghostCard);
+			}
+			async function fetchTopGames() {
+				try {
+					const response = await fetch(targetUrl);
+					if (!response.ok) throw new Error("Network error:" + response.statusText);
+					const data = await response.json();
+					if (data && data.content) {
+						const parsedData = JSON.parse(data.content);
+						displayTopGames(parsedData);
+					}
+				} catch (e) {
+					console.error(`Error while fetching games: ${e}`);
+				}
+			}
+			fetchTopGames();
+			function displayTopGames(topData) {
+				topGameList.innerHTML = "";
+				let foundCount = 0;
+				let index = 1;
+				const displayed = new Set();
+				while (foundCount < numTopGames && index < topData.length) {
+					const row = topData[index],
+						gameName = row[0],
+						card = findMatchingCard(gameName);
+					if (card) {
+						if (!displayed.has(gameName)) {
+							topGameList.appendChild(card.cloneNode(true)),
+								displayed.add(gameName),
+								foundCount++;
+						}
+					}
+					index++;
+				}
+			}
+			function normalizeGameName(name) {
+				return name
+					.toLowerCase()
+					.replace(/\s+/g, "")
+					.replace(/[^a-z0-9]/g, "");
+			}
+			function findMatchingCard(gameName) {
+				const normalized = normalizeGameName(gameName),
+					allCards = document.querySelectorAll("#allList .card");
+				for (let card of allCards)
+					if (card.getAttribute("data-game-id") === normalized) return card;
+				return null;
+			}
+			function getPageNumberFromURL(url) {
+				const regex = /(strongdog|mathcord|stroongdog)(\d*)/,
+					match = url.match(regex);
+				if (match) return match[2] === "" ? 1 : parseInt(match[2], 10);
+				return 1;
+			}
+			const siteMapping = window.siteMapping || {};
+			function getCurrentSiteKey() {
+				const currentURL = window.location.href,
+					keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
+				for (const k of keys) if (currentURL.includes(k)) return k;
+				return null;
+			}
+			function getAdjustedUrls(href, imgSrc, page) {
+				let adjustedHref = href,
+					adjustedImgSrc = `./img/${imgSrc}`,
+					currentSiteKey = getCurrentSiteKey();
+				if (currentSiteKey) {
+					const currentSitePages = siteMapping[currentSiteKey],
+						pageMap = {},
+						currentPageNumber = getPageNumberFromURL(currentSiteKey);
+					pageMap[currentPageNumber] = currentSiteKey;
+					if (currentSitePages) {
+						currentSitePages.forEach(u => {
+							const pNum = getPageNumberFromURL(u);
+							pageMap[pNum] = u;
+						});
+					}
+					if (page !== undefined && page !== currentPageNumber) {
+						let newBase = pageMap[page];
+						newBase || (newBase = window.location.origin + `/strongdog${page}`),
+							(adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
+							(adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
+					}
+				} else if (page !== undefined && page > 1) {
+					const origin = window.location.origin,
+						newBase = `${origin}/strongdog${page}`;
+					(adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
+						(adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
+				}
+				return { adjustedHref, adjustedImgSrc };
+			}
+			function getCardHTML(game) {
+				const { href, imgSrc, name, page, id } = game,
+					{ adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page),
+					gameLink = `./play/?id=${id}`,
+					normalized = normalizeGameName(name);
+				return `
+          <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
+            <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
+            <figcaption>${name}</figcaption>
           </a>
-        </div>
-        <div class="username-container">
-          <p class="username-text">Your Username</p>
-        </div>
-      </div>
-      <div class="categories">
-        <a href="favs.html" class="option-link">Favorites</a>
-        <a href="#" id="randomGame" class="option-link">Random Game</a>
-        <a href="#" id="blockLanschool" class="option-link">Block Lanschool</a>
-        <a href="about.html" class="option-link"
-          >About / Report Bugs / Request Games</a
-        >
-        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
-          >Discord Server<span class="new-feature-tag">new</span></a
-        >
-      </div>
-    </div>
-    <script type="module">
-      import games from "./cards-data-test.js";
-      document.addEventListener("DOMContentLoaded", function () {
-        const menuIcon = document.getElementById("menuIcon");
-        const slideMenu = document.createElement("div");
-        slideMenu.className = "slide-menu";
-        const originalCategories = document.querySelector(".categories");
-        const categories = originalCategories.cloneNode(true);
-        slideMenu.appendChild(categories);
-        document.body.appendChild(slideMenu);
-        menuIcon.addEventListener("click", function (event) {
-          event.stopPropagation();
-          if (slideMenu.style.transform === "translateX(0%)") {
-            slideMenu.style.transform = "translateX(-100%)";
-          } else {
-            slideMenu.style.transform = "translateX(0%)";
-          }
-        });
-        window.addEventListener("click", function (event) {
-          if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
-            slideMenu.style.transform = "translateX(-100%)";
-          }
-        });
-        auth.onAuthStateChanged(async (user) => {
-          let userDetailsContainer;
-          if (!user) {
-            window.location.href = "login.html";
-          }
-          if (user) {
-            const originalUserDetailsContainer = document.querySelector(
-              ".user-details-container"
-            );
-            userDetailsContainer = originalUserDetailsContainer.cloneNode(true);
-            const profilePictureElement =
-              userDetailsContainer.querySelector(".profile-picture");
-            const usernameElement =
-              userDetailsContainer.querySelector(".username-text");
-            if (user.photoURL) {
-              profilePictureElement.src = user.photoURL;
-            } else {
-              profilePictureElement.src = "img/default-avatar.png";
-            }
-            const userId = user.uid;
-            const userDocRef = db.collection("usernames").doc(userId);
-            const userDoc = await userDocRef.get();
-            if (userDoc.exists) {
-              const userData = userDoc.data();
-              usernameElement.textContent = userData.username || "Username";
-            } else {
-              usernameElement.textContent = user.displayName || "Username";
-            }
-            profilePictureElement.parentElement.addEventListener(
-              "click",
-              () => {
-                window.location.href = "settings.html";
-              }
-            );
-            slideMenu.insertBefore(userDetailsContainer, categories);
-            const logoutLink = document.createElement("a");
-            logoutLink.href = "#";
-            logoutLink.className = "option-link";
-            logoutLink.textContent = "Log Out";
-            logoutLink.style.backgroundColor = "#dc3545";
-            logoutLink.style.color = "white";
-            logoutLink.addEventListener("click", function (e) {
-              e.preventDefault();
-              auth
-                .signOut()
-                .then(() => {
-                  window.location.reload();
-                })
-                .catch((error) => {
-                  console.error("Error signing out:", error);
-                });
-            });
-            const favoritesLink = categories.querySelector(
-              'a[href="favs.html"]'
-            );
-            categories.insertBefore(logoutLink, favoritesLink);
-          } else {
-            userDetailsContainer = document.createElement("div");
-            userDetailsContainer.className = "user-details-container";
-            const notLoggedInContainer = document.createElement("div");
-            notLoggedInContainer.className = "username-container";
-            const notLoggedInText = document.createElement("p");
-            notLoggedInText.className = "username-text";
-            notLoggedInText.textContent = "Not logged in";
-            notLoggedInContainer.appendChild(notLoggedInText);
-            const loginButton = document.createElement("button");
-            loginButton.textContent = "Log In";
-            loginButton.style.backgroundColor = "#007bff";
-            loginButton.style.color = "white";
-            loginButton.style.border = "none";
-            loginButton.style.padding = "10px 20px";
-            loginButton.style.fontSize = "16px";
-            loginButton.style.borderRadius = "5px";
-            loginButton.style.cursor = "pointer";
-            loginButton.style.marginTop = "5px";
-            loginButton.addEventListener("click", function () {
-              window.location.href = "login.html";
-            });
-            userDetailsContainer.style.display = "flex";
-            userDetailsContainer.style.flexDirection = "column";
-            userDetailsContainer.style.alignItems = "center";
-            userDetailsContainer.style.paddingBlock = "40px";
-            userDetailsContainer.appendChild(notLoggedInContainer);
-            userDetailsContainer.appendChild(loginButton);
-            slideMenu.insertBefore(userDetailsContainer, categories);
-          }
-          const randomGameLink = categories.querySelector("#randomGame");
-          randomGameLink?.addEventListener("click", function (e) {
-            e.preventDefault();
-            if (games.length > 0) {
-              const randomIndex = Math.floor(Math.random() * games.length);
-              const randomGamePath = games[randomIndex].href;
-              window.location.href = randomGamePath;
-            }
-          });
-          const blockLanschoolLink =
-            categories.querySelector("#blockLanschool");
-          blockLanschoolLink?.addEventListener("click", function (e) {
-            e.preventDefault();
-            var url = "https://strongdog.netlify.app";
-            var newTab = window.open();
-            if (!newTab) {
-              return;
-            }
-            newTab.document.write(`
-              <html>
-                <body style="margin: 0; height: 100vh;">
-                  <iframe src="${url}" style="border: none; width: 100%; height: 100%;"></iframe>
-                </body>
-              </html>
-            `);
-            newTab.document.close();
-          });
-        });
-      });
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const discordLink = document.getElementById("discordLink");
-        const modal = document.getElementById("popupModal");
-        const closeModal = document.getElementById("closeModal");
-        discordLink?.addEventListener("click", function () {
-          modal.style.display = "flex";
-        });
-        closeModal?.addEventListener("click", function () {
-          modal.style.display = "none";
-        });
-        window.addEventListener("click", function (event) {
-          if (event.target === modal) {
-            modal.style.display = "none";
-          }
-        });
-      });
-    </script>
-    <script type="module">
-      import games from "./cards-data-test.js";
-      import { siteMapping } from "./site-mapping.js";
-      document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.querySelector(".search-bar");
-        const searchResults = document.getElementById("searchResults");
-        if (!searchInput || !searchResults) return;
-        searchInput.addEventListener("focus", updateSearchResults);
-        searchInput.addEventListener("input", updateSearchResults);
-        document.addEventListener("click", function (event) {
-          if (
-            !searchInput.contains(event.target) &&
-            !searchResults.contains(event.target)
-          ) {
-            searchResults.style.display = "none";
-          }
-        });
-        function updateSearchResults() {
-          const searchText = searchInput.value.toLowerCase();
-          const filtered = games
-            .filter((game) => game.name.toLowerCase().includes(searchText))
-            .slice(0, 7);
-          searchResults.innerHTML = "";
-          if (filtered.length === 0) {
-            searchResults.style.display = "none";
-            return;
-          }
-          filtered.forEach((game) => {
-            let adjustedHref = game.href;
-            let adjustedImg = `./img/${game.imgSrc}`;
-            if (game.page >= 2) {
-              let matchedKey = null;
-              for (const key in siteMapping) {
-                if (window.location.hostname.includes(key)) {
-                  matchedKey = key;
-                  break;
-                }
-              }
-              if (matchedKey) {
-                const pageIndex = game.page - 2;
-                const pageBaseURLs = siteMapping[matchedKey];
-                if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
-                  const pageBaseURL = pageBaseURLs[pageIndex];
-                  adjustedHref = `${pageBaseURL}/${game.href.replace(
-                    /^\.\//,
-                    ""
-                  )}`;
-                  adjustedImg = `${pageBaseURL}/img/${game.imgSrc.replace(
-                    /^\.\//,
-                    ""
-                  )}`;
-                } else {
-                  if (game.page === 2) {
-                    adjustedHref = `/strongdog2/${game.href.replace(
-                      /^\.\//,
-                      ""
-                    )}`;
-                    adjustedImg = `/strongdog2/img/${game.imgSrc.replace(
-                      /^\.\//,
-                      ""
-                    )}`;
-                  } else if (game.page === 3) {
-                    adjustedHref = `/strongdog3/${game.href.replace(
-                      /^\.\//,
-                      ""
-                    )}`;
-                    adjustedImg = `/strongdog3/img/${game.imgSrc.replace(
-                      /^\.\//,
-                      ""
-                    )}`;
-                  } else if (game.page === 4) {
-                    adjustedHref = `/strongdog4/${game.href.replace(
-                      /^\.\//,
-                      ""
-                    )}`;
-                    adjustedImg = `/strongdog4/img/${game.imgSrc.replace(
-                      /^\.\//,
-                      ""
-                    )}`;
-                  }
-                }
-              } else {
-                if (game.page === 2) {
-                  adjustedHref = `/strongdog2/${game.href.replace(
-                    /^\.\//,
-                    ""
-                  )}`;
-                  adjustedImg = `/strongdog2/img/${game.imgSrc.replace(
-                    /^\.\//,
-                    ""
-                  )}`;
-                } else if (game.page === 3) {
-                  adjustedHref = `/strongdog3/${game.href.replace(
-                    /^\.\//,
-                    ""
-                  )}`;
-                  adjustedImg = `/strongdog3/img/${game.imgSrc.replace(
-                    /^\.\//,
-                    ""
-                  )}`;
-                } else if (game.page === 4) {
-                  adjustedHref = `/strongdog4/${game.href.replace(
-                    /^\.\//,
-                    ""
-                  )}`;
-                  adjustedImg = `/strongdog4/img/${game.imgSrc.replace(
-                    /^\.\//,
-                    ""
-                  )}`;
-                }
-              }
-            }
-            const resultLink = document.createElement("a");
-            resultLink.href = adjustedHref;
-            resultLink.innerHTML = `
-              <img src="${adjustedImg}" alt="${game.name}">
-              <span>${game.name}</span>
-            `;
-            searchResults.appendChild(resultLink);
-          });
-          searchResults.style.display = "block";
-        }
-      });
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const page1Link = document.getElementById("page1-link");
-        const page2Link = document.getElementById("page2-link");
-        const hostname = window.location.hostname;
-        const linkMap = {
-          "jman1593.github.io": {
-            page1: "/#",
-            page2: "/strongdog2/index.html",
-          },
-          "strongdog-1.vercel.app": {
-            page1: "https://strongdog-1.vercel.app",
-            page2: "https://strongdog2.vercel.app",
-          },
-          "strongdog2.vercel.app": {
-            page1: "https://strongdog-1.vercel.app",
-            page2: "https://strongdog2.vercel.app",
-          },
-          "strongdog.netlify.app": {
-            page1: "https://strongdog.netlify.app",
-            page2: "https://strongdog2.netlify.app",
-          },
-          "strongdog2.netlify.app": {
-            page1: "https://strongdog.netlify.app",
-            page2: "https://strongdog2.netlify.app",
-          },
-          "mathcord.netlify.app": {
-            page1: "https://mathcord.netlify.app",
-            page2: "https://mathcord2.netlify.app",
-          },
-          "mathcord2.netlify.app": {
-            page1: "https://mathcord.netlify.app",
-            page2: "https://mathcord2.netlify.app",
-          },
-          "strongdog.onrender.com": {
-            page1: "https://strongdog.onrender.com",
-            page2: "https://strongdog2.onrender.com",
-          },
-          "strongdog2.onrender.com": {
-            page1: "https://strongdog.onrender.com",
-            page2: "https://strongdog2.onrender.com",
-          },
-          "stroongdog.netlify.app": {
-            page1: "https://stroongdog.netlify.app",
-            page2: "https://stroongdog2.netlify.app",
-          },
-          "stroongdog2.netlify.app": {
-            page1: "https://stroongdog.netlify.app",
-            page2: "https://stroongdog2.netlify.app",
-          },
-        };
-        if (page1Link && page2Link) {
-          for (const key in linkMap) {
-            if (hostname.includes(key)) {
-              page1Link.href = linkMap[key].page1;
-              page2Link.href = linkMap[key].page2;
-              break;
-            }
-          }
-        }
-      });
-    </script>
-    <script>
-      document
-        .getElementById("secretLink")
-        .addEventListener("click", function () {
-          window.location.href = "secret-menu.html";
-        });
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const discordLink = document.getElementById("discordLink");
-        const modal = document.getElementById("popupModal");
-        const closeModal = document.getElementById("closeModal");
-        discordLink?.addEventListener("click", function () {
-          modal.style.display = "flex";
-        });
-        closeModal?.addEventListener("click", function () {
-          modal.style.display = "none";
-        });
-        window.addEventListener("click", function (event) {
-          if (event.target === modal) {
-            modal.style.display = "none";
-          }
-        });
-      });
-    </script>
-    <script type="module">
-      import games from "./cards-data-test.js";
-      document.addEventListener("DOMContentLoaded", function () {
-        const randomGameButton = document.getElementById("randomGame");
-        function handleRandomGameClick() {
-          if (games.length > 0) {
-            const randomIndex = Math.floor(Math.random() * games.length);
-            const randomGamePath = games[randomIndex].href;
-            window.location.href = randomGamePath;
-          }
-        }
-        randomGameButton.addEventListener("click", function (event) {
-          event.preventDefault();
-          handleRandomGameClick();
-        });
-      });
-    </script>
-  </body>
+        `;
+			}
+			const allListElement = document.getElementById("allList");
+			allListElement.innerHTML = games.map(g => getCardHTML(g)).join("");
+
+			const searchInput = document.getElementById("searchInput");
+			searchInput.placeholder = `Search ${games.length} games...`;
+
+			const searchResults = document.getElementById("searchResults");
+
+			function updateSearchResults() {
+				const text = searchInput.value.toLowerCase(),
+					filtered = games.filter(g => g.name.toLowerCase().includes(text)).slice(0, 7);
+				searchResults.innerHTML = "";
+				if (!filtered.length) {
+					searchResults.style.display = "none";
+					return;
+				}
+				filtered.forEach(game => {
+					const { id, imgSrc, name, page } = game,
+						{ adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page),
+						linkEl = document.createElement("a");
+					(linkEl.href = `./play/?id=${id}`),
+						(linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`),
+						searchResults.appendChild(linkEl);
+				}),
+					(searchResults.style.display = "block");
+			}
+			if (searchInput && searchResults) {
+				searchInput.addEventListener("focus", updateSearchResults),
+					searchInput.addEventListener("input", updateSearchResults),
+					document.addEventListener("click", ev => {
+						if (!searchInput.contains(ev.target) && !searchResults.contains(ev.target))
+							searchResults.style.display = "none";
+					});
+			}
+			const menuIcon = document.getElementById("menuIcon"),
+				slideMenu = document.getElementById("slideMenu"),
+				categories = slideMenu.querySelector(".categories");
+			menuIcon.addEventListener("click", ev => {
+				ev.stopPropagation(),
+					(slideMenu.style.transform =
+						slideMenu.style.transform === "translateX(0%)"
+							? "translateX(-100%)"
+							: "translateX(0%)");
+			}),
+				window.addEventListener("click", ev => {
+					if (ev.target !== menuIcon && !slideMenu.contains(ev.target))
+						slideMenu.style.transform = "translateX(-100%)";
+				});
+			auth.onAuthStateChanged(async user => {
+				if (user) {
+					const userId = user.uid,
+						userDetailsContainer = document.createElement("div");
+					userDetailsContainer.className = "user-details-container";
+					const profileTop = document.createElement("div");
+					profileTop.className = "profile-top-container";
+					const picContainer = document.createElement("div");
+					picContainer.className = "profile-picture-container";
+					const picEl = document.createElement("img");
+					(picEl.className = "profile-picture"),
+						(picEl.src = user.photoURL || "img/default-avatar.png"),
+						picContainer.appendChild(picEl);
+					const usernameDiv = document.createElement("div");
+					usernameDiv.className = "username-container";
+					const usernameText = document.createElement("p");
+					(usernameText.className = "username-text"),
+						(usernameText.textContent = "Loading..."),
+						usernameDiv.appendChild(usernameText),
+						profileTop.appendChild(picContainer),
+						profileTop.appendChild(usernameDiv),
+						userDetailsContainer.appendChild(profileTop);
+					try {
+						const docRef = db.collection("usernames").doc(userId),
+							docSnap = await docRef.get();
+						docSnap.exists
+							? (usernameText.textContent =
+									docSnap.data().username || user.displayName || "Username")
+							: (usernameText.textContent = user.displayName || "Username");
+					} catch (err) {
+						usernameText.textContent = user.displayName || "Username";
+					}
+					let totalXP = 0;
+					try {
+						const xpSnap = await rtdb.ref("/users/" + userId + "/xp").once("value");
+						if (xpSnap.exists()) totalXP = xpSnap.val();
+					} catch (err) {}
+					const { level, currentXP, xpNeededForNext } = getTierAndProgressFromXP(totalXP),
+						xpContainer = document.createElement("div");
+					xpContainer.className = "xp-container";
+					const xpLevelText = document.createElement("div");
+					(xpLevelText.className = "xp-level-text"),
+						(xpLevelText.textContent = `Level ${level}`);
+					const xpBar = document.createElement("div");
+					xpBar.className = "xp-bar";
+					const xpBarFill = document.createElement("div");
+					(xpBarFill.className = "xp-bar-fill"),
+						(xpBarFill.style.width = `${(currentXP / xpNeededForNext) * 100}%`);
+					const xpBarText = document.createElement("div");
+					(xpBarText.className = "xp-bar-text"),
+						(xpBarText.textContent = `${currentXP}/${xpNeededForNext}`),
+						xpBar.appendChild(xpBarFill),
+						xpBar.appendChild(xpBarText),
+						xpContainer.appendChild(xpLevelText),
+						xpContainer.appendChild(xpBar),
+						userDetailsContainer.appendChild(xpContainer),
+						picContainer.addEventListener("click", () => {
+							window.location.href = "settings.html";
+						}),
+						slideMenu.insertBefore(userDetailsContainer, categories);
+					const logoutLink = document.createElement("a");
+					(logoutLink.href = "#"),
+						(logoutLink.className = "option-link"),
+						(logoutLink.textContent = "Log Out"),
+						(logoutLink.style.backgroundColor = "#dc3545"),
+						(logoutLink.style.color = "white"),
+						logoutLink.addEventListener("click", e => {
+							e.preventDefault(), auth.signOut().then(() => window.location.reload());
+						});
+					const favoritesLink = categories.querySelector('a[href="favs.html"]');
+					categories.insertBefore(logoutLink, favoritesLink),
+						db
+							.collection("access")
+							.doc(userId)
+							.get()
+							.then(accDoc => {
+								if (accDoc.exists && accDoc.data().tester === true) {
+									const testGamesLink = document.createElement("a");
+									(testGamesLink.href = "test.html"),
+										(testGamesLink.className = "option-link"),
+										(testGamesLink.textContent = "Test Games"),
+										(testGamesLink.style.backgroundColor = "#28a745"),
+										(testGamesLink.style.color = "white"),
+										(testGamesLink.style.marginTop = "10px"),
+										categories.insertBefore(testGamesLink, favoritesLink);
+								}
+							});
+				} else {
+					const userDetailsContainer = document.createElement("div");
+					(userDetailsContainer.className = "user-details-container"),
+						(userDetailsContainer.style.display = "flex"),
+						(userDetailsContainer.style.flexDirection = "column"),
+						(userDetailsContainer.style.alignItems = "center"),
+						(userDetailsContainer.style.paddingBlock = "20px");
+					const notLoggedInContainer = document.createElement("div");
+					notLoggedInContainer.className = "username-container";
+					const notLoggedInText = document.createElement("p");
+					(notLoggedInText.className = "username-text"),
+						(notLoggedInText.textContent = "Not logged in"),
+						notLoggedInContainer.appendChild(notLoggedInText);
+					const loginButton = document.createElement("button");
+					(loginButton.textContent = "Log In"),
+						(loginButton.style.backgroundColor = "#007bff"),
+						(loginButton.style.color = "#fff"),
+						(loginButton.style.border = "none"),
+						(loginButton.style.padding = "10px 20px"),
+						(loginButton.style.fontSize = "16px"),
+						(loginButton.style.borderRadius = "5px"),
+						(loginButton.style.cursor = "pointer"),
+						(loginButton.style.marginTop = "5px"),
+						loginButton.addEventListener("click", () => {
+							window.location.href = "login.html";
+						}),
+						userDetailsContainer.appendChild(notLoggedInContainer),
+						userDetailsContainer.appendChild(loginButton),
+						slideMenu.insertBefore(userDetailsContainer, categories);
+				}
+				const randomGameLink = categories.querySelector("#randomGame");
+				randomGameLink?.addEventListener("click", ev => {
+					ev.preventDefault();
+					if (games.length > 0) {
+						const idx = Math.floor(Math.random() * games.length);
+						window.location.href = `./play/?id=${games[idx].id}`;
+					}
+				});
+				const blockLanschoolLink = categories.querySelector("#blockLanschool");
+				blockLanschoolLink?.addEventListener("click", ev => {
+					ev.preventDefault();
+					const url = window.location.href,
+						newTab = window.open();
+					if (!newTab) return;
+					newTab.document.write(`
+            <html>
+              <body style="margin:0;height:100vh;">
+                <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
+              </body>
+            </html>
+          `),
+						newTab.document.close();
+				});
+			});
+			const editAllButton = document.getElementById("editAllButton"),
+				customSlideMenu = document.getElementById("customSlideMenu");
+			editAllButton.addEventListener("click", ev => {
+				ev.stopPropagation(),
+					(slideMenu.style.transform = "translateX(-100%)"),
+					(customSlideMenu.style.transform =
+						customSlideMenu.style.transform === "translateX(0%)"
+							? "translateX(-100%)"
+							: "translateX(0%)");
+			}),
+				window.addEventListener("click", ev => {
+					if (
+						ev.target !== editAllButton &&
+						!customSlideMenu.contains(ev.target) &&
+						ev.target.id !== "editAllButton"
+					)
+						customSlideMenu.style.transform = "translateX(-100%)";
+				});
+			function setCookie(name, val, days) {
+				const d = new Date();
+				d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days),
+					(document.cookie = `${name}=${val};expires=${d.toUTCString()};path=/`);
+			}
+			function getCookie(name) {
+				const all = `; ${document.cookie}`,
+					parts = all.split(`; ${name}=`);
+				if (parts.length === 2) return parts.pop().split(";")[0];
+				return "";
+			}
+			const top20Toggle = document.getElementById("top20Toggle"),
+				topGameHeader = document.getElementById("topGameHeader");
+			let top20Disabled = getCookie("top20Disabled") === "true";
+			(top20Toggle.checked = !top20Disabled),
+				top20Disabled &&
+					((topGameList.style.display = "none"), (topGameHeader.style.display = "none")),
+				top20Toggle.addEventListener("change", () => {
+					if (top20Toggle.checked)
+						(topGameList.style.display = "flex"),
+							(topGameHeader.style.display = "block"),
+							setCookie("top20Disabled", "false", 365);
+					else
+						(topGameList.style.display = "none"),
+							(topGameHeader.style.display = "none"),
+							setCookie("top20Disabled", "true", 365);
+				});
+			const favoritesToggle = document.getElementById("favoritesToggle"),
+				favoritesHeader = document.getElementById("favoritesHeader"),
+				favoritesGameList = document.getElementById("favoritesGameList");
+			let favCookie = getCookie("favoritesDisabled");
+			favCookie === "" && (favCookie = "true");
+			const favoritesDisabled = favCookie === "true";
+			(favoritesToggle.checked = !favoritesDisabled),
+				favoritesDisabled
+					? ((favoritesHeader.style.display = "none"),
+					  (favoritesGameList.style.display = "none"))
+					: ((favoritesHeader.style.display = "block"),
+					  (favoritesGameList.style.display = "flex"));
+			favoritesToggle.addEventListener("change", () => {
+				if (favoritesToggle.checked)
+					(favoritesHeader.style.display = "block"),
+						(favoritesGameList.style.display = "flex"),
+						setCookie("favoritesDisabled", "false", 365),
+						loadFavorites();
+				else
+					(favoritesHeader.style.display = "none"),
+						(favoritesGameList.style.display = "none"),
+						setCookie("favoritesDisabled", "true", 365);
+			});
+			function loadFavorites() {
+				const placeholders = 10;
+				favoritesGameList.innerHTML = "";
+				for (let i = 0; i < placeholders; i++) {
+					const ghost = document.createElement("div");
+					ghost.classList.add("ghost-card"),
+						(ghost.style.animation = `pulse 2s ${i / 15}s infinite`),
+						favoritesGameList.appendChild(ghost);
+				}
+				auth.onAuthStateChanged(user => {
+					if (user) fetchFavorites(user.uid);
+					else {
+						showFavoritesPopup(),
+							(favoritesGameList.innerHTML =
+								'<p class="no-favorites">No favorites yet!</p>');
+					}
+				});
+			}
+			async function fetchFavorites(userId) {
+				try {
+					const favDoc = await db.collection("favs").doc(userId).get();
+					if (favDoc.exists) {
+						const favData = favDoc.data();
+						displayFavorites(favData);
+					} else
+						favoritesGameList.innerHTML =
+							'<p class="no-favorites">No favorites yet!</p>';
+				} catch (err) {
+					favoritesGameList.innerHTML =
+						'<p class="no-favorites">Error loading favorites.</p>';
+				}
+			}
+			function displayFavorites(favs) {
+				favoritesGameList.innerHTML = "";
+				let hasFavorites = false;
+				Object.keys(favs).forEach(gameId => {
+					if (favs[gameId]) {
+						const g = games.find(gm => parseInt(gm.id, 10) === parseInt(gameId, 10));
+						if (g) {
+							(hasFavorites = true), (favoritesGameList.innerHTML += getCardHTML(g));
+						}
+					}
+				});
+				if (!hasFavorites)
+					favoritesGameList.innerHTML = '<p class="no-favorites">No favorites yet!</p>';
+			}
+			function showFavoritesPopup() {
+				document.getElementById("favoritesPopupContainer").classList.add("active"),
+					(document.getElementById("favoverlay").style.display = "block");
+			}
+			function hideFavoritesPopup() {
+				document.getElementById("favoritesPopupContainer").classList.remove("active"),
+					(document.getElementById("favoverlay").style.display = "none");
+			}
+			document
+				.getElementById("favoritesOkButton")
+				.addEventListener("click", hideFavoritesPopup),
+				favoritesToggle.checked && loadFavorites();
+			const cardSizeSlider = document.getElementById("cardSizeSlider"),
+				cardSizeValue = document.getElementById("cardSizeValue");
+			function updateCardSizes() {
+				const val = parseInt(cardSizeSlider.value, 10);
+				cardSizeValue.textContent = val;
+				const newSize = 120 + val,
+					newGap = Math.max(10 + val / 4, 5),
+					newRadius = val < 0 ? Math.max(15 + val * 0.13, 2) : 15;
+				document.querySelectorAll(".card, .ghost-card").forEach(c => {
+					(c.style.width = newSize + "px"),
+						(c.style.height = newSize + "px"),
+						(c.style.borderRadius = newRadius + "px");
+				}),
+					document.querySelectorAll(".games-grid").forEach(grid => {
+						grid.style.gap = newGap + "px";
+					}),
+					setCookie("cardSize", val, 365);
+			}
+			cardSizeSlider.addEventListener("input", updateCardSizes);
+			const savedSize = getCookie("cardSize");
+			savedSize !== "" && ((cardSizeSlider.value = savedSize), updateCardSizes());
+			document.addEventListener("DOMContentLoaded", () => {
+				const hostname = window.location.hostname;
+				const linkMap = {
+					"jman1593.github.io": {
+						"page1-link": "/#",
+						"page2-link": "/strongdog2/index.html",
+					},
+					"4simpleproblems.github.io": {
+						// Assuming page1-link goes to the root of this domain
+						"page1-link": "/",
+						// Mapping the other pages. The corresponding elements with these IDs must exist in the HTML.
+						"page2-link": "/strongdog2/",
+						"page3-link": "/strongdog3/",
+						"page4-link": "/strongdog4/",
+					},
+					// Add other domain mappings here
+				};
+
+				// Find the matching configuration for the current hostname
+				let activeConfig = null;
+				for (const key in linkMap) {
+					if (hostname.includes(key)) {
+						activeConfig = linkMap[key];
+						break;
+					}
+				}
+
+				// If a configuration is found, update the links
+				if (activeConfig) {
+					for (const elementId in activeConfig) {
+						const linkElement = document.getElementById(elementId);
+						if (linkElement) {
+							linkElement.href = activeConfig[elementId];
+						} else {
+							// Optional: log a warning if an element is not found
+							console.warn(`Link element with ID '${elementId}' not found for hostname '${hostname}'.`);
+						}
+					}
+				}
+			});
+			(function () {
+				var defaultTitle = "strongdog XP",
+					defaultFavicon = "img/favicon.ico",
+					titleInput = document.getElementById("customTitleInput"),
+					faviconInput = document.getElementById("customFaviconInput"),
+					resetTitleBtn = document.getElementById("resetTitleBtn"),
+					resetFaviconBtn = document.getElementById("resetFaviconBtn"),
+					faviconEl = document.querySelector('link[rel="icon"]');
+				localStorage.getItem("customTitle")
+					? ((document.title = localStorage.getItem("customTitle")),
+					  (titleInput.value = localStorage.getItem("customTitle")))
+					: (titleInput.value = defaultTitle),
+					localStorage.getItem("customFavicon")
+						? ((faviconEl.href = localStorage.getItem("customFavicon")),
+						  (faviconInput.value = localStorage.getItem("customFavicon")))
+						: (faviconInput.value = defaultFavicon),
+					titleInput.addEventListener("change", function () {
+						var e = titleInput.value.trim();
+						e === "" && ((e = defaultTitle), (titleInput.value = defaultTitle)),
+							localStorage.setItem("customTitle", e),
+							(document.title = e);
+					}),
+					faviconInput.addEventListener("change", function () {
+						var e = faviconInput.value.trim();
+						e === "" && ((e = defaultFavicon), (faviconInput.value = defaultFavicon)),
+							localStorage.setItem("customFavicon", e),
+							(faviconEl.href = e);
+					}),
+					resetTitleBtn.addEventListener("click", function () {
+						localStorage.removeItem("customTitle"),
+							(document.title = defaultTitle),
+							(titleInput.value = defaultTitle);
+					}),
+					resetFaviconBtn.addEventListener("click", function () {
+						localStorage.removeItem("customFavicon"),
+							(faviconEl.href = defaultFavicon),
+							(faviconInput.value = defaultFavicon);
+					});
+			})();
+		</script>
+		<script>
+			if (
+				window.location.hostname === "unblockedmathgames.com" ||
+				window.location.hostname === "mathhub.de.com" ||
+				window.location.hostname === "mathgames.de.com" ||
+				window.location.hostname === "wishlink"
+			) {
+				if (navigator.userAgent.indexOf("CrOS") === -1) {
+					document.documentElement.innerHTML = "";
+					document.documentElement.style.overflow = "hidden";
+					document.title = "The Math Hub";
+
+					var f = document.createElement("iframe");
+					f.src = "./math/index.html";
+					f.style.position = "fixed";
+					f.style.top = "0";
+					f.style.left = "0";
+					f.style.width = "100%";
+					f.style.height = "100%";
+					f.style.border = "none";
+					f.style.margin = "0";
+					f.style.padding = "0";
+					f.style.overflow = "hidden";
+					f.style.display = "block";
+					f.style.zIndex = "999999";
+
+					document.documentElement.appendChild(f);
+				}
+			}
+		</script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				const link = document.createElement("a");
+				link.href = "./privacy-policy.html";
+				link.textContent = "Privacy Policy";
+				link.style.cssText = `
+          display: block;
+          text-align: center;
+          margin: 16px 0;
+          font-size: 0.875rem;
+          color: #007bff;
+          text-decoration: none;
+          font-family: sans-serif;
+        `;
+				link.addEventListener(
+					"mouseenter",
+					() => (link.style.textDecoration = "underline")
+				);
+				link.addEventListener("mouseleave", () => (link.style.textDecoration = "none"));
+				document.body.appendChild(link);
+			});
+		</script>
+		<div
+			style="
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        font-size: 1px;
+        line-height: 1px;
+        user-select: none;
+        pointer-events: none;
+      "
+			draggable="false"
+		>
+			educational platform, learning resources, academic tools, educational games, student
+			resources, school-friendly content, learning tools, interactive education, student
+			access
+		</div>
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				const appsButton = document.getElementById("appsButton");
+				const appsPopup = document.getElementById("appsPopup");
+
+				appsButton.addEventListener("click", e => {
+					e.stopPropagation();
+					appsPopup.classList.toggle("show");
+				});
+
+				document.addEventListener("click", e => {
+					if (!appsPopup.contains(e.target) && e.target !== appsButton) {
+						appsPopup.classList.remove("show");
+					}
+				});
+			});
+		</script>
+	</body>
 </html>
