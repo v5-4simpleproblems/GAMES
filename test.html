@@ -7,28 +7,17 @@
 
     <link rel="icon" type="image/png" href="../images/favicon.png">
     <link rel="apple-touch-icon" href="../images/favicon.png">
-    <link rel="stylesheet" href="../css/style.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="../firebase-config.js"></script>
-    <script src="../ban-enforcer.js"></script>
-    <script src="../panic-key.js"></script>
-    <script src="../url-changer.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="ban-enforcer.js"></script>
+    <script src="panic-key.js"></script>
+    <script src="url-changer.js"></script>
 
-    <meta name="description" content="Play unblocked games from StrongdogXP on the 4SP platform. Fast, free, no downloads—perfect for school or home.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://4simpleproblems.github.io/GN-GAMES/index.html"> <meta property="og:title" content="4SP - STRONGDOGXP">
-    <meta property="og:description" content="Play unblocked games from StrongdogXP on the 4SP platform.">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://4simpleproblems.github.io/GN-GAMES/index.html"> <meta name="twitter:title" content="4SP - STRONGDOGXP">
-    <meta name="twitter:description" content="Play unblocked games from StrongdogXP on the 4SP platform.">
-    <meta name="keywords" content="unblocked games, strongdogxp, 4sp, browser games, school games, html5 games, free games, play games, online games, gaming">
+    <meta name="keywords" content="4sp, 4simpleproblems">
 
     <style>
         :root {
@@ -42,8 +31,8 @@
             --v4-purple-accent: #6720bd;
             --v4-purple-accent-darker: #5a1aa8;
             --v4-purple-gradient: linear-gradient(135deg, #6720bd 0%, #8a2be2 100%);
-            --v4-font-primary: 'Nunito', Arial, sans-serif;
-            --v4-font-secondary: 'Nunito', Arial, sans-serif;
+            --v4-font-primary: 'PrimaryFont', sans-serif;
+            --v4-font-secondary: 'SecondaryFont', sans-serif;
             --v4-bg-gradient: linear-gradient(135deg, #f0f2f5 0%, #e8eaf0 100%);
         }
 
@@ -280,10 +269,10 @@
     <header class="main-header">
         <div class="container">
             <div class="logo">
-                <a href="../index.html"><img src="../images/logo-dark.png" alt="4SP Logo" style="cursor:pointer;"></a>
+                <a href="https://4simpleproblems.github.io/index.html"><img src="../images/logo-dark.png" alt="4SP Logo" style="cursor:pointer;"></a>
             </div>
             <div class="auth-buttons">
-                <button class="btn btn-login" onclick="window.location.href='../index.html'">HOME</button>
+                <button class="btn btn-login" onclick="window.location.href='https://4simpleproblems.github.io/index.html'">HOME</button>
                 <button id="logoutBtn" class="btn btn-login">LOG OUT</button>
             </div>
         </div>
@@ -294,11 +283,11 @@
             <button id="toggleSidebar">☰</button>
             <nav>
                 <ul>
-                    <li><a href="../logged-in/dashboard.html"><span class="icon">🏠</span><span class="label">Dashboard</span></a></li>
-                    <li><a href="../logged-in/soundboard.html"><span class="icon">🎵</span><span class="label">Soundboard</span></a></li>
-                    <li><a href="../logged-in/games.html" class="active"><span class="icon">🎮</span><span class="label">Games</span></a></li>
-                    <li><a href="../logged-in/others.html"><span class="icon">✨</span><span class="label">Others</span></a></li>
-                    <li><a href="../logged-in/settings.html"><span class="icon">⚙️</span><span class="label">Settings</span></a></li>
+                    <li><a href="https://4simpleproblems.github.io/logged-in/dashboard.html"><span class="icon">🏠</span><span class="label">Dashboard</span></a></li>
+                    <li><a href="https://4simpleproblems.github.io/logged-in/soundboard.html"><span class="icon">🎵</span><span class="label">Soundboard</span></a></li>
+                    <li><a href="https://4simpleproblems.github.io/logged-in/games.html" class="active"><span class="icon">🎮</span><span class="label">Games</span></a></li>
+                    <li><a href="https://4simpleproblems.github.io/logged-in/others.html"><span class="icon">✨</span><span class="label">Others</span></a></li>
+                    <li><a href="https://4simpleproblems.github.io/logged-in/settings.html"><span class="icon">⚙️</span><span class="label">Settings</span></a></li>
                     <li><a href="#" id="signOutLink"><span class="icon">🔒</span><span class="label">LOG OUT</span></a></li>
                 </ul>
             </nav>
@@ -340,115 +329,53 @@
     <script type="module">
     import games from '../cards-data.js';
 
-    const dbRef = () => firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
-    const sidebarEl = document.getElementById('sidebar');
-    const toggleSidebarBtn = document.getElementById('toggleSidebar');
-
-    firebase.auth().onAuthStateChanged(async user => {
-        if (user) {
-            updateMarquees();
-            sortAndDisplayGames();
-        } else {
-            window.location.href = '../login.html';
+    // --- Firebase & Auth ---
+    firebase.auth().onAuthStateChanged(user => {
+        if (!user) {
+            window.location.href = 'https://4simpleproblems.github.io/login.html';
         }
     });
+    document.getElementById('logoutBtn')?.addEventListener('click', () => firebase.auth().signOut());
+    document.getElementById('signOutLink')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        firebase.auth().signOut();
+    });
 
-    document.getElementById('logoutBtn')?.addEventListener('click', () => firebase.auth().signOut().then(() => { window.location.href = '../login.html'; }));
-    document.getElementById('signOutLink')?.addEventListener('click', (e) => { e.preventDefault(); firebase.auth().signOut().then(() => { window.location.href = '../login.html'; }); });
-    
-    if (toggleSidebarBtn && sidebarEl) {
-        toggleSidebarBtn.addEventListener('click', () => {
-            sidebarEl.classList.toggle('collapsed');
-            setTimeout(updateMarquees, 550);
-        });
-    }
-
-    function updateMarquees() {
-        document.querySelectorAll('.user-info .marquee-content').forEach(el => {
-            el.classList.remove('sidebar-marquee-active');
-            void el.offsetWidth;
-            el.classList.add('sidebar-marquee-active');
-        });
-    }
-    window.addEventListener('resize', updateMarquees);
-
-    function initializeTitleMarquees() {
-        document.querySelectorAll('#container .title-container').forEach(container => {
-            const wrapper = container.querySelector('.title-content-wrapper');
-            const content = container.querySelector('.title-content');
-            if (!wrapper || !content) return;
-
-            const isOverflowing = content.scrollWidth > container.clientWidth;
-
-            container.classList.remove('card-marquee-active');
-            const duplicate = wrapper.querySelector('.title-content[aria-hidden="true"]');
-            if (duplicate) duplicate.remove();
-
-            if (isOverflowing) {
-                container.classList.add('card-marquee-active');
-                const newDuplicate = content.cloneNode(true);
-                newDuplicate.setAttribute('aria-hidden', 'true');
-                wrapper.appendChild(newDuplicate);
-            }
-        });
-    }
-    window.addEventListener('resize', initializeTitleMarquees);
-    
+    // --- DOM Elements ---
     const container = document.getElementById('container');
     const searchBar = document.getElementById('searchBar');
     const sortOptions = document.getElementById('sortOptions');
     const gameCountEl = document.getElementById('gameCount');
     const showFavoritesBtn = document.getElementById('showFavoritesBtn');
     
+    // --- State Variables ---
     const FAVORITES_KEY = 'strongdogGameFavorites_v1';
-    
-    let masterGameList = games;
     let isShowingFavorites = false;
 
+    // --- Favorites Logic ---
     const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
     const saveFavorites = (favs) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
+    
     function toggleFavorite(gameId, starElement) {
         let favorites = getFavorites();
         const gameIdStr = String(gameId);
-        if (favorites.includes(gameIdStr)) {
-            favorites = favorites.filter(id => id !== gameIdStr);
+        const index = favorites.indexOf(gameIdStr);
+
+        if (index > -1) {
+            favorites.splice(index, 1);
             starElement.classList.remove('favorited');
         } else {
             favorites.push(gameIdStr);
             starElement.classList.add('favorited');
         }
         saveFavorites(favorites);
-        if(isShowingFavorites) sortAndDisplayGames();
-    }
-
-    function sortAndDisplayGames() {
-        let gamesToProcess = [...masterGameList];
-        const sortBy = sortOptions.value;
-
-        if (sortBy === 'name') gamesToProcess.sort((a, b) => a.name.localeCompare(b.name));
-        else if (sortBy === 'id') gamesToProcess.sort((a, b) => parseInt(b.id) - parseInt(a.id));
-        
-        filterAndRenderGames(gamesToProcess);
-    }
-
-    function filterAndRenderGames(sortedGames) {
-        const query = searchBar.value.toLowerCase().trim();
-        let finalGames = sortedGames;
-
         if (isShowingFavorites) {
-            const favorites = getFavorites();
-            finalGames = finalGames.filter(game => favorites.includes(String(game.id)));
+            updateDisplayedGames();
         }
-
-        if (query) {
-            finalGames = finalGames.filter(game => game.name.toLowerCase().includes(query));
-        }
-        
-        renderGameCards(finalGames);
     }
-
-    function renderGameCards(gamesToRender) {
-        container.innerHTML = "";
+    
+    // --- Game Display Logic ---
+    function displayGames(gamesToRender) {
         const favorites = getFavorites();
         
         if (gamesToRender.length === 0) {
@@ -457,65 +384,108 @@
             return;
         }
 
-        const fragment = document.createDocumentFragment();
-        gamesToRender.forEach(game => {
-            const gameCard = document.createElement("a");
-            gameCard.className = "game-card";
-            gameCard.href = `../play/?id=${game.id}`;
-            gameCard.dataset.gameId = game.id;
-
+        container.innerHTML = gamesToRender.map(game => {
             const isFavorited = favorites.includes(String(game.id));
-
-            gameCard.innerHTML = `
+            return `
+            <a class="game-card" href="../play/?id=${game.id}" data-game-id="${game.id}">
                 <img src="../img/${game.imgSrc}" alt="${game.name}" loading="lazy" onerror="this.onerror=null; this.src='../images/favicon.png'; this.style.objectFit='contain';">
-                <button class="card-play-btn">▶</button>
-                <button class="favorite-btn ${isFavorited ? 'favorited' : ''}">★</button>
+                <button class="card-play-btn" data-game-id="${game.id}">▶</button>
+                <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" data-game-id="${game.id}">★</button>
                 <div class="title-container">
                     <div class="title-content-wrapper">
                         <span class="title-content">${game.name}</span>
                     </div>
                 </div>
-            `;
+            </a>`;
+        }).join('');
 
-            const favoriteButton = gameCard.querySelector('.favorite-btn');
-            favoriteButton.addEventListener('click', (e) => {
+        // Add event listeners after rendering
+        container.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                toggleFavorite(game.id, favoriteButton);
+                toggleFavorite(btn.dataset.gameId, btn);
             });
-            
-            fragment.appendChild(gameCard);
         });
-        container.appendChild(fragment);
-        gameCountEl.textContent = `Showing: ${gamesToRender.length} Game(s)`;
         
-        setTimeout(initializeTitleMarquees, 50);
+        gameCountEl.textContent = `Showing: ${gamesToRender.length} Game(s)`;
+        setTimeout(initializeTitleMarquees, 50); // For marquee effect on long titles
     }
     
-    searchBar.addEventListener('input', sortAndDisplayGames);
-    sortOptions.addEventListener('change', sortAndDisplayGames);
+    function updateDisplayedGames() {
+        let gamesToProcess = [...games];
+        
+        // Filter by favorites if toggled
+        if (isShowingFavorites) {
+            const favorites = getFavorites();
+            gamesToProcess = gamesToProcess.filter(game => favorites.includes(String(game.id)));
+        }
+
+        // Filter by search query
+        const query = searchBar.value.toLowerCase().trim();
+        if (query) {
+            gamesToProcess = gamesToProcess.filter(game => game.name.toLowerCase().includes(query));
+        }
+
+        // Sort the results
+        const sortBy = sortOptions.value;
+        if (sortBy === 'name') {
+            gamesToProcess.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortBy === 'id') {
+            gamesToProcess.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+        }
+        
+        displayGames(gamesToProcess);
+    }
+    
+    // --- Event Listeners ---
+    searchBar.addEventListener('input', updateDisplayedGames);
+    sortOptions.addEventListener('change', updateDisplayedGames);
     showFavoritesBtn.addEventListener('click', () => {
         isShowingFavorites = !isShowingFavorites;
         showFavoritesBtn.textContent = isShowingFavorites ? "Show All" : "⭐ Show Favorites";
-        sortAndDisplayGames();
+        updateDisplayedGames();
     });
 
-    // Credits Popup Logic
+    // --- Sidebar & UI ---
+    document.getElementById('toggleSidebar')?.addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+        setTimeout(initializeTitleMarquees, 550);
+    });
+    
+    function initializeTitleMarquees() {
+        document.querySelectorAll('#container .title-container').forEach(container => {
+            const wrapper = container.querySelector('.title-content-wrapper');
+            const content = container.querySelector('.title-content');
+            if (!wrapper || !content) return;
+
+            container.classList.remove('card-marquee-active');
+            wrapper.querySelectorAll('.title-content[aria-hidden="true"]').forEach(n => n.remove());
+
+            if (content.scrollWidth > container.clientWidth) {
+                container.classList.add('card-marquee-active');
+                const duplicate = content.cloneNode(true);
+                duplicate.setAttribute('aria-hidden', 'true');
+                wrapper.appendChild(duplicate);
+            }
+        });
+    }
+    window.addEventListener('resize', initializeTitleMarquees);
+
+    // --- Credits Popup ---
     const creditsBtn = document.getElementById('creditsBtn');
     const creditsOverlay = document.getElementById('creditsOverlay');
     const closeCreditsBtn = document.getElementById('closeCreditsBtn');
-
-    creditsBtn.addEventListener('click', () => {
-        creditsOverlay.style.display = 'flex';
-    });
-    closeCreditsBtn.addEventListener('click', () => {
-        creditsOverlay.style.display = 'none';
-    });
+    creditsBtn.addEventListener('click', () => { creditsOverlay.style.display = 'flex'; });
+    closeCreditsBtn.addEventListener('click', () => { creditsOverlay.style.display = 'none'; });
     creditsOverlay.addEventListener('click', (e) => {
         if (e.target === creditsOverlay) {
             creditsOverlay.style.display = 'none';
         }
     });
+
+    // --- Initial Load ---
+    updateDisplayedGames();
     </script>
 </body>
 </html>
