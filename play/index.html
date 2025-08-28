@@ -584,12 +584,30 @@
         }
 
         function getBaseURLForPage(page) {
-          const currentKey = getCurrentKeyHostOnly();
+          const currentHost = getCurrentKeyHostOnly();
+
+          // ADDED: Explicit mappings to override other logic
+          const explicitMappings = {
+            "jman1593.github.io": {
+              2: "../strongdog2/",
+            },
+            "4simpleproblems.github.io": {
+              2: "../strongdog2/",
+              3: "../strongdog3/",
+              4: "../strongdog4/",
+            }
+          };
+
+          if (explicitMappings[currentHost] && explicitMappings[currentHost][page]) {
+            return explicitMappings[currentHost][page];
+          }
+
+          // Original logic continues below
           if (!page || page === 1) {
             return "../";
           }
 
-          const arr = siteMapping[currentKey];
+          const arr = siteMapping[currentHost];
           if (!arr) {
             if (page === 2) {
               return "../strongdog2/";
