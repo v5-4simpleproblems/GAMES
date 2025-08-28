@@ -297,6 +297,7 @@
         background: transparent;
         position: relative;
         overflow: hidden;
+        text-decoration: none;
     }
 
     .card:hover {
@@ -508,7 +509,9 @@
         align-items: center;
     }
 
-    #topGameList {
+    #topGameList,
+    #allList,
+    #favoritesGameList {
         max-width: 1600px;
         margin: 0 auto;
     }
@@ -836,7 +839,6 @@
 
     .apps-popup.show {
         display: grid;
-        /* change the number of times it repeats for number of items in the waffle menu (2 right now) */
         grid-template-columns: repeat(2, 1fr);
     }
 
@@ -865,6 +867,7 @@
         width: 50px;
         height: 50px;
         border-radius: 10%;
+        object-fit: cover;
     }
 
     svg.movie-svg {
@@ -1337,8 +1340,8 @@
     <div class="updates-text-container">
 
         <p class="updates-paragraph-text">
-            <strong>TO ALL STRONGDOG USERS</strong><br>
-            School has started (for most of you guys) so we have made a few new links that you can see in the links section at the bottom of this page (and there is a discord exclusive)<br>UPDATE: We have resolved all the bugs reported so game requests are now back!
+            <strong>Welcome to StrongdogXP!</strong><br>
+            This website is hosted by <a href="https://4simpleproblems.github.io/" style="color: #6720BD; font-weight: bold; text-decoration: none;" target="_blank">4SP</a>. I have fixed several bugs, and have worked with StrongdogXP to have this here today. So yeah, go nuts.
         </p>
 
     </div>
@@ -2067,7 +2070,7 @@
         }
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", () => {
             const link = document.createElement("a");
             link.href = "./privacy-policy.html";
             link.textContent = "Privacy Policy";
