@@ -674,7 +674,7 @@
                     return finalImgPath;
                 }
 
-                const randomGames = games.slice().sort(() => 0.5 - Math.random()).slice(0, 4);
+                const randomGames = games.slice().sort(() => 0.5 - Math.random()).slice(0, 3);
                 randomGames.forEach((game) => {
                     const { imgSrc, name, id } = game;
                     const adjustedImgSrc = adjustImgPath(imgSrc, game.page);
