@@ -2,42 +2,6 @@
 <html>
 
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056" crossorigin="anonymous"></script>
-    <script>
-        (function() {
-            var customTitle = localStorage.getItem("customTitle");
-            var defaultTitle = document.title;
-            if (
-                customTitle &&
-                customTitle.trim() !== "" &&
-                customTitle !== defaultTitle
-            ) {
-                var titleInterval = setInterval(function() {
-                    if (document.title !== customTitle) {
-                        document.title = customTitle;
-                    }
-                }, 500);
-                setTimeout(function() {
-                    clearInterval(titleInterval);
-                }, 15000);
-            }
-            setTimeout(function() {
-                var customFavicon = localStorage.getItem("customFavicon");
-                if (customFavicon && customFavicon.trim() !== "") {
-                    var favEl = document.querySelector('link[rel*="icon"]');
-                    if (favEl) {
-                        favEl.href = customFavicon;
-                    } else {
-                        var newFav = document.createElement("link");
-                        newFav.rel = "icon";
-                        newFav.href = customFavicon;
-                        document.head.appendChild(newFav);
-                    }
-                }
-            }, 2500);
-        })();
-    </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -47,7 +11,12 @@
         gtag("js", new Date());
         gtag("config", "G-0YLTCV2MMS");
     </script>
-    <title>Loading... - StrongDog XP</title>
+    <title>4SP - STRONGDOG</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../firebase-config.js"></script>
+    <script src="../url-changer.js"></script>
+    <script src="../panic-key.js"></script>
+    <script src="../ban-enforcer.js"></script>
     <style>
         @font-face {
             font-family: 'PrimaryFont';
@@ -236,7 +205,7 @@
         }
         
         .recommended-games-section {
-            width: 220px;
+            width: 280px;
             flex-shrink: 0;
         }
 
@@ -244,32 +213,42 @@
             overflow: hidden;
             white-space: nowrap;
             width: 100%;
+            position: relative;
+        }
+
+        .marquee-container::before,
+        .marquee-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            z-index: 2;
+        }
+
+        .marquee-container::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg) 0%, transparent 100%);
+        }
+
+        .marquee-container::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
         }
         
         .marquee-content {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee-scroll 15s linear infinite;
-            animation-play-state: running;
+            animation: marquee-scroll 25s linear infinite;
             font-size: 1.8rem;
             font-family: var(--ff);
             color: #cccccc;
             font-weight: bold;
         }
-
-        .marquee-container:hover .marquee-content {
-             animation-play-state: paused;
-        }
         
         @keyframes marquee-scroll {
             0% {
                 transform: translateX(0);
-            }
-            10% {
-                transform: translateX(-5%);
-            }
-            20% {
-                transform: translateX(0%);
             }
             100% {
                 transform: translateX(-100%);
@@ -339,7 +318,7 @@
         
         .game-overlay-buttons {
             position: absolute;
-            bottom: 15px;
+            top: 15px;
             right: 15px;
             z-index: 20;
             display: flex;
@@ -458,10 +437,10 @@
             <div class="game-container" id="gameContainer">
                 <div class="game-overlay-buttons" id="gameOverlayButtons">
                      <button id="favoriteIcon" class="overlay-btn" title="Favorite this game">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
                     </button>
                     <button id="fullscreenButton" class="overlay-btn" title="Fullscreen">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
                     </button>
                 </div>
             </div>
@@ -481,18 +460,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
-            authDomain: "strongdog-auth.firebaseapp.com",
-            databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
-            projectId: "strongdog-auth",
-            storageBucket: "strongdog-auth.appspot.com",
-            messagingSenderId: "936276282572",
-            appId: "1:936276282572:web:a802b7f609381ff9428669",
-            measurementId: "G-0YLTCV2MMS",
-        };
-        firebase.initializeApp(firebaseConfig);
-
         const auth = firebase.auth();
         const db = firebase.firestore();
         const rtdb = firebase.database();
@@ -614,7 +581,7 @@
                 gameContainer.appendChild(document.getElementById('gameOverlayButtons'));
                 
                 gameTitleElement.textContent = title;
-                document.title = title + " - StrongDog XP";
+                document.title = "4SP - STRONGDOG";
             }
 
             let selectedGame = null;
@@ -822,3 +789,4 @@
 </body>
 
 </html>
+
