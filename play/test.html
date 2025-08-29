@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -317,10 +318,10 @@
         }
         
         .game-overlay-buttons {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 20;
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            z-index: 1004;
             display: flex;
             gap: 10px;
         }
@@ -423,7 +424,7 @@
       </div>
     </div>
     
-    <div id="gameTitle">Loading...</div>
+    <div id="gameTitle"></div>
 
     <div class="content-wrapper">
         <div class="recommended-games-section">
@@ -435,16 +436,18 @@
         
         <div class="game-area">
             <div class="game-container" id="gameContainer">
-                <div class="game-overlay-buttons" id="gameOverlayButtons">
-                     <button id="favoriteIcon" class="overlay-btn" title="Favorite this game">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                    </button>
-                    <button id="fullscreenButton" class="overlay-btn" title="Fullscreen">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-                    </button>
-                </div>
+                
             </div>
         </div>
+    </div>
+    
+    <div class="game-overlay-buttons" id="gameOverlayButtons">
+         <button id="favoriteIcon" class="overlay-btn" title="Favorite this game">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+        </button>
+        <button id="fullscreenButton" class="overlay-btn" title="Fullscreen">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </button>
     </div>
 
     <div id="redirectMessage">
@@ -574,20 +577,20 @@
                 const iframe = document.createElement("iframe");
                 iframe.src = gamePath;
                 iframe.allowFullscreen = true;
-                gameContainer.innerHTML = "";
+                const gameContainer = document.getElementById('gameContainer');
+                
+                gameContainer.innerHTML = '';
                 gameContainer.appendChild(iframe);
                 
-                // Re-append overlay buttons after clearing container
-                gameContainer.appendChild(document.getElementById('gameOverlayButtons'));
-                
+                const gameTitleElement = document.getElementById("gameTitle");
                 gameTitleElement.textContent = title;
                 document.title = "4SP - STRONGDOG";
             }
 
+
             let selectedGame = null;
             const urlParams = new URLSearchParams(window.location.search);
             const gameId = urlParams.get("id");
-            const gameContainer = document.getElementById("gameContainer");
             const gameTitleElement = document.getElementById("gameTitle");
             const favoriteIcon = document.getElementById("favoriteIcon");
             const fullscreenButton = document.getElementById("fullscreenButton");
@@ -650,7 +653,7 @@
                 favoriteIcon.addEventListener("click", toggleFavorite);
 
                 fullscreenButton.addEventListener("click", function() {
-                    const iframe = gameContainer.querySelector('iframe');
+                    const iframe = document.querySelector('#gameContainer iframe');
                     if (!iframe) return;
                     if (iframe.requestFullscreen) iframe.requestFullscreen();
                     else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
