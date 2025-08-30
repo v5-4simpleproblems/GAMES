@@ -1,1233 +1,931 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>StrongDog XP - Saves</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag("js", new Date());
-			gtag("config", "G-0YLTCV2MMS");
-		</script>
-		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-		<link rel="icon" type="image/x-icon" href="../img/favicon.ico" />
-		<style>
-			body {
-			  font-family: "Nunito", Arial, sans-serif;
-			  margin: 0;
-			  padding: 0;
-			  background-color: #2e2e2e;
-			  color: white;
-			}
-			.navbar {
-			  background-color: #333;
-			  color: white;
-			  padding: 10px 20px;
-			  display: flex;
-			  align-items: center;
-			  position: relative;
-			  justify-content: center;
-			}
-			.logo {
-			  color: white;
-			  font-weight: bold;
-			  text-decoration: none;
-			}
-			.logo .xp {
-			  color: orange;
-			}
-			.menu-icon {
-			  font-size: 2rem;
-			  cursor: pointer;
-			  margin-right: auto;
-			  color: white;
-			  position: relative;
-			  z-index: 1001;
-			}
-			.slide-menu {
-			  position: fixed;
-			  top: 0;
-			  height: 100%;
-			  width: 350px;
-			  background-color: rgba(0, 0, 0, 0.4);
-			  backdrop-filter: blur(10px);
-			  color: white;
-			  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-			  z-index: 1003;
-			  transition: transform 0.4s ease;
-			  overflow-y: auto;
-			  transform: translateX(-100%);
-			  padding-top: 20px;
-			}
-			.categories {
-			  display: flex;
-			  flex-direction: column;
-			  gap: 10px;
-			}
-			.categories > a,
-			.categories > button {
-			  display: block;
-			  text-align: center;
-			  padding: 20px;
-			  background: rgba(0, 0, 0, 0.3);
-			  border-radius: 20px;
-			  text-decoration: none;
-			  color: white;
-			  transition: all 0.3s ease;
-			  margin-left: 20px;
-			  margin-right: 20px;
-			  font-size: 1.1rem;
-			  position: relative;
-			  overflow: hidden;
-			  border: none;
-			  cursor: pointer;
-			}
-			.categories > a:hover,
-			.categories > button:hover {
-			  transform: scale(0.95);
-			}
-			.user-details-container {
-			  display: flex;
-			  flex-direction: column;
-			  align-items: center;
-			  padding-block: 20px;
-			  gap: 10px;
-			}
-			.profile-top-container {
-			  display: flex;
-			  align-items: center;
-			  gap: 15px;
-			}
-			.profile-picture-container {
-			  border-radius: 50%;
-			  width: 100px;
-			  aspect-ratio: 1;
-			  overflow: hidden;
-			  display: flex;
-			  justify-content: center;
-			  align-items: center;
-			  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-			  transition: transform 0.3s ease, box-shadow 0.3s ease;
-			  cursor: pointer;
-			}
-			.profile-picture-container:hover {
-			  transform: scale(1.05);
-			  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
-			}
-			.profile-picture {
-			  width: 100%;
-			  height: 100%;
-			  object-fit: cover;
-			}
-			.username-container {
-			  display: flex;
-			  align-items: center;
-			  justify-content: center;
-			}
-			.username-text {
-			  font-size: 1.5rem;
-			  color: white;
-			}
-			h2 {
-			  text-align: center;
-			  color: white;
-			  margin: 20px 0;
-			  font-size: 1.5em;
-			}
-			.info-message {
-			  color: #ddd;
-			  text-align: center;
-			  max-width: 800px;
-			  margin: 0 auto 20px auto;
-			  padding: 0 20px;
-			  font-size: 0.9rem;
-			}
-			.saves-container {
-			  display: flex;
-			  flex-direction: column;
-			  align-items: center;
-			  gap: 20px;
-			  padding: 20px;
-			  max-width: 800px;
-			  margin: 0 auto;
-			}
-			.save-slot {
-			  background: #444444;
-			  border-radius: 20px;
-			  width: 80%;
-			  max-width: 500px;
-			  padding: 20px;
-			  position: relative;
-			  cursor: pointer;
-			  transition: transform 0.3s ease;
-			  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-			}
-			.save-slot:hover {
-			  transform: scale(0.98);
-			}
-			.save-title {
-			  font-size: 1.2em;
-			  margin-bottom: 10px;
-			  text-align: center;
-			}
-			.save-description {
-			  font-size: 1em;
-			  text-align: center;
-			  color: #ccc;
-			}
-			.delete-button {
-			  position: absolute;
-			  top: 10px;
-			  right: 10px;
-			  background: #a83632;
-			  color: white;
-			  border: none;
-			  border-radius: 50%;
-			  cursor: pointer;
-			  width: 30px;
-			  height: 30px;
-			  font-size: 1em;
-			  line-height: 30px;
-			  text-align: center;
-			}
-			.delete-button:hover {
-			  background: #f00;
-			}
-			.modal {
-			  display: none;
-			  position: fixed;
-			  z-index: 2000;
-			  left: 0;
-			  top: 0;
-			  width: 100%;
-			  height: 100%;
-			  background-color: rgba(0, 0, 0, 0.7);
-			  justify-content: center;
-			  align-items: center;
-			}
-			.modal-content {
-			  background-color: #757575;
-			  padding: 20px;
-			  border-radius: 10px;
-			  width: 90%;
-			  max-width: 400px;
-			  text-align: center;
-			  color: white;
-			  position: relative;
-			}
-			.modal-close {
-			  color: #aaa;
-			  position: absolute;
-			  top: 10px;
-			  right: 15px;
-			  font-size: 28px;
-			  font-weight: bold;
-			  cursor: pointer;
-			}
-			.modal-close:hover {
-			  color: #fff;
-			}
-			.modal-buttons {
-			  display: flex;
-			  gap: 10px;
-			  justify-content: center;
-			  margin-top: 20px;
-			}
-			.modal-buttons button {
-			  background: orange;
-			  border: none;
-			  padding: 10px 15px;
-			  border-radius: 10px;
-			  color: black;
-			  cursor: pointer;
-			  transition: transform 0.2s ease;
-			}
-			.modal-buttons button:hover {
-			  transform: scale(0.95);
-			}
-			.loading-overlay {
-			  display: none;
-			  position: fixed;
-			  z-index: 3000;
-			  top: 0;
-			  left: 0;
-			  width: 100%;
-			  height: 100%;
-			  background: rgba(0, 0, 0, 0.8);
-			  justify-content: center;
-			  align-items: center;
-			  flex-direction: column;
-			  color: white;
-			}
-			.loading-overlay.active {
-			  display: flex;
-			}
-			.loading-animation {
-			  display: flex;
-			  align-items: center;
-			  margin-bottom: 20px;
-			}
-			.loading-bar {
-			  background-color: rgba(255, 255, 255, 0.3);
-			  width: 20px;
-			  height: 40px;
-			  margin-right: 5px;
-			  border-radius: 10px;
-			  animation: load ease infinite 5s;
-			}
-			.loading-bar:nth-child(2) {
-			  animation-delay: 0.1s;
-			}
-			.loading-bar:nth-child(3) {
-			  animation-delay: 0.2s;
-			}
-			.loading-bar:nth-child(4) {
-			  animation-delay: 0.3s;
-			}
-			.loading-bar:nth-child(5) {
-			  animation-delay: 0.4s;
-			}
-			@keyframes load {
-			  0%,
-			  100% {
-			    transform: rotate(0deg);
-			  }
-			  50% {
-			    transform: rotate(720deg) rotateX(180deg);
-			  }
-			}
-			.bottom-buttons {
-			  display: flex;
-			  flex-direction: column;
-			  gap: 10px;
-			  align-items: center;
-			  margin-top: 30px;
-			}
-			.transfer-save-file-btn {
-			  border: none;
-			  padding: 1rem;
-			  border-radius: 10px;
-			  background: orange;
-			  width: 300px;
-			  cursor: pointer;
-			  font-size: 1.2rem;
-			  transition: 0.3s;
-			}
-			.transfer-save-file-btn:hover {
-			  filter: brightness(0.9);
-			  transform: scale(1.05);
-			}
-			.switch {
-			  position: relative;
-			  display: inline-block;
-			  width: 60px;
-			  height: 34px;
-			}
-			.switch input {
-			  opacity: 0;
-			  width: 0;
-			  height: 0;
-			}
-			.slider {
-			  position: absolute;
-			  cursor: pointer;
-			  top: 0;
-			  left: 0;
-			  right: 0;
-			  bottom: 0;
-			  background-color: #ccc;
-			  transition: 0.4s;
-			  border-radius: 34px;
-			}
-			.slider:before {
-			  position: absolute;
-			  content: "";
-			  height: 26px;
-			  width: 26px;
-			  left: 4px;
-			  bottom: 4px;
-			  background-color: white;
-			  transition: 0.4s;
-			  border-radius: 50%;
-			}
-			input:checked + .slider {
-			  background-color: #2196f3;
-			}
-			input:checked + .slider:before {
-			  transform: translateX(26px);
-			}
-			.auto-save-container {
-			  display: flex;
-			  align-items: center;
-			  gap: 10px;
-			  margin-top: 10px;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="navbar">
-			<div class="menu-icon" id="menuIcon">&#9776;</div>
-			<a href="../index.html" class="logo">StrongDog<span class="xp">XP</span></a>
-		</div>
-		<div class="slide-menu" id="slideMenu">
-			<div class="categories" id="sidebarCategories"></div>
-		</div>
-		<h2>Manage Your Saves</h2>
-		<p class="info-message">
-			This will NOT save every game's data. Some games use different methods to save progress.
-			This should save most games data, but not all.
-		</p>
-		<div class="saves-container" id="savesContainer" style="display: none"></div>
-		<div class="bottom-buttons" id="bottomButtonsContainer"></div>
-		<div class="modal" id="modalPrompt">
-			<div class="modal-content" id="modalContent">
-				<span class="modal-close" id="modalClose">&times;</span>
-				<p id="modalText">Modal Text</p>
-				<div class="modal-buttons" id="modalButtons"></div>
-			</div>
-		</div>
-		<div class="loading-overlay" id="loadingOverlay">
-			<div class="loading-animation">
-				<div class="loading-bar"></div>
-				<div class="loading-bar"></div>
-				<div class="loading-bar"></div>
-				<div class="loading-bar"></div>
-				<div class="loading-bar"></div>
-			</div>
-			<p id="loadingText">Loading...</p>
-		</div>
-		<script type="module">
-			import { siteMapping } from "../site-mapping.js";
-			const firebaseConfig = {
-				apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
-				authDomain: "strongdog-auth.firebaseapp.com",
-				databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
-				projectId: "strongdog-auth",
-				storageBucket: "strongdog-auth.appspot.com",
-				messagingSenderId: "936276282572",
-				appId: "1:936276282572:web:a802b7f609381ff9428669",
-				measurementId: "G-0YLTCV2MMS",
-			};
-			firebase.initializeApp(firebaseConfig);
-			const auth = firebase.auth();
-			const db = firebase.firestore();
-			const menuIcon = document.getElementById("menuIcon");
-			const slideMenu = document.getElementById("slideMenu");
-			const categories = document.getElementById("sidebarCategories");
-			const savesContainer = document.getElementById("savesContainer");
-			const bottomButtonsContainer = document.getElementById("bottomButtonsContainer");
-			const modal = document.getElementById("modalPrompt");
-			const modalClose = document.getElementById("modalClose");
-			const modalText = document.getElementById("modalText");
-			const modalButtons = document.getElementById("modalButtons");
-			const loadingOverlay = document.getElementById("loadingOverlay");
-			const loadingText = document.getElementById("loadingText");
-			let currentUser = null;
-			let userId = null;
-			let loadingTimeout = null;
 
-			function setCookie(name, value, expires) {
-				document.cookie =
-					name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
-			}
-			function getCookie(name) {
-				const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-				return match ? match[2] : null;
-			}
-			if (getCookie("autoSaveEnabled") === null) {
-				setCookie("autoSaveEnabled", "false", new Date("Fri, 31 Dec 9999 23:59:59 GMT"));
-			}
-			function getCurrentSiteKey() {
-				const currentURL = window.location.href;
-				const keys = Object.keys(siteMapping);
-				keys.sort((a, b) => b.length - a.length);
-				for (const key of keys) {
-					const normalizedKey = key.replace(/^https?:\/\//, "");
-					if (currentURL.includes(normalizedKey)) {
-						return normalizedKey;
-					}
-				}
-				return window.location.host + window.location.pathname.replace(/\/$/, "");
-			}
-			const currentDomainKey = getCurrentSiteKey();
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>4SP - STRONGDOG</title>
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico" />
+    <style>
+        @font-face {
+            font-family: 'primary';
+            src: url('../fonts/primary.woff') format('woff');
+        }
 
-			menuIcon.addEventListener("click", e => {
-				e.stopPropagation();
-				if (slideMenu.style.transform === "translateX(0%)") {
-					slideMenu.style.transform = "translateX(-100%)";
-				} else {
-					slideMenu.style.transform = "translateX(0%)";
-				}
-			});
-			window.addEventListener("click", e => {
-				if (e.target !== menuIcon && !slideMenu.contains(e.target)) {
-					slideMenu.style.transform = "translateX(-100%)";
-				}
-			});
-			function openModal(text, buttons = []) {
-				modalText.textContent = text;
-				modalButtons.innerHTML = "";
-				buttons.forEach(btn => {
-					const buttonEl = document.createElement("button");
-					buttonEl.classList.add("transfer-save-file-btn");
-					buttonEl.textContent = btn.text;
-					buttonEl.onclick = btn.onclick;
-					modalButtons.appendChild(buttonEl);
-				});
-				modal.style.display = "flex";
-			}
-			modalClose.addEventListener("click", () => {
-				modal.style.display = "none";
-			});
-			window.addEventListener("click", event => {
-				if (event.target === modal) {
-					modal.style.display = "none";
-				}
-			});
-			function showLoading(text = "Loading...") {
-				loadingText.textContent = text;
-				loadingOverlay.style.display = "flex";
-				loadingOverlay.classList.add("active");
-				if (loadingTimeout) clearTimeout(loadingTimeout);
-				loadingTimeout = setTimeout(() => {
-					hideLoading();
-				}, 5000);
-			}
-			function hideLoading() {
-				if (loadingTimeout) {
-					clearTimeout(loadingTimeout);
-					loadingTimeout = null;
-				}
-				loadingOverlay.classList.remove("active");
-				loadingOverlay.style.display = "none";
-			}
-			function getAllLocalStorageData() {
-				const data = {};
-				for (let i = 0; i < localStorage.length; i++) {
-					const key = localStorage.key(i);
-					const value = localStorage.getItem(key);
-					data[key] = value;
-				}
-				return data;
-			}
-			function setAllLocalStorageData(data) {
-				localStorage.clear();
-				for (const [key, value] of Object.entries(data)) {
-					localStorage.setItem(key, value);
-				}
-			}
-			async function getAllIndexedDBData() {
-				if (!indexedDB.databases) return {};
-				let dbList = [];
-				try {
-					dbList = await indexedDB.databases();
-				} catch (error) {
-					console.error("Error fetching IndexedDB databases:", error);
-					return {};
-				}
-				const result = {};
-				for (const dbInfo of dbList) {
-					if (!dbInfo.name) continue;
-					result[dbInfo.name] = await getDataFromDatabase(dbInfo.name);
-				}
-				return result;
-			}
-			function getDataFromDatabase(dbName) {
-				return new Promise((resolve, reject) => {
-					const request = indexedDB.open(dbName);
-					request.onsuccess = event => {
-						const db = event.target.result;
-						const storeNames = Array.from(db.objectStoreNames);
-						const dbData = {};
-						let pending = storeNames.length;
-						if (pending === 0) {
-							db.close();
-							resolve(dbData);
-							return;
-						}
-						storeNames.forEach(storeName => {
-							const transaction = db.transaction(storeName, "readonly");
-							const store = transaction.objectStore(storeName);
-							const items = [];
-							const cursorRequest = store.openCursor();
-							cursorRequest.onsuccess = evt => {
-								const cursor = evt.target.result;
-								if (cursor) {
-									items.push({ key: cursor.key, value: cursor.value });
-									cursor.continue();
-								} else {
-									dbData[storeName] = items;
-									pending--;
-									if (pending === 0) {
-										db.close();
-										resolve(dbData);
-									}
-								}
-							};
-							cursorRequest.onerror = evt => {
-								pending--;
-								if (pending === 0) {
-									db.close();
-									resolve(dbData);
-								}
-							};
-						});
-					};
-					request.onerror = event => {
-						reject(event.target.error);
-					};
-				});
-			}
-			async function setAllIndexedDBData(indexedData) {
-				for (const dbName in indexedData) {
-					const storesData = indexedData[dbName];
-					await new Promise(resolve => {
-						const deleteRequest = indexedDB.deleteDatabase(dbName);
-						deleteRequest.onsuccess = () => resolve();
-						deleteRequest.onerror = () => resolve();
-						deleteRequest.onblocked = () => resolve();
-					});
-					const openRequest = indexedDB.open(dbName, 1);
-					openRequest.onupgradeneeded = function (event) {
-						const db = event.target.result;
-						for (const storeName in storesData) {
-							if (!db.objectStoreNames.contains(storeName)) {
-								db.createObjectStore(storeName, { autoIncrement: false });
-							}
-						}
-					};
-					const dbInstance = await new Promise((resolve, reject) => {
-						openRequest.onsuccess = event => {
-							resolve(event.target.result);
-						};
-						openRequest.onerror = event => {
-							reject(event.target.error);
-						};
-					});
-					for (const storeName in storesData) {
-						await new Promise(resolve => {
-							const transaction = dbInstance.transaction(storeName, "readwrite");
-							transaction.oncomplete = () => resolve();
-							transaction.onerror = () => resolve();
-							const store = transaction.objectStore(storeName);
-							const clearRequest = store.clear();
-							clearRequest.onsuccess = async () => {
-								for (const record of storesData[storeName]) {
-									await new Promise(r => {
-										const putRequest = store.put(record.value, record.key);
-										putRequest.onsuccess = () => r();
-										putRequest.onerror = () => r();
-									});
-								}
-							};
-						});
-					}
-					dbInstance.close();
-				}
-			}
-			function removeUndefined(obj) {
-				if (typeof obj !== "object" || obj === null) return obj;
-				if (Array.isArray(obj)) return obj.map(removeUndefined);
-				for (const key in obj) {
-					if (obj[key] === undefined) {
-						delete obj[key];
-					} else {
-						obj[key] = removeUndefined(obj[key]);
-					}
-				}
-				return obj;
-			}
-			function transformUnsupportedValues(obj) {
-				if (obj instanceof ArrayBuffer) {
-					return firebase.firestore.Blob.fromUint8Array(new Uint8Array(obj));
-				}
-				if (obj instanceof Uint8Array) {
-					return firebase.firestore.Blob.fromUint8Array(obj);
-				}
-				if (Array.isArray(obj)) {
-					return obj.map(transformUnsupportedValues);
-				}
-				if (obj && typeof obj === "object") {
-					for (const key in obj) {
-						obj[key] = transformUnsupportedValues(obj[key]);
-					}
-				}
-				return obj;
-			}
-			async function deleteSaveFromFirebase(slotId) {
-				if (!currentUser) return;
-				const docRef = db.collection("users").doc(userId).collection("saves").doc(slotId);
-				await docRef.delete();
-			}
-			async function saveSlotToFirebase(slotId, title, description, localData) {
-				if (!currentUser) return;
-				localData = removeUndefined(localData);
-				localData = transformUnsupportedValues(localData);
-				const docRef = db.collection("users").doc(userId).collection("saves").doc(slotId);
-				await docRef.set({ title, description, localStorageData: localData });
-			}
-			async function loadSlotFromFirebase(slotId) {
-				if (!currentUser) return null;
-				const docRef = db.collection("users").doc(userId).collection("saves").doc(slotId);
-				const doc = await docRef.get();
-				return doc.exists ? doc.data() : null;
-			}
-			function normalizeDomainKey(str) {
-				return str.replace(/^https?:\/\//, "").replace(/\/$/, "");
-			}
-			function replaceDomainsInData(dataObj, currentDomain) {
-				const keysToCheck = Object.keys(siteMapping).map(k => normalizeDomainKey(k));
-				const normalizedCurrentDomain = normalizeDomainKey(currentDomain);
-				function replaceInString(str) {
-					for (const oldDomain of keysToCheck) {
-						if (str.includes(oldDomain)) {
-							const idx = str.indexOf(oldDomain);
-							if (idx === 0) {
-								return normalizedCurrentDomain + str.substring(oldDomain.length);
-							} else {
-								return str.replace(oldDomain, normalizedCurrentDomain);
-							}
-						}
-					}
-					return str;
-				}
-				for (const slotId in dataObj) {
-					if (slotId === "localStorageBackup") {
-						const localObj = dataObj[slotId];
-						if (localObj && typeof localObj === "object") {
-							for (const k in localObj) {
-								const newKey = replaceInString(k);
-								let newVal = localObj[k];
-								if (typeof newVal === "string") {
-									newVal = replaceInString(newVal);
-								}
-								if (newKey !== k) {
-									delete localObj[k];
-									localObj[newKey] = newVal;
-								} else {
-									localObj[k] = newVal;
-								}
-							}
-						}
-					} else {
-						const saveData = dataObj[slotId];
-						if (saveData && saveData.localStorageData) {
-							const lsData = saveData.localStorageData;
-							for (const k in lsData) {
-								const newKey = replaceInString(k);
-								let newVal = lsData[k];
-								if (typeof newVal === "string") {
-									newVal = replaceInString(newVal);
-								}
-								if (newKey !== k) {
-									delete lsData[k];
-									lsData[newKey] = newVal;
-								} else {
-									lsData[k] = newVal;
-								}
-							}
-						}
-					}
-				}
-			}
-			async function handleLoadSave(slotKey) {
-				showLoading("Loading save...");
-				try {
-					const data = await loadSlotFromFirebase(slotKey);
-					if (data && data.localStorageData) {
-						const tempObj = { someSlot: data };
-						replaceDomainsInData(tempObj, currentDomainKey);
-						if (tempObj.someSlot.localStorageData.localStorageBackup) {
-							setAllLocalStorageData(
-								tempObj.someSlot.localStorageData.localStorageBackup
-							);
-						}
-						if (tempObj.someSlot.localStorageData.indexedDBBackup) {
-							await setAllIndexedDBData(
-								tempObj.someSlot.localStorageData.indexedDBBackup
-							);
-						}
-						alert("Load complete!");
-					}
-				} catch (e) {
-					console.error(e);
-					alert("Error loading save!");
-				} finally {
-					hideLoading();
-				}
-			}
-			function renderSlots(slotsData) {
-				savesContainer.innerHTML = "";
-				for (let i = 1; i <= 3; i++) {
-					const slotKey = `slot${i}`;
-					const slotData = slotsData[slotKey];
-					const slotEl = document.createElement("div");
-					slotEl.className = "save-slot";
-					slotEl.setAttribute("data-slot", slotKey);
-					let titleText = "Empty slot";
-					let descText = "Click here to save your progress";
-					if (slotData) {
-						titleText = slotData.title;
-						descText = slotData.description;
-						const deleteBtn = document.createElement("button");
-						deleteBtn.className = "delete-button";
-						deleteBtn.textContent = "X";
-						deleteBtn.onclick = e => {
-							e.stopPropagation();
-							openModal(
-								"Are you sure you want to delete this save? This action is irreversable",
-								[
-									{
-										text: "Yes",
-										onclick: async () => {
-											modal.style.display = "none";
-											showLoading("Deleting save...");
-											await deleteSaveFromFirebase(slotKey);
-											await loadUserSaves();
-											hideLoading();
-										},
-									},
-									{
-										text: "No",
-										onclick: () => {
-											modal.style.display = "none";
-										},
-									},
-								]
-							);
-						};
-						slotEl.appendChild(deleteBtn);
-					}
-					const titleEl = document.createElement("div");
-					titleEl.className = "save-title";
-					titleEl.textContent = titleText;
-					const descEl = document.createElement("div");
-					descEl.className = "save-description";
-					descEl.textContent = descText;
-					slotEl.appendChild(titleEl);
-					slotEl.appendChild(descEl);
-					slotEl.addEventListener("click", async () => {
-						if (!slotData) {
-							const titlePrompt = prompt("Enter a title for your save:", "");
-							if (titlePrompt === null) return;
-							const descPrompt = prompt("Enter a description for your save:", "");
-							if (descPrompt === null) return;
-							showLoading("Saving your data...");
-							const localData = {
-								localStorageBackup: getAllLocalStorageData(),
-								indexedDBBackup: await getAllIndexedDBData(),
-							};
-							saveSlotToFirebase(slotKey, titlePrompt, descPrompt, localData)
-								.then(() => loadUserSaves())
-								.finally(() => {
-									hideLoading();
-									alert("Save complete!");
-								});
-						} else {
-							openModal("What would you like to do?", [
-								{
-									text: "Load Save",
-									onclick: () => {
-										modal.style.display = "none";
-										openModal(
-											"Are you sure you would like to load this save? This will wipe unsaved changes.",
-											[
-												{
-													text: "Yes",
-													onclick: async () => {
-														modal.style.display = "none";
-														await handleLoadSave(slotKey);
-													},
-												},
-												{
-													text: "No",
-													onclick: () => {
-														modal.style.display = "none";
-													},
-												},
-											]
-										);
-									},
-								},
-								{
-									text: "Overwrite Save",
-									onclick: () => {
-										modal.style.display = "none";
-										openModal(
-											"Are you sure you want to overwrite this save? This action is irreversable.",
-											[
-												{
-													text: "Yes",
-													onclick: async () => {
-														modal.style.display = "none";
-														showLoading("Overwriting save...");
-														await deleteSaveFromFirebase(slotKey);
-														const localData = {
-															localStorageBackup:
-																getAllLocalStorageData(),
-															indexedDBBackup:
-																await getAllIndexedDBData(),
-														};
-														await saveSlotToFirebase(
-															slotKey,
-															slotData.title,
-															slotData.description,
-															localData
-														);
-														await loadUserSaves();
-														hideLoading();
-														alert("Overwrite complete!");
-													},
-												},
-												{
-													text: "No",
-													onclick: () => {
-														modal.style.display = "none";
-													},
-												},
-											]
-										);
-									},
-								},
-							]);
-						}
-					});
-					savesContainer.appendChild(slotEl);
-				}
-			}
-			async function loadUserSaves() {
-				if (!currentUser) {
-					savesContainer.style.display = "none";
-					return;
-				}
-				savesContainer.style.display = "flex";
-				const savesColl = db.collection("users").doc(userId).collection("saves");
-				const snapshot = await savesColl.get();
-				const slotsData = {};
-				snapshot.forEach(doc => {
-					slotsData[doc.id] = doc.data();
-				});
-				renderSlots(slotsData);
-			}
-			async function downloadAllSaves() {
-				showLoading("Preparing download...");
-				const localData = getAllLocalStorageData();
-				const indexedData = await getAllIndexedDBData();
-				const dataToDownload = {
-					localStorageBackup: localData,
-					indexedDBBackup: indexedData,
-				};
-				hideLoading();
-				const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], {
-					type: "application/json",
-				});
-				const url = URL.createObjectURL(blob);
-				const a = document.createElement("a");
-				a.href = url;
-				a.download = "strongdog_saves.json";
-				document.body.appendChild(a);
-				a.click();
-				a.remove();
-				URL.revokeObjectURL(url);
-			}
-			function handleFileUpload() {
-				const input = document.createElement("input");
-				input.type = "file";
-				input.accept = ".json";
-				input.onchange = async e => {
-					const file = e.target.files[0];
-					if (!file) return;
-					const reader = new FileReader();
-					reader.onload = async evt => {
-						const content = evt.target.result;
-						let parsed;
-						try {
-							parsed = JSON.parse(content);
-						} catch (err) {
-							alert("Invalid file format");
-							return;
-						}
-						replaceDomainsInData(parsed, currentDomainKey);
-						openModal(
-							"Are you sure you would like to upload a save? It will wipe all current data on strongdog.",
-							[
-								{
-									text: "Yes",
-									onclick: async () => {
-										modal.style.display = "none";
-										showLoading("Uploading save...");
-										localStorage.clear();
-										let loadedLocalData = null;
-										let loadedIndexedData = null;
-										if (
-											parsed.localStorageBackup &&
-											typeof parsed.localStorageBackup === "object"
-										) {
-											loadedLocalData = parsed.localStorageBackup;
-											loadedIndexedData = parsed.indexedDBBackup;
-										} else {
-											for (const [slotId, slotData] of Object.entries(
-												parsed
-											)) {
-												if (
-													slotData &&
-													slotData.localStorageData &&
-													slotData.localStorageData.localStorageBackup
-												) {
-													loadedLocalData =
-														slotData.localStorageData
-															.localStorageBackup;
-													loadedIndexedData =
-														slotData.localStorageData.indexedDBBackup;
-													break;
-												}
-											}
-										}
-										if (loadedLocalData)
-											setAllLocalStorageData(loadedLocalData);
-										if (loadedIndexedData)
-											await setAllIndexedDBData(loadedIndexedData);
-										hideLoading();
-										alert("Upload complete!");
-									},
-								},
-								{
-									text: "No",
-									onclick: () => {
-										modal.style.display = "none";
-									},
-								},
-							]
-						);
-					};
-					reader.readAsText(file);
-				};
-				input.click();
-			}
-			async function autoSaveData() {
-				if (!currentUser) return;
-				const localData = {
-					localStorageBackup: getAllLocalStorageData(),
-					indexedDBBackup: await getAllIndexedDBData(),
-				};
-				const title = "Auto Save";
-				const description = "Auto-saved on " + new Date().toLocaleString();
-				await saveSlotToFirebase("slot3", title, description, localData);
-			}
-			auth.onAuthStateChanged(async user => {
-				currentUser = user;
-				categories.innerHTML = "";
-				bottomButtonsContainer.innerHTML = "";
-				if (user) {
-					userId = user.uid;
-					const userDetailsContainer = document.createElement("div");
-					userDetailsContainer.className = "user-details-container";
-					const profileTopContainer = document.createElement("div");
-					profileTopContainer.className = "profile-top-container";
-					const profilePictureContainer = document.createElement("div");
-					profilePictureContainer.className = "profile-picture-container";
-					const profilePictureElement = document.createElement("img");
-					profilePictureElement.className = "profile-picture";
-					profilePictureElement.src = user.photoURL || "../img/default-avatar.png";
-					profilePictureContainer.appendChild(profilePictureElement);
-					profilePictureContainer.addEventListener("click", () => {
-						window.location.href = "../settings.html";
-					});
-					const usernameContainer = document.createElement("div");
-					usernameContainer.className = "username-container";
-					const usernameElement = document.createElement("p");
-					usernameElement.className = "username-text";
-					const userDocRef = db.collection("usernames").doc(userId);
-					const userDoc = await userDocRef.get();
-					usernameElement.textContent = userDoc.exists
-						? userDoc.data().username || "Username"
-						: user.displayName || "Username";
-					usernameContainer.appendChild(usernameElement);
-					profileTopContainer.appendChild(profilePictureContainer);
-					profileTopContainer.appendChild(usernameContainer);
-					userDetailsContainer.appendChild(profileTopContainer);
-					slideMenu.insertBefore(userDetailsContainer, categories);
-					const logoutLink = document.createElement("a");
-					logoutLink.href = "#";
-					logoutLink.className = "option-link";
-					logoutLink.textContent = "Log Out";
-					logoutLink.style.backgroundColor = "#dc3545";
-					logoutLink.style.color = "white";
-					logoutLink.addEventListener("click", function (e) {
-						e.preventDefault();
-						auth.signOut()
-							.then(() => {
-								window.location.reload();
-							})
-							.catch(error => {
-								console.error("Error signing out:", error);
-							});
-					});
-					categories.appendChild(logoutLink);
-					const downloadButton = document.createElement("button");
-					downloadButton.textContent = "Download save file";
-					downloadButton.addEventListener("click", () => {
-						downloadAllSaves();
-					});
-					const uploadButton = document.createElement("button");
-					uploadButton.textContent = "Upload save file";
-					uploadButton.addEventListener("click", () => {
-						handleFileUpload();
-					});
-					bottomButtonsContainer.appendChild(downloadButton);
-					bottomButtonsContainer.appendChild(uploadButton);
-					const autoSaveContainer = document.createElement("div");
-					autoSaveContainer.className = "auto-save-container";
-					const autoSaveLabel = document.createElement("span");
-					autoSaveLabel.id = "autoSaveLabel";
-					autoSaveLabel.textContent =
-						"Auto Save is " +
-						(getCookie("autoSaveEnabled") === "true" ? "Enabled" : "Disabled");
-					const autoSaveToggleWrapper = document.createElement("label");
-					autoSaveToggleWrapper.className = "switch";
-					const autoSaveToggleInput = document.createElement("input");
-					autoSaveToggleInput.type = "checkbox";
-					autoSaveToggleInput.id = "toggleAutoSave";
-					autoSaveToggleInput.checked = getCookie("autoSaveEnabled") === "true";
-					const autoSaveToggleSpan = document.createElement("span");
-					autoSaveToggleSpan.className = "slider round";
-					autoSaveToggleWrapper.appendChild(autoSaveToggleInput);
-					autoSaveToggleWrapper.appendChild(autoSaveToggleSpan);
-					autoSaveContainer.appendChild(autoSaveLabel);
-					autoSaveContainer.appendChild(autoSaveToggleWrapper);
-					bottomButtonsContainer.appendChild(autoSaveContainer);
-					autoSaveToggleInput.addEventListener("change", () => {
-						const newState = autoSaveToggleInput.checked;
-						const currentState = getCookie("autoSaveEnabled") === "true";
-						if (newState && !currentState) {
-							openModal(
-								"Enabling auto save will wipe your previous auto save data and replace it with the current data. Do you want to proceed?",
-								[
-									{
-										text: "Yes",
-										onclick: async () => {
-											modal.style.display = "none";
-											setCookie(
-												"autoSaveEnabled",
-												"true",
-												new Date("Fri, 31 Dec 9999 23:59:59 GMT")
-											);
-											await autoSaveData();
-											autoSaveLabel.textContent = "Auto Save is Enabled";
-											alert(
-												"Auto save has been enabled and current data has been saved as auto save."
-											);
-										},
-									},
-									{
-										text: "No",
-										onclick: () => {
-											modal.style.display = "none";
-											autoSaveToggleInput.checked = false;
-										},
-									},
-								]
-							);
-						} else if (!newState && currentState) {
-							openModal(
-								"Disabling auto save means your progress will need to be manually saved in the future. Do you want to proceed?",
-								[
-									{
-										text: "Yes",
-										onclick: () => {
-											modal.style.display = "none";
-											setCookie(
-												"autoSaveEnabled",
-												"false",
-												new Date("Fri, 31 Dec 9999 23:59:59 GMT")
-											);
-											autoSaveLabel.textContent = "Auto Save is Disabled";
-											alert(
-												"Auto save has been disabled. Remember to manually save your progress."
-											);
-										},
-									},
-									{
-										text: "No",
-										onclick: () => {
-											modal.style.display = "none";
-											autoSaveToggleInput.checked = true;
-										},
-									},
-								]
-							);
-						}
-					});
-					await loadUserSaves();
-				} else {
-					userId = null;
-					const userDetailsContainer = document.createElement("div");
-					userDetailsContainer.className = "user-details-container";
-					const notLoggedInContainer = document.createElement("div");
-					notLoggedInContainer.className = "username-container";
-					const notLoggedInText = document.createElement("p");
-					notLoggedInText.className = "username-text";
-					notLoggedInText.textContent = "Not logged in";
-					notLoggedInContainer.appendChild(notLoggedInText);
-					const loginButton = document.createElement("button");
-					loginButton.textContent = "Log In";
-					loginButton.style.backgroundColor = "#007bff";
-					loginButton.style.color = "white";
-					loginButton.style.border = "none";
-					loginButton.style.padding = "10px 20px";
-					loginButton.style.fontSize = "16px";
-					loginButton.style.borderRadius = "5px";
-					loginButton.style.cursor = "pointer";
-					loginButton.style.marginTop = "5px";
-					loginButton.addEventListener("click", function () {
-						window.location.href = "../login.html";
-					});
-					userDetailsContainer.appendChild(notLoggedInContainer);
-					userDetailsContainer.appendChild(loginButton);
-					slideMenu.insertBefore(userDetailsContainer, categories);
-					const downloadButton = document.createElement("button");
-					downloadButton.textContent = "Download save file";
-					downloadButton.addEventListener("click", () => {
-						alert(
-							"You are not logged in. We'll download your current local data only."
-						);
-						showLoading("Preparing download...");
-						const dataToDownload = {
-							localStorageBackup: getAllLocalStorageData(),
-						};
-						hideLoading();
-						const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], {
-							type: "application/json",
-						});
-						const url = URL.createObjectURL(blob);
-						const a = document.createElement("a");
-						a.href = url;
-						a.download = "strongdog_saves.json";
-						document.body.appendChild(a);
-						a.click();
-						a.remove();
-						URL.revokeObjectURL(url);
-					});
-					const uploadButton = document.createElement("button");
-					uploadButton.textContent = "Upload save file";
-					uploadButton.addEventListener("click", () => {
-						handleFileUpload();
-					});
-					bottomButtonsContainer.appendChild(downloadButton);
-					bottomButtonsContainer.appendChild(uploadButton);
-					savesContainer.style.display = "none";
-				}
-			});
-		</script>
-	</body>
+        :root {
+            --red: rgb(220, 53, 69);
+            --green: rgb(40, 167, 69);
+            --ff: 'primary', Arial, sans-serif;
+            --bg: #2e2e2e;
+        }
+
+        body {
+            font-family: var(--ff);
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background-color: rgba(50, 50, 50, 0.9);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 700;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo:hover {
+            transform: translateX(-50%) scale(1.025);
+        }
+
+        .logo .xp {
+            color: orange;
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+        }
+
+        .menu-icon {
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .menu-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .slide-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 400px;
+            backdrop-filter: blur(10px);
+            color: white;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+            z-index: 1003;
+            transition: transform 0.5s ease;
+            transform: translateX(-100%);
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            background: linear-gradient(to bottom right,
+                    rgba(43, 43, 43, 0.599),
+                    rgba(53, 53, 53, 0.599),
+                    rgba(80, 80, 80, 0.599));
+        }
+
+        .slide-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .categories {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-top: 20px;
+        }
+
+        .categories>a,
+        .categories>button {
+            padding: 17px;
+            background: linear-gradient(45deg, #333, #444);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+            text-align: center;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+            font-family: var(--ff);
+        }
+
+        .categories>a:hover,
+        .categories>button:hover {
+            background: linear-gradient(45deg, #ffa500, #ff8433);
+            box-shadow: 0 6px 20px rgba(255, 98, 0, 0.5);
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+            margin: 40px 0;
+            font-size: 2.5rem;
+            text-shadow: none;
+        }
+
+        .info-message {
+            color: #ddd;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            padding: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            background-color: #3f3f3f;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .saves-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .save-slot {
+            background: #444444;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+            padding: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            border-left: 5px solid #666;
+        }
+
+        .save-slot:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border-left-color: orange;
+        }
+
+        .save-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            text-align: left;
+            color: #ffc107;
+        }
+
+        .save-description {
+            font-size: 1em;
+            text-align: left;
+            color: #ccc;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #a83632;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            font-size: 1.2em;
+            line-height: 35px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background: #f00;
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #4a4a4a;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            color: white;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        .modal-close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .loading-animation {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid orange;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .bottom-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-top: 40px;
+            padding-bottom: 40px;
+        }
+
+        .save-action-btn {
+            background: linear-gradient(45deg, #ffa500, #ff8433);
+            color: white;
+            font-family: var(--ff);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 350px;
+            max-width: 90%;
+        }
+
+        .save-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 98, 0, 0.5);
+            filter: brightness(1.1);
+        }
+
+        #credits-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 15vh;
+        }
+
+        #credits-popup {
+            background: #3a3a3a;
+            color: white;
+            padding: 25px 35px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 550px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            border: 1px solid #555;
+        }
+
+        #close-credits-popup {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2.5rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        #close-credits-popup:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        #credits-popup h3 {
+            text-align: center;
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 2px solid orange;
+            padding-bottom: 10px;
+        }
+
+        #credits-popup .credit-person {
+            margin-bottom: 20px;
+        }
+
+        #credits-popup .credit-person h4 {
+            font-size: 1.4rem;
+            color: orange;
+            margin: 0 0 8px 0;
+        }
+
+        #credits-popup .credit-person p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="menu-icon" id="menuIcon">☰</div>
+        <a href="../index.html" class="logo">strongdog<span class="xp">XP</span></a>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search is disabled here" id="searchInput"
+                autocomplete="off" disabled />
+        </div>
+    </div>
+    <div class="slide-menu" id="slideMenu">
+        <div class="categories" id="sidebarCategories">
+            <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
+            <a href="../index.html" class="option-link">Back to StrongdogXP</a>
+            <a href="../favs.html" class="option-link">Favorites</a>
+            <a href="#" id="blockLanschool" class="option-link">Open in about:blank</a>
+            <a href="../about.html" class="option-link">About | Bugs | Request Games</a>
+            <a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
+            <a href="#" id="creditsBtn" class="option-link">Credits</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <h2>Local Save Manager</h2>
+        <p class="info-message">
+            Welcome to your Local Save Manager! This tool lets you back up your progress directly in your browser.
+            You can save your current data into one of three slots, load it back later, or transfer it using a file.
+        </p>
+        <div class="saves-container" id="savesContainer"></div>
+        <div class="bottom-buttons" id="bottomButtonsContainer"></div>
+    </div>
+    <div class="modal" id="modalPrompt">
+        <div class="modal-content" id="modalContent">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <p id="modalText">Modal Text</p>
+            <div class="modal-buttons" id="modalButtons"></div>
+        </div>
+    </div>
+    <div id="credits-overlay">
+        <div id="credits-popup">
+            <span id="close-credits-popup">&times;</span>
+            <h3>Credits</h3>
+            <div class="credit-person">
+                <h4>John P - Creator of StrongdogXP</h4>
+                <p>He downloaded, compiled and created Strongdog entirely.</p>
+            </div>
+            <div class="credit-person">
+                <h4>4SP</h4>
+                <p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p>
+            </div>
+        </div>
+    </div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-animation"></div>
+        <p id="loadingText" class="loading-text">Loading...</p>
+    </div>
+
+    <script type="module">
+        import { siteMapping } from "../site-mapping.js";
+        
+        const savesContainer = document.getElementById("savesContainer");
+        const bottomButtonsContainer = document.getElementById("bottomButtonsContainer");
+        const modal = document.getElementById("modalPrompt");
+        const modalClose = document.getElementById("modalClose");
+        const modalText = document.getElementById("modalText");
+        const modalButtons = document.getElementById("modalButtons");
+        const loadingOverlay = document.getElementById("loadingOverlay");
+        const loadingText = document.getElementById("loadingText");
+        let loadingTimeout = null;
+
+        function getCurrentSiteKey() {
+            const currentURL = window.location.href;
+            const keys = Object.keys(siteMapping);
+            keys.sort((a, b) => b.length - a.length);
+            for (const key of keys) {
+                const normalizedKey = key.replace(/^https?:\/\//, "");
+                if (currentURL.includes(normalizedKey)) {
+                    return normalizedKey;
+                }
+            }
+            return window.location.host + window.location.pathname.replace(/\/$/, "");
+        }
+        const currentDomainKey = getCurrentSiteKey();
+
+        function openModal(text, buttons = []) {
+            modalText.textContent = text;
+            modalButtons.innerHTML = "";
+            buttons.forEach(btn => {
+                const buttonEl = document.createElement("button");
+                buttonEl.className = "save-action-btn";
+                buttonEl.style.width = 'auto';
+                buttonEl.style.fontSize = '1rem';
+                buttonEl.textContent = btn.text;
+                buttonEl.onclick = btn.onclick;
+                modalButtons.appendChild(buttonEl);
+            });
+            modal.style.display = "flex";
+        }
+        modalClose.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+        window.addEventListener("click", event => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        function showLoading(text = "Loading...") {
+            loadingText.textContent = text;
+            loadingOverlay.style.display = "flex";
+            loadingOverlay.classList.add("active");
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            loadingTimeout = setTimeout(() => {
+                hideLoading();
+            }, 5000);
+        }
+
+        function hideLoading() {
+            if (loadingTimeout) {
+                clearTimeout(loadingTimeout);
+                loadingTimeout = null;
+            }
+            loadingOverlay.classList.remove("active");
+            loadingOverlay.style.display = "none";
+        }
+
+        function getAllLocalStorageData() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                // Exclude our own save slots from the backup
+                if (!key.startsWith('sdxp_save_slot_')) {
+                    const value = localStorage.getItem(key);
+                    data[key] = value;
+                }
+            }
+            return data;
+        }
+
+        function setAllLocalStorageData(data) {
+            // Clear only non-save-slot keys
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (!key.startsWith('sdxp_save_slot_')) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+
+            // Set new data
+            for (const [key, value] of Object.entries(data)) {
+                localStorage.setItem(key, value);
+            }
+        }
+        
+        async function getAllIndexedDBData() {
+            if (!('indexedDB' in window) || !indexedDB.databases) return {};
+            let dbList = [];
+            try { dbList = await indexedDB.databases(); }
+            catch (error) { console.error("Error fetching IndexedDB databases:", error); return {}; }
+            
+            const result = {};
+            for (const dbInfo of dbList) {
+                if (!dbInfo.name) continue;
+                result[dbInfo.name] = await getDataFromDatabase(dbInfo.name);
+            }
+            return result;
+        }
+
+        function getDataFromDatabase(dbName) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const request = indexedDB.open(dbName);
+                    request.onsuccess = event => {
+                        const db = event.target.result;
+                        const storeNames = Array.from(db.objectStoreNames);
+                        const dbData = {};
+                        if (storeNames.length === 0) {
+                            db.close();
+                            resolve(dbData);
+                            return;
+                        }
+                        const transaction = db.transaction(storeNames, "readonly");
+                        let storesCompleted = 0;
+                        storeNames.forEach(storeName => {
+                            const store = transaction.objectStore(storeName);
+                            const items = [];
+                            const cursorRequest = store.openCursor();
+                            cursorRequest.onsuccess = evt => {
+                                const cursor = evt.target.result;
+                                if (cursor) {
+                                    items.push({ key: cursor.key, value: cursor.value });
+                                    cursor.continue();
+                                } else {
+                                    dbData[storeName] = items;
+                                    storesCompleted++;
+                                    if (storesCompleted === storeNames.length) {
+                                        db.close();
+                                        resolve(dbData);
+                                    }
+                                }
+                            };
+                            cursorRequest.onerror = evt => {
+                                console.error(`Error reading from ${storeName}:`, evt.target.error);
+                                storesCompleted++;
+                                if (storesCompleted === storeNames.length) {
+                                    db.close();
+                                    resolve(dbData); // Resolve with what we have
+                                }
+                            };
+                        });
+                    };
+                    request.onerror = event => reject(event.target.error);
+                } catch(e) {
+                    reject(e);
+                }
+            });
+        }
+        
+        async function setAllIndexedDBData(allDbsData) {
+            for (const dbName in allDbsData) {
+                await new Promise(resolve => {
+                    const deleteRequest = indexedDB.deleteDatabase(dbName);
+                    deleteRequest.onsuccess = deleteRequest.onerror = deleteRequest.onblocked = () => resolve();
+                });
+
+                await new Promise((resolveDb, rejectDb) => {
+                    const openRequest = indexedDB.open(dbName);
+                    openRequest.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        const storesData = allDbsData[dbName];
+                        for (const storeName in storesData) {
+                            if (!db.objectStoreNames.contains(storeName)) {
+                                db.createObjectStore(storeName);
+                            }
+                        }
+                    };
+                    openRequest.onsuccess = async (event) => {
+                        const db = event.target.result;
+                        const storesData = allDbsData[dbName];
+                        const tx = db.transaction(Object.keys(storesData), 'readwrite');
+                        for (const storeName in storesData) {
+                            const store = tx.objectStore(storeName);
+                            for (const record of storesData[storeName]) {
+                                store.put(record.value, record.key);
+                            }
+                        }
+                        tx.oncomplete = () => { db.close(); resolveDb(); };
+                        tx.onerror = (e) => { console.error(e); db.close(); resolveDb(); };
+                    };
+                    openRequest.onerror = (event) => rejectDb(event.target.error);
+                });
+            }
+        }
+        
+        function normalizeDomainKey(str) { return str.replace(/^https?:\/\//, "").replace(/\/$/, ""); }
+
+        function replaceDomainsInData(dataObj, currentDomain) {
+            if (!dataObj || typeof dataObj !== 'object') return;
+            const keysToCheck = Object.keys(siteMapping).map(k => normalizeDomainKey(k));
+            const normalizedCurrentDomain = normalizeDomainKey(currentDomain);
+            
+            function replaceInString(str) {
+                for (const oldDomain of keysToCheck) {
+                    if (str.includes(oldDomain)) {
+                        return str.replace(new RegExp(oldDomain, 'g'), normalizedCurrentDomain);
+                    }
+                }
+                return str;
+            }
+
+            if (dataObj.localStorageBackup) {
+                const lsData = dataObj.localStorageBackup;
+                for (const k in lsData) {
+                    const newKey = replaceInString(k);
+                    let newVal = lsData[k];
+                    if (typeof newVal === "string") newVal = replaceInString(newVal);
+                    if (newKey !== k) { delete lsData[k]; lsData[newKey] = newVal; }
+                    else { lsData[k] = newVal; }
+                }
+            }
+        }
+        
+        async function handleLoadSave(slotKey) {
+            showLoading("Loading save from slot...");
+            try {
+                const savedDataJSON = localStorage.getItem(slotKey);
+                if (savedDataJSON) {
+                    const parsedData = JSON.parse(savedDataJSON);
+                    replaceDomainsInData(parsedData.data, currentDomainKey);
+
+                    if (parsedData.data.localStorageBackup) {
+                        setAllLocalStorageData(parsedData.data.localStorageBackup);
+                    }
+                    if (parsedData.data.indexedDBBackup) {
+                        await setAllIndexedDBData(parsedData.data.indexedDBBackup);
+                    }
+                    alert("Load complete!");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Error loading save!");
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function renderLocalSlots() {
+            savesContainer.innerHTML = "";
+            for (let i = 1; i <= 3; i++) {
+                const slotKey = `sdxp_save_slot_${i}`;
+                const slotDataJSON = localStorage.getItem(slotKey);
+                const slotData = slotDataJSON ? JSON.parse(slotDataJSON) : null;
+                
+                const slotEl = document.createElement("div");
+                slotEl.className = "save-slot";
+                
+                let titleText = `Slot ${i} - Empty`;
+                let descText = "Click here to save your current game progress";
+                
+                if (slotData) {
+                    titleText = slotData.title;
+                    descText = slotData.description;
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.className = "delete-button";
+                    deleteBtn.textContent = "×";
+                    deleteBtn.onclick = e => {
+                        e.stopPropagation();
+                        openModal(`Are you sure you want to delete '${titleText}'? This action is irreversible.`, [
+                            { text: "Yes, Delete", onclick: () => {
+                                modal.style.display = 'none';
+                                localStorage.removeItem(slotKey);
+                                renderLocalSlots();
+                            }},
+                            { text: "No", onclick: () => modal.style.display = 'none' }
+                        ]);
+                    };
+                    slotEl.appendChild(deleteBtn);
+                }
+                
+                const titleEl = document.createElement("div");
+                titleEl.className = "save-title";
+                titleEl.textContent = titleText;
+                const descEl = document.createElement("div");
+                descEl.className = "save-description";
+                descEl.textContent = descText;
+                slotEl.appendChild(titleEl);
+                slotEl.appendChild(descEl);
+
+                slotEl.addEventListener("click", async () => {
+                    if (!slotData) {
+                        const titlePrompt = prompt(`Enter a title for Slot ${i}:`, "");
+                        if (!titlePrompt) return;
+                        const descPrompt = prompt("Enter a description:", `Saved on ${new Date().toLocaleString()}`);
+                        if (descPrompt === null) return;
+                        
+                        showLoading("Saving data to local slot...");
+                        const localData = {
+                            localStorageBackup: getAllLocalStorageData(),
+                            indexedDBBackup: await getAllIndexedDBData(),
+                        };
+                        const dataToStore = { title: titlePrompt, description: descPrompt, data: localData };
+                        localStorage.setItem(slotKey, JSON.stringify(dataToStore));
+                        hideLoading();
+                        alert("Save complete!");
+                        renderLocalSlots();
+                    } else {
+                        openModal(`Actions for '${slotData.title}'`, [
+                            { text: "Load Save", onclick: () => {
+                                modal.style.display = "none";
+                                openModal("Loading this save will overwrite your current unsaved progress. Proceed?", [
+                                    { text: "Yes, Load", onclick: async () => { modal.style.display = 'none'; await handleLoadSave(slotKey); }},
+                                    { text: "No", onclick: () => modal.style.display = 'none' }
+                                ]);
+                            }},
+                            { text: "Overwrite Save", onclick: async () => {
+                                modal.style.display = "none";
+                                showLoading("Overwriting save...");
+                                const localData = { localStorageBackup: getAllLocalStorageData(), indexedDBBackup: await getAllIndexedDBData() };
+                                const dataToStore = { title: slotData.title, description: `Overwritten on ${new Date().toLocaleString()}`, data: localData };
+                                localStorage.setItem(slotKey, JSON.stringify(dataToStore));
+                                hideLoading();
+                                alert("Overwrite complete!");
+                                renderLocalSlots();
+                            }}
+                        ]);
+                    }
+                });
+                savesContainer.appendChild(slotEl);
+            }
+        }
+        
+        async function downloadAllSaves() {
+            showLoading("Preparing download...");
+            const localData = getAllLocalStorageData();
+            const indexedData = await getAllIndexedDBData();
+            const dataToDownload = { localStorageBackup: localData, indexedDBBackup: indexedData };
+            hideLoading();
+            const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "strongdog_local_save.json";
+            a.click();
+            URL.revokeObjectURL(url);
+            a.remove();
+        }
+
+        function handleFileUpload() {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = ".json";
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = async evt => {
+                    let parsed;
+                    try { parsed = JSON.parse(evt.target.result); } 
+                    catch (err) { alert("Invalid JSON file."); return; }
+
+                    replaceDomainsInData(parsed, currentDomainKey);
+
+                    openModal("Uploading this save file will overwrite all current game data. Are you sure?", [
+                        { text: "Yes, Upload", onclick: async () => {
+                            modal.style.display = 'none';
+                            showLoading("Uploading save...");
+                            if (parsed.localStorageBackup) setAllLocalStorageData(parsed.localStorageBackup);
+                            if (parsed.indexedDBBackup) await setAllIndexedDBData(parsed.indexedDBBackup);
+                            hideLoading();
+                            alert("Upload complete! The page will now reload to apply all changes.");
+                            window.location.reload();
+                        }},
+                        { text: "No", onclick: () => modal.style.display = 'none' }
+                    ]);
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function initializePage() {
+            bottomButtonsContainer.innerHTML = ''; // Clear first
+            const downloadButton = document.createElement("button");
+            downloadButton.className = "save-action-btn";
+            downloadButton.textContent = "Download Current Data to File";
+            downloadButton.addEventListener("click", downloadAllSaves);
+
+            const uploadButton = document.createElement("button");
+            uploadButton.className = "save-action-btn";
+            uploadButton.textContent = "Upload and Replace Data from File";
+            uploadButton.addEventListener("click", handleFileUpload);
+
+            bottomButtonsContainer.appendChild(downloadButton);
+            bottomButtonsContainer.appendChild(uploadButton);
+
+            renderLocalSlots();
+        }
+
+        // Initial Page Load
+        initializePage();
+    </script>
+
+    <script>
+        // --- Static Sidebar and Popup Functionality ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuIcon = document.getElementById("menuIcon");
+            const slideMenu = document.getElementById("slideMenu");
+
+            menuIcon.addEventListener("click", e => {
+                e.stopPropagation();
+                slideMenu.style.transform = (slideMenu.style.transform === "translateX(0%)") ? "translateX(-100%)" : "translateX(0%)";
+            });
+
+            window.addEventListener("click", e => {
+                if (e.target !== menuIcon && !slideMenu.contains(e.target)) {
+                    slideMenu.style.transform = "translateX(-100%)";
+                }
+            });
+
+            const blockLanschoolLink = document.getElementById("blockLanschool");
+            blockLanschoolLink?.addEventListener("click", ev => {
+                ev.preventDefault();
+                const url = window.location.href;
+                const newTab = window.open();
+                if (!newTab) return alert("Please allow popups for this feature to work.");
+                newTab.document.write(`<html><body style="margin:0;height:100vh;"><iframe src="${url}" style="border:none;width:100%;height:100%"></iframe></body></html>`);
+                newTab.document.close();
+            });
+
+            const creditsBtn = document.getElementById('creditsBtn');
+            const creditsOverlay = document.getElementById('credits-overlay');
+            const closeCreditsPopup = document.getElementById('close-credits-popup');
+            
+            if (creditsBtn) {
+                creditsBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    slideMenu.style.transform = 'translateX(-100%)';
+                    if (creditsOverlay) creditsOverlay.style.display = 'flex';
+                });
+            }
+            if (closeCreditsPopup) {
+                closeCreditsPopup.addEventListener('click', () => creditsOverlay.style.display = 'none');
+            }
+            if (creditsOverlay) {
+                creditsOverlay.addEventListener('click', (e) => {
+                    if (e.target === creditsOverlay) creditsOverlay.style.display = 'none';
+                });
+            }
+        });
+    </script>
+
+    <script src="../firebase-config.js" defer></script>
+    <script src="../ban-enforcer.js" defer></script>
+    <script src="../url-changer.js" defer></script>
+    <script src="../panic-key.js" defer></script>
+</body>
+
 </html>
