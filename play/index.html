@@ -277,6 +277,13 @@
             border: none;
         }
 
+        /*
+         * This rule makes the button container fixed to the viewport.
+         * 'position: fixed;' takes the element out of the normal document flow
+         * and positions it relative to the browser window, so it stays put when scrolling.
+         * 'bottom: 15px;' and 'left: 15px;' place it in the bottom-left corner.
+         * 'z-index' ensures it stays on top of other content.
+        */
         .game-overlay-buttons {
             position: fixed;
             bottom: 15px;
@@ -589,7 +596,7 @@
                         document.getElementById('fullscreenDisclaimer'),
                         document.getElementById('gameOverlayButtons')
                     ];
-                    
+
                     elementsToToggle.forEach(el => {
                         if (el) el.classList.toggle('performance-mode-hidden', isFullscreen);
                     });
