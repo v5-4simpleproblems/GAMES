@@ -19,6 +19,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="../firebase-config.js"></script>
     <script src="../panic-key.js"></script>
+    <script src="../ban-enforcer.js"></script>
     <style>
         @font-face {
             font-family: 'PrimaryFont';
@@ -31,7 +32,7 @@
             --bg: #2e2e2e;
         }
 
-        /* This rule hides the body by default. The auth guard script will make it visible only for authorized users. */
+        /* This rule hides the body by default. The auth gate script will make it visible only for logged-in users. */
         body {
             visibility: hidden;
             font-family: var(--ff);
@@ -671,99 +672,33 @@
 
     <script>
         /**
-         * auth-guard.js (v2 - Corrected Overlay)
-         * This script protects the page by checking the user's authentication status.
+         * Authentication Gate
+         * This script protects the page by ensuring a user is logged in.
          * 1. If the user is logged out, it redirects to the login page.
-         * 2. If the user is logged in, it checks if they are banned.
-         * 3. If they are banned, it shows a ban screen correctly.
-         * 4. If they are logged in and not banned, it reveals the page content.
+         * 2. If the user is logged in, it reveals the page content, allowing other scripts
+         * (like ban-enforcer.js) to perform their subsequent checks.
          */
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof firebase === 'undefined') {
-                console.error("Authentication Error: Firebase is not loaded. Cannot protect page.");
+                console.error("Auth Error: Firebase is not loaded.");
                 document.body.style.visibility = 'visible';
-                document.body.innerHTML = `<h1 style="color:white; text-align:center;">Error: Cannot connect to services. Please try again later.</h1>`;
+                document.body.innerHTML = `<h1 style="color:white; text-align:center;">Error: Cannot connect to services.</h1>`;
                 return;
             }
 
             firebase.auth().onAuthStateChanged(user => {
                 if (user) {
-                    // --- Case 1: User is logged in ---
-                    const db = firebase.firestore();
-                    db.collection('bans').doc(user.uid).get().then(doc => {
-                        if (doc.exists) {
-                            // --- Case 1a: User is BANNED ---
-                            console.warn("Access Denied: User is banned.");
-                            showBanScreen(doc.data());
-                        } else {
-                            // --- Case 1b: User is logged in and NOT banned ---
-                            console.log("Access Granted: User is authenticated and not banned.");
-                            document.body.style.visibility = 'visible';
-                        }
-                    }).catch(error => {
-                        console.error("Error checking ban status:", error);
-                        document.body.style.visibility = 'visible'; // Failsafe
-                    });
+                    // User is logged in. Reveal the page.
+                    // The external ban-enforcer.js script will handle checking for bans.
+                    console.log("Authentication successful. Revealing page content.");
+                    document.body.style.visibility = 'visible';
                 } else {
-                    // --- Case 2: User is logged out ---
-                    console.log("No user logged in. Redirecting to login page.");
+                    // User is logged out. Redirect them to the login page.
+                    console.log("Authentication failed: No user is logged in. Redirecting...");
                     window.location.href = 'https://4simpleproblems.github.io/login.html';
                 }
             });
         });
-
-        /**
-         * This function creates and displays the ban screen overlay correctly.
-         */
-        function showBanScreen(banData) {
-            // Lock scrolling on both elements for maximum compatibility.
-            document.documentElement.style.overflow = 'hidden';
-            document.body.style.overflow = 'hidden';
-
-            // --- Create Shield ---
-            const shield = document.createElement('div');
-            shield.style.position = 'fixed';
-            shield.style.top = '0';
-            shield.style.left = '0';
-            shield.style.width = '100vw';
-            shield.style.height = '100vh';
-            shield.style.backgroundColor = 'rgba(10, 10, 10, 0.75)';
-            shield.style.backdropFilter = 'blur(14px)';
-            shield.style.webkitBackdropFilter = 'blur(14px)';
-            // Set a z-index *lower* than the message box.
-            shield.style.zIndex = '2147483646';
-
-            // --- Create Message Box ---
-            const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
-            const banDate = banData.bannedAt && banData.bannedAt.toDate ? `on ${banData.bannedAt.toDate().toLocaleDateString()}` : '';
-
-            const messageBox = document.createElement('div');
-            messageBox.style.position = 'fixed';
-            messageBox.style.bottom = '40px';
-            messageBox.style.right = '40px';
-            messageBox.style.maxWidth = '600px';
-            messageBox.style.textAlign = 'right';
-            messageBox.style.color = '#ffffff';
-            messageBox.style.fontFamily = "'PrimaryFont', Arial, sans-serif";
-            messageBox.style.textShadow = '0 2px 8px rgba(0,0,0,0.7)';
-            // Set a z-index *higher* than the shield to ensure it's on top.
-            messageBox.style.zIndex = '2147483647';
-            messageBox.innerHTML = `
-                <h1 style="font-size: 2.3em; color: #fc0324; margin: 0 0 10px 0; font-weight: bold;">Access Denied</h1>
-                <p style="font-size: 1.1em; margin: 0 0 15px 0; line-height: 1.4; color: #e0e0e0;">Your account has been suspended from this service.</p>
-                <p style="font-size: 1em; margin: 0 0 20px 0; color: #bdbdbd;"><strong>Reason:</strong> ${reason}</p>
-                <p style="font-size: 0.8em; color: #9e9e9e;">This action was taken ${banDate}. If you believe this is an error, please contact support.</p>
-            `;
-            
-            // Append both the shield and the message to the BODY.
-            // This prevents the filter from breaking the message's fixed position.
-            document.body.appendChild(shield);
-            document.body.appendChild(messageBox);
-            
-            // Finally, make the body visible so our new elements can be seen.
-            // The page content behind the shield remains inaccessible.
-            document.body.style.visibility = 'visible';
-        }
     </script>
 </body>
 
