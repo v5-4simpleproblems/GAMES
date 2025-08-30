@@ -1,123 +1,166 @@
 /**
- * ban-enforcer.js (v3.4 - Fixed Fullscreen Overlay & Direct Appending)
+ * ban-enforcer.js (v4.0 - Block-First Authentication Model)
  *
- * This script enforces website bans using a "check-first, block-later" approach.
- * If a user is confirmed to be banned, it deploys a persistent, full-screen
- * overlay that correctly covers the entire viewport and instantly rebuilds if tampered with.
+ * This script enforces website bans and login requirements using a "block-first" model.
+ * It immediately deploys an invisible shield to block all page interaction and scrolling.
+ * It then checks the user's Firebase authentication and ban status to determine the outcome.
  *
- * Visuals:
- * - Guaranteed full-screen blur shield, updated every 100ms.
- * - Home button fixed to the top-right, linking to the index page.
- * - Ban message fixed to the top-left.
+ * --- FLOW ---
+ * 1.  An invisible, full-screen shield is immediately deployed, and scrolling is locked.
+ * 2.  Firebase checks the user's login state.
+ * 3a. If LOGGED OUT -> User is immediately redirected to the login page.
+ * 3b. If LOGGED IN -> Script checks the 'bans' collection in Firestore.
+ * 4a. If BANNED -> The shield becomes the visible ban screen overlay.
+ * 4b. If NOT BANNED -> The shield is removed, and page access is granted.
  *
  * IMPORTANT:
- * 1. This script must be placed AFTER the Firebase SDK scripts in your HTML.
- * 2. It should be included on EVERY page you want to protect.
+ * - This script must be placed AFTER the Firebase SDK scripts in your HTML.
+ * - It should be included on EVERY page you want to protect.
  */
 
-console.log("Debug: ban-enforcer.js v3.4 (Fixed Fullscreen Overlay) has started.");
+console.log("Debug: ban-enforcer.js v4.0 (Block-First Model) has started.");
 
+// --- 1. Immediately create an invisible shield and lock scrolling ---
+(function() {
+    // Check if the shield already exists to prevent duplication.
+    if (document.getElementById('auth-shield')) return;
+
+    // Create the shield element
+    const shield = document.createElement('div');
+    shield.id = 'auth-shield';
+    // Style the shield to be a full-screen, transparent overlay that blocks clicks.
+    shield.style.position = 'fixed';
+    shield.style.top = '0';
+    shield.style.left = '0';
+    shield.style.width = '100vw';
+    shield.style.height = '100vh';
+    shield.style.zIndex = '2147483646'; // High z-index to cover everything.
+    shield.style.backgroundColor = 'transparent'; // Invisible by default.
+    shield.style.transition = 'background-color 0.3s ease, backdrop-filter 0.3s ease'; // For smooth transition to ban screen
+
+    // Append to the root <html> element to ensure it loads before the body is interactive.
+    document.documentElement.appendChild(shield);
+
+    // Immediately disable scrolling on the entire page.
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    console.log("Debug: Pre-emptive auth shield deployed and page scrolling locked.");
+})();
+
+/**
+ * Helper function to remove the shield and restore scrolling for authorized users.
+ */
+function removeAuthShield() {
+    const shield = document.getElementById('auth-shield');
+    if (shield) {
+        shield.remove();
+    }
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    console.log("Debug: Auth shield removed and page unlocked for authorized user.");
+}
+
+// --- 2. Wait for DOM content to be loaded, then check authentication ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Debug: DOMContentLoaded event fired. Ban enforcer is running.");
+    console.log("Debug: DOMContentLoaded event fired. Checking authentication and ban status.");
 
     if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined' || typeof firebase.firestore === 'undefined') {
-        console.error("FATAL ERROR: Firebase is not loaded correctly. Check the script order. Ban enforcement is disabled.");
+        console.error("FATAL ERROR: Firebase is not loaded correctly. Page will remain locked.");
+        // We don't remove the shield here, as something is fundamentally broken.
         return;
     }
 
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
+            // --- USER IS LOGGED IN ---
+            // Now, check if they are banned.
             const db = firebase.firestore();
             const banDocRef = db.collection('bans').doc(user.uid);
 
             banDocRef.get().then(doc => {
                 if (doc.exists) {
+                    // --- BANNED ---
                     const banData = doc.data();
-                    console.warn(`User ${user.uid} is BANNED. Reason: ${banData.reason}. Deploying ban screen.`);
+                    console.warn(`User ${user.uid} is BANNED. Reason: ${banData.reason}. Activating ban screen.`);
                     showBanScreen(banData);
                 } else {
-                    console.log("Debug: User is not banned. Page operation is normal.");
+                    // --- LOGGED IN AND NOT BANNED ---
+                    console.log("Debug: User is logged in and not banned. Granting access.");
+                    removeAuthShield();
                 }
             }).catch(error => {
-                console.error("Debug: An error occurred while checking ban status. Allowing page access as a failsafe.", error);
+                console.error("Debug: An error occurred while checking ban status. Granting access as a failsafe.", error);
+                removeAuthShield(); // Failsafe to prevent locking out users due to a DB error.
             });
+
         } else {
-            console.log("Debug: No user is logged in. Page operation is normal.");
+            // --- USER IS LOGGED OUT ---
+            console.log("Debug: No user is logged in. Redirecting to login page.");
+            window.location.href = 'https://4simpleproblems.github.io/login.html';
         }
     });
 });
 
 /**
- * Manages the creation and persistent enforcement of the ban screen UI.
+ * Activates the ban screen UI and starts the persistence guard.
+ * This function MODIFIES the existing auth-shield to become the visible ban screen.
  * @param {object} banData - The data from the user's document in the 'bans' collection.
  */
 function showBanScreen(banData) {
-    const shieldId = 'ban-enforcer-shield';
+    const shieldId = 'auth-shield'; // We are targeting the existing shield
     const homeButtonId = 'ban-enforcer-home-button';
     const messageBoxId = 'ban-enforcer-message';
 
     // This function runs on an interval to ensure the ban screen cannot be removed.
     const enforceBanVisuals = () => {
-        // Ensure scrolling is locked, always.
+        // Ensure scrolling remains locked.
         document.documentElement.style.overflow = 'hidden';
         document.body.style.overflow = 'hidden';
 
-        // Check for existence of each element. If any are missing, rebuild all of them.
-        if (!document.getElementById(shieldId) || !document.getElementById(homeButtonId) || !document.getElementById(messageBoxId)) {
-            console.warn("[Guard] Ban UI element(s) not found. Rebuilding all UI.");
+        // Find the main shield and make it visible.
+        const shield = document.getElementById(shieldId);
+        if (shield) {
+            shield.style.backgroundColor = 'rgba(10, 10, 10, 0.75)';
+            shield.style.backdropFilter = 'blur(14px)';
+            shield.style.webkitBackdropFilter = 'blur(14px)';
+        } else {
+            // If the main shield is gone, something is very wrong. Re-run the IIFE logic.
+            console.warn("[Guard] Main auth shield was removed. Re-deploying...");
+            (function() { // Re-create the shield if it was forcefully removed
+                if (document.getElementById('auth-shield')) return;
+                const newShield = document.createElement('div');
+                newShield.id = 'auth-shield';
+                Object.assign(newShield.style, {
+                    position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
+                    zIndex: '2147483646', backgroundColor: 'rgba(10, 10, 10, 0.75)',
+                    backdropFilter: 'blur(14px)', webkitBackdropFilter: 'blur(14px)'
+                });
+                document.documentElement.appendChild(newShield);
+            })();
+        }
 
-            // Remove any existing fragments to ensure a clean rebuild
-            [shieldId, homeButtonId, messageBoxId].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.remove();
-            });
-
-            // --- 1. Create the Shield (background blur) ---
-            const shield = document.createElement('div');
-            shield.id = shieldId;
-            Object.assign(shield.style, {
-                position: 'fixed',
-                top: '0',
-                left: '0',
-                width: '100vw',
-                height: '100vh',
-                backgroundColor: 'rgba(10, 10, 10, 0.75)',
-                backdropFilter: 'blur(14px)',
-                webkitBackdropFilter: 'blur(14px)',
-                zIndex: '2147483646' // Just below message/button
-            });
-            document.body.appendChild(shield); // Append directly to body
-
-            // --- 2. Create the Home Button (top-right) ---
+        // Check for and create the Home Button if missing.
+        if (!document.getElementById(homeButtonId)) {
             const homeButton = document.createElement('a');
             homeButton.id = homeButtonId;
-            homeButton.href = '../index.html'; // MODIFIED: Changed link to index.html
+            homeButton.href = '../index.html';
             homeButton.innerHTML = `<i class="fa-solid fa-house"></i>`;
             Object.assign(homeButton.style, {
-                position: 'fixed',
-                top: '20px',
-                right: '20px',
-                width: '45px',
-                height: '45px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '22px',
-                color: 'white',
-                textDecoration: 'none',
-                backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                backdropFilter: 'blur(10px)',
-                webkitBackdropFilter: 'blur(10px)',
-                borderRadius: '10px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                transition: 'background-color 0.3s ease',
-                zIndex: '2147483647' // On top
+                position: 'fixed', top: '20px', right: '20px', width: '45px', height: '45px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px',
+                color: 'white', textDecoration: 'none', backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                backdropFilter: 'blur(10px)', webkitBackdropFilter: 'blur(10px)',
+                borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.2)',
+                transition: 'background-color 0.3s ease', zIndex: '2147483647'
             });
             homeButton.onmouseover = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'; };
             homeButton.onmouseout = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'; };
-            document.body.appendChild(homeButton); // Append directly to body
+            document.body.appendChild(homeButton);
+        }
 
-            // --- 3. Create the Message Box (top-left) ---
+        // Check for and create the Message Box if missing.
+        if (!document.getElementById(messageBoxId)) {
             const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
             const banDate = banData.bannedAt && banData.bannedAt.toDate ? `on ${banData.bannedAt.toDate().toLocaleDateString()}` : '';
             
@@ -130,18 +173,11 @@ function showBanScreen(banData) {
                 <p style="font-size: 0.8em; color: #9e9e9e;">This action was taken ${banDate}. If you believe this is an error, please contact 4simpleproblems+support@gmail.com</p>
             `;
             Object.assign(messageBox.style, {
-                position: 'fixed',
-                top: '40px',
-                left: '40px',
-                maxWidth: '600px',
-                width: 'auto',
-                textAlign: 'left',
-                color: '#ffffff',
-                fontFamily: "'PrimaryFont', Arial, sans-serif",
-                textShadow: '0 2px 8px rgba(0,0,0,0.7)',
-                zIndex: '2147483647' // On top
+                position: 'fixed', top: '40px', left: '40px', maxWidth: '600px', width: 'auto',
+                textAlign: 'left', color: '#ffffff', fontFamily: "'PrimaryFont', Arial, sans-serif",
+                textShadow: '0 2px 8px rgba(0,0,0,0.7)', zIndex: '2147483647'
             });
-            document.body.appendChild(messageBox); // Append directly to body
+            document.body.appendChild(messageBox);
         }
     };
 
