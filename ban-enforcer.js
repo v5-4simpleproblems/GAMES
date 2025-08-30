@@ -1,24 +1,20 @@
 /**
- * ban-enforcer.js (v4.2 - Direct & Reliable Block-First Model)
+ * ban-enforcer.js (v4.3 - Fixed Initialization Crash)
  *
- * This script enforces website bans and login requirements using a direct "block-first" model.
- * It has been streamlined to remove the complex timeout, which was causing the "stuck" issue.
+ * This version corrects a critical timing issue where the script tried to access the <body>
+ * before it existed, causing a crash. The scroll lock is now correctly applied after the
+ * DOM is ready, ensuring the script runs reliably.
  *
  * --- FLOW ---
- * 1.  An invisible, full-screen shield is immediately deployed, and scrolling is locked.
- * 2.  Firebase checks the user's login state.
- * 3a. If LOGGED OUT -> User is immediately redirected to the login page.
- * 3b. If LOGGED IN -> Script checks the 'bans' collection in Firestore.
- * 4a. If BANNED -> The shield becomes the visible ban screen overlay.
- * 4b. If NOT BANNED -> The shield is removed, and page access is granted.
- *
- * IMPORTANT:
- * - This script must be placed AFTER all Firebase SDK scripts in your HTML.
+ * 1.  An invisible, full-screen shield is immediately deployed.
+ * 2.  The page structure loads, and THEN scrolling is locked.
+ * 3.  Firebase checks the user's login state and proceeds with the ban check or redirect.
  */
 
-console.log("Debug: ban-enforcer.js v4.2 (Direct & Reliable) has started.");
+console.log("Debug: ban-enforcer.js v4.3 (Fixed Initialization) has started.");
 
-// --- 1. Immediately create an invisible shield and lock scrolling ---
+// --- 1. Immediately create an invisible shield. ---
+// This part is safe because it only touches `documentElement` (the <html> tag), which always exists.
 (function() {
     if (document.getElementById('auth-shield')) return;
 
@@ -36,11 +32,7 @@ console.log("Debug: ban-enforcer.js v4.2 (Direct & Reliable) has started.");
     });
 
     document.documentElement.appendChild(shield);
-
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-
-    console.log("Debug: Pre-emptive auth shield deployed and page scrolling locked.");
+    console.log("Debug: Pre-emptive auth shield deployed.");
 })();
 
 /**
@@ -56,15 +48,18 @@ function removeAuthShield() {
     console.log("Debug: Auth shield removed and page unlocked for authorized user.");
 }
 
-// --- 2. Wait for DOM content to be loaded, then check authentication ---
+// --- 2. Wait for DOM to be ready, then lock scroll and check auth ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Debug: DOMContentLoaded event fired. Checking authentication and ban status.");
+    // NOW RUNS HERE: It is now safe to lock scrolling because the <body> exists.
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    console.log("Debug: DOMContentLoaded fired. Page scrolling locked.");
 
     if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined' || typeof firebase.firestore === 'undefined') {
-        console.error("FATAL ERROR: Firebase is not loaded correctly. Check script order in HTML. Page will remain locked.");
+        console.error("FATAL ERROR: Firebase is not loaded correctly. Check script order in HTML.");
         document.body.innerHTML = `<h1 style="font-family: Arial, sans-serif; color: white; text-align: center; margin-top: 40px;">Fatal Error: Page cannot be loaded.</h1>`;
-        // Make body visible to show the error. This is a critical failsafe.
-        document.body.style.visibility = 'visible';
+        document.body.style.visibility = 'visible'; // Make body visible to show the error
+        removeAuthShield(); // Remove the shield so the error is interactable if needed
         return;
     }
 
@@ -87,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }).catch(error => {
                 console.error("Debug: An error occurred while checking ban status. Granting access as a failsafe.", error);
-                removeAuthShield(); // Failsafe to prevent locking out users due to a DB error.
+                removeAuthShield(); // Failsafe
             });
 
         } else {
@@ -100,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Activates the ban screen UI and starts the persistence guard.
- * This function MODIFIES the existing auth-shield to become the visible ban screen.
  */
 function showBanScreen(banData) {
     const shieldId = 'auth-shield';
@@ -108,6 +102,7 @@ function showBanScreen(banData) {
     const messageBoxId = 'ban-enforcer-message';
 
     const enforceBanVisuals = () => {
+        // This guard function ensures the ban screen cannot be removed by the user.
         document.documentElement.style.overflow = 'hidden';
         document.body.style.overflow = 'hidden';
 
@@ -117,19 +112,16 @@ function showBanScreen(banData) {
             shield.style.backdropFilter = 'blur(14px)';
             shield.style.webkitBackdropFilter = 'blur(14px)';
         } else {
-            // If the main shield is gone, the user is trying to bypass the ban. Re-create it.
+            // If the shield is gone, re-create it immediately.
             console.warn("[Guard] Main auth shield was removed. Re-deploying...");
-            (function() {
-                if (document.getElementById(shieldId)) return;
-                const newShield = document.createElement('div');
-                newShield.id = shieldId;
-                Object.assign(newShield.style, {
-                    position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
-                    zIndex: '2147483646', backgroundColor: 'rgba(10, 10, 10, 0.75)',
-                    backdropFilter: 'blur(14px)', webkitBackdropFilter: 'blur(14px)'
-                });
-                document.documentElement.appendChild(newShield);
-            })();
+            const newShield = document.createElement('div');
+            newShield.id = shieldId;
+            Object.assign(newShield.style, {
+                position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
+                zIndex: '2147483646', backgroundColor: 'rgba(10, 10, 10, 0.75)',
+                backdropFilter: 'blur(14px)', webkitBackdropFilter: 'blur(14px)'
+            });
+            document.documentElement.appendChild(newShield);
         }
 
         if (!document.getElementById(homeButtonId)) {
