@@ -6,7 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>4SP - STRONGDOG</title>
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico" />
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    
+    <script src="../firebase-config.js"></script>
+
+    <script src="../panic-key.js"></script>
+    <script src="../url-changer.js"></script>
     <style>
+        /* This rule hides the body by default. The auth gate script will make it visible. */
+        body {
+            visibility: hidden;
+        }
+
         @font-face {
             font-family: 'primary';
             src: url('../fonts/primary.woff') format('woff');
@@ -539,7 +553,6 @@
             const data = {};
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                // Exclude our own save slots from the backup
                 if (!key.startsWith('sdxp_save_slot_')) {
                     const value = localStorage.getItem(key);
                     data[key] = value;
@@ -549,7 +562,6 @@
         }
 
         function setAllLocalStorageData(data) {
-            // Clear only non-save-slot keys
             const keysToRemove = [];
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
@@ -559,7 +571,6 @@
             }
             keysToRemove.forEach(key => localStorage.removeItem(key));
 
-            // Set new data
             for (const [key, value] of Object.entries(data)) {
                 localStorage.setItem(key, value);
             }
@@ -617,7 +628,7 @@
                                 storesCompleted++;
                                 if (storesCompleted === storeNames.length) {
                                     db.close();
-                                    resolve(dbData); // Resolve with what we have
+                                    resolve(dbData);
                                 }
                             };
                         });
@@ -921,11 +932,6 @@
             }
         });
     </script>
-
-    <script src="../firebase-config.js" defer></script>
-    <script src="../ban-enforcer.js" defer></script>
-    <script src="../url-changer.js" defer></script>
-    <script src="../panic-key.js" defer></script>
 </body>
 
 </html>
