@@ -1,1218 +1,705 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
-    crossorigin="anonymous"></script>
+
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
     <script>
-      (function () {
-        var customTitle = localStorage.getItem("customTitle");
-        var defaultTitle = document.title;
-        if (
-          customTitle &&
-          customTitle.trim() !== "" &&
-          customTitle !== defaultTitle
-        ) {
-          var titleInterval = setInterval(function () {
-            if (document.title !== customTitle) {
-              document.title = customTitle;
-            }
-          }, 500);
-          setTimeout(function () {
-            clearInterval(titleInterval);
-          }, 15000);
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
         }
-        setTimeout(function () {
-          var customFavicon = localStorage.getItem("customFavicon");
-          if (customFavicon && customFavicon.trim() !== "") {
-            var favEl = document.querySelector('link[rel*="icon"]');
-            if (favEl) {
-              favEl.href = customFavicon;
-            } else {
-              var newFav = document.createElement("link");
-              newFav.rel = "icon";
-              newFav.href = customFavicon;
-              document.head.appendChild(newFav);
-            }
-          }
-        }, 2500);
-      })();
+        gtag("js", new Date());
+        gtag("config", "G-0YLTCV2MMS");
     </script>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-0YLTCV2MMS");
-    </script>
-    <title>Loading... - StrongDog XP</title>
+    <title>4SP - STRONGDOG</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
+    <script src="../panic-key.js"></script>
+    <script src="../ban-enforcer.js"></script>
     <style>
-      body {
-        font-family: "Poppins", sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #2e2e2e;
-        color: #e0e0e0;
-      }
-
-      .header {
-        background-color: #3c3c3c;
-        padding: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-bottom: 3px solid #ff8c00;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        position: relative;
-      }
-
-      .menu-icon {
-        position: absolute;
-        left: 20px;
-        font-size: 2rem;
-        cursor: pointer;
-        color: white;
-        z-index: 1001;
-      }
-
-      .header-logo {
-        text-decoration: none;
-        font-size: 36px;
-        font-weight: bold;
-        transition: color 0.3s;
-      }
-
-      .header-logo span:nth-child(1) {
-        color: #ffffff;
-      }
-
-      .header-logo span:nth-child(2) {
-        color: #ff8c00;
-      }
-
-      .header-logo:hover span:nth-child(1) {
-        color: #e0e0e0;
-      }
-
-      .slide-menu {
-        position: fixed;
-        top: 0;
-        height: 100%;
-        width: 350px;
-        background-color: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(10px);
-        color: white;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-        z-index: 1003;
-        transition: transform 0.4s ease;
-        overflow-y: auto;
-        transform: translateX(-100%);
-      }
-
-      .profile-picture-container {
-        border-radius: 50%;
-        width: 100px;
-        aspect-ratio: 1;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-      }
-
-      .profile-picture-container:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
-      }
-
-      .profile-picture {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .user-details-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-block: 20px;
-        gap: 10px;
-      }
-
-      .profile-top-container {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
-
-      .username-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .username-text {
-        font-size: 1.5rem;
-        color: white;
-      }
-
-      .categories {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .categories > a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 20px;
-        text-decoration: none;
-        color: white;
-        transition: all 0.3s ease;
-        margin-left: 20px;
-        margin-right: 20px;
-        text-align: center;
-        font-size: 1.1rem;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .categories > a::after {
-        content: "";
-        background: rgba(255, 255, 255, 0.1);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        width: 0;
-        height: 0;
-        transition: 0.4s ease-out;
-      }
-
-      .categories > a:hover::after {
-        width: 400px;
-        height: 400px;
-      }
-
-      .categories > a:hover {
-        transform: scale(0.95);
-      }
-
-      span.new-feature-tag {
-        background: orange;
-        border-radius: 100vw;
-        padding: 0.2rem 0.4rem;
-        margin-left: 1rem;
-        font-size: 0.6rem;
-        color: black;
-        text-transform: uppercase;
-      }
-
-      .xp-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 10px auto;
-        width: 80%;
-      }
-
-      .xp-level-text {
-        color: white;
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-      }
-
-      .xp-bar {
-        position: relative;
-        width: 100%;
-        height: 20px;
-        background: black;
-        border-radius: 10px;
-        overflow: hidden;
-      }
-
-      .xp-bar-fill {
-        height: 100%;
-        background: linear-gradient(to right, #47fced, #0af);
-        width: 0%;
-        transition: width 0.5s ease;
-      }
-
-      .xp-bar-text {
-        position: absolute;
-        width: 100%;
-        text-align: center;
-        color: white;
-        font-size: 0.8rem;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-      }
-
-      .content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 40px;
-      }
-
-      .ad {
-        width: 120px;
-        height: 300px;
-        background-color: #4a4a4a;
-        margin: 0 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-      }
-
-      .game-container {
-        flex-shrink: 0;
-        width: 85%;
-        height: 700px;
-        margin: 20px auto;
-        background-color: #3a3a3a;
-        position: relative;
-        overflow: hidden;
-        border-radius: 20px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
-      }
-
-      .game-container iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        display: block;
-        border-radius: 20px;
-      }
-
-      .game-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #3a3a3a;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 30px auto;
-        width: 85%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
-      }
-
-      .fullscreen-button {
-        padding: 10px 20px;
-        background-color: #ff8c00;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-        font-weight: bold;
-      }
-
-      .fullscreen-button:hover {
-        background-color: #ff6a00;
-      }
-
-      .cards-section {
-        background-color: #3a3a3a;
-        padding: 50px;
-        text-align: center;
-        border-radius: 20px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
-        margin: 40px;
-      }
-
-      .card-container {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 30px;
-      }
-
-      .card {
-        display: block;
-        width: 200px;
-        text-align: center;
-        background-color: #4a4a4a;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
-        overflow: hidden;
-        text-decoration: none;
-        color: #e0e0e0;
-        transition: transform 0.3s, box-shadow 0.3s;
-      }
-
-      .card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 1);
-      }
-
-      .card img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-      }
-
-      .card figcaption {
-        padding: 15px;
-        font-size: 16px;
-        color: #ff8c00;
-      }
-
-      #redirectMessage {
-        display: none;
-        text-align: center;
-        margin-top: 50px;
-      }
-
-      #redirectMessage h2 {
-        color: #ff8c00;
-      }
-
-      #redirectMessage p {
-        color: #e0e0e0;
-      }
-
-      #redirectMessage a {
-        color: #ff8c00;
-        text-decoration: underline;
-      }
-
-      @media (max-width: 768px) {
-        .content {
-          flex-direction: column;
+        @font-face {
+            font-family: 'PrimaryFont';
+            /* You'll need to provide the actual font file here */
+            /* src: url('fonts/primary.woff') format('woff'); */
         }
 
-        .ad {
-          margin: 20px 0;
+        :root {
+            --ff: 'PrimaryFont', Arial, sans-serif;
+            --bg: #2e2e2e;
+        }
+
+        /* This rule hides the body by default. The auth gate script will make it visible only for logged-in users. */
+        body {
+            visibility: hidden;
+            font-family: var(--ff);
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            will-change: transform;
+        }
+
+        .navbar {
+            background-color: rgba(50, 50, 50, 0.9);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 700;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo .xp {
+            color: orange;
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+        }
+
+        .menu-icon {
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .slide-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 400px;
+            backdrop-filter: blur(10px);
+            color: white;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+            z-index: 1003;
+            transition: transform 0.5s ease;
+            transform: translateX(-100%);
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            background: linear-gradient(to bottom right,
+                    rgba(43, 43, 43, 0.599),
+                    rgba(53, 53, 53, 0.599),
+                    rgba(80, 80, 80, 0.599));
+        }
+
+        .slide-menu.active {
+            transform: translateX(0);
+        }
+
+        .categories {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-top: 30px;
+        }
+
+        .categories>a {
+            padding: 17px;
+            background: linear-gradient(45deg, #333, #444);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+            text-align: center;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .categories>a:hover {
+            background: linear-gradient(45deg, #ffa500, #ff8433);
+            box-shadow: 0 6px 20px rgba(255, 98, 0, 0.5);
+        }
+
+        .categories>a::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .categories>a:hover::after {
+            width: 500px;
+            height: 500px;
+        }
+
+        .content-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .recommended-games-section {
+            width: 280px;
+            flex-shrink: 0;
+        }
+
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            position: relative;
+        }
+
+        .marquee-container::before,
+        .marquee-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            z-index: 2;
+        }
+
+        .marquee-container::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg) 0%, transparent 100%);
+        }
+
+        .marquee-container::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
+        }
+
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee-scroll 25s linear infinite;
+            font-size: 1.8rem;
+            font-family: var(--ff);
+            color: #cccccc;
+            font-weight: bold;
+        }
+
+        .performance-mode-active .marquee-content {
+            animation-play-state: paused;
+        }
+
+        @keyframes marquee-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #4a4a4a;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            text-decoration: none;
+            color: #e0e0e0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+        }
+
+        .card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .card figcaption {
+            padding: 10px;
+            font-size: 14px;
+            color: #ff8c00;
+        }
+
+        .game-area {
+            flex-grow: 1;
+            max-width: 75%;
         }
 
         .game-container {
-          width: 95%;
-          height: 500px;
+            width: 100%;
+            padding-top: 56.25%;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+            contain: strict;
         }
 
-        .game-bar {
-          width: 95%;
+        .game-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
-      }
+
+        .game-overlay-buttons {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            z-index: 1004;
+            display: flex;
+            gap: 10px;
+        }
+
+        .overlay-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background-color: rgba(30, 30, 30, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .overlay-btn:hover {
+            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #favoriteIcon.favorited {
+            color: #ffc107;
+            text-shadow: 0 0 12px rgba(255, 193, 7, 0.9);
+        }
+
+        #redirectMessage {
+            display: none;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #redirectMessage h2,
+        #gameTitle {
+            color: #ff8c00;
+        }
+
+        #gameTitle {
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .performance-mode-hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 900px) {
+            .content-wrapper {
+                flex-direction: column-reverse;
+                align-items: center;
+            }
+
+            .game-area {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .recommended-games-section {
+                width: 100%;
+                max-width: 500px;
+                margin-bottom: 30px;
+            }
+
+            .card-container {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .card {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide-menu {
+                width: 280px;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div
-      id="secretLink"
-      title="Secret Menu"
-      style="
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 10px;
-        height: 10px;
-        cursor: pointer;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-      "
-    ></div>
+</head>
 
-    <div class="header">
-      <div class="menu-icon" id="menuIcon">&#9776;</div>
-      <a href="../index.html" class="header-logo">
-        <span>StrongDog</span>
-        <span>XP</span>
-      </a>
+<body>
+    <div class="navbar">
+        <div class="menu-icon" id="menuIcon">☰</div>
+        <a href="../index.html" class="logo">strongdog<span class="xp">XP</span></a>
+        <div></div>
     </div>
 
     <div class="slide-menu" id="slideMenu">
-      <div class="categories">
-        <a href="../favs.html" class="option-link">Favorites</a>
-        <a href="../about.html" class="option-link"
-          >About / Report Bugs / Request Games</a
-        >
-        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
-          Discord Server<span class="new-feature-tag">new</span>
-        </a>
-      </div>
+        <div class="categories">
+            <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
+            <a href="../favs.html" class="option-link">Favorites</a>
+            <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
+            <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
+                Discord Server
+            </a>
+        </div>
     </div>
 
-    <div class="content">
-      <div class="ad ad-left">
-        <script
-          async 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
-          crossorigin="anonymous"
-        ></script>
-<div id="container-09ae756035aa003fa10265bdd6ee9f04"></div>
-        <ins
-          class="adsbygoogle"
-          style="display: inline-block; width: 120px; height: 300px"
-          data-ad-client="ca-pub-1609993827735056"
-          data-ad-slot="3552085788"
-        ></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
-      <div class="game-container" id="gameContainer"></div>
-      <div class="ad ad-right">
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
-          crossorigin="anonymous"
-        ></script>
-<div id="container-09ae756035aa003fa10265bdd6ee9f04"></div>
-        <ins
-          class="adsbygoogle"
-          style="display: inline-block; width: 120px; height: 300px"
-          data-ad-client="ca-pub-1609993827735056"
-          data-ad-slot="3552085788"
-        ></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
+    <div id="gameTitle"></div>
+
+    <div class="content-wrapper">
+        <div class="recommended-games-section">
+            <div class="marquee-container">
+                <div class="marquee-content">Recommended Games</div>
+            </div>
+            <div class="card-container" id="cardContainer"></div>
+        </div>
+
+        <div class="game-area">
+            <div class="game-container" id="gameContainer">
+
+            </div>
+        </div>
     </div>
 
-    <div class="game-bar">
-      <span id="gameTitle">Loading...</span>
-      <span
-        id="favoriteIcon"
-        class="favorite-icon"
-        style="cursor: pointer; font-size: 24px"
-        title="Favorite this game"
-        >&#9734;</span
-      >
-      <button id="fullscreenButton" class="fullscreen-button">
-        Fullscreen
-      </button>
-    </div>
+    <p id="fullscreenDisclaimer" style="text-align: center; color: #aaa; margin: 20px; font-size: 0.9em;">Fullscreen activates performance mode, which causes less lag.</p>
 
-    <div class="cards-section">
-      <h2>Recommended Games</h2>
-      <div class="card-container" id="cardContainer"></div>
+    <div class="game-overlay-buttons" id="gameOverlayButtons">
+        <button id="fullscreenButton" class="overlay-btn" title="Fullscreen">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                </path>
+            </svg>
+        </button>
     </div>
 
     <div id="redirectMessage">
-      <h2>Redirecting to the game...</h2>
-      <p>
-        If you are not redirected automatically,
-        <a href="#" id="manualRedirectLink">click here</a>.
-      </p>
+        <h2>Redirecting to the game...</h2>
+        <p>
+            If you are not redirected automatically,
+            <a href="#" id="manualRedirectLink">click here</a>.
+        </p>
     </div>
-
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
-        authDomain: "strongdog-auth.firebaseapp.com",
-        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
-        projectId: "strongdog-auth",
-        storageBucket: "strongdog-auth.appspot.com",
-        messagingSenderId: "936276282572",
-        appId: "1:936276282572:web:a802b7f609381ff9428669",
-        measurementId: "G-0YLTCV2MMS",
-      };
-      firebase.initializeApp(firebaseConfig);
-
-      const auth = firebase.auth();
-      const db = firebase.firestore();
-      const rtdb = firebase.database();
-
-      function getTierAndProgressFromXP(xp) {
-        const baseXPNeeded = 50;
-        const increasePerTier = 200;
-        const exponentialMultiplier = 1.2;
-        const levelsPerTier = 5;
-        const capTier = 10;
-
-        let level = 1;
-        let tier = 1;
-        let xpNeeded = baseXPNeeded;
-
-        while (xp >= xpNeeded) {
-          xp -= xpNeeded;
-
-          if (tier < capTier) {
-            if (level % levelsPerTier === 0) {
-              tier++;
-              xpNeeded = Math.round(xpNeeded * exponentialMultiplier);
-            }
-          } else {
-            if (level % levelsPerTier === 0) {
-              xpNeeded += increasePerTier;
-            }
-          }
-
-          level++;
-        }
-
-        return {
-          level,
-          tier,
-          currentXP: xp,
-          xpNeededForNext: xpNeeded,
-        };
-      }
-    </script>
 
     <script src="../appscript.js"></script>
 
     <script type="module">
-      import games from "../cards-data.js";
-      import { siteMapping } from "../site-mapping.js";
+        import games from "../cards-data.js";
+        import {
+            siteMapping
+        } from "../site-mapping.js";
 
-      document.addEventListener("DOMContentLoaded", async function () {
-        function getCurrentKeyHostOnly() {
-          const host = window.location.host;
-          return host;
-        }
-
-        function getBaseURLForPage(page) {
-          const currentHost = getCurrentKeyHostOnly();
-          const currentPath = window.location.pathname;
-
-          // Handle the specific case where the site is hosted in a /STRONGDOG/ subdirectory
-          if (currentHost === "4simpleproblems.github.io" && currentPath.toLowerCase().startsWith('/strongdog/')) {
-              if (!page || page === 1) {
-                  return "/STRONGDOG/"; // Base for the main site
-              }
-              if (page === 2) {
-                  return "/strongdog2/";
-              }
-              if (page === 3) {
-                  return "/strongdog3/";
-              }
-              if (page === 4) {
-                  return "/strongdog4/";
-              }
-              return "/STRONGDOG/"; // Fallback
-          }
-
-          // Fallback to previous logic for other domains or root hosting
-          const explicitMappings = {
-            "jman1593.github.io": {
-              2: "../strongdog2/",
-            },
-            "4simpleproblems.github.io": {
-              2: "../strongdog2/",
-              3: "../strongdog3/",
-              4: "../strongdog4/",
+        document.addEventListener("DOMContentLoaded", async function () {
+            function getCurrentKeyHostOnly() {
+                return window.location.host;
             }
-          };
 
-          if (explicitMappings[currentHost] && explicitMappings[currentHost][page]) {
-            return explicitMappings[currentHost][page];
-          }
+            function getBaseURLForPage(page) {
+                const currentHost = getCurrentKeyHostOnly();
+                const currentPath = window.location.pathname;
 
-          // Original fallback logic
-          if (!page || page === 1) {
-            return "../";
-          }
-
-          const arr = siteMapping[currentHost];
-          if (!arr) {
-            if (page === 2) {
-              return "../strongdog2/";
-            } else if (page === 3) {
-              return "../strongdog3/";
-            } else if (page === 4) {
-              return "../strongdog4/";
-            } else {
-              return "../";
-            }
-          }
-          const index = page - 2;
-          if (arr[index]) {
-            return arr[index].replace(/^\.\/$/, "../");
-          } else {
-            if (page === 2) {
-              return "../strongdog2/";
-            } else if (page === 3) {
-              return "../strongdog3/";
-            } else if (page === 4) {
-              return "../strongdog4/";
-            } else {
-              return "../";
-            }
-          }
-        }
-
-        function adjustHrefPath(path, page) {
-          path = path.replace(/^\.\//, "").replace(/^\//, "");
-          const baseURL = getBaseURLForPage(page);
-
-          let finalPath;
-          if (baseURL === "../") {
-            finalPath = "../" + path;
-          } else {
-            if (!baseURL.endsWith("/")) {
-              finalPath = baseURL + "/" + path;
-            } else {
-              finalPath = baseURL + path;
-            }
-          }
-          return finalPath;
-        }
-
-        async function getEmbedPath(adjustedHref, originalHref, page) {
-          let cleanHref = adjustedHref
-            .replace(/index\.html$/, "")
-            .replace(/base\.html$/, "")
-            .replace(/\.html$/, "");
-          if (!cleanHref.endsWith("/")) cleanHref += "/";
-
-          const pathsToTry = [
-            cleanHref + "game/index.html",
-            cleanHref + "game/base.html",
-            cleanHref + "gamereal/index.html",
-            cleanHref + "gamereal/base.html",
-            cleanHref + "index.html",
-            cleanHref + "base.html",
-          ];
-
-          try {
-            const response = await fetch(adjustedHref, { method: "GET" });
-            if (response.ok) {
-              const text = await response.text();
-              const match = text.match(
-                /embedGame\((['"])(.*?)\1,\s*(['"])(.*?)\3\)/
-              );
-              if (match) {
-                const [, , embedPath, , title] = match;
-                const resolvedPath = new URL(embedPath, adjustedHref).href;
-                if (await fileExists(resolvedPath)) {
-                  return resolvedPath;
+                if (currentHost === "4simpleproblems.github.io" && currentPath.toLowerCase().startsWith('/strongdog/')) {
+                    if (!page || page === 1) return "/STRONGDOG/";
+                    if (page === 2) return "/strongdog2/";
+                    if (page === 3) return "/strongdog3/";
+                    if (page === 4) return "/strongdog4/";
+                    return "/STRONGDOG/";
                 }
-              }
+                const explicitMappings = {
+                    "jman1593.github.io": {
+                        2: "../strongdog2/",
+                    },
+                    "4simpleproblems.github.io": {
+                        2: "../strongdog2/",
+                        3: "../strongdog3/",
+                        4: "../strongdog4/",
+                    }
+                };
+                if (explicitMappings[currentHost] && explicitMappings[currentHost][page]) {
+                    return explicitMappings[currentHost][page];
+                }
+                if (!page || page === 1) return "../";
+                const arr = siteMapping[currentHost];
+                if (!arr) {
+                    if (page === 2) return "../strongdog2/";
+                    if (page === 3) return "../strongdog3/";
+                    if (page === 4) return "../strongdog4/";
+                    return "../";
+                }
+                const index = page - 2;
+                if (arr[index]) return arr[index].replace(/^\.\/$/, "../");
+                if (page === 2) return "../strongdog2/";
+                if (page === 3) return "../strongdog3/";
+                if (page === 4) return "../strongdog4/";
+                return "../";
             }
-          } catch (error) {
-            console.warn(
-              "Failed to parse embed path from cards-data.js",
-              error
-            );
-          }
 
-          for (const path of pathsToTry) {
-            if (await fileExists(path)) {
-              return path;
+            async function getEmbedPath(adjustedHref, originalHref, page) {
+                let cleanHref = adjustedHref.replace(/index\.html$/, "").replace(/base\.html$/, "").replace(/\.html$/, "");
+                if (!cleanHref.endsWith("/")) cleanHref += "/";
+                const pathsToTry = [cleanHref + "game/index.html", cleanHref + "game/base.html", cleanHref + "gamereal/index.html", cleanHref + "gamereal/base.html", cleanHref + "index.html", cleanHref + "base.html", ];
+                try {
+                    const response = await fetch(adjustedHref, {
+                        method: "GET"
+                    });
+                    if (response.ok) {
+                        const text = await response.text();
+                        const match = text.match(/embedGame\((['"])(.*?)\1,\s*(['"])(.*?)\3\)/);
+                        if (match) {
+                            const [, , embedPath, , title] = match;
+                            const resolvedPath = new URL(embedPath, adjustedHref).href;
+                            if (await fileExists(resolvedPath)) return resolvedPath;
+                        }
+                    }
+                } catch (error) {
+                    console.warn("Failed to parse embed path from cards-data.js", error);
+                }
+                for (const path of pathsToTry) {
+                    if (await fileExists(path)) return path;
+                }
+                return adjustHrefPath(originalHref, page);
             }
-          }
 
-          return adjustHrefPath(originalHref, page);
-        }
+            function adjustHrefPath(path, page) {
+                path = path.replace(/^\.\//, "").replace(/^\//, "");
+                const baseURL = getBaseURLForPage(page);
+                let finalPath;
+                if (baseURL === "../") {
+                    finalPath = "../" + path;
+                } else {
+                    finalPath = baseURL.endsWith("/") ? baseURL + path : baseURL + "/" + path;
+                }
+                return finalPath;
+            }
 
-        async function fileExists(url) {
-          try {
-            const response = await fetch(url, { method: "HEAD" });
-            return response.ok;
-          } catch {
-            return false;
-          }
-        }
+            async function fileExists(url) {
+                try {
+                    const response = await fetch(url, {
+                        method: "HEAD"
+                    });
+                    return response.ok;
+                } catch {
+                    return false;
+                }
+            }
 
-        function embedGame(gamePath, title) {
-          const iframe = document.createElement("iframe");
-          iframe.src = gamePath;
-          iframe.onload = function () {
-            iframe.contentWindow.focus();
-          };
-          gameContainer.innerHTML = "";
-          gameContainer.appendChild(iframe);
-          gameTitleElement.textContent = title;
-          document.title = title + " - StrongDog XP";
+            function embedGame(gamePath, title) {
+                const iframe = document.createElement("iframe");
+                iframe.src = gamePath;
+                iframe.allowFullscreen = true;
+                const gameContainer = document.getElementById('gameContainer');
 
-          iframe.onload = function () {
-            fetch(
-              "https://script.google.com/macros/s/AKfycbx1xYwL2QqkOQHyeCWIVSMVLP_XXts5zpb0M-vbvlRl1MpRYYcv4NI-i8OaGc0YP0wpsg/exec?title=" +
-                encodeURIComponent(title),
-              { method: "GET" }
-            )
-              .then((response) => response.text())
-              .then((result) => console.log("[DEBUG] View recorded:", result))
-              .catch((error) =>
-                console.error("[DEBUG] Error recording view:", error)
-              );
-          };
-        }
+                gameContainer.innerHTML = '';
+                gameContainer.appendChild(iframe);
 
-        let selectedGame = null;
-        const urlParams = new URLSearchParams(window.location.search);
-        const gameId = urlParams.get("id");
-        const gameContainer = document.getElementById("gameContainer");
-        const gameTitleElement = document.getElementById("gameTitle");
-        const favoriteIcon = document.getElementById("favoriteIcon");
-        const fullscreenButton = document.getElementById("fullscreenButton");
-        const redirectMessage = document.getElementById("redirectMessage");
-        const manualRedirectLink =
-          document.getElementById("manualRedirectLink");
+                const gameTitleElement = document.getElementById("gameTitle");
+                gameTitleElement.textContent = title;
 
-        if (gameId) {
-          const idNum = parseInt(gameId, 10);
-          selectedGame = games.find((g) => g.id === idNum);
-        }
+                const savedTitle = localStorage.getItem('savedTitle');
+                if (savedTitle) {
+                    document.title = savedTitle;
+                } else {
+                    document.title = "4SP - STRONGDOG";
+                }
+            }
 
-        gameTitleElement.textContent = "Loading...";
-        document.title = "Loading... - StrongDog XP";
+            let selectedGame = null;
+            const urlParams = new URLSearchParams(window.location.search);
+            const gameId = urlParams.get("id");
+            const fullscreenButton = document.getElementById("fullscreenButton");
+            const redirectMessage = document.getElementById("redirectMessage");
+            const manualRedirectLink = document.getElementById("manualRedirectLink");
 
-        if (!selectedGame) {
-          embedGame("../404.html", "Not Found");
-        } else {
-          const normalGameIds = [
-            250, 244, 605, 130, 729, 742, 743, 744, 745, 757, 759, 760, 761,
-            762,
-          ];
-          if (normalGameIds.includes(selectedGame.id)) {
-            document.title = "Redirecting... - StrongDog XP";
-            redirectMessage.style.display = "block";
+            if (gameId) {
+                const idNum = parseInt(gameId, 10);
+                selectedGame = games.find((g) => g.id === idNum);
+            }
 
-            const page = selectedGame.page;
-            const baseURL = getBaseURLForPage(page);
-
-            let adjustedHref = selectedGame.href.replace(/^\.\//, "");
-            let finalRedirectURL;
-            if (!baseURL.endsWith("/")) {
-              finalRedirectURL = baseURL + "/" + adjustedHref;
+            if (!selectedGame) {
+                embedGame("../404.html", "Not Found");
             } else {
-              finalRedirectURL = baseURL + adjustedHref;
-            }
+                const page = selectedGame.page;
+                const baseURL = getBaseURLForPage(page);
+                let adjustedHref = selectedGame.href.replace(/^\.\//, "");
+                adjustedHref = baseURL.endsWith("/") ? baseURL + adjustedHref : baseURL + "/" + adjustedHref;
+                const embedPath = await getEmbedPath(adjustedHref, selectedGame.href, page);
+                embedGame(embedPath, selectedGame.name);
 
-            manualRedirectLink.href = finalRedirectURL;
-            window.location.href = finalRedirectURL;
-            return;
-          }
-
-          const page = selectedGame.page;
-          const baseURL = getBaseURLForPage(page);
-
-          let adjustedHref = selectedGame.href.replace(/^\.\//, "");
-          if (!baseURL.endsWith("/")) {
-            adjustedHref = baseURL + "/" + adjustedHref;
-          } else {
-            adjustedHref = baseURL + adjustedHref;
-          }
-
-          const embedPath = await getEmbedPath(
-            adjustedHref,
-            selectedGame.href,
-            page
-          );
-          embedGame(embedPath, selectedGame.name);
-
-          let userFavorites = new Set();
-          function updateFavoriteIcon() {
-            if (userFavorites.has(selectedGame.id)) {
-              favoriteIcon.innerHTML = "&#9733;";
-              favoriteIcon.style.color = "gold";
-            } else {
-              favoriteIcon.innerHTML = "&#9734;";
-              favoriteIcon.style.color = "white";
-            }
-          }
-
-          async function toggleFavorite() {
-            const user = auth.currentUser;
-            if (!user) {
-              alert("Please sign in to favorite a game!");
-              return;
-            }
-            const favRef = db.collection("favs").doc(user.uid);
-
-            if (userFavorites.has(selectedGame.id)) {
-              await favRef.update({
-                [selectedGame.id]: firebase.firestore.FieldValue.delete(),
-              });
-              userFavorites.delete(selectedGame.id);
-            } else {
-              await favRef.set(
-                {
-                  [selectedGame.id]: true,
-                },
-                { merge: true }
-              );
-              userFavorites.add(selectedGame.id);
-            }
-            updateFavoriteIcon();
-          }
-
-          async function loadFavorites() {
-            const user = auth.currentUser;
-            if (user) {
-              const favDoc = await db.collection("favs").doc(user.uid).get();
-              if (favDoc.exists) {
-                const data = favDoc.data();
-                userFavorites = new Set(
-                  Object.keys(data).map((id) => parseInt(id, 10))
-                );
-              } else {
-                userFavorites = new Set();
-              }
-              updateFavoriteIcon();
-            } else {
-              userFavorites = new Set();
-              updateFavoriteIcon();
-            }
-          }
-
-          auth.onAuthStateChanged((user) => {
-            loadFavorites();
-          });
-
-          favoriteIcon.addEventListener("click", function () {
-            toggleFavorite();
-          });
-
-          fullscreenButton.addEventListener("click", function () {
-            if (gameContainer.requestFullscreen) {
-              gameContainer.requestFullscreen();
-            } else if (gameContainer.webkitRequestFullscreen) {
-              gameContainer.webkitRequestFullscreen();
-            } else if (gameContainer.msRequestFullscreen) {
-              gameContainer.msRequestFullscreen();
-            }
-          });
-
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "f") fullscreenButton.click();
-          });
-
-          const cardContainer = document.getElementById("cardContainer");
-
-          function adjustImgPath(path, page) {
-            path = path
-              .replace(/^\.\//, "")
-              .replace(/^\//, "")
-              .replace(/^img\//, "");
-            const baseURL = getBaseURLForPage(page);
-
-            let finalImgPath;
-            if (baseURL === "../") {
-              finalImgPath = "../img/" + path;
-            } else {
-              if (!baseURL.endsWith("/")) {
-                finalImgPath = baseURL + "/img/" + path;
-              } else {
-                finalImgPath = baseURL + "img/" + path;
-              }
-            }
-            return finalImgPath;
-          }
-
-          const randomGames = games
-            .slice()
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 10);
-
-          randomGames.forEach((game) => {
-            const { imgSrc, name, id } = game;
-            const adjustedImgSrc = adjustImgPath(imgSrc, game.page);
-
-            const card = document.createElement("a");
-            card.className = "card";
-            card.href = `../play/?id=${id}`;
-
-            const img = document.createElement("img");
-            img.src = adjustedImgSrc;
-            img.alt = name;
-            card.appendChild(img);
-
-            const figcaption = document.createElement("figcaption");
-            figcaption.textContent = name;
-            card.appendChild(figcaption);
-
-            cardContainer.appendChild(card);
-          });
-        }
-
-        let lastActivityTime = Date.now();
-        const activityEvents = [
-          "mousemove",
-          "keydown",
-          "mousedown",
-          "touchstart",
-          "scroll",
-        ];
-        activityEvents.forEach((event) => {
-          document.addEventListener(event, () => {
-            lastActivityTime = Date.now();
-          });
-        });
-
-        auth.onAuthStateChanged((user) => {
-          if (user) {
-            setInterval(() => {
-              if (Date.now() - lastActivityTime <= 3 * 60 * 1000) {
-                const xpRef = rtdb.ref(`users/${user.uid}/xp`);
-                xpRef.transaction((currentXP) => (currentXP || 0) + 10);
-
-                const pointsRef = rtdb.ref(`users/${user.uid}/points`);
-                pointsRef.transaction(
-                  (currentPoints) => (currentPoints || 0) + 1
-                );
-              }
-            }, 60 * 1000);
-          }
-        });
-
-        manualRedirectLink.addEventListener("click", function (e) {
-          e.preventDefault();
-          const selectedId = urlParams.get("id");
-          const sGame = games.find((g) => g.id == selectedId);
-          if (sGame && sGame.href) {
-            window.location.href = "../" + sGame.href;
-          }
-        });
-      });
-    </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const menuIcon = document.getElementById("menuIcon");
-        const slideMenu = document.getElementById("slideMenu");
-        const categories = document.querySelector(".categories");
-
-        menuIcon.addEventListener("click", function (event) {
-          event.stopPropagation();
-          if (slideMenu.style.transform === "translateX(0%)") {
-            slideMenu.style.transform = "translateX(-100%)";
-          } else {
-            slideMenu.style.transform = "translateX(0%)";
-          }
-        });
-
-        window.addEventListener("click", function (event) {
-          if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
-            slideMenu.style.transform = "translateX(-100%)";
-          }
-        });
-
-        auth.onAuthStateChanged(async (user) => {
-          const userDetailsContainer = document.createElement("div");
-          userDetailsContainer.className = "user-details-container";
-
-          const profileTopContainer = document.createElement("div");
-          profileTopContainer.className = "profile-top-container";
-
-          const profilePictureContainer = document.createElement("div");
-          profilePictureContainer.className = "profile-picture-container";
-          const profilePictureElement = document.createElement("img");
-          profilePictureElement.className = "profile-picture";
-          profilePictureContainer.appendChild(profilePictureElement);
-
-          const usernameContainer = document.createElement("div");
-          usernameContainer.className = "username-container";
-          const usernameElement = document.createElement("p");
-          usernameElement.className = "username-text";
-          usernameContainer.appendChild(usernameElement);
-
-          profileTopContainer.appendChild(profilePictureContainer);
-          profileTopContainer.appendChild(usernameContainer);
-          userDetailsContainer.appendChild(profileTopContainer);
-
-          const xpContainer = document.createElement("div");
-          xpContainer.className = "xp-container";
-          const xpLevelText = document.createElement("div");
-          xpLevelText.className = "xp-level-text";
-          const xpBar = document.createElement("div");
-          xpBar.className = "xp-bar";
-          const xpBarFill = document.createElement("div");
-          xpBarFill.className = "xp-bar-fill";
-          const xpBarText = document.createElement("div");
-          xpBarText.className = "xp-bar-text";
-          xpBar.appendChild(xpBarFill);
-          xpBar.appendChild(xpBarText);
-          xpContainer.appendChild(xpLevelText);
-          xpContainer.appendChild(xpBar);
-
-          if (user) {
-            if (user.photoURL) {
-              profilePictureElement.src = user.photoURL;
-            } else {
-              profilePictureElement.src = "../img/default-avatar.png";
-            }
-
-            const userId = user.uid;
-            const userDocRef = db.collection("usernames").doc(userId);
-            const userDoc = await userDocRef.get();
-
-            if (userDoc.exists) {
-              const userData = userDoc.data();
-              usernameElement.textContent = userData.username || "Username";
-            } else {
-              usernameElement.textContent = user.displayName || "Username";
-            }
-
-            const xpRef = rtdb.ref(`users/${userId}/xp`);
-            xpRef.on("value", (snapshot) => {
-              let totalXP = snapshot.exists() ? snapshot.val() : 0;
-              const { level, tier, currentXP, xpNeededForNext } =
-                getTierAndProgressFromXP(totalXP);
-
-              xpLevelText.textContent = `Level ${level}`;
-              const fillPercent = (currentXP / xpNeededForNext) * 100;
-              xpBarFill.style.width = `${fillPercent}%`;
-              xpBarText.textContent = `${currentXP}/${xpNeededForNext}`;
-            });
-
-            userDetailsContainer.appendChild(xpContainer);
-
-            profilePictureContainer.addEventListener("click", () => {
-              window.location.href = "../settings.html";
-            });
-
-            slideMenu.insertBefore(userDetailsContainer, categories);
-
-            const logoutLink = document.createElement("a");
-            logoutLink.href = "#";
-            logoutLink.className = "option-link";
-            logoutLink.textContent = "Log Out";
-            logoutLink.style.backgroundColor = "#dc3545";
-            logoutLink.style.color = "white";
-
-            logoutLink.addEventListener("click", function (e) {
-              e.preventDefault();
-              auth
-                .signOut()
-                .then(() => {
-                  window.location.reload();
-                })
-                .catch((error) => {
-                  console.error("Error signing out:", error);
+                fullscreenButton.addEventListener("click", function () {
+                    const gameContainer = document.getElementById('gameContainer');
+                    if (!gameContainer) return;
+                    if (gameContainer.requestFullscreen) gameContainer.requestFullscreen();
+                    else if (gameContainer.webkitRequestFullscreen) gameContainer.webkitRequestFullscreen();
+                    else if (gameContainer.msRequestFullscreen) gameContainer.msRequestFullscreen();
                 });
-            });
 
-            const favsLink = categories.querySelector('a[href="../favs.html"]');
-            categories.insertBefore(logoutLink, favsLink);
+                document.addEventListener('fullscreenchange', () => {
+                    const isFullscreen = !!document.fullscreenElement;
+                    document.body.classList.toggle('performance-mode-active', isFullscreen);
 
-            try {
-              const accessDocRef = db.collection("access").doc(user.uid);
-              accessDocRef.get().then((accessDoc) => {
-                if (accessDoc.exists) {
-                  const accessData = accessDoc.data();
-                  if (accessData.tester === true) {
-                    const testGamesLink = document.createElement("a");
-                    testGamesLink.href = "../test.html";
-                    testGamesLink.className = "option-link";
-                    testGamesLink.textContent = "Test Games";
-                    testGamesLink.style.backgroundColor = "#28a745";
-                    testGamesLink.style.color = "white";
-                    testGamesLink.style.marginTop = "10px";
-
-                    testGamesLink.addEventListener("mouseover", function () {
-                      testGamesLink.style.backgroundColor = "#218838";
-                    });
-                    testGamesLink.addEventListener("mouseout", function () {
-                      testGamesLink.style.backgroundColor = "#28a745";
+                    const elementsToToggle = [
+                        document.querySelector('.navbar'),
+                        document.getElementById('gameTitle'),
+                        document.querySelector('.recommended-games-section'),
+                        document.getElementById('fullscreenDisclaimer'),
+                        document.getElementById('gameOverlayButtons')
+                    ];
+                    
+                    elementsToToggle.forEach(el => {
+                        if (el) el.classList.toggle('performance-mode-hidden', isFullscreen);
                     });
 
-                    categories.insertBefore(testGamesLink, favsLink);
-                  }
+                    if (isFullscreen) {
+                        const iframe = document.querySelector('#gameContainer iframe');
+                        if (iframe) {
+                           iframe.focus();
+                        }
+                    }
+                });
+
+                const cardContainer = document.getElementById("cardContainer");
+
+                function adjustImgPath(path, page) {
+                    path = path.replace(/^\.\//, "").replace(/^\//, "").replace(/^img\//, "");
+                    const baseURL = getBaseURLForPage(page);
+                    let finalImgPath;
+                    if (baseURL === "../") {
+                        finalImgPath = "../img/" + path;
+                    } else {
+                        finalImgPath = baseURL.endsWith("/") ? baseURL + "img/" + path : baseURL + "/img/" + path;
+                    }
+                    return finalImgPath;
                 }
-              });
-            } catch (error) {
-              console.error(error);
+
+                const randomGames = games.slice().sort(() => 0.5 - Math.random()).slice(0, 3);
+                randomGames.forEach((game) => {
+                    const {
+                        imgSrc,
+                        name,
+                        id
+                    } = game;
+                    const adjustedImgSrc = adjustImgPath(imgSrc, game.page);
+                    const card = document.createElement("a");
+                    card.className = "card";
+                    card.href = `../play/?id=${id}`;
+                    const img = document.createElement("img");
+                    img.src = adjustedImgSrc;
+                    img.alt = name;
+                    card.appendChild(img);
+                    const figcaption = document.createElement("figcaption");
+                    figcaption.textContent = name;
+                    card.appendChild(figcaption);
+                    cardContainer.appendChild(card);
+                });
             }
-          } else {
-            const notLoggedInContainer = document.createElement("div");
-            notLoggedInContainer.className = "username-container";
 
-            const notLoggedInText = document.createElement("p");
-            notLoggedInText.className = "username-text";
-            notLoggedInText.textContent = "Not logged in";
+            manualRedirectLink.addEventListener("click", function (e) {
+                e.preventDefault();
+                const selectedId = urlParams.get("id");
+                const sGame = games.find((g) => g.id == selectedId);
+                if (sGame && sGame.href) window.location.href = "../" + sGame.href;
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuIcon = document.getElementById("menuIcon");
+            const slideMenu = document.getElementById("slideMenu");
 
-            notLoggedInContainer.appendChild(notLoggedInText);
-
-            const loginButton = document.createElement("button");
-            loginButton.textContent = "Log In";
-            loginButton.style.backgroundColor = "#007bff";
-            loginButton.style.color = "white";
-            loginButton.style.border = "none";
-            loginButton.style.padding = "10px 20px";
-            loginButton.style.fontSize = "16px";
-            loginButton.style.borderRadius = "5px";
-            loginButton.style.cursor = "pointer";
-            loginButton.style.marginTop = "5px";
-
-            loginButton.addEventListener("click", function () {
-              window.location.href = "../login.html";
+            menuIcon.addEventListener("click", function (event) {
+                event.stopPropagation();
+                slideMenu.classList.toggle('active');
             });
 
-            userDetailsContainer.style.display = "flex";
-            userDetailsContainer.style.flexDirection = "column";
-            userDetailsContainer.style.alignItems = "center";
-            userDetailsContainer.style.paddingBlock = "20px";
-
-            userDetailsContainer.appendChild(notLoggedInContainer);
-            userDetailsContainer.appendChild(loginButton);
-            slideMenu.insertBefore(userDetailsContainer, categories);
-          }
+            window.addEventListener("click", function (event) {
+                if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
+                    slideMenu.classList.remove('active');
+                }
+            });
         });
 
-        document
-          .getElementById("secretLink")
-          .addEventListener("click", function () {
-            window.location.href = "../secret-menu.html";
-          });
-      });
-
-      document.addEventListener("keydown", function (event) {
-        if (
-          ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(
-            event.key
-          )
-        ) {
-          event.preventDefault();
-        }
-      });
+        document.addEventListener("keydown", function (event) {
+            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(event.key)) {
+                event.preventDefault();
+            }
+        });
     </script>
 
     <script>
-      document.addEventListener("DOMContentLoaded", async function () {
-        const specialGameIds = [739, 749];
-        const urlParams = new URLSearchParams(window.location.search);
-        const gameIdParam = urlParams.get("id");
-        const gameIdNum = Number(gameIdParam);
-
-        if (gameIdParam && specialGameIds.includes(gameIdNum)) {
-          const jsPath = `./${gameIdNum}.js`;
-
-          try {
-            const response = await fetch(jsPath);
-            if (!response.ok) {
-              console.error(
-                `Could not load extra JS for gameId=${gameIdParam} from: ${jsPath}`
-              );
-              return;
+        /**
+         * Authentication Gate
+         * This script protects the page by ensuring a user is logged in.
+         * 1. If the user is logged out, it redirects to the login page.
+         * 2. If the user is logged in, it reveals the page content, allowing other scripts
+         * (like ban-enforcer.js) to perform their subsequent checks.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') {
+                console.error("Auth Error: Firebase is not loaded.");
+                document.body.style.visibility = 'visible';
+                document.body.innerHTML = `<h1 style="color:white; text-align:center;">Error: Cannot connect to services.</h1>`;
+                return;
             }
 
-            const scriptContent = await response.text();
-            const scriptElement = document.createElement("script");
-            scriptElement.type = "text/javascript";
-            scriptElement.text = scriptContent;
-            document.body.appendChild(scriptElement);
-          } catch (error) {
-            console.error(
-              `Error while loading extra JS for gameId=${gameIdParam}:`,
-              error
-            );
-          }
-        }
-      });
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    // User is logged in. Reveal the page.
+                    // The external ban-enforcer.js script will handle checking for bans.
+                    console.log("Authentication successful. Revealing page content.");
+                    document.body.style.visibility = 'visible';
+                } else {
+                    // User is logged out. Redirect them to the login page.
+                    console.log("Authentication failed: No user is logged in. Redirecting...");
+                    window.location.href = 'https://4simpleproblems.github.io/login.html';
+                }
+            });
+        });
     </script>
-  </body>
+</body>
+
 </html>
