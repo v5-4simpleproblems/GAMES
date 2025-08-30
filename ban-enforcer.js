@@ -1,13 +1,13 @@
 /**
- * ban-enforcer.js (v3.3 - UI Adjustments & Faster Interval)
+ * ban-enforcer.js (v3.4 - Fixed Fullscreen Overlay & Direct Appending)
  *
  * This script enforces website bans using a "check-first, block-later" approach.
  * If a user is confirmed to be banned, it deploys a persistent, full-screen
- * overlay with an optimized guard that instantly rebuilds the UI if tampered with.
+ * overlay that correctly covers the entire viewport and instantly rebuilds if tampered with.
  *
  * Visuals:
- * - Full-screen blur shield, updated every 100ms.
- * - Home button fixed to the top-right, linking to the login page.
+ * - Guaranteed full-screen blur shield, updated every 100ms.
+ * - Home button fixed to the top-right, linking to the index page.
  * - Ban message fixed to the top-left.
  *
  * IMPORTANT:
@@ -15,7 +15,7 @@
  * 2. It should be included on EVERY page you want to protect.
  */
 
-console.log("Debug: ban-enforcer.js v3.3 (UI Adjustments) has started.");
+console.log("Debug: ban-enforcer.js v3.4 (Fixed Fullscreen Overlay) has started.");
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Debug: DOMContentLoaded event fired. Ban enforcer is running.");
@@ -52,24 +52,29 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {object} banData - The data from the user's document in the 'bans' collection.
  */
 function showBanScreen(banData) {
-    const containerId = 'ban-enforcer-container';
+    const shieldId = 'ban-enforcer-shield';
+    const homeButtonId = 'ban-enforcer-home-button';
+    const messageBoxId = 'ban-enforcer-message';
 
     // This function runs on an interval to ensure the ban screen cannot be removed.
     const enforceBanVisuals = () => {
-        // First, always ensure scrolling is locked.
+        // Ensure scrolling is locked, always.
         document.documentElement.style.overflow = 'hidden';
         document.body.style.overflow = 'hidden';
 
-        // Check if the main container exists. If not, the UI has been tampered with.
-        if (!document.getElementById(containerId)) {
-            console.warn("[Guard] Ban UI not found. Rebuilding now.");
+        // Check for existence of each element. If any are missing, rebuild all of them.
+        if (!document.getElementById(shieldId) || !document.getElementById(homeButtonId) || !document.getElementById(messageBoxId)) {
+            console.warn("[Guard] Ban UI element(s) not found. Rebuilding all UI.");
 
-            // Create the main container that will hold all UI elements.
-            const banContainer = document.createElement('div');
-            banContainer.id = containerId;
+            // Remove any existing fragments to ensure a clean rebuild
+            [shieldId, homeButtonId, messageBoxId].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.remove();
+            });
 
             // --- 1. Create the Shield (background blur) ---
             const shield = document.createElement('div');
+            shield.id = shieldId;
             Object.assign(shield.style, {
                 position: 'fixed',
                 top: '0',
@@ -79,13 +84,14 @@ function showBanScreen(banData) {
                 backgroundColor: 'rgba(10, 10, 10, 0.75)',
                 backdropFilter: 'blur(14px)',
                 webkitBackdropFilter: 'blur(14px)',
-                zIndex: '2147483646'
+                zIndex: '2147483646' // Just below message/button
             });
-            
+            document.body.appendChild(shield); // Append directly to body
+
             // --- 2. Create the Home Button (top-right) ---
             const homeButton = document.createElement('a');
-            // MODIFIED: Updated the href to the login page.
-            homeButton.href = 'https://4simpleproblems.github.io/login.html';
+            homeButton.id = homeButtonId;
+            homeButton.href = '../index.html'; // MODIFIED: Changed link to index.html
             homeButton.innerHTML = `<i class="fa-solid fa-house"></i>`;
             Object.assign(homeButton.style, {
                 position: 'fixed',
@@ -105,41 +111,37 @@ function showBanScreen(banData) {
                 borderRadius: '10px',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 transition: 'background-color 0.3s ease',
-                zIndex: '2147483647'
+                zIndex: '2147483647' // On top
             });
             homeButton.onmouseover = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'; };
             homeButton.onmouseout = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'; };
+            document.body.appendChild(homeButton); // Append directly to body
 
             // --- 3. Create the Message Box (top-left) ---
             const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
             const banDate = banData.bannedAt && banData.bannedAt.toDate ? `on ${banData.bannedAt.toDate().toLocaleDateString()}` : '';
             
             const messageBox = document.createElement('div');
+            messageBox.id = messageBoxId;
             messageBox.innerHTML = `
                 <h1 style="font-size: 2.3em; color: #fc0324; margin: 0 0 10px 0; font-weight: bold;">Access Denied</h1>
                 <p style="font-size: 1.1em; margin: 0 0 15px 0; line-height: 1.4; color: #e0e0e0;">Your account has been suspended from this service.</p>
                 <p style="font-size: 1em; margin: 0 0 20px 0; color: #bdbdbd;"><strong>Reason:</strong> ${reason}</p>
                 <p style="font-size: 0.8em; color: #9e9e9e;">This action was taken ${banDate}. If you believe this is an error, please contact 4simpleproblems+support@gmail.com</p>
             `;
-            // MODIFIED: Updated styles for top-left positioning.
             Object.assign(messageBox.style, {
                 position: 'fixed',
                 top: '40px',
                 left: '40px',
                 maxWidth: '600px',
                 width: 'auto',
-                textAlign: 'left', // Text is aligned to the left
+                textAlign: 'left',
                 color: '#ffffff',
                 fontFamily: "'PrimaryFont', Arial, sans-serif",
                 textShadow: '0 2px 8px rgba(0,0,0,0.7)',
-                zIndex: '2147483647'
+                zIndex: '2147483647' // On top
             });
-
-            // Append all elements to the container, then the container to the body
-            banContainer.appendChild(shield);
-            banContainer.appendChild(homeButton);
-            banContainer.appendChild(messageBox);
-            document.body.appendChild(banContainer);
+            document.body.appendChild(messageBox); // Append directly to body
         }
     };
 
@@ -166,6 +168,5 @@ function showBanScreen(banData) {
 
     // Run the enforcement function once immediately, then start the interval guard.
     enforceBanVisuals();
-    // MODIFIED: Updated the interval to 100ms for faster updates.
-    setInterval(enforceBanVisuals, 10);
+    setInterval(enforceBanVisuals, 100);
 }
