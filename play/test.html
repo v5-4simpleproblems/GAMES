@@ -18,7 +18,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="../firebase-config.js"></script>
-    <script src="../url-changer.js"></script>
     <script src="../panic-key.js"></script>
     <script src="../ban-enforcer.js"></script>
     <style>
@@ -40,6 +39,8 @@
             background-color: var(--bg);
             color: #e0e0e0;
             overflow-x: hidden;
+            /* Performance: Help browser with rendering layers */
+            will-change: transform;
         }
 
         .navbar {
@@ -55,7 +56,7 @@
             top: 0;
             z-index: 1000;
         }
-        
+
         .logo {
             position: absolute;
             left: 50%;
@@ -79,7 +80,7 @@
             color: white;
             transition: transform 0.3s ease, color 0.3s ease;
         }
-        
+
         .slide-menu {
             position: fixed;
             top: 0;
@@ -100,49 +101,16 @@
                     rgba(53, 53, 53, 0.599),
                     rgba(80, 80, 80, 0.599));
         }
-        
+
         .slide-menu.active {
             transform: translateX(0);
-        }
-
-        .profile-picture-container {
-            border-radius: 50%;
-            width: 120px;
-            aspect-ratio: 1;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
-            transition: all 0.4s ease;
-            cursor: pointer;
-            border: 3px solid orange;
-        }
-        
-        .profile-picture {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .user-details-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 0;
-            gap: 15px;
-        }
-
-        .username-text {
-            font-size: 1.8rem;
-            color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         .categories {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            padding-top: 30px;
         }
 
         .categories>a {
@@ -182,47 +150,6 @@
             height: 500px;
         }
 
-        .xp-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px auto;
-            width: 90%;
-        }
-
-        .xp-level-text {
-            color: white;
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-
-        .xp-bar {
-            position: relative;
-            width: 100%;
-            height: 25px;
-            background: black;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .xp-bar-fill {
-            height: 100%;
-            background: linear-gradient(to right, #47fced, #0af);
-            width: 0%;
-            transition: width 0.7s ease;
-        }
-
-        .xp-bar-text {
-            position: absolute;
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-size: 0.9rem;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
-
         .content-wrapper {
             display: flex;
             justify-content: center;
@@ -230,7 +157,7 @@
             gap: 30px;
             align-items: flex-start;
         }
-        
+
         .recommended-games-section {
             width: 280px;
             flex-shrink: 0;
@@ -262,7 +189,7 @@
             right: 0;
             background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
         }
-        
+
         .marquee-content {
             display: inline-block;
             padding-left: 100%;
@@ -272,11 +199,17 @@
             color: #cccccc;
             font-weight: bold;
         }
-        
+
+        .performance-mode-active .marquee-content {
+            /* Performance: Stop animation when hidden */
+            animation-play-state: paused;
+        }
+
         @keyframes marquee-scroll {
             0% {
                 transform: translateX(0);
             }
+
             100% {
                 transform: translateX(-100%);
             }
@@ -318,7 +251,7 @@
             font-size: 14px;
             color: #ff8c00;
         }
-        
+
         .game-area {
             flex-grow: 1;
             max-width: 75%;
@@ -326,12 +259,15 @@
 
         .game-container {
             width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            padding-top: 56.25%;
+            /* 16:9 Aspect Ratio */
             background-color: #000;
             position: relative;
             overflow: hidden;
             border-radius: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+            /* Performance: Isolate this element for rendering */
+            contain: strict;
         }
 
         .game-container iframe {
@@ -342,7 +278,7 @@
             height: 100%;
             border: none;
         }
-        
+
         .game-overlay-buttons {
             position: fixed;
             bottom: 15px;
@@ -351,7 +287,7 @@
             display: flex;
             gap: 10px;
         }
-        
+
         .overlay-btn {
             width: 48px;
             height: 48px;
@@ -368,12 +304,12 @@
             justify-content: center;
             transition: all 0.3s ease;
         }
-        
+
         .overlay-btn:hover {
             transform: scale(1.1);
             background: rgba(0, 0, 0, 0.6);
         }
-        
+
         #favoriteIcon.favorited {
             color: #ffc107;
             text-shadow: 0 0 12px rgba(255, 193, 7, 0.9);
@@ -389,12 +325,12 @@
         #gameTitle {
             color: #ff8c00;
         }
-        
+
         #gameTitle {
-          padding: 20px;
-          font-size: 1.5em;
-          font-weight: bold;
-          text-align: center;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
         }
 
         .performance-mode-hidden {
@@ -406,24 +342,29 @@
                 flex-direction: column-reverse;
                 align-items: center;
             }
+
             .game-area {
                 width: 100%;
                 max-width: 100%;
             }
+
             .recommended-games-section {
                 width: 100%;
                 max-width: 500px;
                 margin-bottom: 30px;
             }
+
             .card-container {
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: center;
             }
+
             .card {
                 width: 150px;
             }
         }
+
         @media (max-width: 768px) {
             .slide-menu {
                 width: 280px;
@@ -436,21 +377,20 @@
     <div class="navbar">
         <div class="menu-icon" id="menuIcon">☰</div>
         <a href="../index.html" class="logo">strongdog<span class="xp">XP</span></a>
-        <!-- Placeholder for right side elements like search if needed -->
         <div></div>
     </div>
 
     <div class="slide-menu" id="slideMenu">
-      <div class="categories">
-        <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
-        <a href="../favs.html" class="option-link">Favorites</a>
-        <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
-        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
-          Discord Server
-        </a>
-      </div>
+        <div class="categories">
+            <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
+            <a href="../favs.html" class="option-link">Favorites</a>
+            <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
+            <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
+                Discord Server
+            </a>
+        </div>
     </div>
-    
+
     <div id="gameTitle"></div>
 
     <div class="content-wrapper">
@@ -460,19 +400,23 @@
             </div>
             <div class="card-container" id="cardContainer"></div>
         </div>
-        
+
         <div class="game-area">
             <div class="game-container" id="gameContainer">
-                
+
             </div>
         </div>
     </div>
-    
+
     <p id="fullscreenDisclaimer" style="text-align: center; color: #aaa; margin: 20px; font-size: 0.9em;">Fullscreen activates performance mode, which causes less lag.</p>
 
     <div class="game-overlay-buttons" id="gameOverlayButtons">
         <button id="fullscreenButton" class="overlay-btn" title="Fullscreen">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                </path>
+            </svg>
         </button>
     </div>
 
@@ -484,36 +428,6 @@
         </p>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
-    <script>
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const rtdb = firebase.database();
-
-        function getTierAndProgressFromXP(xp) {
-            const baseXPNeeded = 50, increasePerTier = 200, exponentialMultiplier = 1.2, levelsPerTier = 5, capTier = 10;
-            let level = 1, tier = 1, xpNeeded = baseXPNeeded;
-            while (xp >= xpNeeded) {
-                xp -= xpNeeded;
-                if (tier < capTier) {
-                    if (level % levelsPerTier === 0) {
-                        tier++;
-                        xpNeeded = Math.round(xpNeeded * exponentialMultiplier);
-                    }
-                } else {
-                    if (level % levelsPerTier === 0) {
-                        xpNeeded += increasePerTier;
-                    }
-                }
-                level++;
-            }
-            return { level, tier, currentXP: xp, xpNeededForNext: xpNeeded, };
-        }
-    </script>
-
     <script src="../appscript.js"></script>
 
     <script type="module">
@@ -522,7 +436,7 @@
             siteMapping
         } from "../site-mapping.js";
 
-        document.addEventListener("DOMContentLoaded", async function() {
+        document.addEventListener("DOMContentLoaded", async function () {
             function getCurrentKeyHostOnly() {
                 return window.location.host;
             }
@@ -538,7 +452,16 @@
                     if (page === 4) return "/strongdog4/";
                     return "/STRONGDOG/";
                 }
-                const explicitMappings = { "jman1593.github.io": { 2: "../strongdog2/", }, "4simpleproblems.github.io": { 2: "../strongdog2/", 3: "../strongdog3/", 4: "../strongdog4/", } };
+                const explicitMappings = {
+                    "jman1593.github.io": {
+                        2: "../strongdog2/",
+                    },
+                    "4simpleproblems.github.io": {
+                        2: "../strongdog2/",
+                        3: "../strongdog3/",
+                        4: "../strongdog4/",
+                    }
+                };
                 if (explicitMappings[currentHost] && explicitMappings[currentHost][page]) {
                     return explicitMappings[currentHost][page];
                 }
@@ -563,7 +486,9 @@
                 if (!cleanHref.endsWith("/")) cleanHref += "/";
                 const pathsToTry = [cleanHref + "game/index.html", cleanHref + "game/base.html", cleanHref + "gamereal/index.html", cleanHref + "gamereal/base.html", cleanHref + "index.html", cleanHref + "base.html", ];
                 try {
-                    const response = await fetch(adjustedHref, { method: "GET" });
+                    const response = await fetch(adjustedHref, {
+                        method: "GET"
+                    });
                     if (response.ok) {
                         const text = await response.text();
                         const match = text.match(/embedGame\((['"])(.*?)\1,\s*(['"])(.*?)\3\)/);
@@ -573,13 +498,15 @@
                             if (await fileExists(resolvedPath)) return resolvedPath;
                         }
                     }
-                } catch (error) { console.warn("Failed to parse embed path from cards-data.js", error); }
+                } catch (error) {
+                    console.warn("Failed to parse embed path from cards-data.js", error);
+                }
                 for (const path of pathsToTry) {
                     if (await fileExists(path)) return path;
                 }
                 return adjustHrefPath(originalHref, page);
             }
-             
+
             function adjustHrefPath(path, page) {
                 path = path.replace(/^\.\//, "").replace(/^\//, "");
                 const baseURL = getBaseURLForPage(page);
@@ -594,9 +521,13 @@
 
             async function fileExists(url) {
                 try {
-                    const response = await fetch(url, { method: "HEAD" });
+                    const response = await fetch(url, {
+                        method: "HEAD"
+                    });
                     return response.ok;
-                } catch { return false; }
+                } catch {
+                    return false;
+                }
             }
 
             function embedGame(gamePath, title) {
@@ -604,13 +535,21 @@
                 iframe.src = gamePath;
                 iframe.allowFullscreen = true;
                 const gameContainer = document.getElementById('gameContainer');
-                
+
                 gameContainer.innerHTML = '';
                 gameContainer.appendChild(iframe);
-                
+
                 const gameTitleElement = document.getElementById("gameTitle");
                 gameTitleElement.textContent = title;
-                document.title = "4SP - STRONGDOG";
+
+                // **MODIFICATION**: Check for a saved title from url-changer.js.
+                const savedTitle = localStorage.getItem('savedTitle');
+                if (savedTitle) {
+                    document.title = savedTitle;
+                } else {
+                    // If no title is saved, use the default.
+                    document.title = "4SP - STRONGDOG";
+                }
             }
 
 
@@ -636,7 +575,14 @@
                 const embedPath = await getEmbedPath(adjustedHref, selectedGame.href, page);
                 embedGame(embedPath, selectedGame.name);
 
-                fullscreenButton.addEventListener("click", function() {
+                // **MODIFICATION**: Dynamically load url-changer.js AFTER the initial setup is complete.
+                // This ensures it runs last and has priority to set and save a new title.
+                const urlChangerScript = document.createElement('script');
+                urlChangerScript.src = '../url-changer.js';
+                document.body.appendChild(urlChangerScript);
+
+
+                fullscreenButton.addEventListener("click", function () {
                     const gameContainer = document.getElementById('gameContainer');
                     if (!gameContainer) return;
                     if (gameContainer.requestFullscreen) gameContainer.requestFullscreen();
@@ -645,6 +591,9 @@
                 });
 
                 document.addEventListener('fullscreenchange', () => {
+                    const isFullscreen = !!document.fullscreenElement;
+                    document.body.classList.toggle('performance-mode-active', isFullscreen);
+
                     const elementsToToggle = [
                         document.querySelector('.navbar'),
                         document.getElementById('gameTitle'),
@@ -652,19 +601,22 @@
                         document.getElementById('fullscreenDisclaimer'),
                         document.getElementById('gameOverlayButtons')
                     ];
+                    
+                    elementsToToggle.forEach(el => {
+                        if (el) el.classList.toggle('performance-mode-hidden', isFullscreen);
+                    });
 
-                    if (document.fullscreenElement) {
-                        elementsToToggle.forEach(el => {
-                            if (el) el.classList.add('performance-mode-hidden');
-                        });
-                    } else {
-                        elementsToToggle.forEach(el => {
-                            if (el) el.classList.remove('performance-mode-hidden');
-                        });
+                    // Focus the iframe content when entering fullscreen
+                    if (isFullscreen) {
+                        const iframe = document.querySelector('#gameContainer iframe');
+                        if (iframe) {
+                           iframe.focus();
+                        }
                     }
                 });
 
                 const cardContainer = document.getElementById("cardContainer");
+
                 function adjustImgPath(path, page) {
                     path = path.replace(/^\.\//, "").replace(/^\//, "").replace(/^img\//, "");
                     const baseURL = getBaseURLForPage(page);
@@ -679,7 +631,11 @@
 
                 const randomGames = games.slice().sort(() => 0.5 - Math.random()).slice(0, 3);
                 randomGames.forEach((game) => {
-                    const { imgSrc, name, id } = game;
+                    const {
+                        imgSrc,
+                        name,
+                        id
+                    } = game;
                     const adjustedImgSrc = adjustImgPath(imgSrc, game.page);
                     const card = document.createElement("a");
                     card.className = "card";
@@ -694,7 +650,7 @@
                     cardContainer.appendChild(card);
                 });
             }
-            
+
             manualRedirectLink.addEventListener("click", function (e) {
                 e.preventDefault();
                 const selectedId = urlParams.get("id");
@@ -704,80 +660,23 @@
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const menuIcon = document.getElementById("menuIcon");
             const slideMenu = document.getElementById("slideMenu");
 
-            menuIcon.addEventListener("click", function(event) {
+            menuIcon.addEventListener("click", function (event) {
                 event.stopPropagation();
                 slideMenu.classList.toggle('active');
             });
 
-            window.addEventListener("click", function(event) {
+            window.addEventListener("click", function (event) {
                 if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
                     slideMenu.classList.remove('active');
                 }
             });
-
-            auth.onAuthStateChanged(async (user) => {
-                const existingUserDetails = slideMenu.querySelector('.user-details-container');
-                if(existingUserDetails) existingUserDetails.remove();
-
-                const categories = slideMenu.querySelector(".categories");
-                const userDetailsContainer = document.createElement("div");
-                userDetailsContainer.className = "user-details-container";
-                
-                if (user) {
-                    // Logged in view
-                    const profilePictureContainer = document.createElement("div");
-                    profilePictureContainer.className = "profile-picture-container";
-                    const profilePictureElement = document.createElement("img");
-                    profilePictureElement.className = "profile-picture";
-                    profilePictureElement.src = user.photoURL || "../img/default-avatar.png";
-                    profilePictureContainer.appendChild(profilePictureElement);
-
-                    const usernameElement = document.createElement("p");
-                    usernameElement.className = "username-text";
-                    
-                    const userDoc = await db.collection("usernames").doc(user.uid).get();
-                    usernameElement.textContent = (userDoc.exists && userDoc.data().username) ? userDoc.data().username : (user.displayName || "Username");
-                    
-                    const xpContainer = document.createElement("div");
-                    xpContainer.className = "xp-container";
-                    xpContainer.innerHTML = `<div class="xp-level-text">Level 1</div><div class="xp-bar"><div class="xp-bar-fill"></div><div class="xp-bar-text">0/50</div></div>`;
-
-                    rtdb.ref(`users/${user.uid}/xp`).on("value", (snapshot) => {
-                        const totalXP = snapshot.exists() ? snapshot.val() : 0;
-                        const { level, currentXP, xpNeededForNext } = getTierAndProgressFromXP(totalXP);
-                        xpContainer.querySelector('.xp-level-text').textContent = `Level ${level}`;
-                        xpContainer.querySelector('.xp-bar-fill').style.width = `${(currentXP / xpNeededForNext) * 100}%`;
-                        xpContainer.querySelector('.xp-bar-text').textContent = `${currentXP}/${xpNeededForNext}`;
-                    });
-
-                    userDetailsContainer.appendChild(profilePictureContainer);
-                    userDetailsContainer.appendChild(usernameElement);
-                    userDetailsContainer.appendChild(xpContainer);
-
-                    profilePictureContainer.addEventListener("click", () => { window.location.href = "../settings.html"; });
-
-                    const logoutLink = document.createElement("a");
-                    logoutLink.href = "#";
-                    logoutLink.className = "option-link";
-                    logoutLink.textContent = "Log Out";
-                    logoutLink.style.backgroundColor = "#dc3545";
-                    logoutLink.addEventListener("click", (e) => { e.preventDefault(); auth.signOut().then(() => window.location.reload()); });
-                    categories.appendChild(logoutLink);
-
-                } else {
-                    // Logged out view
-                    userDetailsContainer.innerHTML = `<p class="username-text">Not logged in</p><button id="loginBtnSidebar" class="option-link" style="background-color: #007bff; border: none; width: 80%; cursor: pointer;">Log In</button>`;
-                    userDetailsContainer.querySelector('#loginBtnSidebar').addEventListener('click', () => { window.location.href = '../login.html'; });
-                }
-                 slideMenu.insertBefore(userDetailsContainer, categories);
-            });
         });
 
-        document.addEventListener("keydown", function(event) {
+        document.addEventListener("keydown", function (event) {
             if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(event.key)) {
                 event.preventDefault();
             }
@@ -787,4 +686,3 @@
 </body>
 
 </html>
-
