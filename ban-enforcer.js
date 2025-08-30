@@ -1,65 +1,16 @@
 /**
- * ban-enforcer.js (v2.1 - Enhanced Persistence with Home Button)
+ * ban-enforcer.js (v3.1 - Corrected Overlay & Optimized Logic)
  *
- * This script is the primary enforcement mechanism for website bans. It has been updated
- * for more aggressive and persistent enforcement and includes a home button on the ban screen.
- *
- * It immediately injects a transparent "shield" and disables page scrolling to block all interaction.
- * It then checks if the user's ID exists in the 'bans' collection in Firestore.
- * - If BANNED, the shield becomes a visible, persistent overlay with the ban reason and a home button.
- * A new interval guard prevents tampering via developer tools.
- * - If NOT BANNED, the shield is removed and scrolling is re-enabled, allowing normal interaction.
+ * This script enforces website bans using a "check-first, block-later" approach to avoid
+ * disrupting the user experience for non-banned users. If a user is confirmed to be banned,
+ * it deploys a persistent, full-screen overlay with corrected layering and positioning.
  *
  * IMPORTANT:
  * 1. This script must be placed AFTER the Firebase SDK scripts in your HTML.
  * 2. It should be included on EVERY page you want to protect.
  */
 
-console.log("Debug: ban-enforcer.js script has started.");
-
-// --- 1. Immediately create shield and lock scrolling ---
-// This IIFE (Immediately Invoked Function Expression) runs as soon as the script is parsed.
-(function() {
-    // Check if the shield already exists to prevent duplication.
-    if (document.getElementById('ban-enforcer-shield')) return;
-
-    // Create the shield element
-    const shield = document.createElement('div');
-    shield.id = 'ban-enforcer-shield';
-    // Style the shield to be a full-screen, transparent overlay that blocks clicks.
-    shield.style.position = 'fixed';
-    shield.style.top = '0';
-    shield.style.left = '0';
-    shield.style.width = '100vw';
-    shield.style.height = '100vh';
-    shield.style.zIndex = '2147483647'; // Max z-index to cover everything.
-    shield.style.backgroundColor = 'transparent'; // Invisible by default.
-
-    // Append to the root <html> element to ensure it loads before the body is interactive.
-    document.documentElement.appendChild(shield);
-
-    // **MODIFICATION**: Immediately disable scrolling on the entire page to prevent any interaction
-    // during the ban check.
-    document.documentElement.style.overflow = 'hidden';
-
-    console.log("Debug: Pre-ban shield deployed and page scrolling locked.");
-})();
-
-
-/**
- * Helper function to remove the shield and restore scrolling.
- * This is called when the user is verified as not banned.
- */
-function removeShieldAndUnlockScroll() {
-    const shield = document.getElementById('ban-enforcer-shield');
-    if (shield) {
-        shield.remove();
-    }
-    // **MODIFICATION**: Restore scrolling.
-    document.documentElement.style.overflow = '';
-    console.log("Debug: Shield removed and page scrolling unlocked.");
-}
-
+console.log("Debug: ban-enforcer.js v3.1 (Optimized) has started.");
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Debug: DOMContentLoaded event fired. Ban enforcer is running.");
@@ -67,109 +18,90 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check for the Firebase library, which is a critical dependency.
     if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined' || typeof firebase.firestore === 'undefined') {
         console.error("FATAL ERROR: Firebase is not loaded correctly. Check the script order. Ban enforcement is disabled.");
-        removeShieldAndUnlockScroll(); // Failsafe
         return;
     }
 
     // firebase.auth().onAuthStateChanged is the entry point.
     firebase.auth().onAuthStateChanged(user => {
+        // If a user is logged in, check their ban status. Otherwise, do nothing.
         if (user) {
-            // A user is logged in. We now need to check if they are banned.
             console.log("Debug: User is logged in. Checking ban status for UID:", user.uid);
-
             const db = firebase.firestore();
             const banDocRef = db.collection('bans').doc(user.uid);
 
             banDocRef.get().then(doc => {
+                // The ONLY time we take action is if the user's document exists in the 'bans' collection.
                 if (doc.exists) {
-                    // --- USER IS BANNED ---
                     const banData = doc.data();
-                    console.warn(`User ${user.uid} is BANNED. Reason: ${banData.reason}. Locking page permanently.`);
-                    // Call the function to make the shield visible and display the ban message.
+                    console.warn(`User ${user.uid} is BANNED. Reason: ${banData.reason}. Deploying ban screen.`);
+                    // Call the function to create the shield and display the ban message.
                     showBanScreen(banData);
                 } else {
-                    // --- USER IS NOT BANNED ---
-                    console.log("Debug: User is not banned.");
-                    removeShieldAndUnlockScroll();
+                    // User is logged in but not banned. Do nothing.
+                    console.log("Debug: User is not banned. Page operation is normal.");
                 }
             }).catch(error => {
-                console.error("Debug: An error occurred while checking ban status. Removing shield to prevent lockout.", error);
-                removeShieldAndUnlockScroll(); // Failsafe
+                // If there's an error, we fail open (do nothing) to avoid locking out legitimate users.
+                console.error("Debug: An error occurred while checking ban status. Allowing page access as a failsafe.", error);
             });
-
         } else {
-            // --- NO USER LOGGED IN ---
-            console.log("Debug: No user is logged in.");
-            removeShieldAndUnlockScroll();
+            // No user is logged in. Do nothing.
+            console.log("Debug: No user is logged in. Page operation is normal.");
         }
     });
 });
 
 /**
- * Makes the ban screen visible and starts the persistence guard to prevent tampering.
+ * Creates and displays the ban screen, then starts the persistence guard.
+ * This function is ONLY called for confirmed banned users.
  * @param {object} banData - The data from the user's document in the 'bans' collection.
  */
 function showBanScreen(banData) {
-    const shieldId = 'ban-enforcer-shield';
-    const messageId = 'ban-enforcer-message';
-    // **NEW**: ID for the home button
-    const homeButtonId = 'ban-enforcer-home-button';
+    // Lock scrolling immediately, as we now know the user is banned.
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
 
+    const containerId = 'ban-enforcer-container';
+    
     // This function contains the logic to create/update all visual ban elements.
-    // It is called once and then used by the interval guard.
     const enforceBanVisuals = () => {
-        // --- 1. Find or create the main shield ---
-        let shield = document.getElementById(shieldId);
-        if (!shield) {
-            console.warn("Debug [Guard]: Ban shield was removed by user. Re-deploying...");
-            shield = document.createElement('div');
-            shield.id = shieldId;
-            shield.style.position = 'fixed';
-            shield.style.top = '0';
-            shield.style.left = '0';
-            shield.style.width = '100vw';
-            shield.style.height = '100vh';
-            shield.style.zIndex = '2147483647';
-            document.documentElement.appendChild(shield);
+        // Find or create the main container that will hold all ban UI.
+        let banContainer = document.getElementById(containerId);
+        if (!banContainer) {
+            banContainer = document.createElement('div');
+            banContainer.id = containerId;
+            document.body.appendChild(banContainer);
         }
 
-        // --- 2. Apply visible styles to the shield ---
-        shield.style.backgroundColor = 'rgba(10, 10, 10, 0.75)';
-        shield.style.backdropFilter = 'blur(14px)';
-        shield.style.webkitBackdropFilter = 'blur(14px)';
+        // --- Sanitize data once to prevent potential HTML injection ---
+        const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
+        const banDate = banData.bannedAt && banData.bannedAt.toDate ? `on ${banData.bannedAt.toDate().toLocaleDateString()}` : '';
 
-        // --- 3. Find or create the message box ---
-        let messageBox = document.getElementById(messageId);
-        if (!messageBox) {
-            console.warn("Debug [Guard]: Ban message was removed by user. Re-displaying...");
-            messageBox = document.createElement('div');
-            messageBox.id = messageId;
+        // FIX: The entire UI is now built inside the container to solve positioning issues.
+        // The innerHTML is set here, creating a shield, message box, and home button as siblings.
+        banContainer.innerHTML = `
+            <div id="ban-enforcer-shield" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(10, 10, 10, 0.75); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 2147483646;"></div>
 
-            // --- Sanitize data to prevent potential HTML injection ---
-            const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
-            const banDate = banData.bannedAt && banData.bannedAt.toDate ? `on ${banData.bannedAt.toDate().toLocaleDateString()}` : '';
+            <a id="ban-enforcer-home-button" href="../index.html" style="position: fixed; top: 20px; right: 20px; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: white; text-decoration: none; background-color: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); transition: background-color 0.3s ease; z-index: 2147483647;">
+                <i class="fa-solid fa-house"></i>
+            </a>
 
-            messageBox.innerHTML = `
+            <div id="ban-enforcer-message" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 600px; width: 90%; text-align: center; color: #ffffff; font-family: 'PrimaryFont', Arial, sans-serif; text-shadow: 0 2px 8px rgba(0,0,0,0.7); z-index: 2147483647;">
                 <h1 style="font-size: 2.3em; color: #fc0324; margin: 0 0 10px 0; font-weight: bold;">Access Denied</h1>
                 <p style="font-size: 1.1em; margin: 0 0 15px 0; line-height: 1.4; color: #e0e0e0;">Your account has been suspended from this service.</p>
                 <p style="font-size: 1em; margin: 0 0 20px 0; color: #bdbdbd;"><strong>Reason:</strong> ${reason}</p>
                 <p style="font-size: 0.8em; color: #9e9e9e;">This action was taken ${banDate}. If you believe this is an error, please contact 4simpleproblems+support@gmail.com</p>
-            `;
-            document.body.appendChild(messageBox);
+            </div>
+        `;
+
+        // Add hover effects for the home button dynamically
+        const homeButton = document.getElementById('ban-enforcer-home-button');
+        if (homeButton) {
+            homeButton.onmouseover = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'; };
+            homeButton.onmouseout = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'; };
         }
-
-        // --- 4. Apply styles to the message box ---
-        messageBox.style.position = 'fixed';
-        messageBox.style.bottom = '40px';
-        messageBox.style.right = '40px';
-        messageBox.style.maxWidth = '600px';
-        messageBox.style.textAlign = 'right';
-        messageBox.style.color = '#ffffff';
-        messageBox.style.fontFamily = "'PrimaryFont', Arial, sans-serif"; // Assumes font is loaded elsewhere or is a fallback
-        messageBox.style.zIndex = '2147483647';
-        messageBox.style.textShadow = '0 2px 8px rgba(0,0,0,0.7)';
-
-        // --- 5. Ensure scrolling remains locked ---
+        
+        // --- Ensure scrolling remains locked ---
         if (document.documentElement.style.overflow !== 'hidden') {
             document.documentElement.style.overflow = 'hidden';
             console.warn("Debug [Guard]: User tried to re-enable scrolling. Re-locking.");
@@ -177,62 +109,20 @@ function showBanScreen(banData) {
         if (document.body.style.overflow !== 'hidden') {
             document.body.style.overflow = 'hidden';
         }
-
-        // --- 6. **NEW**: Find or create the Home button ---
-        let homeButton = document.getElementById(homeButtonId);
-        if (!homeButton) {
-            console.warn("Debug [Guard]: Home button was removed. Re-creating...");
-            homeButton = document.createElement('a'); // Use an anchor tag for navigation
-            homeButton.id = homeButtonId;
-            homeButton.href = '../index.html'; // Set the redirection target
-
-            // Add the Font Awesome icon
-            homeButton.innerHTML = `<i class="fa-solid fa-house"></i>`;
-
-            // Apply styles
-            homeButton.style.position = 'fixed';
-            homeButton.style.top = '10px';
-            homeButton.style.right = '10px';
-            homeButton.style.zIndex = '2147483647';
-            homeButton.style.width = '45px';
-            homeButton.style.height = '45px';
-            homeButton.style.display = 'flex';
-            homeButton.style.alignItems = 'center';
-            homeButton.style.justifyContent = 'center';
-            homeButton.style.fontSize = '22.5px';
-            homeButton.style.color = 'white';
-            homeButton.style.textDecoration = 'none';
-            
-            // Frosted glass effect
-            homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-            homeButton.style.backdropFilter = 'blur(10px)';
-            homeButton.style.webkitBackdropFilter = 'blur(10px)'; // For Safari
-            homeButton.style.borderRadius = '10px';
-            homeButton.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-            homeButton.style.transition = 'background-color 0.3s ease';
-
-            // Hover effect for better UX
-            homeButton.onmouseover = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'; };
-            homeButton.onmouseout = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'; };
-
-            document.body.appendChild(homeButton);
-        }
     };
 
-    // --- **NEW**: Inject Font Awesome for the home button icon ---
-    // This is safe to run multiple times; the browser won't load the same stylesheet twice.
+    // --- Inject Font Awesome for the home button icon ---
     if (!document.querySelector('link[href*="font-awesome"]')) {
-         const faLink = document.createElement('link');
-         faLink.rel = 'stylesheet';
-         faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
-         document.head.appendChild(faLink);
+        const faLink = document.createElement('link');
+        faLink.rel = 'stylesheet';
+        faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
+        document.head.appendChild(faLink);
     }
-
-    // Inject the custom font (if not already loaded globally)
-    // This is safe to run multiple times if the guard needs to reconstruct the page.
+    
+    // --- Inject the custom font (if not already loaded globally) ---
     if (!document.querySelector('style[data-font="primary"]')) {
         const fontStyle = document.createElement('style');
-        fontStyle.setAttribute('data-font', 'primary'); // Mark the style tag
+        fontStyle.setAttribute('data-font', 'primary');
         fontStyle.textContent = `
             @font-face {
                 font-family: 'PrimaryFont';
@@ -243,11 +133,10 @@ function showBanScreen(banData) {
         `;
         document.head.appendChild(fontStyle);
     }
-
+    
     // Run the enforcement function for the first time.
     enforceBanVisuals();
 
-    // **MODIFICATION**: Start the persistence guard interval.
-    // This will continuously check and re-apply the ban if the user tampers with the elements.
-    setInterval(enforceBanVisuals, 200);
+    // Start the persistence guard interval to prevent tampering.
+    setInterval(enforceBanVisuals, 250);
 }
