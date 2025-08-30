@@ -1,21 +1,21 @@
 /**
- * ban-enforcer.js (v3.2 - Refined UI & Optimized Guard)
+ * ban-enforcer.js (v3.3 - UI Adjustments & Faster Interval)
  *
  * This script enforces website bans using a "check-first, block-later" approach.
  * If a user is confirmed to be banned, it deploys a persistent, full-screen
  * overlay with an optimized guard that instantly rebuilds the UI if tampered with.
  *
  * Visuals:
- * - Full-screen blur shield.
- * - Home button fixed to the top-right.
- * - Ban message fixed to the bottom-right.
+ * - Full-screen blur shield, updated every 100ms.
+ * - Home button fixed to the top-right, linking to the login page.
+ * - Ban message fixed to the top-left.
  *
  * IMPORTANT:
  * 1. This script must be placed AFTER the Firebase SDK scripts in your HTML.
  * 2. It should be included on EVERY page you want to protect.
  */
 
-console.log("Debug: ban-enforcer.js v3.2 (Refined UI) has started.");
+console.log("Debug: ban-enforcer.js v3.3 (UI Adjustments) has started.");
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Debug: DOMContentLoaded event fired. Ban enforcer is running.");
@@ -84,7 +84,8 @@ function showBanScreen(banData) {
             
             // --- 2. Create the Home Button (top-right) ---
             const homeButton = document.createElement('a');
-            homeButton.href = '../index.html';
+            // MODIFIED: Updated the href to the login page.
+            homeButton.href = 'https://4simpleproblems.github.io/login.html';
             homeButton.innerHTML = `<i class="fa-solid fa-house"></i>`;
             Object.assign(homeButton.style, {
                 position: 'fixed',
@@ -109,7 +110,7 @@ function showBanScreen(banData) {
             homeButton.onmouseover = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'; };
             homeButton.onmouseout = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'; };
 
-            // --- 3. Create the Message Box (bottom-right) ---
+            // --- 3. Create the Message Box (top-left) ---
             const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
             const banDate = banData.bannedAt && banData.bannedAt.toDate ? `on ${banData.bannedAt.toDate().toLocaleDateString()}` : '';
             
@@ -120,13 +121,14 @@ function showBanScreen(banData) {
                 <p style="font-size: 1em; margin: 0 0 20px 0; color: #bdbdbd;"><strong>Reason:</strong> ${reason}</p>
                 <p style="font-size: 0.8em; color: #9e9e9e;">This action was taken ${banDate}. If you believe this is an error, please contact 4simpleproblems+support@gmail.com</p>
             `;
+            // MODIFIED: Updated styles for top-left positioning.
             Object.assign(messageBox.style, {
                 position: 'fixed',
-                bottom: '40px',
-                right: '40px',
+                top: '40px',
+                left: '40px',
                 maxWidth: '600px',
                 width: 'auto',
-                textAlign: 'right', // Text is aligned to the right
+                textAlign: 'left', // Text is aligned to the left
                 color: '#ffffff',
                 fontFamily: "'PrimaryFont', Arial, sans-serif",
                 textShadow: '0 2px 8px rgba(0,0,0,0.7)',
@@ -164,5 +166,6 @@ function showBanScreen(banData) {
 
     // Run the enforcement function once immediately, then start the interval guard.
     enforceBanVisuals();
-    setInterval(enforceBanVisuals, 250);
+    // MODIFIED: Updated the interval to 100ms for faster updates.
+    setInterval(enforceBanVisuals, 10);
 }
