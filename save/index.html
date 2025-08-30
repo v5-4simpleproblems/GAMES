@@ -10,12 +10,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
+    
     <script src="../firebase-config.js"></script>
 
     <script src="../panic-key.js"></script>
     <script src="../url-changer.js"></script>
-
+    
     <style>
         /* This rule hides the body by default. The auth gate script will make it visible. */
         body {
@@ -175,71 +175,7 @@
             line-height: 1.6;
             background-color: #3f3f3f;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .saves-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .save-slot {
-            background: #444444;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 600px;
-            padding: 25px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-            border-left: 5px solid #666;
-        }
-
-        .save-slot:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-            border-left-color: orange;
-        }
-
-        .save-title {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            text-align: left;
-            color: #ffc107;
-        }
-
-        .save-description {
-            font-size: 1em;
-            text-align: left;
-            color: #ccc;
-        }
-
-        .delete-button {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #a83632;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 35px;
-            height: 35px;
-            font-size: 1.2em;
-            line-height: 35px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .delete-button:hover {
-            background: #f00;
-            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .modal {
@@ -265,7 +201,7 @@
             text-align: center;
             color: white;
             position: relative;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
         }
 
         .modal-close {
@@ -277,7 +213,7 @@
             font-weight: bold;
             cursor: pointer;
         }
-
+        
         .modal-buttons {
             display: flex;
             gap: 15px;
@@ -320,15 +256,10 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
+        
         .bottom-buttons {
             display: flex;
             flex-direction: column;
@@ -344,13 +275,13 @@
             font-family: var(--ff);
             font-size: 1.2rem;
             font-weight: 600;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
             border: none;
             border-radius: 12px;
             padding: 15px 30px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             width: 350px;
             max-width: 90%;
         }
@@ -436,14 +367,17 @@
         <div class="menu-icon" id="menuIcon">☰</div>
         <a href="../index.html" class="logo">strongdog<span class="xp">XP</span></a>
         <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search is disabled here" id="searchInput" autocomplete="off" disabled />
+            <input type="text" class="search-bar" placeholder="Search is disabled here" id="searchInput"
+                autocomplete="off" disabled />
         </div>
     </div>
     <div class="slide-menu" id="slideMenu">
         <div class="categories" id="sidebarCategories">
             <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
             <a href="../index.html" class="option-link">Back to StrongdogXP</a>
+            <a href="../favs.html" class="option-link">Favorites</a>
             <a href="#" id="blockLanschool" class="option-link">Open in about:blank</a>
+            <a href="../about.html" class="option-link">About | Bugs | Request Games</a>
             <a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
             <a href="#" id="creditsBtn" class="option-link">Credits</a>
         </div>
@@ -451,10 +385,9 @@
     <div class="main-content">
         <h2>Local Save Manager</h2>
         <p class="info-message">
-            Welcome to your Local Save Manager! This tool lets you back up your progress directly in your browser.
-            You can save your current data into one of three slots, load it back later, or transfer it using a file.
+            Welcome to your Local Save Manager! This tool lets you back up your progress directly to your computer.
+            You can download your current data to a file, or upload a previously saved file to restore your progress.
         </p>
-        <div class="saves-container" id="savesContainer"></div>
         <div class="bottom-buttons" id="bottomButtonsContainer"></div>
     </div>
     <div class="modal" id="modalPrompt">
@@ -484,11 +417,8 @@
     </div>
 
     <script type="module">
-        import {
-            siteMapping
-        } from "../site-mapping.js";
-
-        const savesContainer = document.getElementById("savesContainer");
+        import { siteMapping } from "../site-mapping.js";
+        
         const bottomButtonsContainer = document.getElementById("bottomButtonsContainer");
         const modal = document.getElementById("modalPrompt");
         const modalClose = document.getElementById("modalClose");
@@ -558,6 +488,7 @@
             const data = {};
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
+                // This check is kept to ignore any old save slots if they still exist in a user's browser.
                 if (!key.startsWith('sdxp_save_slot_')) {
                     const value = localStorage.getItem(key);
                     data[key] = value;
@@ -580,17 +511,13 @@
                 localStorage.setItem(key, value);
             }
         }
-
+        
         async function getAllIndexedDBData() {
             if (!('indexedDB' in window) || !indexedDB.databases) return {};
             let dbList = [];
-            try {
-                dbList = await indexedDB.databases();
-            } catch (error) {
-                console.error("Error fetching IndexedDB databases:", error);
-                return {};
-            }
-
+            try { dbList = await indexedDB.databases(); }
+            catch (error) { console.error("Error fetching IndexedDB databases:", error); return {}; }
+            
             const result = {};
             for (const dbInfo of dbList) {
                 if (!dbInfo.name) continue;
@@ -621,10 +548,7 @@
                             cursorRequest.onsuccess = evt => {
                                 const cursor = evt.target.result;
                                 if (cursor) {
-                                    items.push({
-                                        key: cursor.key,
-                                        value: cursor.value
-                                    });
+                                    items.push({ key: cursor.key, value: cursor.value });
                                     cursor.continue();
                                 } else {
                                     dbData[storeName] = items;
@@ -646,12 +570,12 @@
                         });
                     };
                     request.onerror = event => reject(event.target.error);
-                } catch (e) {
+                } catch(e) {
                     reject(e);
                 }
             });
         }
-
+        
         async function setAllIndexedDBData(allDbsData) {
             for (const dbName in allDbsData) {
                 await new Promise(resolve => {
@@ -680,30 +604,21 @@
                                 store.put(record.value, record.key);
                             }
                         }
-                        tx.oncomplete = () => {
-                            db.close();
-                            resolveDb();
-                        };
-                        tx.onerror = (e) => {
-                            console.error(e);
-                            db.close();
-                            resolveDb();
-                        };
+                        tx.oncomplete = () => { db.close(); resolveDb(); };
+                        tx.onerror = (e) => { console.error(e); db.close(); resolveDb(); };
                     };
                     openRequest.onerror = (event) => rejectDb(event.target.error);
                 });
             }
         }
-
-        function normalizeDomainKey(str) {
-            return str.replace(/^https?:\/\//, "").replace(/\/$/, "");
-        }
+        
+        function normalizeDomainKey(str) { return str.replace(/^https?:\/\//, "").replace(/\/$/, ""); }
 
         function replaceDomainsInData(dataObj, currentDomain) {
             if (!dataObj || typeof dataObj !== 'object') return;
             const keysToCheck = Object.keys(siteMapping).map(k => normalizeDomainKey(k));
             const normalizedCurrentDomain = normalizeDomainKey(currentDomain);
-
+            
             function replaceInString(str) {
                 for (const oldDomain of keysToCheck) {
                     if (str.includes(oldDomain)) {
@@ -719,166 +634,19 @@
                     const newKey = replaceInString(k);
                     let newVal = lsData[k];
                     if (typeof newVal === "string") newVal = replaceInString(newVal);
-                    if (newKey !== k) {
-                        delete lsData[k];
-                        lsData[newKey] = newVal;
-                    } else {
-                        lsData[k] = newVal;
-                    }
+                    if (newKey !== k) { delete lsData[k]; lsData[newKey] = newVal; }
+                    else { lsData[k] = newVal; }
                 }
             }
         }
-
-        async function handleLoadSave(slotKey) {
-            showLoading("Loading save from slot...");
-            try {
-                const savedDataJSON = localStorage.getItem(slotKey);
-                if (savedDataJSON) {
-                    const parsedData = JSON.parse(savedDataJSON);
-                    replaceDomainsInData(parsedData.data, currentDomainKey);
-
-                    if (parsedData.data.localStorageBackup) {
-                        setAllLocalStorageData(parsedData.data.localStorageBackup);
-                    }
-                    if (parsedData.data.indexedDBBackup) {
-                        await setAllIndexedDBData(parsedData.data.indexedDBBackup);
-                    }
-                    alert("Load complete!");
-                }
-            } catch (e) {
-                console.error(e);
-                alert("Error loading save!");
-            } finally {
-                hideLoading();
-            }
-        }
-
-        function renderLocalSlots() {
-            savesContainer.innerHTML = "";
-            for (let i = 1; i <= 3; i++) {
-                const slotKey = `sdxp_save_slot_${i}`;
-                const slotDataJSON = localStorage.getItem(slotKey);
-                const slotData = slotDataJSON ? JSON.parse(slotDataJSON) : null;
-
-                const slotEl = document.createElement("div");
-                slotEl.className = "save-slot";
-
-                let titleText = `Slot ${i} - Empty`;
-                let descText = "Click here to save your current game progress";
-
-                if (slotData) {
-                    titleText = slotData.title;
-                    descText = slotData.description;
-                    const deleteBtn = document.createElement("button");
-                    deleteBtn.className = "delete-button";
-                    deleteBtn.textContent = "×";
-                    deleteBtn.onclick = e => {
-                        e.stopPropagation();
-                        openModal(`Are you sure you want to delete '${titleText}'? This action is irreversible.`, [{
-                                text: "Yes, Delete",
-                                onclick: () => {
-                                    modal.style.display = 'none';
-                                    localStorage.removeItem(slotKey);
-                                    renderLocalSlots();
-                                }
-                            },
-                            {
-                                text: "No",
-                                onclick: () => modal.style.display = 'none'
-                            }
-                        ]);
-                    };
-                    slotEl.appendChild(deleteBtn);
-                }
-
-                const titleEl = document.createElement("div");
-                titleEl.className = "save-title";
-                titleEl.textContent = titleText;
-                const descEl = document.createElement("div");
-                descEl.className = "save-description";
-                descEl.textContent = descText;
-                slotEl.appendChild(titleEl);
-                slotEl.appendChild(descEl);
-
-                slotEl.addEventListener("click", async () => {
-                    if (!slotData) {
-                        const titlePrompt = prompt(`Enter a title for Slot ${i}:`, "");
-                        if (!titlePrompt) return;
-                        const descPrompt = prompt("Enter a description:", `Saved on ${new Date().toLocaleString()}`);
-                        if (descPrompt === null) return;
-
-                        showLoading("Saving data to local slot...");
-                        const localData = {
-                            localStorageBackup: getAllLocalStorageData(),
-                            indexedDBBackup: await getAllIndexedDBData(),
-                        };
-                        const dataToStore = {
-                            title: titlePrompt,
-                            description: descPrompt,
-                            data: localData
-                        };
-                        localStorage.setItem(slotKey, JSON.stringify(dataToStore));
-                        hideLoading();
-                        alert("Save complete!");
-                        renderLocalSlots();
-                    } else {
-                        openModal(`Actions for '${slotData.title}'`, [{
-                                text: "Load Save",
-                                onclick: () => {
-                                    modal.style.display = "none";
-                                    openModal("Loading this save will overwrite your current unsaved progress. Proceed?", [{
-                                            text: "Yes, Load",
-                                            onclick: async () => {
-                                                modal.style.display = 'none';
-                                                await handleLoadSave(slotKey);
-                                            }
-                                        },
-                                        {
-                                            text: "No",
-                                            onclick: () => modal.style.display = 'none'
-                                        }
-                                    ]);
-                                }
-                            },
-                            {
-                                text: "Overwrite Save",
-                                onclick: async () => {
-                                    modal.style.display = "none";
-                                    showLoading("Overwriting save...");
-                                    const localData = {
-                                        localStorageBackup: getAllLocalStorageData(),
-                                        indexedDBBackup: await getAllIndexedDBData()
-                                    };
-                                    const dataToStore = {
-                                        title: slotData.title,
-                                        description: `Overwritten on ${new Date().toLocaleString()}`,
-                                        data: localData
-                                    };
-                                    localStorage.setItem(slotKey, JSON.stringify(dataToStore));
-                                    hideLoading();
-                                    alert("Overwrite complete!");
-                                    renderLocalSlots();
-                                }
-                            }
-                        ]);
-                    }
-                });
-                savesContainer.appendChild(slotEl);
-            }
-        }
-
+        
         async function downloadAllSaves() {
             showLoading("Preparing download...");
             const localData = getAllLocalStorageData();
             const indexedData = await getAllIndexedDBData();
-            const dataToDownload = {
-                localStorageBackup: localData,
-                indexedDBBackup: indexedData
-            };
+            const dataToDownload = { localStorageBackup: localData, indexedDBBackup: indexedData };
             hideLoading();
-            const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], {
-                type: "application/json"
-            });
+            const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
@@ -898,31 +666,22 @@
                 const reader = new FileReader();
                 reader.onload = async evt => {
                     let parsed;
-                    try {
-                        parsed = JSON.parse(evt.target.result);
-                    } catch (err) {
-                        alert("Invalid JSON file.");
-                        return;
-                    }
+                    try { parsed = JSON.parse(evt.target.result); } 
+                    catch (err) { alert("Invalid JSON file."); return; }
 
                     replaceDomainsInData(parsed, currentDomainKey);
 
-                    openModal("Uploading this save file will overwrite all current game data. Are you sure?", [{
-                            text: "Yes, Upload",
-                            onclick: async () => {
-                                modal.style.display = 'none';
-                                showLoading("Uploading save...");
-                                if (parsed.localStorageBackup) setAllLocalStorageData(parsed.localStorageBackup);
-                                if (parsed.indexedDBBackup) await setAllIndexedDBData(parsed.indexedDBBackup);
-                                hideLoading();
-                                alert("Upload complete! The page will now reload to apply all changes.");
-                                window.location.reload();
-                            }
-                        },
-                        {
-                            text: "No",
-                            onclick: () => modal.style.display = 'none'
-                        }
+                    openModal("Uploading this save file will overwrite all current game data. Are you sure?", [
+                        { text: "Yes, Upload", onclick: async () => {
+                            modal.style.display = 'none';
+                            showLoading("Uploading save...");
+                            if (parsed.localStorageBackup) setAllLocalStorageData(parsed.localStorageBackup);
+                            if (parsed.indexedDBBackup) await setAllIndexedDBData(parsed.indexedDBBackup);
+                            hideLoading();
+                            alert("Upload complete! The page will now reload to apply all changes.");
+                            window.location.reload();
+                        }},
+                        { text: "No", onclick: () => modal.style.display = 'none' }
                     ]);
                 };
                 reader.readAsText(file);
@@ -944,8 +703,6 @@
 
             bottomButtonsContainer.appendChild(downloadButton);
             bottomButtonsContainer.appendChild(uploadButton);
-
-            renderLocalSlots();
         }
 
         // Initial Page Load
@@ -982,7 +739,7 @@
             const creditsBtn = document.getElementById('creditsBtn');
             const creditsOverlay = document.getElementById('credits-overlay');
             const closeCreditsPopup = document.getElementById('close-credits-popup');
-
+            
             if (creditsBtn) {
                 creditsBtn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1000,17 +757,15 @@
             }
         });
     </script>
-
+    
     <script>
         /**
          * Authentication Gate (v4.5 - Foolproof Stacking Context Fix)
-         * This script protects the page and correctly handles the ban screen overlay.
          */
-
+        
         // --- 1. Immediately create a SIMPLE, invisible shield. ---
         (function() {
             if (document.getElementById('auth-shield-temporary')) return;
-
             const shield = document.createElement('div');
             shield.id = 'auth-shield-temporary';
             Object.assign(shield.style, {
@@ -1022,7 +777,6 @@
                 zIndex: '2147483647',
                 backgroundColor: 'transparent'
             });
-
             document.documentElement.appendChild(shield);
             console.log("Debug: Temporary auth shield deployed.");
         })();
@@ -1035,7 +789,6 @@
             if (shield) {
                 shield.remove();
             }
-            // We only unlock scrolling if a ban screen isn't being shown
             if (!document.getElementById('ban-enforcer-container')) {
                 document.documentElement.style.overflow = '';
                 document.body.style.overflow = '';
@@ -1099,8 +852,8 @@
 
                 if (!document.getElementById(banContainerId)) {
                     console.warn("[Guard] Ban container not found. Rebuilding UI.");
-
-                    document.body.style.visibility = 'visible'; // Make body visible for the ban screen to be appended to.
+                    
+                    document.body.style.visibility = 'visible';
 
                     const banContainer = document.createElement('div');
                     banContainer.id = banContainerId;
@@ -1146,12 +899,8 @@
                         border: '1px solid rgba(255, 255, 255, 0.2)',
                         transition: 'background-color 0.3s ease'
                     });
-                    homeButton.onmouseover = () => {
-                        homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-                    };
-                    homeButton.onmouseout = () => {
-                        homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-                    };
+                    homeButton.onmouseover = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'; };
+                    homeButton.onmouseout = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'; };
                     banContainer.appendChild(homeButton);
 
                     const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
@@ -1185,7 +934,7 @@
                 faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
                 document.head.appendChild(faLink);
             }
-
+            
             enforceBanVisuals();
             setInterval(enforceBanVisuals, 100);
         }
