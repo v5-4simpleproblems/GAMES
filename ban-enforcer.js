@@ -1,9 +1,8 @@
 /**
- * ban-enforcer.js (v4.0 - Block-First Authentication Model)
+ * ban-enforcer.js (v4.2 - Direct & Reliable Block-First Model)
  *
- * This script enforces website bans and login requirements using a "block-first" model.
- * It immediately deploys an invisible shield to block all page interaction and scrolling.
- * It then checks the user's Firebase authentication and ban status to determine the outcome.
+ * This script enforces website bans and login requirements using a direct "block-first" model.
+ * It has been streamlined to remove the complex timeout, which was causing the "stuck" issue.
  *
  * --- FLOW ---
  * 1.  An invisible, full-screen shield is immediately deployed, and scrolling is locked.
@@ -14,34 +13,30 @@
  * 4b. If NOT BANNED -> The shield is removed, and page access is granted.
  *
  * IMPORTANT:
- * - This script must be placed AFTER the Firebase SDK scripts in your HTML.
- * - It should be included on EVERY page you want to protect.
+ * - This script must be placed AFTER all Firebase SDK scripts in your HTML.
  */
 
-console.log("Debug: ban-enforcer.js v4.0 (Block-First Model) has started.");
+console.log("Debug: ban-enforcer.js v4.2 (Direct & Reliable) has started.");
 
 // --- 1. Immediately create an invisible shield and lock scrolling ---
 (function() {
-    // Check if the shield already exists to prevent duplication.
     if (document.getElementById('auth-shield')) return;
 
-    // Create the shield element
     const shield = document.createElement('div');
     shield.id = 'auth-shield';
-    // Style the shield to be a full-screen, transparent overlay that blocks clicks.
-    shield.style.position = 'fixed';
-    shield.style.top = '0';
-    shield.style.left = '0';
-    shield.style.width = '100vw';
-    shield.style.height = '100vh';
-    shield.style.zIndex = '2147483646'; // High z-index to cover everything.
-    shield.style.backgroundColor = 'transparent'; // Invisible by default.
-    shield.style.transition = 'background-color 0.3s ease, backdrop-filter 0.3s ease'; // For smooth transition to ban screen
+    Object.assign(shield.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100vw',
+        height: '100vh',
+        zIndex: '2147483646',
+        backgroundColor: 'transparent',
+        transition: 'background-color 0.3s ease, backdrop-filter 0.3s ease'
+    });
 
-    // Append to the root <html> element to ensure it loads before the body is interactive.
     document.documentElement.appendChild(shield);
 
-    // Immediately disable scrolling on the entire page.
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
 
@@ -66,15 +61,16 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Debug: DOMContentLoaded event fired. Checking authentication and ban status.");
 
     if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined' || typeof firebase.firestore === 'undefined') {
-        console.error("FATAL ERROR: Firebase is not loaded correctly. Page will remain locked.");
-        // We don't remove the shield here, as something is fundamentally broken.
+        console.error("FATAL ERROR: Firebase is not loaded correctly. Check script order in HTML. Page will remain locked.");
+        document.body.innerHTML = `<h1 style="font-family: Arial, sans-serif; color: white; text-align: center; margin-top: 40px;">Fatal Error: Page cannot be loaded.</h1>`;
+        // Make body visible to show the error. This is a critical failsafe.
+        document.body.style.visibility = 'visible';
         return;
     }
 
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             // --- USER IS LOGGED IN ---
-            // Now, check if they are banned.
             const db = firebase.firestore();
             const banDocRef = db.collection('bans').doc(user.uid);
 
@@ -82,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (doc.exists) {
                     // --- BANNED ---
                     const banData = doc.data();
-                    console.warn(`User ${user.uid} is BANNED. Reason: ${banData.reason}. Activating ban screen.`);
+                    console.warn(`User ${user.uid} is BANNED. Activating ban screen.`);
                     showBanScreen(banData);
                 } else {
                     // --- LOGGED IN AND NOT BANNED ---
@@ -105,32 +101,28 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Activates the ban screen UI and starts the persistence guard.
  * This function MODIFIES the existing auth-shield to become the visible ban screen.
- * @param {object} banData - The data from the user's document in the 'bans' collection.
  */
 function showBanScreen(banData) {
-    const shieldId = 'auth-shield'; // We are targeting the existing shield
+    const shieldId = 'auth-shield';
     const homeButtonId = 'ban-enforcer-home-button';
     const messageBoxId = 'ban-enforcer-message';
 
-    // This function runs on an interval to ensure the ban screen cannot be removed.
     const enforceBanVisuals = () => {
-        // Ensure scrolling remains locked.
         document.documentElement.style.overflow = 'hidden';
         document.body.style.overflow = 'hidden';
 
-        // Find the main shield and make it visible.
         const shield = document.getElementById(shieldId);
         if (shield) {
             shield.style.backgroundColor = 'rgba(10, 10, 10, 0.75)';
             shield.style.backdropFilter = 'blur(14px)';
             shield.style.webkitBackdropFilter = 'blur(14px)';
         } else {
-            // If the main shield is gone, something is very wrong. Re-run the IIFE logic.
+            // If the main shield is gone, the user is trying to bypass the ban. Re-create it.
             console.warn("[Guard] Main auth shield was removed. Re-deploying...");
-            (function() { // Re-create the shield if it was forcefully removed
-                if (document.getElementById('auth-shield')) return;
+            (function() {
+                if (document.getElementById(shieldId)) return;
                 const newShield = document.createElement('div');
-                newShield.id = 'auth-shield';
+                newShield.id = shieldId;
                 Object.assign(newShield.style, {
                     position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
                     zIndex: '2147483646', backgroundColor: 'rgba(10, 10, 10, 0.75)',
@@ -140,7 +132,6 @@ function showBanScreen(banData) {
             })();
         }
 
-        // Check for and create the Home Button if missing.
         if (!document.getElementById(homeButtonId)) {
             const homeButton = document.createElement('a');
             homeButton.id = homeButtonId;
@@ -159,7 +150,6 @@ function showBanScreen(banData) {
             document.body.appendChild(homeButton);
         }
 
-        // Check for and create the Message Box if missing.
         if (!document.getElementById(messageBoxId)) {
             const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
             const banDate = banData.bannedAt && banData.bannedAt.toDate ? `on ${banData.bannedAt.toDate().toLocaleDateString()}` : '';
