@@ -653,6 +653,78 @@
         background-color: #ff6a00 !important;
     }
 
+    /* Credits Popup Styles */
+    #credits-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        display: none;
+        /* Hidden by default */
+        justify-content: center;
+        align-items: flex-start;
+        /* Aligns popup to the top */
+        padding-top: 15vh;
+        /* Pushes it down a bit */
+    }
+
+    #credits-popup {
+        background: #3a3a3a;
+        color: white;
+        padding: 25px 35px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 550px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        position: relative;
+        border: 1px solid #555;
+    }
+
+    #close-credits-popup {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 2.5rem;
+        color: #ccc;
+        cursor: pointer;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    #close-credits-popup:hover {
+        color: white;
+        transform: scale(1.1);
+    }
+
+    #credits-popup h3 {
+        text-align: center;
+        font-size: 2rem;
+        margin-top: 0;
+        margin-bottom: 25px;
+        border-bottom: 2px solid orange;
+        padding-bottom: 10px;
+    }
+
+    #credits-popup .credit-person {
+        margin-bottom: 20px;
+    }
+
+    #credits-popup .credit-person h4 {
+        font-size: 1.4rem;
+        color: orange;
+        margin: 0 0 8px 0;
+    }
+
+    #credits-popup .credit-person p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin: 0;
+        color: #e0e0e0;
+    }
+
     @media (max-width: 768px) {
         .navbar {
             flex-wrap: wrap;
@@ -789,9 +861,9 @@
 
         <p class="updates-paragraph-text">
             <strong>Welcome to StrongdogXP!</strong><br>
-            This website is hosted by <a href="https://4simpleproblems.github.io/"
+            This website is being hosted by <a href="https://4simpleproblems.github.io/"
                 style="color: #6720BD; font-weight: bold; text-decoration: none;" target="_blank">4SP</a>. I have fixed
-            several bugs, and have worked with StrongdogXP to have this here today. So yeah, go nuts.
+            several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
         </p>
 
     </div>
@@ -830,6 +902,7 @@
             <a href="about.html" class="option-link">About | Bugs | Request Games</a>
             <a href="./save/index.html" class="option-link">Save manager</a>
             <a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
+            <a href="#" id="creditsBtn" class="option-link">Credits</a>
         </div>
     </div>
     <div class="custom-slide-menu" id="customSlideMenu" style="transform: translateX(-100%)">
@@ -869,6 +942,22 @@
             </div>
         </div>
     </div>
+
+    <div id="credits-overlay">
+        <div id="credits-popup">
+            <span id="close-credits-popup">&times;</span>
+            <h3>Credits</h3>
+            <div class="credit-person">
+                <h4>John P - Creator of StrongdogXP</h4>
+                <p>He downloaded, compiled and created Strongdog entirely.</p>
+            </div>
+            <div class="credit-person">
+                <h4>4SP</h4>
+                <p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         const altLinksEl = document.getElementById("alternate-links-container"),
             altLinksKeyEl = document.getElementById("alternate-links-key"),
@@ -1032,11 +1121,11 @@
                 gameLink = `./play/?id=${id}`,
                 normalized = normalizeGameName(name);
             return `
-        <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
-          <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
-          <figcaption>${name}</figcaption>
-        </a>
-      `;
+            <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
+              <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
+              <figcaption>${name}</figcaption>
+            </a>
+          `;
         }
         const allListElement = document.getElementById("allList");
         allListElement.innerHTML = games.map(g => getCardHTML(g)).join("");
@@ -1109,12 +1198,12 @@
                 newTab = window.open();
             if (!newTab) return;
             newTab.document.write(`
-            <html>
-              <body style="margin:0;height:100vh;">
-                <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
-              </body>
-            </html>
-          `),
+                    <html>
+                      <body style="margin:0;height:100vh;">
+                        <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
+                      </body>
+                    </html>
+                  `),
                 newTab.document.close();
         });
 
@@ -1321,6 +1410,48 @@
             document.body.appendChild(link);
         });
     </script>
+    <script>
+        // Credits Popup Functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const creditsBtn = document.getElementById('creditsBtn');
+            const creditsOverlay = document.getElementById('credits-overlay');
+            const closeCreditsPopup = document.getElementById('close-credits-popup');
+            const slideMenu = document.getElementById('slideMenu');
+
+            if (creditsBtn) {
+                creditsBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Close the sidebar
+                    if (slideMenu) {
+                        slideMenu.style.transform = 'translateX(-100%)';
+                    }
+                    // Show the credits popup
+                    if (creditsOverlay) {
+                        creditsOverlay.style.display = 'flex';
+                    }
+                });
+            }
+
+            const closePopup = () => {
+                if (creditsOverlay) {
+                    creditsOverlay.style.display = 'none';
+                }
+            };
+
+            if (closeCreditsPopup) {
+                closeCreditsPopup.addEventListener('click', closePopup);
+            }
+
+            if (creditsOverlay) {
+                // Close if clicking on the background overlay
+                creditsOverlay.addEventListener('click', (e) => {
+                    if (e.target === creditsOverlay) {
+                        closePopup();
+                    }
+                });
+            }
+        });
+    </script>
     <div style="
       position: absolute;
       bottom: 0;
@@ -1337,6 +1468,10 @@
         resources, school-friendly content, learning tools, interactive education, student
         access
     </div>
+    <script src="/firebase-config.js" defer></script>
+    <script src="/ban-enforcer.js" defer></script>
+    <script src="/url-changer.js" defer></script>
+    <script src="/panic-key.js" defer></script>
 </body>
 
 </html>
