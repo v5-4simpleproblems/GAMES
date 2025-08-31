@@ -267,7 +267,7 @@
             <h1 class="error-code">404</h1>
             <p class="error-message">Oops! The page you're looking for seems to have gotten lost in the digital cosmos.</p>
             <div class="button-container">
-                <a href="https://4simpleproblems.github.io/STRONGDOG/index.html" class="action-button">Go back to home</a>
+                <a href="https://4simpleproblems.github.io/STRONGDOG/index.html" class="action-button">Back to StrongdogXP</a>
                 <a href="https://4simpleproblems.github.io/logged-in/games.html" class="action-button">Back to 4SP</a>
             </div>
         </div>
@@ -275,7 +275,7 @@
 
     <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
         <div class="categories">
-            <a href="https://4simpleproblems.github.io/STRONGDOG/index.html" class="option-link">STRONGDOG Home</a>
+            <a href="https://4simpleproblems.github.io/STRONGDOG/index.html" class="option-link">Back to StrongdogXP</a>
             <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
             <a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
         </div>
@@ -305,7 +305,28 @@
         });
     </script>
     
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js" defer></script>
     <script src="../firebase-config.js" defer></script>
+
+    <!-- Login Check -->
+    <script defer>
+        // This script depends on the firebase SDKs and your firebase-config.js.
+        // The 'defer' attribute ensures they load and execute in the correct order.
+        firebase.auth().onAuthStateChanged(user => {
+            if (!user) {
+                console.log("No user is signed in. Redirecting to login page...");
+                // If the user is not logged in, redirect them to the specified login page.
+                window.location.replace('https://4simpleproblems.github.io/login.html');
+            } else {
+                console.log("User is signed in:", user.uid);
+                // If the user is signed in, they are allowed to see this page.
+            }
+        });
+    </script>
+
+    <!-- Other Site Scripts -->
     <script src="../ban-enforcer.js" defer></script>
     <script src="../url-changer.js" defer></script>
     <script src="../panic-key.js" defer></script>
