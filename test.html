@@ -9,7 +9,7 @@
     :root {
         --red: rgb(220, 53, 69);
         --green: rgb(40, 167, 69);
-        --ff: 'primary', Arial, sans-serif;
+        --ff: 'primary', sans-serif;
         --bg: #2e2e2e;
     }
 
@@ -34,12 +34,14 @@
         top: 0;
         z-index: 1000;
         position: relative;
+		font-family: var(--ff);
     }
 
     .search-container {
         display: flex;
         align-items: center;
         position: relative;
+		font-family: var(--ff);
     }
 
     .logo {
@@ -172,15 +174,18 @@
         color: white;
         transition: all 0.3s ease;
         box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+		font-family: var(--ff);
     }
 
     .search-bar::placeholder {
         color: rgba(255, 255, 255, 0.6);
+		font-family: var(--ff);
     }
 
     .search-bar:focus {
         outline: none;
         background-color: rgba(0, 0, 0, 0.6);
+		font-family: var(--ff);
     }
 
     .games-grid {
@@ -367,50 +372,6 @@
         margin: 40px 0;
         font-size: 2.5rem;
         text-shadow: none;
-    }
-
-    .alternate-links-container {
-        padding: 20px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 15px;
-        margin: 0 auto;
-        max-width: 900px;
-        background-color: #444444;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .alternate-link:last-child:nth-child(odd) {
-        grid-column: 1 / -1;
-    }
-
-    .alternate-link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 15px;
-        text-decoration: none;
-        color: #007bff;
-        background-color: #4e4e4e;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    }
-
-    .alternate-link:hover {
-        background-color: #444;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .alternate-link span:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        flex-grow: 1;
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-right: 10px;
     }
 
     .updates-paragraph-text {
@@ -751,7 +712,7 @@
         .search-bar {
             width: 90%;
             font-size: 0.9rem;
-			font-family: 'primary', Arial, sans-serif;
+			font-family: 'primary', sans-serif;
         }
 
         .slide-menu,
@@ -777,16 +738,6 @@
 
         .card figcaption {
             font-size: 0.9rem;
-        }
-
-        .alternate-links-container {
-            grid-template-columns: 1fr;
-            padding: 10px;
-            margin: 0 10px;
-        }
-
-        .alternate-link span:first-child {
-            font-size: 1rem;
         }
 
         .news-container {
@@ -887,13 +838,6 @@
     <div class="games-grid" id="favoritesGameList" style="display: none"></div>
     <h2 style="text-align: center"><strong>All</strong></h2>
     <div class="games-grid" id="allList"></div>
-    <h2 style="text-align: center"><strong>strongdogXP LLC</strong></h2>
-    <h2 class="alternate-links-title">Alternate Links</h2>
-    <div class="alternate-links-container" id="alternate-links-container"></div>
-    <h2 class="alternate-links-title">
-        Exclusive links available on the strongdogXP
-        <a href="https://discord.gg/ea4x95f7cH" style="color: #007bff">Discord server</a>!
-    </h2>
     <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
         <div class="categories">
             <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
@@ -956,41 +900,6 @@
         </div>
     </div>
 
-    <script>
-        const altLinksEl = document.getElementById("alternate-links-container"),
-            altLinksKeyEl = document.getElementById("alternate-links-key"),
-            altLinks = [
-                "wishlink.net",
-                "betterlives.info",
-                "itsmart.info",
-                "strongdog.de.com",
-                "mathcord.de.com",
-                "mathgames.de.com",
-                "unblockedmathgames.com",
-                "colute.net",
-                "chesstube.eu.com",
-                "hateroll.com",
-                "strongdogunblocked.github.io",
-                "weakcatxp.github.io",
-                "gametreexp.github.io",
-                "mathcordxp.github.io",
-                "strongdogxp.github.io",
-                "jman1593.github.io",
-                "strongdog-1.vercel.app",
-                "mathcord.com",
-                "strongdog.com",
-            ];
-        altLinks.forEach(link => {
-            const a = document.createElement("a");
-            a.classList.add("alternate-link"),
-                (a.href = "https://" + link),
-                (a.target = "_blank");
-            const linkText = document.createElement("span");
-            linkText.textContent = link;
-            a.appendChild(linkText),
-                altLinksEl.appendChild(a);
-        });
-    </script>
     <script type="module">
         import games from "./cards-data.js";
         import {
@@ -1019,6 +928,10 @@
                 console.error(`Error while fetching games: ${e}`);
             }
         }
+
+        // Create a map of games for fast lookups. This is more efficient than searching the array every time.
+        const gameMap = new Map(games.map(game => [normalizeGameName(game.name), game]));
+
         fetchTopGames();
 
         function displayTopGames(topData) {
@@ -1029,12 +942,17 @@
             while (foundCount < numTopGames && index < topData.length) {
                 const row = topData[index],
                     gameName = row[0],
-                    card = findMatchingCard(gameName);
-                if (card) {
-                    if (!displayed.has(gameName)) {
-                        topGameList.appendChild(card.cloneNode(true)),
-                            displayed.add(gameName),
-                            foundCount++;
+                    normalizedGameName = normalizeGameName(gameName);
+
+                if (!displayed.has(normalizedGameName)) {
+                    // Use the map to find the full game object.
+                    const gameData = gameMap.get(normalizedGameName);
+                    if (gameData) {
+                        // Generate the card HTML directly instead of searching the DOM for it.
+                        const cardHTML = getCardHTML(gameData);
+                        topGameList.insertAdjacentHTML('beforeend', cardHTML);
+                        displayed.add(normalizedGameName);
+                        foundCount++;
                     }
                 }
                 index++;
@@ -1046,14 +964,6 @@
                 .toLowerCase()
                 .replace(/\s+/g, "")
                 .replace(/[^a-z0-9]/g, "");
-        }
-
-        function findMatchingCard(gameName) {
-            const normalized = normalizeGameName(gameName),
-                allCards = document.querySelectorAll("#allList .card");
-            for (let card of allCards)
-                if (card.getAttribute("data-game-id") === normalized) return card;
-            return null;
         }
 
         function getPageNumberFromURL(url) {
@@ -1097,7 +1007,7 @@
                 const origin = window.location.origin,
                     newBase = `${origin}/strongdog${page}`;
                 (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
-                    (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
+                (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
             }
             return {
                 adjustedHref,
@@ -1118,15 +1028,88 @@
             } = getAdjustedUrls(href, imgSrc, page),
                 gameLink = `./play/?id=${id}`,
                 normalized = normalizeGameName(name);
+
+            // MODIFIED: Added decoding="async" and explicit width/height attributes.
+            // These additions help the browser render more smoothly by preventing layout shifts
+            // and decoding images off the main thread.
             return `
-            <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
-              <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
-              <figcaption>${name}</figcaption>
-            </a>
-          `;
+                <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
+                    <img src="${adjustedImgSrc}" alt="${name}" loading="lazy" decoding="async" width="120" height="120">
+                    <figcaption>${name}</figcaption>
+                </a>
+              `;
         }
+
         const allListElement = document.getElementById("allList");
-        allListElement.innerHTML = games.map(g => getCardHTML(g)).join("");
+        
+        // --- START: New efficient image loading logic ---
+
+        // To handle a large number of games without lag, we implement "virtual scrolling".
+        // Instead of adding all game cards to the page at once (which is slow),
+        // we load them in batches as the user scrolls down. This keeps the page fast and responsive.
+        // We use the IntersectionObserver API to detect when the user is nearing the end of the loaded content.
+
+        // 1. Configuration for virtual scrolling
+        const GAMES_PER_BATCH = 40; // The number of games to load each time the user scrolls down.
+        let currentGameIndex = 0; // A counter to track which games have been loaded so far.
+
+        // 2. Function to load and display the next batch of games
+        function loadMoreGames() {
+            // If we've already loaded all the games, stop the observer to save resources.
+            if (currentGameIndex >= games.length) {
+                if (observer) {
+                    observer.disconnect();
+                }
+                return;
+            }
+
+            // Using a DocumentFragment is much faster for performance than appending elements one by one.
+            const fragment = document.createDocumentFragment();
+            const endIndex = Math.min(currentGameIndex + GAMES_PER_BATCH, games.length);
+
+            // Create the HTML for the next batch of games
+            for (let i = currentGameIndex; i < endIndex; i++) {
+                const game = games[i];
+                const cardHTML = getCardHTML(game);
+                // A temporary element is needed to convert the HTML string into a real DOM node
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = cardHTML.trim();
+                fragment.appendChild(tempContainer.firstChild);
+            }
+
+            // Append the entire batch of new game cards to the grid in a single operation.
+            allListElement.appendChild(fragment);
+            // Update our counter for the next batch.
+            currentGameIndex = endIndex;
+        }
+
+        // 3. Set up the Intersection Observer to trigger loading more games.
+        // This observer will watch a "sentinel" element at the bottom of the page.
+        const sentinel = document.createElement('div');
+        sentinel.id = 'sentinel';
+        sentinel.style.height = '10px'; // Give it a small height to ensure it can be observed.
+        document.body.appendChild(sentinel); // Add the sentinel to the end of the page body.
+
+        const observerOptions = {
+            root: null, // Use the browser viewport as the scroll area.
+            rootMargin: '300px', // Start loading when the user scrolls within 300px of the bottom.
+            threshold: 0.1 // Trigger when at least 10% of the sentinel is visible.
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            // This callback is triggered whenever the sentinel's visibility changes.
+            if (entries[0].isIntersecting) {
+                loadMoreGames(); // If the sentinel is on-screen, load the next batch of games.
+            }
+        }, observerOptions);
+
+        // Start observing the sentinel element.
+        observer.observe(sentinel);
+
+        // Load the very first batch of games when the page loads.
+        loadMoreGames();
+
+        // --- END: New efficient image loading logic ---
 
         const searchInput = document.getElementById("searchInput");
         searchInput.placeholder = `Search ${games.length} games...`;
@@ -1196,12 +1179,12 @@
                 newTab = window.open();
             if (!newTab) return;
             newTab.document.write(`
-                    <html>
-                      <body style="margin:0;height:100vh;">
-                        <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
-                      </body>
-                    </html>
-                  `),
+                            <html>
+                              <body style="margin:0;height:100vh;">
+                                <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
+                              </body>
+                            </html>
+                          `),
                 newTab.document.close();
         });
 
@@ -1385,28 +1368,6 @@
                 document.documentElement.appendChild(f);
             }
         }
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const link = document.createElement("a");
-            link.href = "./privacy-policy.html";
-            link.textContent = "Privacy Policy";
-            link.style.cssText = `
-        display: block;
-        text-align: center;
-        margin: 16px 0;
-        font-size: 0.875rem;
-        color: #007bff;
-        text-decoration: none;
-        font-family: sans-serif;
-      `;
-            link.addEventListener(
-                "mouseenter",
-                () => (link.style.textDecoration = "underline")
-            );
-            link.addEventListener("mouseleave", () => (link.style.textDecoration = "none"));
-            document.body.appendChild(link);
-        });
     </script>
     <script>
         // Credits Popup Functionality
