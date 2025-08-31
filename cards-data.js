@@ -273,7 +273,6 @@ export default [
   { href: './html/smashkarts/index.html', imgSrc: 'smashkarts.jpg', name: 'smashkarts' , 'page': 3, 'id': 752 },
   { href: './html/taming.io/index.html', imgSrc: 'taming.io.jpg', name: 'taming.io' , 'page': 3, 'id': 750 },
   { href: './html/new 1v1.lol/index.html', imgSrc: '1v1.lol.jpg', name: 'new 1v1.lol' , 'page': 3, 'id': 748 },
-  { href: './html/nova AI/index.html', imgSrc: 'Nova AI.png', name: 'Nova AI' , 'page': 3, 'id': 762 },
   { href: './html/Dinogen arena/index.html', imgSrc: 'Dinogen arena.jpg', name: 'Dinogen arena' , 'page': 3, 'id': 741 },
   { href: './html/five nights at winstons/index.html', imgSrc: 'five nights at winstons.jpg', name: 'five nights at winstons' , 'page': 3, 'id': 742 },
   { href: './html/amazing strange rope police/index.html', imgSrc: 'amazing strange rope police.jpg', name: 'amazing strange rope police' , 'page': 3, 'id': 733 },
