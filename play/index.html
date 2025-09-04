@@ -22,6 +22,11 @@
     <script src="../ban-enforcer.js"></script>
     <script src="../url-changer.js"></script>
     <style>
+        @font-face {
+            font-family: 'PrimaryFont';
+            /* You'll need to provide the actual font file here */
+            /* src: url('fonts/primary.woff') format('woff'); */
+        }
 
         :root {
             --ff: 'PrimaryFont', Arial, sans-serif;
@@ -247,9 +252,11 @@
             color: #ff8c00;
         }
 
+        /* --- New/updated styles for fullscreen animation --- */
         .game-area {
             flex-grow: 1;
             max-width: 75%;
+            /* Add a transition for the zoom effect */
             transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
@@ -262,6 +269,8 @@
             border-radius: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
             contain: strict;
+            /* Add a transition for the border-radius and box-shadow */
+            transition: border-radius 0.7s, box-shadow 0.7s;
         }
 
         .game-container iframe {
@@ -340,7 +349,7 @@
             opacity: 0;
         }
 
-        /* Zoom-in effect for game container */
+        /* Final state for the game area during fullscreen zoom */
         .game-area-fullscreen {
             position: fixed;
             top: 0;
@@ -563,13 +572,6 @@
 
                 const gameTitleElement = document.getElementById("gameTitle");
                 gameTitleElement.textContent = title;
-
-                const savedTitle = localStorage.getItem('savedTitle');
-                if (savedTitle) {
-                    document.title = savedTitle;
-                } else {
-                    document.title = "4SP - STRONGDOG";
-                }
             }
 
             let selectedGame = null;
@@ -598,11 +600,11 @@
                     const gameArea = document.getElementById('gameArea');
                     if (!gameArea) return;
 
-                    // Trigger the zoom animation before requesting fullscreen
-                    gameArea.classList.add('game-area-fullscreen');
+                    // Apply the fullscreen classes to start the visual transition
                     document.body.classList.add('performance-mode-active');
+                    gameArea.classList.add('game-area-fullscreen');
 
-                    // A slight delay to allow the animation to start before the browser takes over
+                    // A slight delay to allow the CSS transition to start before the browser takes over
                     setTimeout(() => {
                         if (gameArea.requestFullscreen) gameArea.requestFullscreen();
                         else if (gameArea.webkitRequestFullscreen) gameArea.webkitRequestFullscreen();
@@ -614,8 +616,13 @@
                     const gameArea = document.getElementById('gameArea');
                     const isFullscreen = !!document.fullscreenElement;
 
-                    // Remove the fullscreen classes and re-enable visibility on exit
-                    if (!isFullscreen) {
+                    if (isFullscreen) {
+                        const iframe = document.querySelector('#gameContainer iframe');
+                        if (iframe) {
+                            iframe.focus();
+                        }
+                    } else {
+                        // When exiting fullscreen, remove the classes to trigger the zoom-out animation
                         gameArea.classList.remove('game-area-fullscreen');
                         document.body.classList.remove('performance-mode-active');
                     }
