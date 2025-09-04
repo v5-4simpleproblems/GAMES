@@ -20,12 +20,8 @@
     <script src="../firebase-config.js"></script>
     <script src="../panic-key.js"></script>
     <script src="../ban-enforcer.js"></script>
+    <script src="../url-changer.js"></script>
     <style>
-        @font-face {
-            font-family: 'PrimaryFont';
-            /* You'll need to provide the actual font file here */
-            /* src: url('fonts/primary.woff') format('woff'); */
-        }
 
         :root {
             --ff: 'PrimaryFont', Arial, sans-serif;
@@ -41,7 +37,6 @@
             background-color: var(--bg);
             color: #e0e0e0;
             overflow-x: hidden;
-            /* The "will-change: transform;" property that was here has been removed to fix the button positioning. */
         }
 
         .navbar {
@@ -255,6 +250,7 @@
         .game-area {
             flex-grow: 1;
             max-width: 75%;
+            transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .game-container {
@@ -284,6 +280,7 @@
             z-index: 1004;
             display: flex;
             gap: 10px;
+            transition: opacity 0.3s ease;
         }
 
         .overlay-btn {
@@ -331,8 +328,35 @@
             text-align: center;
         }
 
-        .performance-mode-hidden {
+        /* Fullscreen styles */
+        .performance-mode-active #gameTitle,
+        .performance-mode-active .navbar,
+        .performance-mode-active .recommended-games-section,
+        .performance-mode-active #fullscreenDisclaimer {
             display: none !important;
+        }
+
+        .performance-mode-active #gameOverlayButtons {
+            opacity: 0;
+        }
+
+        /* Zoom-in effect for game container */
+        .game-area-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            z-index: 1005;
+        }
+
+        .game-area-fullscreen .game-container {
+            width: 100%;
+            padding-top: 0;
+            height: 100vh;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         @media (max-width: 900px) {
@@ -399,7 +423,7 @@
             <div class="card-container" id="cardContainer"></div>
         </div>
 
-        <div class="game-area">
+        <div class="game-area" id="gameArea">
             <div class="game-container" id="gameContainer">
 
             </div>
@@ -571,34 +595,29 @@
                 embedGame(embedPath, selectedGame.name);
 
                 fullscreenButton.addEventListener("click", function () {
-                    const gameContainer = document.getElementById('gameContainer');
-                    if (!gameContainer) return;
-                    if (gameContainer.requestFullscreen) gameContainer.requestFullscreen();
-                    else if (gameContainer.webkitRequestFullscreen) gameContainer.webkitRequestFullscreen();
-                    else if (gameContainer.msRequestFullscreen) gameContainer.msRequestFullscreen();
+                    const gameArea = document.getElementById('gameArea');
+                    if (!gameArea) return;
+
+                    // Trigger the zoom animation before requesting fullscreen
+                    gameArea.classList.add('game-area-fullscreen');
+                    document.body.classList.add('performance-mode-active');
+
+                    // A slight delay to allow the animation to start before the browser takes over
+                    setTimeout(() => {
+                        if (gameArea.requestFullscreen) gameArea.requestFullscreen();
+                        else if (gameArea.webkitRequestFullscreen) gameArea.webkitRequestFullscreen();
+                        else if (gameArea.msRequestFullscreen) gameArea.msRequestFullscreen();
+                    }, 50);
                 });
 
                 document.addEventListener('fullscreenchange', () => {
+                    const gameArea = document.getElementById('gameArea');
                     const isFullscreen = !!document.fullscreenElement;
-                    document.body.classList.toggle('performance-mode-active', isFullscreen);
 
-                    const elementsToToggle = [
-                        document.querySelector('.navbar'),
-                        document.getElementById('gameTitle'),
-                        document.querySelector('.recommended-games-section'),
-                        document.getElementById('fullscreenDisclaimer'),
-                        document.getElementById('gameOverlayButtons')
-                    ];
-
-                    elementsToToggle.forEach(el => {
-                        if (el) el.classList.toggle('performance-mode-hidden', isFullscreen);
-                    });
-
-                    if (isFullscreen) {
-                        const iframe = document.querySelector('#gameContainer iframe');
-                        if (iframe) {
-                           iframe.focus();
-                        }
+                    // Remove the fullscreen classes and re-enable visibility on exit
+                    if (!isFullscreen) {
+                        gameArea.classList.remove('game-area-fullscreen');
+                        document.body.classList.remove('performance-mode-active');
                     }
                 });
 
