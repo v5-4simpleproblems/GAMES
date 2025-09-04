@@ -256,9 +256,9 @@
             flex-grow: 1;
             max-width: 75%;
             position: relative;
-            /* Added for positioning the fullscreen element */
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            /* Smoother transition */
+            /* This is the key. Transform handles the animation. */
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55), border-radius 0.6s ease;
+            z-index: 10;
         }
 
         .game-container {
@@ -336,71 +336,22 @@
             text-align: center;
         }
 
-        /* Styles for performance mode and fullscreen animation */
-        body.performance-mode-active #gameTitle,
-        body.performance-mode-active .navbar,
-        body.performance-mode-active .recommended-games-section,
-        body.performance-mode-active #fullscreenDisclaimer {
+        /* Performance mode and fullscreen animation */
+        .performance-mode-active #gameTitle,
+        .performance-mode-active .navbar,
+        .performance-mode-active .recommended-games-section,
+        .performance-mode-active #fullscreenDisclaimer {
             display: none !important;
         }
 
-        body.performance-mode-active #gameOverlayButtons {
+        .performance-mode-active .game-overlay-buttons {
             opacity: 0;
+            pointer-events: none;
         }
 
-        /* This is the key to the zoom animation. */
-        .game-fullscreen {
-            position: fixed;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) scale(1) !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: none !important;
-            z-index: 1005;
-        }
-
-        .game-fullscreen .game-container {
-            width: 100% !important;
-            padding-top: 0 !important;
-            height: 100% !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-        }
-
-
-        @media (max-width: 900px) {
-            .content-wrapper {
-                flex-direction: column-reverse;
-                align-items: center;
-            }
-
-            .game-area {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            .recommended-games-section {
-                width: 100%;
-                max-width: 500px;
-                margin-bottom: 30px;
-            }
-
-            .card-container {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .card {
-                width: 150px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .slide-menu {
-                width: 280px;
-            }
+        /* The fullscreen state with border-radius */
+        .game-area.fullscreen {
+            border-radius: 0;
         }
     </style>
 </head>
@@ -597,27 +548,36 @@
                 const embedPath = await getEmbedPath(adjustedHref, selectedGame.href, page);
                 embedGame(embedPath, selectedGame.name);
 
-                fullscreenButton.addEventListener("click", function () {
+                fullscreenButton.addEventListener("click", () => {
                     const gameArea = document.getElementById('gameArea');
-                    if (!gameArea) return;
-
-                    // Apply the fullscreen class and performance mode class to start the zoom animation
-                    gameArea.classList.add('game-fullscreen');
+                    const rect = gameArea.getBoundingClientRect();
+                    
+                    // Set the transform origin to the center of the viewport
+                    gameArea.style.transformOrigin = `${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px`;
+                    
+                    // Calculate the new transform
+                    const scaleX = window.innerWidth / rect.width;
+                    const scaleY = window.innerHeight / rect.height;
+                    
+                    // Apply fullscreen styles and transform
                     document.body.classList.add('performance-mode-active');
+                    gameArea.classList.add('fullscreen');
+                    gameArea.style.transform = `scale(${scaleX}, ${scaleY})`;
+                    
+                    // A small delay to ensure the animation starts before native fullscreen
+                    setTimeout(() => {
+                        gameArea.requestFullscreen();
+                    }, 50);
                 });
 
                 document.addEventListener('fullscreenchange', () => {
-                    const gameArea = document.getElementById('gameArea');
                     const isFullscreen = !!document.fullscreenElement;
-                    if (isFullscreen) {
-                        const iframe = document.querySelector('#gameContainer iframe');
-                        if (iframe) {
-                            iframe.focus();
-                        }
-                    } else {
-                        // When exiting fullscreen, remove the classes to trigger the zoom-out animation
-                        gameArea.classList.remove('game-fullscreen');
+
+                    if (!isFullscreen) {
+                        // On exit, remove the transform and fullscreen class
+                        gameArea.style.transform = 'none';
                         document.body.classList.remove('performance-mode-active');
+                        gameArea.classList.remove('fullscreen');
                     }
                 });
 
