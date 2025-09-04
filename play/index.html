@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-        gtag("config", "G-0YLTCV2MMS");
-    </script>
+    
     <title>4SP - STRONGDOG</title>
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -252,13 +241,10 @@
             color: #ff8c00;
         }
 
+        /* No animation properties for .game-area */
         .game-area {
             flex-grow: 1;
             max-width: 75%;
-            position: relative;
-            /* This is the key. Transform handles the animation. */
-            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55), border-radius 0.6s ease;
-            z-index: 10;
         }
 
         .game-container {
@@ -288,7 +274,6 @@
             z-index: 1004;
             display: flex;
             gap: 10px;
-            transition: opacity 0.3s ease;
         }
 
         .overlay-btn {
@@ -336,22 +321,66 @@
             text-align: center;
         }
 
-        /* Performance mode and fullscreen animation */
+        /* Performance mode for instant hide */
         .performance-mode-active #gameTitle,
         .performance-mode-active .navbar,
         .performance-mode-active .recommended-games-section,
-        .performance-mode-active #fullscreenDisclaimer {
+        .performance-mode-active #fullscreenDisclaimer,
+        .performance-mode-active .game-overlay-buttons {
             display: none !important;
         }
 
-        .performance-mode-active .game-overlay-buttons {
-            opacity: 0;
-            pointer-events: none;
+        /* Fullscreen styles for instant, no-animation resizing */
+        .game-area.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            z-index: 1005;
         }
 
-        /* The fullscreen state with border-radius */
-        .game-area.fullscreen {
+        .game-area.fullscreen .game-container {
+            width: 100%;
+            padding-top: 0;
+            height: 100%;
             border-radius: 0;
+            box-shadow: none;
+        }
+
+        @media (max-width: 900px) {
+            .content-wrapper {
+                flex-direction: column-reverse;
+                align-items: center;
+            }
+
+            .game-area {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .recommended-games-section {
+                width: 100%;
+                max-width: 500px;
+                margin-bottom: 30px;
+            }
+
+            .card-container {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .card {
+                width: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide-menu {
+                width: 280px;
+            }
         }
     </style>
 </head>
@@ -532,6 +561,7 @@
             const fullscreenButton = document.getElementById("fullscreenButton");
             const redirectMessage = document.getElementById("redirectMessage");
             const manualRedirectLink = document.getElementById("manualRedirectLink");
+            const gameArea = document.getElementById('gameArea');
 
             if (gameId) {
                 const idNum = parseInt(gameId, 10);
@@ -549,35 +579,16 @@
                 embedGame(embedPath, selectedGame.name);
 
                 fullscreenButton.addEventListener("click", () => {
-                    const gameArea = document.getElementById('gameArea');
-                    const rect = gameArea.getBoundingClientRect();
-                    
-                    // Set the transform origin to the center of the viewport
-                    gameArea.style.transformOrigin = `${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px`;
-                    
-                    // Calculate the new transform
-                    const scaleX = window.innerWidth / rect.width;
-                    const scaleY = window.innerHeight / rect.height;
-                    
-                    // Apply fullscreen styles and transform
                     document.body.classList.add('performance-mode-active');
                     gameArea.classList.add('fullscreen');
-                    gameArea.style.transform = `scale(${scaleX}, ${scaleY})`;
-                    
-                    // A small delay to ensure the animation starts before native fullscreen
-                    setTimeout(() => {
-                        gameArea.requestFullscreen();
-                    }, 50);
+                    gameArea.requestFullscreen();
                 });
 
                 document.addEventListener('fullscreenchange', () => {
                     const isFullscreen = !!document.fullscreenElement;
-
                     if (!isFullscreen) {
-                        // On exit, remove the transform and fullscreen class
-                        gameArea.style.transform = 'none';
-                        document.body.classList.remove('performance-mode-active');
                         gameArea.classList.remove('fullscreen');
+                        document.body.classList.remove('performance-mode-active');
                     }
                 });
 
