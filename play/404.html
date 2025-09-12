@@ -11,6 +11,8 @@
         --green: rgb(40, 167, 69);
         --ff: 'primary', sans-serif;
         --bg: #2e2e2e;
+        /* Added purple variable for consistency */
+        --purple: #6720BD;
     }
 
     body {
@@ -58,8 +60,9 @@
     }
 
     .logo .xp {
-        color: orange;
-        text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+        /* UPDATED: from orange to purple */
+        color: var(--purple);
+        text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
     }
 
     .menu-icon {
@@ -127,8 +130,9 @@
     }
 
     .categories>a:hover {
-        background: linear-gradient(45deg, #ffa500, #ff8433);
-        box-shadow: 0 6px 20px rgba(255, 98, 0, 0.5);
+        /* UPDATED: from orange gradient to purple gradient */
+        background: linear-gradient(45deg, #6720BD, #8a2be2);
+        box-shadow: 0 6px 20px rgba(103, 32, 189, 0.5);
     }
 
     .categories>a::after {
@@ -167,12 +171,13 @@
         font-size: 12rem;
         font-weight: 700;
         margin: 0;
-        color: #f39c12;
-        /* Static glow, no animation */
+        /* UPDATED: from orange to purple */
+        color: var(--purple);
+        /* UPDATED: from orange glow to purple glow */
         text-shadow:
-            0 0 8px rgba(255, 140, 0, 0.8),
-            0 0 20px rgba(255, 140, 0, 0.6),
-            0 0 40px rgba(255, 140, 0, 0.4);
+            0 0 8px rgba(103, 32, 189, 0.8),
+            0 0 20px rgba(103, 32, 189, 0.6),
+            0 0 40px rgba(103, 32, 189, 0.4);
     }
 
     .error-message {
@@ -190,7 +195,8 @@
 
     .action-button {
         padding: 12px 25px;
-        background: linear-gradient(45deg, #ffa500, #ff8433);
+        /* UPDATED: from orange gradient to purple gradient */
+        background: linear-gradient(45deg, #6720BD, #8a2be2);
         border: none;
         border-radius: 15px;
         text-decoration: none;
@@ -199,12 +205,14 @@
         font-family: var(--ff);
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(255, 98, 0, 0.4);
+        /* UPDATED: from orange shadow to purple shadow */
+        box-shadow: 0 4px 15px rgba(103, 32, 189, 0.4);
     }
 
     .action-button:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(255, 98, 0, 0.6);
+        /* UPDATED: from orange shadow to purple shadow */
+        box-shadow: 0 6px 20px rgba(103, 32, 189, 0.6);
     }
     
 
@@ -305,12 +313,10 @@
         });
     </script>
     
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js" defer></script>
     <script src="../firebase-config.js" defer></script>
 
-    <!-- Login Check -->
     <script defer>
         // This script depends on the firebase SDKs and your firebase-config.js.
         // The 'defer' attribute ensures they load and execute in the correct order.
@@ -326,7 +332,6 @@
         });
     </script>
 
-    <!-- Other Site Scripts -->
     <script src="../ban-enforcer.js" defer></script>
     <script src="../url-changer.js" defer></script>
     <script src="../panic-key.js" defer></script>
