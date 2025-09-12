@@ -20,6 +20,8 @@
         :root {
             --ff: 'PrimaryFont', Arial, sans-serif;
             --bg: #2e2e2e;
+            /* Added purple variable for consistency */
+            --purple: #6720BD;
         }
 
         /* This rule hides the body by default. The auth gate script will make it visible only for logged-in users. */
@@ -60,8 +62,9 @@
         }
 
         .logo .xp {
-            color: orange;
-            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+            /* UPDATED: from orange to purple */
+            color: var(--purple);
+            text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
         }
 
         .menu-icon {
@@ -118,8 +121,9 @@
         }
 
         .categories>a:hover {
-            background: linear-gradient(45deg, #ffa500, #ff8433);
-            box-shadow: 0 6px 20px rgba(255, 98, 0, 0.5);
+            /* UPDATED: from orange gradient to purple gradient */
+            background: linear-gradient(45deg, #6720BD, #8a2be2);
+            box-shadow: 0 6px 20px rgba(103, 32, 189, 0.5);
         }
 
         .categories>a::after {
@@ -238,7 +242,8 @@
         .card figcaption {
             padding: 10px;
             font-size: 14px;
-            color: #ff8c00;
+            /* UPDATED: from orange to purple */
+            color: var(--purple);
         }
 
         /* No animation properties for .game-area */
@@ -311,7 +316,8 @@
 
         #redirectMessage h2,
         #gameTitle {
-            color: #ff8c00;
+            /* UPDATED: from orange to purple */
+            color: var(--purple);
         }
 
         #gameTitle {
@@ -424,7 +430,7 @@
 
     <div class="game-overlay-buttons" id="gameOverlayButtons">
         <button id="fullscreenButton" class="overlay-btn" title="Fullscreen">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none"
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
                 </path>
