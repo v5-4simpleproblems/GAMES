@@ -36,14 +36,14 @@
         top: 0;
         z-index: 1000;
         position: relative;
-        font-family: var(--ff);
+		font-family: var(--ff);
     }
 
     .search-container {
         display: flex;
         align-items: center;
         position: relative;
-        font-family: var(--ff);
+		font-family: var(--ff);
     }
 
     .logo {
@@ -156,7 +156,7 @@
         width: 500px;
         height: 500px;
     }
-
+    
     span.new-feature-tag {
         /* UPDATED: from orange to purple */
         background: var(--purple);
@@ -164,8 +164,7 @@
         padding: 0.3rem 0.6rem;
         margin-left: 1rem;
         font-size: 0.7rem;
-        color: white;
-        /* Changed from black for better contrast */
+        color: white; /* Changed from black for better contrast */
         text-transform: uppercase;
         box-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
     }
@@ -180,18 +179,18 @@
         color: white;
         transition: all 0.3s ease;
         box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-        font-family: var(--ff);
+		font-family: var(--ff);
     }
 
     .search-bar::placeholder {
         color: rgba(255, 255, 255, 0.6);
-        font-family: var(--ff);
+		font-family: var(--ff);
     }
 
     .search-bar:focus {
         outline: none;
         background-color: rgba(0, 0, 0, 0.6);
-        font-family: var(--ff);
+		font-family: var(--ff);
     }
 
     .games-grid {
@@ -208,7 +207,6 @@
     }
 
     @keyframes pulse {
-
         0%,
         100% {
             background: #3e3e3e;
@@ -382,14 +380,12 @@
     }
 
     .updates-paragraph-text {
-        color: rgba(0, 0, 0, 0.9);
-        /* Black text with 10% transparency */
-        background: linear-gradient(156deg, #c3a1ff, #e6d4ff, #ab87ff, #d8b8ff);
-        /* Shiny light purple gradient */
+        color: black;
+        background-color: #a83632;
+        background: linear-gradient(156deg, #d1c4e9, #e6e6fa, #d8bfd8, #e0b0ff);
         padding: 20px;
         border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(195, 161, 255, 0.5);
-        /* Matching purple shadow */
+        box-shadow: 0 10px 25px rgba(209, 196, 233, 0.5);
         font-size: 1.1rem;
         text-align: center;
         max-width: 850px;
@@ -726,7 +722,7 @@
         .search-bar {
             width: 90%;
             font-size: 0.9rem;
-            font-family: 'primary', sans-serif;
+			font-family: 'primary', sans-serif;
         }
 
         .slide-menu,
@@ -766,14 +762,12 @@
 </style>
 
 <head>
-        <title>4SP - STRONGDOG</title>
-       
+    <title>4SP - STRONGDOG</title>
     <meta charset="UTF-8" />
-       
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-       
-    <meta name="keywords"         content="educational platform, learning resources, academic tools, educational games, student resources, school-friendly content, learning tools, interactive education, student access" />
-        <script type="application/ld+json">
+    <meta name="keywords"
+        content="educational platform, learning resources, academic tools, educational games, student resources, school-friendly content, learning tools, interactive education, student access" />
+    <script type="application/ld+json">
         {
             "@context": "https://schema.org",
             "@graph": [{
@@ -811,110 +805,112 @@
             ]
         }
     </script>
-       
     <link rel="icon" type="image/x-icon" href="img/favicon.ico" id="faviconLink" />
 </head>
 
 <body>
-        <div class="navbar">
-                <div class="menu-icon" id="menuIcon">☰</div>
-                <a href="index.html" class="logo">strongdog<span class="xp">XP</span></a>
-                <div class="search-container">
-                        <input type="text" class="search-bar" placeholder="Search for games…" id="searchInput"                 autocomplete="off" />
-                        <div class="search-results" id="searchResults"></div>
-                    </div>
-            </div>
-        <div class="updates-text-container">
+    <div class="navbar">
+        <div class="menu-icon" id="menuIcon">☰</div>
+        <a href="index.html" class="logo">strongdog<span class="xp">XP</span></a>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search for games…" id="searchInput"
+                autocomplete="off" />
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+    <div class="updates-text-container">
 
-                <p class="updates-paragraph-text">
-                        <strong>Welcome to StrongdogXP!</strong><br>
-                        This website is being hosted by <a href="https://4simpleproblems.github.io/"                 style="color: #6720BD; font-weight: bold; text-decoration: none;" target="_blank">4SP</a>. I have fixed
-                        several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
-                    </p>
+        <p class="updates-paragraph-text">
+            <strong>Welcome to StrongdogXP!</strong><br>
+            This website is being hosted by <a href="https://4simpleproblems.github.io/"
+                style="color: #6720BD; font-weight: bold; text-decoration: none;" target="_blank">4SP</a>. I have fixed
+            several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
+        </p>
 
-            </div>
-        <div class="modal" id="popupModal">
-                <div class="modal-content">
-                        <span class="modal-close" id="closeModal">×</span>
-                        <p>
-                                The strongdog Discord server is a place for strongdog users to chill, request
-                                ideas, talk with developers, and have fun!
-                                <a href="https://discord.gg/ea4x95f7cH" target="_blank">Join here</a>.
-                            </p>
-                    </div>
-            </div>
-        <h2 id="topGameHeader" style="text-align: center">
-                <strong>Top 20</strong>
-            </h2>
-        <div class="games-grid" id="topGameList"></div>
-        <div class="section-header" id="favoritesHeader" style="display: none">
-                <h2 style="text-align: center"><strong>Favorites</strong></h2>
-            </div>
-        <div class="games-grid" id="favoritesGameList" style="display: none"></div>
-        <h2 style="text-align: center"><strong>All</strong></h2>
-        <div class="games-grid" id="allList"></div>
-        <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
-                <div class="categories">
-                        <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
-                        <a href="#" id="blockLanschool" class="option-link">Open in about:blank</a>
-                        <a href="./save/index.html" class="option-link">Save manager</a>
-                        <a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
-                        <a href="#" id="creditsBtn" class="option-link">Credits</a>
-                    </div>
-            </div>
-        <div class="custom-slide-menu" id="customSlideMenu" style="transform: translateX(-100%)">
-                <div class="custom-options" style="padding: 20px">
-                        <div class="toggle-option" style="margin-bottom: 10px">
-                                <label for="top20Toggle">Show Top 20</label>
-                                <input type="checkbox" id="top20Toggle" checked />
-                            </div>
-                        <div class="toggle-option" style="margin-bottom: 10px">
-                                <label for="favoritesToggle">Show Favorites</label>
-                                <input type="checkbox" id="favoritesToggle" />
-                            </div>
-                        <div class="slider-option" style="margin-bottom: 10px">
-                                <label for="cardSizeSlider" style="color: #fff; display: block; margin-bottom: 5px">Card Size
-                                        Adjustment</label>
-                                <input type="range" id="cardSizeSlider" min="-100" max="100" value="0" step="1" style="width: 100%" />
-                                <div style="text-align: center; color: #fff; margin-top: 5px">
-                                        Size: <span id="cardSizeValue">0</span>
-                                    </div>
-                            </div>
-              _B`ack to 4SP`>          <div class="custom-option" style="margin-bottom: 10px">
-                                <label for="customTitleInput" style="color: #fff; display: block; margin-bottom: 5px">Custom
-                                        Title</label>
-                                <input type="text" id="customTitleInput" style="width: 100%; padding: 5px" value="strongdog XP" />
-                                <button id="resetTitleBtn" style="margin-top: 5px; padding: 5px 10px">
-                                        Reset Title
-                                    </button>
-                            </div>
-                        <div class="custom-option" style="margin-bottom: 10px">
-                                <label for="customFaviconInput" style="color: #fff; display: block; margin-bottom: 5px">Custom Favicon
-                                        URL</label>
-                                <input type="text" id="customFaviconInput" style="width: 100%; padding: 5px"                     value="img/favicon.ico" />
-                                <button id="resetFaviconBtn" style="margin-top: 5px; padding: 5px 10px">
-                                        Reset Favicon
-                                    </button>
-                            </div>
-                    </div>
-            </div>
+    </div>
+    <div class="modal" id="popupModal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeModal">×</span>
+            <p>
+                The strongdog Discord server is a place for strongdog users to chill, request
+                ideas, talk with developers, and have fun!
+                <a href="https://discord.gg/ea4x95f7cH" target="_blank">Join here</a>.
+            </p>
+        </div>
+    </div>
+    <h2 id="topGameHeader" style="text-align: center">
+        <strong>Top 20</strong>
+    </h2>
+    <div class="games-grid" id="topGameList"></div>
+    <div class="section-header" id="favoritesHeader" style="display: none">
+        <h2 style="text-align: center"><strong>Favorites</strong></h2>
+    </div>
+    <div class="games-grid" id="favoritesGameList" style="display: none"></div>
+    <h2 style="text-align: center"><strong>All</strong></h2>
+    <div class="games-grid" id="allList"></div>
+    <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
+        <div class="categories">
+            <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
+            <a href="#" id="blockLanschool" class="option-link">Open in about:blank</a>
+            <a href="./save/index.html" class="option-link">Save manager</a>
+            <a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
+            <a href="#" id="creditsBtn" class="option-link">Credits</a>
+        </div>
+    </div>
+    <div class="custom-slide-menu" id="customSlideMenu" style="transform: translateX(-100%)">
+        <div class="custom-options" style="padding: 20px">
+            <div class="toggle-option" style="margin-bottom: 10px">
+                <label for="top20Toggle">Show Top 20</label>
+                <input type="checkbox" id="top20Toggle" checked />
+            </div>
+            <div class="toggle-option" style="margin-bottom: 10px">
+                <label for="favoritesToggle">Show Favorites</label>
+                <input type="checkbox" id="favoritesToggle" />
+            </div>
+            <div class="slider-option" style="margin-bottom: 10px">
+                <label for="cardSizeSlider" style="color: #fff; display: block; margin-bottom: 5px">Card Size
+                    Adjustment</label>
+                <input type="range" id="cardSizeSlider" min="-100" max="100" value="0" step="1" style="width: 100%" />
+                <div style="text-align: center; color: #fff; margin-top: 5px">
+                    Size: <span id="cardSizeValue">0</span>
+                </div>
+            </div>
+            <div class="custom-option" style="margin-bottom: 10px">
+                <label for="customTitleInput" style="color: #fff; display: block; margin-bottom: 5px">Custom
+                    Title</label>
+                <input type="text" id="customTitleInput" style="width: 100%; padding: 5px" value="strongdog XP" />
+                <button id="resetTitleBtn" style="margin-top: 5px; padding: 5px 10px">
+                    Reset Title
+                </button>
+            </div>
+            <div class="custom-option" style="margin-bottom: 10px">
+                <label for="customFaviconInput" style="color: #fff; display: block; margin-bottom: 5px">Custom Favicon
+                    URL</label>
+                <input type="text" id="customFaviconInput" style="width: 100%; padding: 5px"
+                    value="img/favicon.ico" />
+                <button id="resetFaviconBtn" style="margin-top: 5px; padding: 5px 10px">
+                    Reset Favicon
+                </button>
+            </div>
+        </div>
+    </div>
 
-        <div id="credits-overlay">
-                <div id="credits-popup">
-                        <span id="close-credits-popup">&times;</span>
-                        <h3>Credits</h3>
-                        <div class="credit-person">
-                                <h4>John P - Creator of StrongdogXP</h4>
-                                <p>He downloaded, compiled and created Strongdog entirely.</p>
-                            </div>
-                        <div class="credit-person">
-                                <h4>4SP</h4>
-                                <p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p>
-                            </div>
-                    </div>
-            </div>
+    <div id="credits-overlay">
+        <div id="credits-popup">
+            <span id="close-credits-popup">&times;</span>
+            <h3>Credits</h3>
+            <div class="credit-person">
+                <h4>John P - Creator of StrongdogXP</h4>
+                <p>He downloaded, compiled and created Strongdog entirely.</p>
+            </div>
+            <div class="credit-person">
+                <h4>4SP</h4>
+                <p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p>
+            </div>
+        </div>
+    </div>
 
-        <script type="module">
+    <script type="module">
         import games from "./cards-data.js";
         import {
             targetUrl
@@ -1020,7 +1016,7 @@
                 const origin = window.location.origin,
                     newBase = `${origin}/strongdog${page}`;
                 (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
-                (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
+                    (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
             }
             return {
                 adjustedHref,
@@ -1042,11 +1038,11 @@
                 gameLink = `./play/?id=${id}`,
                 normalized = normalizeGameName(name);
             return `
-                <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
-                  <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
-                  <figcaption>${name}</figcaption>
-                </a>
-              `;
+                <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
+                    <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
+                    <figcaption>${name}</figcaption>
+                </a>
+                  `;
         }
         const allListElement = document.getElementById("allList");
         allListElement.innerHTML = games.map(g => getCardHTML(g)).join("");
@@ -1073,7 +1069,7 @@
                     } = game, {
                         adjustedImgSrc
                     } = getAdjustedUrls(game.href, imgSrc, page),
-                        linkEl = document.createElement("a");
+                    linkEl = document.createElement("a");
                     (linkEl.href = `./play/?id=${id}`),
                     (linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`),
                     searchResults.appendChild(linkEl);
@@ -1119,12 +1115,12 @@
                 newTab = window.open();
             if (!newTab) return;
             newTab.document.write(`
-                        <html>
-                          <body style="margin:0;height:100vh;">
-                            <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
-                          </body>
-                        </html>
-                      `),
+                                <html>
+                                  <body style="margin:0;height:100vh;">
+                                    <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
+                                  </body>
+                                </html>
+                              `),
                 newTab.document.close();
         });
 
@@ -1216,7 +1212,7 @@
                 document.querySelectorAll(".games-grid").forEach(grid => {
                     grid.style.gap = newGap + "px";
                 }),
-                _B`ack to 4SP` > setCookie("cardSize", val, 365);
+                setCookie("cardSize", val, 365);
         }
         cardSizeSlider.addEventListener("input", updateCardSizes);
         const savedSize = getCookie("cardSize");
@@ -1279,7 +1275,7 @@
                 });
         })();
     </script>
-        <script>
+    <script>
         if (
             window.location.hostname === "unblockedmathgames.com" ||
             window.location.hostname === "mathhub.de.com" ||
@@ -1309,7 +1305,7 @@
             }
         }
     </script>
-        <script>
+    <script>
         // Credits Popup Functionality
         document.addEventListener('DOMContentLoaded', () => {
             const creditsBtn = document.getElementById('creditsBtn');
@@ -1351,23 +1347,26 @@
             }
         });
     </script>
-        <div style="
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      font-size: 1px;
-      line-height: 1px;
-      user-select: none;
-      pointer-events: none;
-    " draggable="false">
-            </div>
-        <script src="/firebase-config.js" defer></script>
-        <script src="/ban-enforcer.js" defer></script>
-        <script src="/url-changer.js" defer></script>
-        <script src="/panic-key.js" defer></script>
+    <div style="
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      font-size: 1px;
+      line-height: 1px;
+      user-select: none;
+      pointer-events: none;
+    " draggable="false">
+        educational platform, learning resources, academic tools, educational games, student
+        resources, school-friendly content, learning tools, interactive education, student
+        access
+    </div>
+    <script src="/firebase-config.js" defer></script>
+    <script src="/ban-enforcer.js" defer></script>
+    <script src="/url-changer.js" defer></script>
+    <script src="/panic-key.js" defer></script>
 </body>
 
 </html>
