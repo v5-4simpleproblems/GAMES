@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-    
+
+<head>
     <title>4SP - STRONGDOG</title>
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -502,7 +503,7 @@
             async function getEmbedPath(adjustedHref, originalHref, page) {
                 let cleanHref = adjustedHref.replace(/index\.html$/, "").replace(/base\.html$/, "").replace(/\.html$/, "");
                 if (!cleanHref.endsWith("/")) cleanHref += "/";
-                const pathsToTry = [cleanHref + "game/index.html", cleanHref + "game/base.html", cleanHref + "gamereal/index.html", cleanHref + "gamereal/base.html", cleanHref + "index.html", cleanHref + "base.html", ];
+                const pathsToTry = [cleanHref + "game/index.html", cleanHref + "game/base.html", cleanHref + "gamereal/index.html", cleanHref + "gamereal/base.html", cleanHref + "index.html", cleanHref + "base.html",];
                 try {
                     const response = await fetch(adjustedHref, {
                         method: "GET"
@@ -552,9 +553,19 @@
                 const iframe = document.createElement("iframe");
                 iframe.src = gamePath;
                 iframe.allowFullscreen = true;
+                
+                // --- MODIFICATION START ---
+                // This sandbox attribute is the key to blocking redirects and ads.
+                // 'allow-scripts': Allows the game's JavaScript to run.
+                // 'allow-same-origin': Allows the game to load its own resources, but blocks third-party content (like ads).
+                // 'allow-forms': Allows forms to be submitted (e.g., for high scores).
+                // 'allow-pointer-lock': Important for many games that need to control the cursor.
+                // By NOT including 'allow-top-navigation', we prevent the iframe from redirecting the main page.
+                iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-pointer-lock');
+                // --- MODIFICATION END ---
+                
                 const gameContainer = document.getElementById('gameContainer');
-
-                gameContainer.innerHTML = '';
+                gameContainer.innerHTML = ''; // Clear previous game
                 gameContainer.appendChild(iframe);
 
                 const gameTitleElement = document.getElementById("gameTitle");
