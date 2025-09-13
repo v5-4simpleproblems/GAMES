@@ -1,1372 +1,1371 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-    @font-face {
-        font-family: 'primary';
-        src: url('fonts/primary.woff') format('woff');
-    }
+    @font-face {
+        font-family: 'primary';
+        src: url('fonts/primary.woff') format('woff');
+    }
 
-    :root {
-        --red: rgb(220, 53, 69);
-        --green: rgb(40, 167, 69);
-        --ff: 'primary', sans-serif;
-        --bg: #2e2e2e;
-        /* Added purple variable for consistency */
-        --purple: #6720BD;
-    }
+    :root {
+        --red: rgb(220, 53, 69);
+        --green: rgb(40, 167, 69);
+        --ff: 'primary', sans-serif;
+        --bg: #2e2e2e;
+        /* Added purple variable for consistency */
+        --purple: #6720BD;
+    }
 
-    body {
-        font-family: var(--ff);
-        margin: 0;
-        padding: 0;
-        background-color: var(--bg);
-        overflow-x: hidden;
-    }
+    body {
+        font-family: var(--ff);
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg);
+        overflow-x: hidden;
+    }
 
-    .navbar {
-        background-color: rgba(50, 50, 50, 0.9);
-        backdrop-filter: blur(10px);
-        color: white;
-        padding: 15px 30px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        position: relative;
+    .navbar {
+        background-color: rgba(50, 50, 50, 0.9);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        position: relative;
 		font-family: var(--ff);
-    }
+    }
 
-    .search-container {
-        display: flex;
-        align-items: center;
-        position: relative;
+    .search-container {
+        display: flex;
+        align-items: center;
+        position: relative;
 		font-family: var(--ff);
-    }
+    }
 
-    .logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        font-weight: 700;
-        font-size: 2.5rem;
-        letter-spacing: 1px;
-        transition: transform 0.3s ease;
-        text-decoration: none;
-        color: white;
-    }
+    .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-weight: 700;
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+        transition: transform 0.3s ease;
+        text-decoration: none;
+        color: white;
+    }
 
-    .logo:hover {
-        transform: translateX(-50%) scale(1.025);
-        text-decoration: none;
-    }
+    .logo:hover {
+        transform: translateX(-50%) scale(1.025);
+        text-decoration: none;
+    }
 
-    .logo .xp {
-        /* UPDATED: from orange to purple */
-        color: var(--purple);
-        text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
-    }
+    .logo .xp {
+        /* UPDATED: from orange to purple */
+        color: var(--purple);
+        text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
+    }
 
-    .menu-icon {
-        font-size: 2.5rem;
-        cursor: pointer;
-        color: white;
-        transition: transform 0.3s ease, color 0.3s ease;
-    }
+    .menu-icon {
+        font-size: 2.5rem;
+        cursor: pointer;
+        color: white;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
 
-    .menu-icon:hover {
-        transform: scale(1.2);
-        color: white;
-    }
+    .menu-icon:hover {
+        transform: scale(1.2);
+        color: white;
+    }
 
-    .slide-menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 400px;
-        backdrop-filter: blur(10px);
-        color: white;
-        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
-        z-index: 1003;
-        transition: transform 0.5s ease;
-        transform: translateX(-100%);
-        padding: 20px;
-        overflow-y: auto;
-        box-sizing: border-box;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        background: linear-gradient(to bottom right,
-                rgba(43, 43, 43, 0.599),
-                rgba(53, 53, 53, 0.599),
-                rgba(80, 80, 80, 0.599));
-    }
+    .slide-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 400px;
+        backdrop-filter: blur(10px);
+        color: white;
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+        z-index: 1003;
+        transition: transform 0.5s ease;
+        transform: translateX(-100%);
+        padding: 20px;
+        overflow-y: auto;
+        box-sizing: border-box;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        background: linear-gradient(to bottom right,
+                rgba(43, 43, 43, 0.599),
+                rgba(53, 53, 53, 0.599),
+                rgba(80, 80, 80, 0.599));
+    }
 
-    .slide-menu::-webkit-scrollbar {
-        display: none;
-    }
+    .slide-menu::-webkit-scrollbar {
+        display: none;
+    }
 
-    .slide-menu[style*="translateX(0%)"] {
-        transform: translateX(0);
-    }
+    .slide-menu[style*="translateX(0%)"] {
+        transform: translateX(0);
+    }
 
-    .categories {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        padding-top: 20px;
-    }
+    .categories {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding-top: 20px;
+    }
 
-    .categories>a {
-        padding: 17px;
-        background: linear-gradient(45deg, #333, #444);
-        border-radius: 15px;
-        text-decoration: none;
-        color: white;
-        transition: transform 0.4s ease;
-        text-align: center;
-        font-size: 1.2rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
+    .categories>a {
+        padding: 17px;
+        background: linear-gradient(45deg, #333, #444);
+        border-radius: 15px;
+        text-decoration: none;
+        color: white;
+        transition: transform 0.4s ease;
+        text-align: center;
+        font-size: 1.2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
 
-    .categories>a:hover {
-        /* UPDATED: from orange gradient to purple gradient */
-        background: linear-gradient(45deg, #6720BD, #8a2be2);
-        box-shadow: 0 6px 20px rgba(103, 32, 189, 0.5);
-    }
+    .categories>a:hover {
+        /* UPDATED: from orange gradient to purple gradient */
+        background: linear-gradient(45deg, #6720BD, #8a2be2);
+        box-shadow: 0 6px 20px rgba(103, 32, 189, 0.5);
+    }
 
-    .categories>a::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        width: 0;
-        height: 0;
-        background: rgba(0, 0, 0, 0.1);
-        transition: all 0.5s ease;
-    }
+    .categories>a::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(0, 0, 0, 0.1);
+        transition: all 0.5s ease;
+    }
 
-    .categories>a:hover::after {
-        width: 500px;
-        height: 500px;
-    }
-    
-    span.new-feature-tag {
-        /* UPDATED: from orange to purple */
-        background: var(--purple);
-        border-radius: 50px;
-        padding: 0.3rem 0.6rem;
-        margin-left: 1rem;
-        font-size: 0.7rem;
-        color: white; /* Changed from black for better contrast */
-        text-transform: uppercase;
-        box-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
-    }
+    .categories>a:hover::after {
+        width: 500px;
+        height: 500px;
+    }
+    
+    span.new-feature-tag {
+        /* UPDATED: from orange to purple */
+        background: var(--purple);
+        border-radius: 50px;
+        padding: 0.3rem 0.6rem;
+        margin-left: 1rem;
+        font-size: 0.7rem;
+        color: white; /* Changed from black for better contrast */
+        text-transform: uppercase;
+        box-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
+    }
 
-    .search-bar {
-        padding: 0.8rem 1.2rem;
-        font-size: 1rem;
-        border-radius: 15px;
-        width: 275px;
-        border: none;
-        background-color: rgba(0, 0, 0, 0.4);
-        color: white;
-        transition: all 0.3s ease;
-        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+    .search-bar {
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+        border-radius: 15px;
+        width: 275px;
+        border: none;
+        background-color: rgba(0, 0, 0, 0.4);
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
 		font-family: var(--ff);
-    }
+    }
 
-    .search-bar::placeholder {
-        color: rgba(255, 255, 255, 0.6);
+    .search-bar::placeholder {
+        color: rgba(255, 255, 255, 0.6);
 		font-family: var(--ff);
-    }
+    }
 
-    .search-bar:focus {
-        outline: none;
-        background-color: rgba(0, 0, 0, 0.6);
+    .search-bar:focus {
+        outline: none;
+        background-color: rgba(0, 0, 0, 0.6);
 		font-family: var(--ff);
-    }
-
-    .games-grid {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 20px;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .ghost-card {
-        background: #3e3e3e;
-        animation: pulse 1.5s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-        0%,
-        100% {
-            background: #3e3e3e;
-        }
-
-        50% {
-            background: #5e5e5e;
-        }
-    }
-
-    .card,
-    .ghost-card {
-        border-radius: 15px;
-        width: 120px;
-        aspect-ratio: 1;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-        transition: all 0.4s ease;
-    }
-
-    .card {
-        background: transparent;
-        position: relative;
-        overflow: hidden;
-        text-decoration: none;
-    }
-
-    .card:hover {
-        transform: scale(1.1) translateY(-10px);
-        /* UPDATED: from orange shadow to purple shadow */
-        box-shadow: 0 10px 30px rgba(103, 32, 189, 0.4);
-    }
-
-    .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.4s ease;
-    }
-
-    .card:hover img {
-        transform: scale(1.05);
-    }
-
-    .card figcaption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-        color: #ffffff;
-        padding: 10px 0;
-        transition: all 0.4s ease;
-        transform: translateY(100%);
-        opacity: 0;
-        text-align: center;
-        font-weight: 600;
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-    }
-
-    .card:hover figcaption {
-        transform: translateY(1px);
-        opacity: 1;
-    }
-
-    .search-results {
-        position: absolute;
-        right: 0;
-        top: 71px;
-        background-color: rgba(30, 30, 30, 0.9);
-        backdrop-filter: blur(5px);
-        border-radius: 15px;
-        width: 313px;
-        display: none;
-        overflow: hidden;
-        z-index: 1000;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-    }
-
-    .search-results a {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: white;
-        padding: 10px;
-        transition: all 0.3s ease;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .search-results a:focus,
-    .search-results a:hover {
-        outline: none;
-        background: rgba(50, 50, 50, 0.7);
-        padding-left: 15px;
-    }
-
-    .search-results img {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-        margin-right: 15px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .search-results a:last-child {
-        border-bottom: none;
-    }
-
-    .news-container {
-        margin: 30px auto;
-        padding: 30px;
-        max-width: 900px;
-        background-color: #444444;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .news {
-        color: white;
-    }
-
-    .credits-title {
-        font-size: 2rem;
-        margin-bottom: 20px;
-        color: white;
-        border-bottom: 3px solid #ddd;
-        padding-bottom: 10px;
-        text-shadow: none;
-    }
-
-    .credits-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .credits-role {
-        font-weight: 700;
-        color: white;
-        font-size: 1.2rem;
-    }
-
-    .credits-names {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        align-items: center;
-    }
-
-    .credits-link {
-        color: #4fa7ff;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .credits-link:hover {
-        text-decoration: underline;
-    }
-
-    .credits-names span {
-        color: #c4c4c4;
-    }
-
-    h2 {
-        text-align: center;
-        color: white;
-        margin: 40px 0;
-        font-size: 2.5rem;
-        text-shadow: none;
-    }
-
-    .updates-paragraph-text {
-        color: black;
-        background-color: #a83632;
-        background: linear-gradient(156deg, #ae8625, #f7ef8a, #d1ac47, #edc967);
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px #d1ac4780;
-        font-size: 1.1rem;
-        text-align: center;
-        max-width: 850px;
-        margin-block: 20px;
-    }
-
-    .updates-text-container {
-        margin: 0 20%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    #topGameList,
-    #allList,
-    #favoritesGameList {
-        max-width: 1600px;
-        margin: 0 auto;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-content {
-        background-color: #757575;
-        padding: 30px;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 450px;
-        text-align: center;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-        color: white;
-    }
-
-    .modal-close {
-        color: #aaa;
-        float: right;
-        font-size: 32px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .modal-close:hover,
-    .modal-close:focus {
-        color: #000;
-        transform: scale(1.2);
-    }
-
-    .modal-link {
-        color: blue;
-        text-decoration: underline;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .modal-link:hover {
-        /* UPDATED: from orange to purple */
-        color: var(--purple);
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .edit-button {
-        width: 30px;
-        cursor: pointer;
-        fill: #999;
-        transition: transform 0.3s ease;
-    }
-
-    .edit-button:hover {
-        transform: scale(1.2);
-    }
-
-    .custom-slide-menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 400px;
-        background-color: #202020;
-        color: white;
-        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
-        z-index: 1003;
-        transition: transform 0.5s ease;
-        transform: translateX(-100%);
-        padding: 20px;
-        overflow-y: auto;
-        box-sizing: border-box;
-    }
-
-    .custom-slide-menu[style*="translateX(0%)"] {
-        transform: translateX(0);
-    }
-
-    .custom-options {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px 0;
-    }
-
-    .toggle-option {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        background: #333333;
-        border-radius: 10px;
-    }
-
-    .toggle-option label {
-        font-size: 1.2rem;
-        color: white;
-    }
-
-    .toggle-option input[type="checkbox"] {
-        appearance: none;
-        width: 50px;
-        height: 25px;
-        background: #555555;
-        border-radius: 25px;
-        position: relative;
-        cursor: pointer;
-        outline: none;
-        transition: background 0.3s ease;
-    }
-
-    .toggle-option input[type="checkbox"]:checked {
-        background: #007bff;
-    }
-
-    .toggle-option input[type="checkbox"]::before {
-        content: "";
-        position: absolute;
-        width: 21px;
-        height: 21px;
-        background: white;
-        border-radius: 50%;
-        top: 2px;
-        left: 2px;
-        transition: transform 0.3s ease;
-    }
-
-    .toggle-option input[type="checkbox"]:checked::before {
-        transform: translateX(25px);
-    }
-
-    input[type="range"] {
-        appearance: none;
-        width: 100%;
-        margin: 10px 0;
-        background: transparent;
-    }
-
-    input[type="range"]::-webkit-slider-runnable-track {
-        height: 8px;
-        background: #ccc;
-        border-radius: 5px;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-        appearance: none;
-        height: 20px;
-        width: 20px;
-        background: #fff;
-        border: 1px solid #777;
-        border-radius: 50%;
-        cursor: pointer;
-        margin-top: -6px;
-    }
-
-    #customSlideMenu .custom-options {
-        padding: 20px !important;
-    }
-
-    #customSlideMenu .custom-option {
-        margin-bottom: 20px !important;
-    }
-
-    #customSlideMenu label {
-        color: white;
-        display: block;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
-        font-weight: 600;
-    }
-
-    #customSlideMenu input[type="text"] {
-        width: 100% !important;
-        padding: 10px !important;
-        border: 1px solid #444 !important;
-        border-radius: 5px !important;
-        font-size: 1rem !important;
-        background-color: #333 !important;
-        color: white !important;
-        box-sizing: border-box !important;
-    }
-
-    #customSlideMenu input[type="text"]::placeholder {
-        color: #bbb !important;
-    }
-
-    #customSlideMenu button {
-        margin-top: 10px !important;
-        padding: 10px 15px !important;
-        border: none !important;
-        border-radius: 5px !important;
-        /* UPDATED: from orange to purple */
-        background-color: var(--purple) !important;
-        color: white !important;
-        cursor: pointer !important;
-        font-size: 1rem !important;
-        transition: background-color 0.3s ease !important;
-    }
-
-    #customSlideMenu button:hover {
-        /* UPDATED: from orange to darker purple */
-        background-color: #5a1aa8 !important;
-    }
-
-    /* Credits Popup Styles */
-    #credits-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(5px);
-        z-index: 2000;
-        display: none;
-        /* Hidden by default */
-        justify-content: center;
-        align-items: flex-start;
-        /* Aligns popup to the top */
-        padding-top: 15vh;
-        /* Pushes it down a bit */
-    }
-
-    #credits-popup {
-        background: #3a3a3a;
-        color: white;
-        padding: 25px 35px;
-        border-radius: 15px;
-        width: 90%;
-        max-width: 550px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-        position: relative;
-        border: 1px solid #555;
-    }
-
-    #close-credits-popup {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 2.5rem;
-        color: #ccc;
-        cursor: pointer;
-        transition: color 0.3s ease, transform 0.3s ease;
-    }
-
-    #close-credits-popup:hover {
-        color: white;
-        transform: scale(1.1);
-    }
-
-    #credits-popup h3 {
-        text-align: center;
-        font-size: 2rem;
-        margin-top: 0;
-        margin-bottom: 25px;
-        /* UPDATED: from orange to purple */
-        border-bottom: 2px solid var(--purple);
-        padding-bottom: 10px;
-    }
-
-    #credits-popup .credit-person {
-        margin-bottom: 20px;
-    }
-
-    #credits-popup .credit-person h4 {
-        font-size: 1.4rem;
-        /* UPDATED: from orange to purple */
-        color: var(--purple);
-        margin: 0 0 8px 0;
-    }
-
-    #credits-popup .credit-person p {
-        font-size: 1rem;
-        line-height: 1.5;
-        margin: 0;
-        color: #e0e0e0;
-    }
-
-    @media (max-width: 768px) {
-        .navbar {
-            flex-wrap: wrap;
-            padding: 10px 15px;
-        }
-
-        .menu-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        .search-bar {
-            width: 90%;
-            font-size: 0.9rem;
+    }
+
+    .games-grid {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .ghost-card {
+        background: #3e3e3e;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+        0%,
+        100% {
+            background: #3e3e3e;
+        }
+
+        50% {
+            background: #5e5e5e;
+        }
+    }
+
+    .card,
+    .ghost-card {
+        border-radius: 15px;
+        width: 120px;
+        aspect-ratio: 1;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+        transition: all 0.4s ease;
+    }
+
+    .card {
+        background: transparent;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+    }
+
+    .card:hover {
+        transform: scale(1.1) translateY(-10px);
+        /* UPDATED: from orange shadow to purple shadow */
+        box-shadow: 0 10px 30px rgba(103, 32, 189, 0.4);
+    }
+
+    .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .card:hover img {
+        transform: scale(1.05);
+    }
+
+    .card figcaption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        color: #ffffff;
+        padding: 10px 0;
+        transition: all 0.4s ease;
+        transform: translateY(100%);
+        opacity: 0;
+        text-align: center;
+        font-weight: 600;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    }
+
+    .card:hover figcaption {
+        transform: translateY(1px);
+        opacity: 1;
+    }
+
+    .search-results {
+        position: absolute;
+        right: 0;
+        top: 71px;
+        background-color: rgba(30, 30, 30, 0.9);
+        backdrop-filter: blur(5px);
+        border-radius: 15px;
+        width: 313px;
+        display: none;
+        overflow: hidden;
+        z-index: 1000;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .search-results a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+        padding: 10px;
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .search-results a:focus,
+    .search-results a:hover {
+        outline: none;
+        background: rgba(50, 50, 50, 0.7);
+        padding-left: 15px;
+    }
+
+    .search-results img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        margin-right: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-results a:last-child {
+        border-bottom: none;
+    }
+
+    .news-container {
+        margin: 30px auto;
+        padding: 30px;
+        max-width: 900px;
+        background-color: #444444;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .news {
+        color: white;
+    }
+
+    .credits-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: white;
+        border-bottom: 3px solid #ddd;
+        padding-bottom: 10px;
+        text-shadow: none;
+    }
+
+    .credits-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .credits-role {
+        font-weight: 700;
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .credits-names {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .credits-link {
+        color: #4fa7ff;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .credits-link:hover {
+        text-decoration: underline;
+    }
+
+    .credits-names span {
+        color: #c4c4c4;
+    }
+
+    h2 {
+        text-align: center;
+        color: white;
+        margin: 40px 0;
+        font-size: 2.5rem;
+        text-shadow: none;
+    }
+
+    .updates-paragraph-text {
+        color: rgba(0, 0, 0, 0.9); /* Black text with 10% transparency */
+        background: linear-gradient(156deg, #c3a1ff, #e6d4ff, #ab87ff, #d8b8ff); /* Shiny light purple gradient */
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(195, 161, 255, 0.5); /* Matching purple shadow */
+        font-size: 1.1rem;
+        text-align: center;
+        max-width: 850px;
+        margin-block: 20px;
+    }
+
+    .updates-text-container {
+        margin: 0 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #topGameList,
+    #allList,
+    #favoritesGameList {
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: #757575;
+        padding: 30px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        color: white;
+    }
+
+    .modal-close {
+        color: #aaa;
+        float: right;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .modal-close:hover,
+    .modal-close:focus {
+        color: #000;
+        transform: scale(1.2);
+    }
+
+    .modal-link {
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .modal-link:hover {
+        /* UPDATED: from orange to purple */
+        color: var(--purple);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .edit-button {
+        width: 30px;
+        cursor: pointer;
+        fill: #999;
+        transition: transform 0.3s ease;
+    }
+
+    .edit-button:hover {
+        transform: scale(1.2);
+    }
+
+    .custom-slide-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 400px;
+        background-color: #202020;
+        color: white;
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+        z-index: 1003;
+        transition: transform 0.5s ease;
+        transform: translateX(-100%);
+        padding: 20px;
+        overflow-y: auto;
+        box-sizing: border-box;
+    }
+
+    .custom-slide-menu[style*="translateX(0%)"] {
+        transform: translateX(0);
+    }
+
+    .custom-options {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 0;
+    }
+
+    .toggle-option {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background: #333333;
+        border-radius: 10px;
+    }
+
+    .toggle-option label {
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    .toggle-option input[type="checkbox"] {
+        appearance: none;
+        width: 50px;
+        height: 25px;
+        background: #555555;
+        border-radius: 25px;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+        transition: background 0.3s ease;
+    }
+
+    .toggle-option input[type="checkbox"]:checked {
+        background: #007bff;
+    }
+
+    .toggle-option input[type="checkbox"]::before {
+        content: "";
+        position: absolute;
+        width: 21px;
+        height: 21px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s ease;
+    }
+
+    .toggle-option input[type="checkbox"]:checked::before {
+        transform: translateX(25px);
+    }
+
+    input[type="range"] {
+        appearance: none;
+        width: 100%;
+        margin: 10px 0;
+        background: transparent;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+        height: 8px;
+        background: #ccc;
+        border-radius: 5px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        height: 20px;
+        width: 20px;
+        background: #fff;
+        border: 1px solid #777;
+        border-radius: 50%;
+        cursor: pointer;
+        margin-top: -6px;
+    }
+
+    #customSlideMenu .custom-options {
+        padding: 20px !important;
+    }
+
+    #customSlideMenu .custom-option {
+        margin-bottom: 20px !important;
+    }
+
+    #customSlideMenu label {
+        color: white;
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    #customSlideMenu input[type="text"] {
+        width: 100% !important;
+        padding: 10px !important;
+        border: 1px solid #444 !important;
+        border-radius: 5px !important;
+        font-size: 1rem !important;
+        background-color: #333 !important;
+        color: white !important;
+        box-sizing: border-box !important;
+    }
+
+    #customSlideMenu input[type="text"]::placeholder {
+        color: #bbb !important;
+    }
+
+    #customSlideMenu button {
+        margin-top: 10px !important;
+        padding: 10px 15px !important;
+        border: none !important;
+        border-radius: 5px !important;
+        /* UPDATED: from orange to purple */
+        background-color: var(--purple) !important;
+        color: white !important;
+        cursor: pointer !important;
+        font-size: 1rem !important;
+        transition: background-color 0.3s ease !important;
+    }
+
+    #customSlideMenu button:hover {
+        /* UPDATED: from orange to darker purple */
+        background-color: #5a1aa8 !important;
+    }
+
+    /* Credits Popup Styles */
+    #credits-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        display: none;
+        /* Hidden by default */
+        justify-content: center;
+        align-items: flex-start;
+        /* Aligns popup to the top */
+        padding-top: 15vh;
+        /* Pushes it down a bit */
+    }
+
+    #credits-popup {
+        background: #3a3a3a;
+        color: white;
+        padding: 25px 35px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 550px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        position: relative;
+        border: 1px solid #555;
+    }
+
+    #close-credits-popup {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 2.5rem;
+        color: #ccc;
+        cursor: pointer;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    #close-credits-popup:hover {
+        color: white;
+        transform: scale(1.1);
+    }
+
+    #credits-popup h3 {
+        text-align: center;
+        font-size: 2rem;
+        margin-top: 0;
+        margin-bottom: 25px;
+        /* UPDATED: from orange to purple */
+        border-bottom: 2px solid var(--purple);
+        padding-bottom: 10px;
+    }
+
+    #credits-popup .credit-person {
+        margin-bottom: 20px;
+    }
+
+    #credits-popup .credit-person h4 {
+        font-size: 1.4rem;
+        /* UPDATED: from orange to purple */
+        color: var(--purple);
+        margin: 0 0 8px 0;
+    }
+
+    #credits-popup .credit-person p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin: 0;
+        color: #e0e0e0;
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            flex-wrap: wrap;
+            padding: 10px 15px;
+        }
+
+        .menu-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 90%;
+            font-size: 0.9rem;
 			font-family: 'primary', sans-serif;
-        }
+        }
 
-        .slide-menu,
-        .custom-slide-menu {
-            width: 250px;
-        }
+        .slide-menu,
+        .custom-slide-menu {
+            width: 250px;
+        }
 
-        .categories>a {
-            font-size: 1rem;
-            padding: 15px;
-        }
+        .categories>a {
+            font-size: 1rem;
+            padding: 15px;
+        }
 
-        .games-grid {
-            gap: 8px;
-            padding: 10px;
-        }
+        .games-grid {
+            gap: 8px;
+            padding: 10px;
+        }
 
-        .card,
-        .ghost-card {
-            width: 100px;
-            aspect-ratio: 1;
-        }
+        .card,
+        .ghost-card {
+            width: 100px;
+            aspect-ratio: 1;
+        }
 
-        .card figcaption {
-            font-size: 0.9rem;
-        }
+        .card figcaption {
+            font-size: 0.9rem;
+        }
 
-        .news-container {
-            margin: 20px;
-            padding: 20px;
-        }
+        .news-container {
+            margin: 20px;
+            padding: 20px;
+        }
 
-        .edit-button {
-            width: 25px;
-        }
-    }
+        .edit-button {
+            width: 25px;
+        }
+    }
 </style>
 
 <head>
-    <title>4SP - STRONGDOG</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <meta name="keywords"
-        content="educational platform, learning resources, academic tools, educational games, student resources, school-friendly content, learning tools, interactive education, student access" />
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@graph": [{
-                    "@type": "Organization",
-                    "name": "strongdogXP LLC",
-                    "url": "https://65s.org/",
-                    "logo": "https://65s.org/images/logo.png",
-                    "description": "strongdog XP is a gaming portal where users can access a wide variety of browser games and connect with the community through the Discord server.",
-                    "founder": {
-                        "@type": "Person",
-                        "name": "Josh P"
-                    }
-                },
-                {
-                    "@type": "WebSite",
-                    "url": "https://65s.org/",
-                    "name": "strongdog XP"
-                },
-                {
-                    "@type": "WebPage",
-                    "url": "https://65s.org/",
-                    "name": "Home",
-                    "description": "Browse a wide variety of browser games and join the strongdogXP community.",
-                    "inLanguage": "en-US"
-                },
-                {
-                    "@type": "BreadcrumbList",
-                    "itemListElement": [{
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Home",
-                        "item": "https://65s.org/"
-                    }]
-                }
-            ]
-        }
-    </script>
-    <link rel="icon" type="image/x-icon" href="img/favicon.ico" id="faviconLink" />
+    <title>4SP - STRONGDOG</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="keywords"
+        content="educational platform, learning resources, academic tools, educational games, student resources, school-friendly content, learning tools, interactive education, student access" />
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@graph": [{
+                    "@type": "Organization",
+                    "name": "strongdogXP LLC",
+                    "url": "https://65s.org/",
+                    "logo": "https://65s.org/images/logo.png",
+                    "description": "strongdog XP is a gaming portal where users can access a wide variety of browser games and connect with the community through the Discord server.",
+                    "founder": {
+                        "@type": "Person",
+                        "name": "Josh P"
+                    }
+                },
+                {
+                    "@type": "WebSite",
+                    "url": "https://65s.org/",
+                    "name": "strongdog XP"
+                },
+                {
+                    "@type": "WebPage",
+                    "url": "https://65s.org/",
+                    "name": "Home",
+                    "description": "Browse a wide variety of browser games and join the strongdogXP community.",
+                    "inLanguage": "en-US"
+                },
+                {
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [{
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://65s.org/"
+                    }]
+                }
+            ]
+        }
+    </script>
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico" id="faviconLink" />
 </head>
 
 <body>
-    <div class="navbar">
-        <div class="menu-icon" id="menuIcon">☰</div>
-        <a href="index.html" class="logo">strongdog<span class="xp">XP</span></a>
-        <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search for games…" id="searchInput"
-                autocomplete="off" />
-            <div class="search-results" id="searchResults"></div>
-        </div>
-    </div>
-    <div class="updates-text-container">
+    <div class="navbar">
+        <div class="menu-icon" id="menuIcon">☰</div>
+        <a href="index.html" class="logo">strongdog<span class="xp">XP</span></a>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search for games…" id="searchInput"
+                autocomplete="off" />
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+    <div class="updates-text-container">
 
-        <p class="updates-paragraph-text">
-            <strong>Welcome to StrongdogXP!</strong><br>
-            This website is being hosted by <a href="https://4simpleproblems.github.io/"
-                style="color: #6720BD; font-weight: bold; text-decoration: none;" target="_blank">4SP</a>. I have fixed
-            several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
-        </p>
+        <p class="updates-paragraph-text">
+            <strong>Welcome to StrongdogXP!</strong><br>
+            This website is being hosted by <a href="https://4simpleproblems.github.io/"
+                style="color: #6720BD; font-weight: bold; text-decoration: none;" target="_blank">4SP</a>. I have fixed
+            several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
+        </p>
 
-    </div>
-    <div class="modal" id="popupModal">
-        <div class="modal-content">
-            <span class="modal-close" id="closeModal">×</span>
-            <p>
-                The strongdog Discord server is a place for strongdog users to chill, request
-                ideas, talk with developers, and have fun!
-                <a href="https://discord.gg/ea4x95f7cH" target="_blank">Join here</a>.
-            </p>
-        </div>
-    </div>
-    <h2 id="topGameHeader" style="text-align: center">
-        <strong>Top 20</strong>
-    </h2>
-    <div class="games-grid" id="topGameList"></div>
-    <div class="section-header" id="favoritesHeader" style="display: none">
-        <h2 style="text-align: center"><strong>Favorites</strong></h2>
-    </div>
-    <div class="games-grid" id="favoritesGameList" style="display: none"></div>
-    <h2 style="text-align: center"><strong>All</strong></h2>
-    <div class="games-grid" id="allList"></div>
-    <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
-        <div class="categories">
-            <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
-            <a href="#" id="blockLanschool" class="option-link">Open in about:blank</a>
-            <a href="./save/index.html" class="option-link">Save manager</a>
-            <a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
-            <a href="#" id="creditsBtn" class="option-link">Credits</a>
-        </div>
-    </div>
-    <div class="custom-slide-menu" id="customSlideMenu" style="transform: translateX(-100%)">
-        <div class="custom-options" style="padding: 20px">
-            <div class="toggle-option" style="margin-bottom: 10px">
-                <label for="top20Toggle">Show Top 20</label>
-                <input type="checkbox" id="top20Toggle" checked />
-            </div>
-            <div class="toggle-option" style="margin-bottom: 10px">
-                <label for="favoritesToggle">Show Favorites</label>
-                <input type="checkbox" id="favoritesToggle" />
-            </div>
-            <div class="slider-option" style="margin-bottom: 10px">
-                <label for="cardSizeSlider" style="color: #fff; display: block; margin-bottom: 5px">Card Size
-                    Adjustment</label>
-                <input type="range" id="cardSizeSlider" min="-100" max="100" value="0" step="1" style="width: 100%" />
-                <div style="text-align: center; color: #fff; margin-top: 5px">
-                    Size: <span id="cardSizeValue">0</span>
-                </div>
-            </div>
-            <div class="custom-option" style="margin-bottom: 10px">
-                <label for="customTitleInput" style="color: #fff; display: block; margin-bottom: 5px">Custom
-                    Title</label>
-                <input type="text" id="customTitleInput" style="width: 100%; padding: 5px" value="strongdog XP" />
-                <button id="resetTitleBtn" style="margin-top: 5px; padding: 5px 10px">
-                    Reset Title
-                </button>
-            </div>
-            <div class="custom-option" style="margin-bottom: 10px">
-                <label for="customFaviconInput" style="color: #fff; display: block; margin-bottom: 5px">Custom Favicon
-                    URL</label>
-                <input type="text" id="customFaviconInput" style="width: 100%; padding: 5px"
-                    value="img/favicon.ico" />
-                <button id="resetFaviconBtn" style="margin-top: 5px; padding: 5px 10px">
-                    Reset Favicon
-                </button>
-            </div>
-        </div>
-    </div>
+    </div>
+    <div class="modal" id="popupModal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeModal">×</span>
+            <p>
+                The strongdog Discord server is a place for strongdog users to chill, request
+                ideas, talk with developers, and have fun!
+                <a href="https://discord.gg/ea4x95f7cH" target="_blank">Join here</a>.
+            </p>
+        </div>
+    </div>
+    <h2 id="topGameHeader" style="text-align: center">
+        <strong>Top 20</strong>
+    </h2>
+    <div class="games-grid" id="topGameList"></div>
+    <div class="section-header" id="favoritesHeader" style="display: none">
+        <h2 style="text-align: center"><strong>Favorites</strong></h2>
+    </div>
+    <div class="games-grid" id="favoritesGameList" style="display: none"></div>
+    <h2 style="text-align: center"><strong>All</strong></h2>
+    <div class="games-grid" id="allList"></div>
+    <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
+        <div class="categories">
+            <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
+            <a href="#" id="blockLanschool" class="option-link">Open in about:blank</a>
+            <a href="./save/index.html" class="option-link">Save manager</a>
+            <a href="https://discord.gg/dyyebUaqRS" class="option-link">Discord Server</a>
+            <a href="#" id="creditsBtn" class="option-link">Credits</a>
+        </div>
+    </div>
+    <div class="custom-slide-menu" id="customSlideMenu" style="transform: translateX(-100%)">
+        <div class="custom-options" style="padding: 20px">
+            <div class="toggle-option" style="margin-bottom: 10px">
+                <label for="top20Toggle">Show Top 20</label>
+                <input type="checkbox" id="top20Toggle" checked />
+            </div>
+            <div class="toggle-option" style="margin-bottom: 10px">
+                <label for="favoritesToggle">Show Favorites</label>
+                <input type="checkbox" id="favoritesToggle" />
+            </div>
+            <div class="slider-option" style="margin-bottom: 10px">
+                <label for="cardSizeSlider" style="color: #fff; display: block; margin-bottom: 5px">Card Size
+                    Adjustment</label>
+                <input type="range" id="cardSizeSlider" min="-100" max="100" value="0" step="1" style="width: 100%" />
+                <div style="text-align: center; color: #fff; margin-top: 5px">
+                    Size: <span id="cardSizeValue">0</span>
+                </div>
+            </div>
+  _B`ack to 4SP`>          <div class="custom-option" style="margin-bottom: 10px">
+                <label for="customTitleInput" style="color: #fff; display: block; margin-bottom: 5px">Custom
+                    Title</label>
+                <input type="text" id="customTitleInput" style="width: 100%; padding: 5px" value="strongdog XP" />
+                <button id="resetTitleBtn" style="margin-top: 5px; padding: 5px 10px">
+                    Reset Title
+                </button>
+            </div>
+            <div class="custom-option" style="margin-bottom: 10px">
+                <label for="customFaviconInput" style="color: #fff; display: block; margin-bottom: 5px">Custom Favicon
+                    URL</label>
+                <input type="text" id="customFaviconInput" style="width: 100%; padding: 5px"
+                    value="img/favicon.ico" />
+                <button id="resetFaviconBtn" style="margin-top: 5px; padding: 5px 10px">
+                    Reset Favicon
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <div id="credits-overlay">
-        <div id="credits-popup">
-            <span id="close-credits-popup">&times;</span>
-            <h3>Credits</h3>
-            <div class="credit-person">
-                <h4>John P - Creator of StrongdogXP</h4>
-                <p>He downloaded, compiled and created Strongdog entirely.</p>
-            </div>
-            <div class="credit-person">
-                <h4>4SP</h4>
-                <p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p>
-            </div>
-        </div>
-    </div>
+    <div id="credits-overlay">
+        <div id="credits-popup">
+            <span id="close-credits-popup">&times;</span>
+            <h3>Credits</h3>
+            <div class="credit-person">
+                <h4>John P - Creator of StrongdogXP</h4>
+                <p>He downloaded, compiled and created Strongdog entirely.</p>
+            </div>
+            <div class="credit-person">
+                <h4>4SP</h4>
+                <p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p>
+            </div>
+        </div>
+    </div>
 
-    <script type="module">
-        import games from "./cards-data.js";
-        import {
-            targetUrl
-        } from "./appscript.js";
+    <script type="module">
+        import games from "./cards-data.js";
+        import {
+            targetUrl
+        } from "./appscript.js";
 
-        const numTopGames = 20;
-        const topGameList = document.getElementById("topGameList");
+        const numTopGames = 20;
+        const topGameList = document.getElementById("topGameList");
 
-        for (let i = 0; i < numTopGames; i++) {
-            const ghostCard = document.createElement("div");
-            ghostCard.classList.add("ghost-card"),
-                (ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`),
-                topGameList.appendChild(ghostCard);
-        }
-        async function fetchTopGames() {
-            try {
-                const response = await fetch(targetUrl);
-                if (!response.ok) throw new Error("Network error:" + response.statusText);
-                const data = await response.json();
-                if (data && data.content) {
-                    const parsedData = JSON.parse(data.content);
-                    displayTopGames(parsedData);
-                }
-            } catch (e) {
-                console.error(`Error while fetching games: ${e}`);
-            }
-        }
-        fetchTopGames();
+        for (let i = 0; i < numTopGames; i++) {
+            const ghostCard = document.createElement("div");
+            ghostCard.classList.add("ghost-card"),
+                (ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`),
+                topGameList.appendChild(ghostCard);
+        }
+        async function fetchTopGames() {
+            try {
+                const response = await fetch(targetUrl);
+                if (!response.ok) throw new Error("Network error:" + response.statusText);
+                const data = await response.json();
+                if (data && data.content) {
+                    const parsedData = JSON.parse(data.content);
+                    displayTopGames(parsedData);
+                }
+            } catch (e) {
+                console.error(`Error while fetching games: ${e}`);
+            }
+        }
+        fetchTopGames();
 
-        function displayTopGames(topData) {
-            topGameList.innerHTML = "";
-            let foundCount = 0;
-            let index = 1;
-            const displayed = new Set();
-            while (foundCount < numTopGames && index < topData.length) {
-                const row = topData[index],
-                    gameName = row[0],
-                    card = findMatchingCard(gameName);
-                if (card) {
-                    if (!displayed.has(gameName)) {
-                        topGameList.appendChild(card.cloneNode(true)),
-                            displayed.add(gameName),
-                            foundCount++;
-                    }
-                }
-                index++;
-            }
-        }
+        function displayTopGames(topData) {
+            topGameList.innerHTML = "";
+            let foundCount = 0;
+            let index = 1;
+            const displayed = new Set();
+            while (foundCount < numTopGames && index < topData.length) {
+                const row = topData[index],
+                    gameName = row[0],
+                    card = findMatchingCard(gameName);
+                if (card) {
+                    if (!displayed.has(gameName)) {
+                        topGameList.appendChild(card.cloneNode(true)),
+                            displayed.add(gameName),
+                            foundCount++;
+                    }
+                }
+                index++;
+            }
+        }
 
-        function normalizeGameName(name) {
-            return name
-                .toLowerCase()
-                .replace(/\s+/g, "")
-                .replace(/[^a-z0-9]/g, "");
-        }
+        function normalizeGameName(name) {
+            return name
+                .toLowerCase()
+                .replace(/\s+/g, "")
+                .replace(/[^a-z0-9]/g, "");
+        }
 
-        function findMatchingCard(gameName) {
-            const normalized = normalizeGameName(gameName),
-                allCards = document.querySelectorAll("#allList .card");
-            for (let card of allCards)
-                if (card.getAttribute("data-game-id") === normalized) return card;
-            return null;
-        }
+        function findMatchingCard(gameName) {
+            const normalized = normalizeGameName(gameName),
+                allCards = document.querySelectorAll("#allList .card");
+            for (let card of allCards)
+                if (card.getAttribute("data-game-id") === normalized) return card;
+            return null;
+        }
 
-        function getPageNumberFromURL(url) {
-            const regex = /(strongdog|mathcord|stroongdog)(\d*)/,
-                match = url.match(regex);
-            if (match) return match[2] === "" ? 1 : parseInt(match[2], 10);
-            return 1;
-        }
-        const siteMapping = window.siteMapping || {};
+        function getPageNumberFromURL(url) {
+            const regex = /(strongdog|mathcord|stroongdog)(\d*)/,
+                match = url.match(regex);
+            if (match) return match[2] === "" ? 1 : parseInt(match[2], 10);
+            return 1;
+        }
+        const siteMapping = window.siteMapping || {};
 
-        function getCurrentSiteKey() {
-            const currentURL = window.location.href,
-                keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
-            for (const k of keys)
-                if (currentURL.includes(k)) return k;
-            return null;
-        }
+        function getCurrentSiteKey() {
+            const currentURL = window.location.href,
+                keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
+            for (const k of keys)
+                if (currentURL.includes(k)) return k;
+            return null;
+        }
 
-        function getAdjustedUrls(href, imgSrc, page) {
-            let adjustedHref = href,
-                adjustedImgSrc = `./img/${imgSrc}`,
-                currentSiteKey = getCurrentSiteKey();
-            if (currentSiteKey) {
-                const currentSitePages = siteMapping[currentSiteKey],
-                    pageMap = {},
-                    currentPageNumber = getPageNumberFromURL(currentSiteKey);
-                pageMap[currentPageNumber] = currentSiteKey;
-                if (currentSitePages) {
-                    currentSitePages.forEach(u => {
-                        const pNum = getPageNumberFromURL(u);
-                        pageMap[pNum] = u;
-                    });
-                }
-                if (page !== undefined && page !== currentPageNumber) {
-                    let newBase = pageMap[page];
-                    newBase || (newBase = window.location.origin + `/strongdog${page}`),
-                        (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
-                        (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
-                }
-            } else if (page !== undefined && page > 1) {
-                const origin = window.location.origin,
-                    newBase = `${origin}/strongdog${page}`;
-                (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
-                    (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
-            }
-            return {
-                adjustedHref,
-                adjustedImgSrc
-            };
-        }
+        function getAdjustedUrls(href, imgSrc, page) {
+            let adjustedHref = href,
+                adjustedImgSrc = `./img/${imgSrc}`,
+                currentSiteKey = getCurrentSiteKey();
+            if (currentSiteKey) {
+                const currentSitePages = siteMapping[currentSiteKey],
+                    pageMap = {},
+                    currentPageNumber = getPageNumberFromURL(currentSiteKey);
+                pageMap[currentPageNumber] = currentSiteKey;
+                if (currentSitePages) {
+                    currentSitePages.forEach(u => {
+                        const pNum = getPageNumberFromURL(u);
+                        pageMap[pNum] = u;
+                    });
+                }
+                if (page !== undefined && page !== currentPageNumber) {
+                    let newBase = pageMap[page];
+                    newBase || (newBase = window.location.origin + `/strongdog${page}`),
+                        (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
+                        (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
+                }
+            } else if (page !== undefined && page > 1) {
+                const origin = window.location.origin,
+                    newBase = `${origin}/strongdog${page}`;
+                (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
+                    (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
+            }
+            return {
+                adjustedHref,
+                adjustedImgSrc
+            };
+        }
 
-        function getCardHTML(game) {
-            const {
-                href,
-                imgSrc,
-                name,
-                page,
-                id
-            } = game, {
-                adjustedHref,
-                adjustedImgSrc
-            } = getAdjustedUrls(href, imgSrc, page),
-                gameLink = `./play/?id=${id}`,
-                normalized = normalizeGameName(name);
-            return `
-                <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
-                  <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
-                  <figcaption>${name}</figcaption>
-                </a>
-              `;
-        }
-        const allListElement = document.getElementById("allList");
-        allListElement.innerHTML = games.map(g => getCardHTML(g)).join("");
+        function getCardHTML(game) {
+            const {
+                href,
+                imgSrc,
+                name,
+                page,
+                id
+            } = game, {
+                adjustedHref,
+                adjustedImgSrc
+            } = getAdjustedUrls(href, imgSrc, page),
+                gameLink = `./play/?id=${id}`,
+                normalized = normalizeGameName(name);
+            return `
+                <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
+                  <img src="${adjustedImgSrc}" alt="${name}" loading="lazy">
+                  <figcaption>${name}</figcaption>
+                </a>
+              `;
+        }
+        const allListElement = document.getElementById("allList");
+        allListElement.innerHTML = games.map(g => getCardHTML(g)).join("");
 
-        const searchInput = document.getElementById("searchInput");
-        searchInput.placeholder = `Search ${games.length} games...`;
+        const searchInput = document.getElementById("searchInput");
+        searchInput.placeholder = `Search ${games.length} games...`;
 
-        const searchResults = document.getElementById("searchResults");
+        const searchResults = document.getElementById("searchResults");
 
-        function updateSearchResults() {
-            const text = searchInput.value.toLowerCase(),
-                filtered = games.filter(g => g.name.toLowerCase().includes(text)).slice(0, 7);
-            searchResults.innerHTML = "";
-            if (!filtered.length) {
-                searchResults.style.display = "none";
-                return;
-            }
-            filtered.forEach(game => {
-                    const {
-                        id,
-                        imgSrc,
-                        name,
-                        page
-                    } = game, {
-                        adjustedImgSrc
-                    } = getAdjustedUrls(game.href, imgSrc, page),
-                    linkEl = document.createElement("a");
-                    (linkEl.href = `./play/?id=${id}`),
-                    (linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`),
-                    searchResults.appendChild(linkEl);
-                }),
-                (searchResults.style.display = "block");
-        }
-        if (searchInput && searchResults) {
-            searchInput.addEventListener("focus", updateSearchResults),
-                searchInput.addEventListener("input", updateSearchResults),
-                document.addEventListener("click", ev => {
-                    if (!searchInput.contains(ev.target) && !searchResults.contains(ev.target))
-                        searchResults.style.display = "none";
-                });
-        }
-        const menuIcon = document.getElementById("menuIcon"),
-            slideMenu = document.getElementById("slideMenu"),
-            categories = slideMenu.querySelector(".categories");
-        menuIcon.addEventListener("click", ev => {
-                ev.stopPropagation(),
-                    (slideMenu.style.transform =
-                        slideMenu.style.transform === "translateX(0%)" ?
-                        "translateX(-100%)" :
-                        "translateX(0%)");
-            }),
-            window.addEventListener("click", ev => {
-                if (ev.target !== menuIcon && !slideMenu.contains(ev.target))
-                    slideMenu.style.transform = "translateX(-100%)";
-            });
+        function updateSearchResults() {
+            const text = searchInput.value.toLowerCase(),
+                filtered = games.filter(g => g.name.toLowerCase().includes(text)).slice(0, 7);
+            searchResults.innerHTML = "";
+            if (!filtered.length) {
+                searchResults.style.display = "none";
+                return;
+            }
+            filtered.forEach(game => {
+                    const {
+                        id,
+                        imgSrc,
+                        name,
+                        page
+                    } = game, {
+                        adjustedImgSrc
+                    } = getAdjustedUrls(game.href, imgSrc, page),
+                    linkEl = document.createElement("a");
+                    (linkEl.href = `./play/?id=${id}`),
+                    (linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`),
+                    searchResults.appendChild(linkEl);
+                }),
+                (searchResults.style.display = "block");
+        }
+        if (searchInput && searchResults) {
+            searchInput.addEventListener("focus", updateSearchResults),
+                searchInput.addEventListener("input", updateSearchResults),
+                document.addEventListener("click", ev => {
+                    if (!searchInput.contains(ev.target) && !searchResults.contains(ev.target))
+                        searchResults.style.display = "none";
+                });
+        }
+        const menuIcon = document.getElementById("menuIcon"),
+            slideMenu = document.getElementById("slideMenu"),
+            categories = slideMenu.querySelector(".categories");
+        menuIcon.addEventListener("click", ev => {
+                ev.stopPropagation(),
+                    (slideMenu.style.transform =
+                        slideMenu.style.transform === "translateX(0%)" ?
+                        "translateX(-100%)" :
+                        "translateX(0%)");
+            }),
+            window.addEventListener("click", ev => {
+                if (ev.target !== menuIcon && !slideMenu.contains(ev.target))
+                    slideMenu.style.transform = "translateX(-100%)";
+            });
 
-        const randomGameLink = categories.querySelector("#randomGame");
-        randomGameLink?.addEventListener("click", ev => {
-            ev.preventDefault();
-            if (games.length > 0) {
-                const idx = Math.floor(Math.random() * games.length);
-                window.location.href = `./play/?id=${games[idx].id}`;
-            }
-        });
+        const randomGameLink = categories.querySelector("#randomGame");
+        randomGameLink?.addEventListener("click", ev => {
+            ev.preventDefault();
+            if (games.length > 0) {
+                const idx = Math.floor(Math.random() * games.length);
+                window.location.href = `./play/?id=${games[idx].id}`;
+            }
+        });
 
-        const blockLanschoolLink = categories.querySelector("#blockLanschool");
-        blockLanschoolLink?.addEventListener("click", ev => {
-            ev.preventDefault();
-            const url = window.location.href,
-                newTab = window.open();
-            if (!newTab) return;
-            newTab.document.write(`
-                        <html>
-                          <body style="margin:0;height:100vh;">
-                            <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
-                          </body>
-                        </html>
-                      `),
-                newTab.document.close();
-        });
+        const blockLanschoolLink = categories.querySelector("#blockLanschool");
+        blockLanschoolLink?.addEventListener("click", ev => {
+            ev.preventDefault();
+            const url = window.location.href,
+                newTab = window.open();
+            if (!newTab) return;
+            newTab.document.write(`
+                        <html>
+                          <body style="margin:0;height:100vh;">
+                            <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
+                          </body>
+                        </html>
+                      `),
+                newTab.document.close();
+        });
 
 
-        const editAllButton = document.getElementById("editAllButton"),
-            customSlideMenu = document.getElementById("customSlideMenu");
-        editAllButton.addEventListener("click", ev => {
-                ev.stopPropagation(),
-                    (slideMenu.style.transform = "translateX(-100%)"),
-                    (customSlideMenu.style.transform =
-                        customSlideMenu.style.transform === "translateX(0%)" ?
-                        "translateX(-100%)" :
-                        "translateX(0%)");
-            }),
-            window.addEventListener("click", ev => {
-                if (
-                    ev.target !== editAllButton &&
-                    !customSlideMenu.contains(ev.target) &&
-                    ev.target.id !== "editAllButton"
-                )
-                    customSlideMenu.style.transform = "translateX(-100%)";
-            });
+        const editAllButton = document.getElementById("editAllButton"),
+            customSlideMenu = document.getElementById("customSlideMenu");
+        editAllButton.addEventListener("click", ev => {
+                ev.stopPropagation(),
+                    (slideMenu.style.transform = "translateX(-100%)"),
+                    (customSlideMenu.style.transform =
+                        customSlideMenu.style.transform === "translateX(0%)" ?
+                        "translateX(-100%)" :
+                        "translateX(0%)");
+            }),
+            window.addEventListener("click", ev => {
+                if (
+                    ev.target !== editAllButton &&
+                    !customSlideMenu.contains(ev.target) &&
+                    ev.target.id !== "editAllButton"
+                )
+                    customSlideMenu.style.transform = "translateX(-100%)";
+            });
 
-        function setCookie(name, val, days) {
-            const d = new Date();
-            d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days),
-                (document.cookie = `${name}=${val};expires=${d.toUTCString()};path=/`);
-        }
+        function setCookie(name, val, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days),
+                (document.cookie = `${name}=${val};expires=${d.toUTCString()};path=/`);
+        }
 
-        function getCookie(name) {
-            const all = `; ${document.cookie}`,
-                parts = all.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(";")[0];
-            return "";
-        }
-        const top20Toggle = document.getElementById("top20Toggle"),
-            topGameHeader = document.getElementById("topGameHeader");
-        let top20Disabled = getCookie("top20Disabled") === "true";
-        (top20Toggle.checked = !top20Disabled),
-        top20Disabled &&
-            ((topGameList.style.display = "none"), (topGameHeader.style.display = "none")),
-            top20Toggle.addEventListener("change", () => {
-                if (top20Toggle.checked)
-                    (topGameList.style.display = "flex"),
-                    (topGameHeader.style.display = "block"),
-                    setCookie("top20Disabled", "false", 365);
-                else
-                    (topGameList.style.display = "none"),
-                    (topGameHeader.style.display = "none"),
-                    setCookie("top20Disabled", "true", 365);
-            });
-        const favoritesToggle = document.getElementById("favoritesToggle"),
-            favoritesHeader = document.getElementById("favoritesHeader"),
-            favoritesGameList = document.getElementById("favoritesGameList");
-        let favCookie = getCookie("favoritesDisabled");
-        favCookie === "" && (favCookie = "true");
-        const favoritesDisabled = favCookie === "true";
-        (favoritesToggle.checked = !favoritesDisabled),
-        favoritesDisabled ?
-            ((favoritesHeader.style.display = "none"),
-                (favoritesGameList.style.display = "none")) :
-            ((favoritesHeader.style.display = "block"),
-                (favoritesGameList.style.display = "flex"));
-        favoritesToggle.addEventListener("change", () => {
-            if (favoritesToggle.checked)
-                (favoritesHeader.style.display = "block"),
-                (favoritesGameList.style.display = "flex"),
-                setCookie("favoritesDisabled", "false", 365);
-            else
-                (favoritesHeader.style.display = "none"),
-                (favoritesGameList.style.display = "none"),
-                setCookie("favoritesDisabled", "true", 365);
-        });
+        function getCookie(name) {
+            const all = `; ${document.cookie}`,
+                parts = all.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(";")[0];
+            return "";
+        }
+        const top20Toggle = document.getElementById("top20Toggle"),
+            topGameHeader = document.getElementById("topGameHeader");
+        let top20Disabled = getCookie("top20Disabled") === "true";
+        (top20Toggle.checked = !top20Disabled),
+        top20Disabled &&
+            ((topGameList.style.display = "none"), (topGameHeader.style.display = "none")),
+            top20Toggle.addEventListener("change", () => {
+                if (top20Toggle.checked)
+                    (topGameList.style.display = "flex"),
+                    (topGameHeader.style.display = "block"),
+                    setCookie("top20Disabled", "false", 365);
+                else
+                    (topGameList.style.display = "none"),
+                    (topGameHeader.style.display = "none"),
+                    setCookie("top20Disabled", "true", 365);
+            });
+        const favoritesToggle = document.getElementById("favoritesToggle"),
+            favoritesHeader = document.getElementById("favoritesHeader"),
+            favoritesGameList = document.getElementById("favoritesGameList");
+        let favCookie = getCookie("favoritesDisabled");
+        favCookie === "" && (favCookie = "true");
+        const favoritesDisabled = favCookie === "true";
+        (favoritesToggle.checked = !favoritesDisabled),
+        favoritesDisabled ?
+            ((favoritesHeader.style.display = "none"),
+                (favoritesGameList.style.display = "none")) :
+            ((favoritesHeader.style.display = "block"),
+                (favoritesGameList.style.display = "flex"));
+        favoritesToggle.addEventListener("change", () => {
+            if (favoritesToggle.checked)
+                (favoritesHeader.style.display = "block"),
+                (favoritesGameList.style.display = "flex"),
+                setCookie("favoritesDisabled", "false", 365);
+            else
+                (favoritesHeader.style.display = "none"),
+                (favoritesGameList.style.display = "none"),
+                setCookie("favoritesDisabled", "true", 365);
+        });
 
-        const cardSizeSlider = document.getElementById("cardSizeSlider"),
-            cardSizeValue = document.getElementById("cardSizeValue");
+        const cardSizeSlider = document.getElementById("cardSizeSlider"),
+            cardSizeValue = document.getElementById("cardSizeValue");
 
-        function updateCardSizes() {
-            const val = parseInt(cardSizeSlider.value, 10);
-            cardSizeValue.textContent = val;
-            const newSize = 120 + val,
-                newGap = Math.max(10 + val / 4, 5),
-                newRadius = val < 0 ? Math.max(15 + val * 0.13, 2) : 15;
-            document.querySelectorAll(".card, .ghost-card").forEach(c => {
-                    (c.style.width = newSize + "px"),
-                    (c.style.height = newSize + "px"),
-                    (c.style.borderRadius = newRadius + "px");
-                }),
-                document.querySelectorAll(".games-grid").forEach(grid => {
-                    grid.style.gap = newGap + "px";
-                }),
-                setCookie("cardSize", val, 365);
-        }
-        cardSizeSlider.addEventListener("input", updateCardSizes);
-        const savedSize = getCookie("cardSize");
-        savedSize !== "" && ((cardSizeSlider.value = savedSize), updateCardSizes());
-        document.addEventListener("DOMContentLoaded", () => {
-            const page1Link = document.getElementById("page1-link"),
-                page2Link = document.getElementById("page2-link");
-            if (!page1Link || !page2Link) return;
-            const hostname = window.location.hostname,
-                linkMap = {
-                    "jman1593.github.io": {
-                        page1: "/#",
-                        page2: "/strongdog2/index.html",
-                    },
-                };
-            for (const key in linkMap)
-                if (hostname.includes(key)) {
-                    (page1Link.href = linkMap[key].page1),
-                    (page2Link.href = linkMap[key].page2);
-                    break;
-                }
-        });
-        (function() {
-            var defaultTitle = "strongdog XP",
-                defaultFavicon = "img/favicon.ico",
-                titleInput = document.getElementById("customTitleInput"),
-                faviconInput = document.getElementById("customFaviconInput"),
-                resetTitleBtn = document.getElementById("resetTitleBtn"),
-                resetFaviconBtn = document.getElementById("resetFaviconBtn"),
-                faviconEl = document.querySelector('link[rel="icon"]');
-            localStorage.getItem("customTitle") ?
-                ((document.title = localStorage.getItem("customTitle")),
-                    (titleInput.value = localStorage.getItem("customTitle"))) :
-                (titleInput.value = defaultTitle),
-                localStorage.getItem("customFavicon") ?
-                ((faviconEl.href = localStorage.getItem("customFavicon")),
-                    (faviconInput.value = localStorage.getItem("customFavicon"))) :
-                (faviconInput.value = defaultFavicon),
-                titleInput.addEventListener("change", function() {
-                    var e = titleInput.value.trim();
-                    e === "" && ((e = defaultTitle), (titleInput.value = defaultTitle)),
-                        localStorage.setItem("customTitle", e),
-                        (document.title = e);
-                }),
-                faviconInput.addEventListener("change", function() {
-                    var e = faviconInput.value.trim();
-                    e === "" && ((e = defaultFavicon), (faviconInput.value = defaultFavicon)),
-                        localStorage.setItem("customFavicon", e),
-                        (faviconEl.href = e);
-                }),
-                resetTitleBtn.addEventListener("click", function() {
-                    localStorage.removeItem("customTitle"),
-                        (document.title = defaultTitle),
-                        (titleInput.value = defaultTitle);
-                }),
-                resetFaviconBtn.addEventListener("click", function() {
-                    localStorage.removeItem("customFavicon"),
-                        (faviconEl.href = defaultFavicon),
-                        (faviconInput.value = defaultFavicon);
-                });
-        })();
-    </script>
-    <script>
-        if (
-            window.location.hostname === "unblockedmathgames.com" ||
-            window.location.hostname === "mathhub.de.com" ||
-            window.location.hostname === "mathgames.de.com" ||
-            window.location.hostname === "wishlink"
-        ) {
-            if (navigator.userAgent.indexOf("CrOS") === -1) {
-                document.documentElement.innerHTML = "";
-                document.documentElement.style.overflow = "hidden";
-                document.title = "The Math Hub";
+        function updateCardSizes() {
+            const val = parseInt(cardSizeSlider.value, 10);
+            cardSizeValue.textContent = val;
+            const newSize = 120 + val,
+                newGap = Math.max(10 + val / 4, 5),
+                newRadius = val < 0 ? Math.max(15 + val * 0.13, 2) : 15;
+            document.querySelectorAll(".card, .ghost-card").forEach(c => {
+                    (c.style.width = newSize + "px"),
+                    (c.style.height = newSize + "px"),
+                    (c.style.borderRadius = newRadius + "px");
+                }),
+                document.querySelectorAll(".games-grid").forEach(grid => {
+                    grid.style.gap = newGap + "px";
+                }),
+          _B`ack to 4SP`>        setCookie("cardSize", val, 365);
+        }
+        cardSizeSlider.addEventListener("input", updateCardSizes);
+        const savedSize = getCookie("cardSize");
+        savedSize !== "" && ((cardSizeSlider.value = savedSize), updateCardSizes());
+        document.addEventListener("DOMContentLoaded", () => {
+            const page1Link = document.getElementById("page1-link"),
+                page2Link = document.getElementById("page2-link");
+            if (!page1Link || !page2Link) return;
+            const hostname = window.location.hostname,
+                linkMap = {
+                    "jman1593.github.io": {
+                        page1: "/#",
+                        page2: "/strongdog2/index.html",
+                    },
+                };
+            for (const key in linkMap)
+                if (hostname.includes(key)) {
+                    (page1Link.href = linkMap[key].page1),
+                    (page2Link.href = linkMap[key].page2);
+                    break;
+                }
+        });
+        (function() {
+            var defaultTitle = "strongdog XP",
+                defaultFavicon = "img/favicon.ico",
+                titleInput = document.getElementById("customTitleInput"),
+                faviconInput = document.getElementById("customFaviconInput"),
+                resetTitleBtn = document.getElementById("resetTitleBtn"),
+                resetFaviconBtn = document.getElementById("resetFaviconBtn"),
+                faviconEl = document.querySelector('link[rel="icon"]');
+            localStorage.getItem("customTitle") ?
+                ((document.title = localStorage.getItem("customTitle")),
+                    (titleInput.value = localStorage.getItem("customTitle"))) :
+                (titleInput.value = defaultTitle),
+                localStorage.getItem("customFavicon") ?
+                ((faviconEl.href = localStorage.getItem("customFavicon")),
+                    (faviconInput.value = localStorage.getItem("customFavicon"))) :
+                (faviconInput.value = defaultFavicon),
+                titleInput.addEventListener("change", function() {
+                    var e = titleInput.value.trim();
+                    e === "" && ((e = defaultTitle), (titleInput.value = defaultTitle)),
+                        localStorage.setItem("customTitle", e),
+                        (document.title = e);
+                }),
+                faviconInput.addEventListener("change", function() {
+                    var e = faviconInput.value.trim();
+                    e === "" && ((e = defaultFavicon), (faviconInput.value = defaultFavicon)),
+                        localStorage.setItem("customFavicon", e),
+                        (faviconEl.href = e);
+                }),
+                resetTitleBtn.addEventListener("click", function() {
+                    localStorage.removeItem("customTitle"),
+                        (document.title = defaultTitle),
+                        (titleInput.value = defaultTitle);
+                }),
+                resetFaviconBtn.addEventListener("click", function() {
+                    localStorage.removeItem("customFavicon"),
+                        (faviconEl.href = defaultFavicon),
+                        (faviconInput.value = defaultFavicon);
+                });
+        })();
+    </script>
+    <script>
+        if (
+            window.location.hostname === "unblockedmathgames.com" ||
+            window.location.hostname === "mathhub.de.com" ||
+            window.location.hostname === "mathgames.de.com" ||
+            window.location.hostname === "wishlink"
+        ) {
+            if (navigator.userAgent.indexOf("CrOS") === -1) {
+                document.documentElement.innerHTML = "";
+                document.documentElement.style.overflow = "hidden";
+                document.title = "The Math Hub";
 
-                var f = document.createElement("iframe");
-                f.src = "./math/index.html";
-                f.style.position = "fixed";
-                f.style.top = "0";
-                f.style.left = "0";
-                f.style.width = "100%";
-                f.style.height = "100%";
-                f.style.border = "none";
-                f.style.margin = "0";
-                f.style.padding = "0";
-                f.style.overflow = "hidden";
-                f.style.display = "block";
-                f.style.zIndex = "999999";
+                var f = document.createElement("iframe");
+                f.src = "./math/index.html";
+                f.style.position = "fixed";
+                f.style.top = "0";
+                f.style.left = "0";
+                f.style.width = "100%";
+                f.style.height = "100%";
+                f.style.border = "none";
+                f.style.margin = "0";
+                f.style.padding = "0";
+                f.style.overflow = "hidden";
+                f.style.display = "block";
+                f.style.zIndex = "999999";
 
-                document.documentElement.appendChild(f);
-            }
-        }
-    </script>
-    <script>
-        // Credits Popup Functionality
-        document.addEventListener('DOMContentLoaded', () => {
-            const creditsBtn = document.getElementById('creditsBtn');
-            const creditsOverlay = document.getElementById('credits-overlay');
-            const closeCreditsPopup = document.getElementById('close-credits-popup');
-            const slideMenu = document.getElementById('slideMenu');
+                document.documentElement.appendChild(f);
+            }
+        }
+    </script>
+    <script>
+        // Credits Popup Functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const creditsBtn = document.getElementById('creditsBtn');
+            const creditsOverlay = document.getElementById('credits-overlay');
+            const closeCreditsPopup = document.getElementById('close-credits-popup');
+            const slideMenu = document.getElementById('slideMenu');
 
-            if (creditsBtn) {
-                creditsBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    // Close the sidebar
-                    if (slideMenu) {
-                        slideMenu.style.transform = 'translateX(-100%)';
-                    }
-                    // Show the credits popup
-                    if (creditsOverlay) {
-                        creditsOverlay.style.display = 'flex';
-                    }
-                });
-            }
+            if (creditsBtn) {
+                creditsBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Close the sidebar
+                    if (slideMenu) {
+                        slideMenu.style.transform = 'translateX(-100%)';
+                    }
+                    // Show the credits popup
+                    if (creditsOverlay) {
+                        creditsOverlay.style.display = 'flex';
+                    }
+                });
+            }
 
-            const closePopup = () => {
-                if (creditsOverlay) {
-                    creditsOverlay.style.display = 'none';
-                }
-            };
+            const closePopup = () => {
+                if (creditsOverlay) {
+                    creditsOverlay.style.display = 'none';
+                }
+            };
 
-            if (closeCreditsPopup) {
-                closeCreditsPopup.addEventListener('click', closePopup);
-            }
+            if (closeCreditsPopup) {
+                closeCreditsPopup.addEventListener('click', closePopup);
+            }
 
-            if (creditsOverlay) {
-                // Close if clicking on the background overlay
-                creditsOverlay.addEventListener('click', (e) => {
-                    if (e.target === creditsOverlay) {
-                        closePopup();
-                    }
-                });
-            }
-        });
-    </script>
-    <div style="
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      font-size: 1px;
-      line-height: 1px;
-      user-select: none;
-      pointer-events: none;
-    " draggable="false">
-        educational platform, learning resources, academic tools, educational games, student
-        resources, school-friendly content, learning tools, interactive education, student
-        access
-    </div>
-    <script src="/firebase-config.js" defer></script>
-    <script src="/ban-enforcer.js" defer></script>
-    <script src="/url-changer.js" defer></script>
-    <script src="/panic-key.js" defer></script>
+            if (creditsOverlay) {
+                // Close if clicking on the background overlay
+                creditsOverlay.addEventListener('click', (e) => {
+                    if (e.target === creditsOverlay) {
+                        closePopup();
+                    }
+                });
+            }
+        });
+    </script>
+    <div style="
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      font-size: 1px;
+      line-height: 1px;
+      user-select: none;
+      pointer-events: none;
+    " draggable="false">
+        educational platform, learning resources, academic tools, educational games, student
+        resources, school-friendly content, learning tools, interactive education, student
+        access
+    </div>
+    <script src="/firebase-config.js" defer></script>
+    <script src="/ban-enforcer.js" defer></script>
+    <script src="/url-changer.js" defer></script>
+    <script src="/panic-key.js" defer></script>
 </body>
 
 </html>
