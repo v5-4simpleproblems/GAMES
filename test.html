@@ -1,801 +1,799 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-    @font-face {
-        font-family: 'primary';
-        src: url('fonts/primary.woff') format('woff');
-    }
-
-    :root {
-        --red: rgb(220, 53, 69);
-        --green: rgb(40, 167, 69);
-        --ff: 'primary', sans-serif;
-        --bg: #2e2e2e;
-    }
-
-    body {
-        font-family: var(--ff);
-        margin: 0;
-        padding: 0;
-        background-color: var(--bg);
-        overflow-x: hidden;
-    }
-
-    .navbar {
-        background-color: rgba(50, 50, 50, 0.9);
-        backdrop-filter: blur(10px);
-        color: white;
-        padding: 15px 30px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        position: relative;
-		font-family: var(--ff);
-    }
-
-    .search-container {
-        display: flex;
-        align-items: center;
-        position: relative;
-		font-family: var(--ff);
-    }
-
-    .logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        font-weight: 700;
-        font-size: 2.5rem;
-        letter-spacing: 1px;
-        transition: transform 0.3s ease;
-        text-decoration: none;
-        color: white;
-    }
-
-    .logo:hover {
-        transform: translateX(-50%) scale(1.025);
-        text-decoration: none;
-    }
-
-    .logo .xp {
-        color: orange;
-        text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
-    }
-
-    .menu-icon {
-        font-size: 2.5rem;
-        cursor: pointer;
-        color: white;
-        transition: transform 0.3s ease, color 0.3s ease;
-    }
-
-    .menu-icon:hover {
-        transform: scale(1.2);
-        color: white;
-    }
-
-    .slide-menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 400px;
-        backdrop-filter: blur(10px);
-        color: white;
-        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
-        z-index: 1003;
-        transition: transform 0.5s ease;
-        transform: translateX(-100%);
-        padding: 20px;
-        overflow-y: auto;
-        box-sizing: border-box;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        background: linear-gradient(to bottom right,
-                rgba(43, 43, 43, 0.599),
-                rgba(53, 53, 53, 0.599),
-                rgba(80, 80, 80, 0.599));
-    }
-
-    .slide-menu::-webkit-scrollbar {
-        display: none;
-    }
-
-    .slide-menu[style*="translateX(0%)"] {
-        transform: translateX(0);
-    }
-
-    .categories {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        padding-top: 20px;
-    }
-
-    .categories>a {
-        padding: 17px;
-        background: linear-gradient(45deg, #333, #444);
-        border-radius: 15px;
-        text-decoration: none;
-        color: white;
-        transition: transform 0.4s ease;
-        text-align: center;
-        font-size: 1.2rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .categories>a:hover {
-        background: linear-gradient(45deg, #ffa500, #ff8433);
-        box-shadow: 0 6px 20px rgba(255, 98, 0, 0.5);
-    }
-
-    .categories>a::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        width: 0;
-        height: 0;
-        background: rgba(0, 0, 0, 0.1);
-        transition: all 0.5s ease;
-    }
-
-    .categories>a:hover::after {
-        width: 500px;
-        height: 500px;
-    }
-
-    span.new-feature-tag {
-        background: orange;
-        border-radius: 50px;
-        padding: 0.3rem 0.6rem;
-        margin-left: 1rem;
-        font-size: 0.7rem;
-        color: black;
-        text-transform: uppercase;
-        box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
-    }
-
-    .search-bar {
-        padding: 0.8rem 1.2rem;
-        font-size: 1rem;
-        border-radius: 15px;
-        width: 275px;
-        border: none;
-        background-color: rgba(0, 0, 0, 0.4);
-        color: white;
-        transition: all 0.3s ease;
-        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-		font-family: var(--ff);
-    }
-
-    .search-bar::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-		font-family: var(--ff);
-    }
-
-    .search-bar:focus {
-        outline: none;
-        background-color: rgba(0, 0, 0, 0.6);
-		font-family: var(--ff);
-    }
-
-    .games-grid {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 20px;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .ghost-card {
-        background: #3e3e3e;
-        animation: pulse 1.5s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-
-        0%,
-        100% {
-            background: #3e3e3e;
+<head>
+    <title>4SP - STRONGDOG</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico" id="faviconLink" />
+    <style>
+        @font-face {
+            font-family: 'primary';
+            src: url('fonts/primary.woff') format('woff');
         }
 
-        50% {
-            background: #5e5e5e;
+        :root {
+            --red: rgb(220, 53, 69);
+            --green: rgb(40, 167, 69);
+            --ff: 'primary', sans-serif;
+            --bg: #2e2e2e;
+            --purple: #6720BD;
         }
-    }
 
-    .card,
-    .ghost-card {
-        border-radius: 15px;
-        width: 120px;
-        aspect-ratio: 1;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-        transition: all 0.4s ease;
-    }
+        body {
+            font-family: var(--ff);
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            overflow-x: hidden;
+        }
 
-    .card {
-        background: transparent;
-        position: relative;
-        overflow: hidden;
-        text-decoration: none;
-    }
-
-    .card:hover {
-        transform: scale(1.1) translateY(-10px);
-        box-shadow: 0 10px 30px rgba(255, 98, 0, 0.4);
-    }
-
-    .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.4s ease;
-    }
-
-    .card:hover img {
-        transform: scale(1.05);
-    }
-
-    .card figcaption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-        color: #ffffff;
-        padding: 10px 0;
-        transition: all 0.4s ease;
-        transform: translateY(100%);
-        opacity: 0;
-        text-align: center;
-        font-weight: 600;
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-    }
-
-    .card:hover figcaption {
-        transform: translateY(1px);
-        opacity: 1;
-    }
-
-    .search-results {
-        position: absolute;
-        right: 0;
-        top: 71px;
-        background-color: rgba(30, 30, 30, 0.9);
-        backdrop-filter: blur(5px);
-        border-radius: 15px;
-        width: 313px;
-        display: none;
-        overflow: hidden;
-        z-index: 1000;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-    }
-
-    .search-results a {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: white;
-        padding: 10px;
-        transition: all 0.3s ease;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .search-results a:focus,
-    .search-results a:hover {
-        outline: none;
-        background: rgba(50, 50, 50, 0.7);
-        padding-left: 15px;
-    }
-
-    .search-results img {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-        margin-right: 15px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .search-results a:last-child {
-        border-bottom: none;
-    }
-
-    .news-container {
-        margin: 30px auto;
-        padding: 30px;
-        max-width: 900px;
-        background-color: #444444;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .news {
-        color: white;
-    }
-
-    .credits-title {
-        font-size: 2rem;
-        margin-bottom: 20px;
-        color: white;
-        border-bottom: 3px solid #ddd;
-        padding-bottom: 10px;
-        text-shadow: none;
-    }
-
-    .credits-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .credits-role {
-        font-weight: 700;
-        color: white;
-        font-size: 1.2rem;
-    }
-
-    .credits-names {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        align-items: center;
-    }
-
-    .credits-link {
-        color: #4fa7ff;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .credits-link:hover {
-        text-decoration: underline;
-    }
-
-    .credits-names span {
-        color: #c4c4c4;
-    }
-
-    h2 {
-        text-align: center;
-        color: white;
-        margin: 40px 0;
-        font-size: 2.5rem;
-        text-shadow: none;
-    }
-
-    .updates-paragraph-text {
-        color: black;
-        background-color: #a83632;
-        background: linear-gradient(156deg, #ae8625, #f7ef8a, #d1ac47, #edc967);
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px #d1ac4780;
-        font-size: 1.1rem;
-        text-align: center;
-        max-width: 850px;
-        margin-block: 20px;
-    }
-
-    .updates-text-container {
-        margin: 0 20%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    #topGameList,
-    #allList,
-    #favoritesGameList {
-        max-width: 1600px;
-        margin: 0 auto;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-content {
-        background-color: #757575;
-        padding: 30px;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 450px;
-        text-align: center;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-        color: white;
-    }
-
-    .modal-close {
-        color: #aaa;
-        float: right;
-        font-size: 32px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .modal-close:hover,
-    .modal-close:focus {
-        color: #000;
-        transform: scale(1.2);
-    }
-
-    .modal-link {
-        color: blue;
-        text-decoration: underline;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .modal-link:hover {
-        color: #ff8433;
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .edit-button {
-        width: 30px;
-        cursor: pointer;
-        fill: #999;
-        transition: transform 0.3s ease;
-    }
-
-    .edit-button:hover {
-        transform: scale(1.2);
-    }
-
-    .custom-slide-menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 400px;
-        background-color: #202020;
-        color: white;
-        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
-        z-index: 1003;
-        transition: transform 0.5s ease;
-        transform: translateX(-100%);
-        padding: 20px;
-        overflow-y: auto;
-        box-sizing: border-box;
-    }
-
-    .custom-slide-menu[style*="translateX(0%)"] {
-        transform: translateX(0);
-    }
-
-    .custom-options {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px 0;
-    }
-
-    .toggle-option {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        background: #333333;
-        border-radius: 10px;
-    }
-
-    .toggle-option label {
-        font-size: 1.2rem;
-        color: white;
-    }
-
-    .toggle-option input[type="checkbox"] {
-        appearance: none;
-        width: 50px;
-        height: 25px;
-        background: #555555;
-        border-radius: 25px;
-        position: relative;
-        cursor: pointer;
-        outline: none;
-        transition: background 0.3s ease;
-    }
-
-    .toggle-option input[type="checkbox"]:checked {
-        background: #007bff;
-    }
-
-    .toggle-option input[type="checkbox"]::before {
-        content: "";
-        position: absolute;
-        width: 21px;
-        height: 21px;
-        background: white;
-        border-radius: 50%;
-        top: 2px;
-        left: 2px;
-        transition: transform 0.3s ease;
-    }
-
-    .toggle-option input[type="checkbox"]:checked::before {
-        transform: translateX(25px);
-    }
-
-    input[type="range"] {
-        appearance: none;
-        width: 100%;
-        margin: 10px 0;
-        background: transparent;
-    }
-
-    input[type="range"]::-webkit-slider-runnable-track {
-        height: 8px;
-        background: #ccc;
-        border-radius: 5px;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-        appearance: none;
-        height: 20px;
-        width: 20px;
-        background: #fff;
-        border: 1px solid #777;
-        border-radius: 50%;
-        cursor: pointer;
-        margin-top: -6px;
-    }
-
-    #customSlideMenu .custom-options {
-        padding: 20px !important;
-    }
-
-    #customSlideMenu .custom-option {
-        margin-bottom: 20px !important;
-    }
-
-    #customSlideMenu label {
-        color: white;
-        display: block;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
-        font-weight: 600;
-    }
-
-    #customSlideMenu input[type="text"] {
-        width: 100% !important;
-        padding: 10px !important;
-        border: 1px solid #444 !important;
-        border-radius: 5px !important;
-        font-size: 1rem !important;
-        background-color: #333 !important;
-        color: white !important;
-        box-sizing: border-box !important;
-    }
-
-    #customSlideMenu input[type="text"]::placeholder {
-        color: #bbb !important;
-    }
-
-    #customSlideMenu button {
-        margin-top: 10px !important;
-        padding: 10px 15px !important;
-        border: none !important;
-        border-radius: 5px !important;
-        background-color: #ff8c00 !important;
-        color: white !important;
-        cursor: pointer !important;
-        font-size: 1rem !important;
-        transition: background-color 0.3s ease !important;
-    }
-
-    #customSlideMenu button:hover {
-        background-color: #ff6a00 !important;
-    }
-
-    /* Credits Popup Styles */
-    #credits-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(5px);
-        z-index: 2000;
-        display: none;
-        /* Hidden by default */
-        justify-content: center;
-        align-items: flex-start;
-        /* Aligns popup to the top */
-        padding-top: 15vh;
-        /* Pushes it down a bit */
-    }
-
-    #credits-popup {
-        background: #3a3a3a;
-        color: white;
-        padding: 25px 35px;
-        border-radius: 15px;
-        width: 90%;
-        max-width: 550px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-        position: relative;
-        border: 1px solid #555;
-    }
-
-    #close-credits-popup {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 2.5rem;
-        color: #ccc;
-        cursor: pointer;
-        transition: color 0.3s ease, transform 0.3s ease;
-    }
-
-    #close-credits-popup:hover {
-        color: white;
-        transform: scale(1.1);
-    }
-
-    #credits-popup h3 {
-        text-align: center;
-        font-size: 2rem;
-        margin-top: 0;
-        margin-bottom: 25px;
-        border-bottom: 2px solid orange;
-        padding-bottom: 10px;
-    }
-
-    #credits-popup .credit-person {
-        margin-bottom: 20px;
-    }
-
-    #credits-popup .credit-person h4 {
-        font-size: 1.4rem;
-        color: orange;
-        margin: 0 0 8px 0;
-    }
-
-    #credits-popup .credit-person p {
-        font-size: 1rem;
-        line-height: 1.5;
-        margin: 0;
-        color: #e0e0e0;
-    }
-
-    @media (max-width: 768px) {
         .navbar {
-            flex-wrap: wrap;
-            padding: 10px 15px;
-        }
-
-        .menu-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            left: 50%;
-            transform: translateX(-50%);
+            background-color: rgba(50, 50, 50, 0.9);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            font-family: var(--ff);
         }
 
         .search-container {
             display: flex;
             align-items: center;
             position: relative;
+            font-family: var(--ff);
         }
 
-        .search-bar {
-            width: 90%;
-            font-size: 0.9rem;
-			font-family: 'primary', sans-serif;
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 700;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: white;
         }
 
-        .slide-menu,
-        .custom-slide-menu {
-            width: 250px;
+        .logo:hover {
+            transform: translateX(-50%) scale(1.025);
+            text-decoration: none;
+        }
+
+        .logo .xp {
+            color: var(--purple);
+            text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
+        }
+
+        .menu-icon {
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .menu-icon:hover {
+            transform: scale(1.2);
+            color: white;
+        }
+
+        .slide-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 400px;
+            backdrop-filter: blur(10px);
+            color: white;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+            z-index: 1003;
+            transition: transform 0.5s ease;
+            transform: translateX(-100%);
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            background: linear-gradient(to bottom right,
+                    rgba(43, 43, 43, 0.599),
+                    rgba(53, 53, 53, 0.599),
+                    rgba(80, 80, 80, 0.599));
+        }
+
+        .slide-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide-menu[style*="translateX(0%)"] {
+            transform: translateX(0);
+        }
+
+        .categories {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-top: 20px;
         }
 
         .categories>a {
+            padding: 17px;
+            background: linear-gradient(45deg, #333, #444);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.4s ease;
+            text-align: center;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .categories>a:hover {
+            background: linear-gradient(45deg, #6720BD, #8a2be2);
+            box-shadow: 0 6px 20px rgba(103, 32, 189, 0.5);
+        }
+
+        .categories>a::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .categories>a:hover::after {
+            width: 500px;
+            height: 500px;
+        }
+
+        span.new-feature-tag {
+            background: var(--purple);
+            border-radius: 50px;
+            padding: 0.3rem 0.6rem;
+            margin-left: 1rem;
+            font-size: 0.7rem;
+            color: white;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
+        }
+
+        .search-bar {
+            padding: 0.8rem 1.2rem;
             font-size: 1rem;
-            padding: 15px;
+            border-radius: 15px;
+            width: 275px;
+            border: none;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            font-family: var(--ff);
         }
 
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            font-family: var(--ff);
+        }
+
+        .search-bar:focus {
+            outline: none;
+            background-color: rgba(0, 0, 0, 0.6);
+            font-family: var(--ff);
+        }
+        
+        /* --- New Game Grid & Cards Styles --- */
         .games-grid {
-            gap: 8px;
-            padding: 10px;
-        }
-
-        .card,
-        .ghost-card {
-            width: 100px;
-            aspect-ratio: 1;
-        }
-
-        .card figcaption {
-            font-size: 0.9rem;
-        }
-
-        .news-container {
-            margin: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
             padding: 20px;
         }
 
-        .edit-button {
-            width: 25px;
+        .zone-item {
+            background-color: #3a3a3a; /* Dark background for cards */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
         }
-    }
-</style>
+        
+        .zone-item img.game-cover {
+            width: 100%; height: 100%; object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.4s ease-in-out;
+        }
+        
+        .zone-item .card-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(15, 15, 25, 0.9) 0%, rgba(20, 20, 30, 0.5) 50%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 15px;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-sizing: border-box;
+            color: #fff;
+        }
 
-<head>
-    <title>4SP - STRONGDOG</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <meta name="keywords"
-        content="educational platform, learning resources, academic tools, educational games, student resources, school-friendly content, learning tools, interactive education, student access" />
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@graph": [{
-                    "@type": "Organization",
-                    "name": "strongdogXP LLC",
-                    "url": "https://65s.org/",
-                    "logo": "https://65s.org/images/logo.png",
-                    "description": "strongdog XP is a gaming portal where users can access a wide variety of browser games and connect with the community through the Discord server.",
-                    "founder": {
-                        "@type": "Person",
-                        "name": "Josh P"
-                    }
-                },
-                {
-                    "@type": "WebSite",
-                    "url": "https://65s.org/",
-                    "name": "strongdog XP"
-                },
-                {
-                    "@type": "WebPage",
-                    "url": "https://65s.org/",
-                    "name": "Home",
-                    "description": "Browse a wide variety of browser games and join the strongdogXP community.",
-                    "inLanguage": "en-US"
-                },
-                {
-                    "@type": "BreadcrumbList",
-                    "itemListElement": [{
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Home",
-                        "item": "https://65s.org/"
-                    }]
-                }
-            ]
+        .zone-item:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 8px 30px rgba(103, 32, 189, 0.4);
         }
-    </script>
-    <link rel="icon" type="image/x-icon" href="img/favicon.ico" id="faviconLink" />
+        .zone-item:hover .game-cover {
+            transform: scale(1.1);
+        }
+        .zone-item:hover .card-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .zone-item .game-title {
+            font-family: var(--ff);
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+        }
+
+        .zone-item .card-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .zone-item .card-play-btn, .zone-item .favorite-btn {
+            border: none;
+            border-radius: 8px;
+            height: 38px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zone-item .card-play-btn {
+            flex-grow: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #6720bd;
+            font-weight: bold;
+            font-family: var(--ff);
+        }
+        .zone-item .card-play-btn:hover {
+            background-color: #fff;
+            transform: scale(1.05);
+        }
+
+        .zone-item .favorite-btn {
+            width: 38px;
+            background-color: rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+        .zone-item .favorite-btn:hover {
+            background-color: rgba(255, 255, 255, 0.35);
+        }
+        .zone-item .favorite-btn img {
+            width: 20px;
+            height: 20px;
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+
+        .zone-item .favorite-btn.favorited img {
+            /* Make white, add yellow/orange drop-shadow for tint/glow effect */
+            filter: brightness(0) invert(1) drop-shadow(0 0 6px #ffc107) drop-shadow(0 0 10px #ff8c00);
+            transform: scale(1.1);
+        }
+
+        /* --- End New Game Styles --- */
+
+        .search-results {
+            position: absolute;
+            right: 0;
+            top: 71px;
+            background-color: rgba(30, 30, 30, 0.9);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            width: 313px;
+            display: none;
+            overflow: hidden;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .search-results a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            padding: 10px;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .search-results a:focus,
+        .search-results a:hover {
+            outline: none;
+            background: rgba(50, 50, 50, 0.7);
+            padding-left: 15px;
+        }
+
+        .search-results img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-results a:last-child {
+            border-bottom: none;
+        }
+
+        .news-container {
+            margin: 30px auto;
+            padding: 30px;
+            max-width: 900px;
+            background-color: #444444;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .news {
+            color: white;
+        }
+
+        .credits-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: white;
+            border-bottom: 3px solid #ddd;
+            padding-bottom: 10px;
+            text-shadow: none;
+        }
+
+        .credits-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .credits-role {
+            font-weight: 700;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .credits-names {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .credits-link {
+            color: #4fa7ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .credits-link:hover {
+            text-decoration: underline;
+        }
+
+        .credits-names span {
+            color: #c4c4c4;
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+            margin: 40px 0;
+            font-size: 2.5rem;
+            text-shadow: none;
+        }
+
+        .updates-paragraph-text {
+            color: black;
+            background-color: #a83632;
+            background: linear-gradient(156deg, #d1c4e9, #e6e6fa, #d8bfd8, #e0b0ff);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(209, 196, 233, 0.5);
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 850px;
+            margin-block: 20px;
+        }
+
+        .updates-text-container {
+            margin: 0 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #topGameList,
+        #allList,
+        #favoritesGameList {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #757575;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            color: white;
+        }
+
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+            color: #000;
+            transform: scale(1.2);
+        }
+
+        .modal-link {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-link:hover {
+            color: var(--purple);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .edit-button {
+            width: 30px;
+            cursor: pointer;
+            fill: #999;
+            transition: transform 0.3s ease;
+        }
+
+        .edit-button:hover {
+            transform: scale(1.2);
+        }
+
+        .custom-slide-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 400px;
+            background-color: #202020;
+            color: white;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
+            z-index: 1003;
+            transition: transform 0.5s ease;
+            transform: translateX(-100%);
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .custom-slide-menu[style*="translateX(0%)"] {
+            transform: translateX(0);
+        }
+
+        .custom-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .toggle-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #333333;
+            border-radius: 10px;
+        }
+
+        .toggle-option label {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .toggle-option input[type="checkbox"] {
+            appearance: none;
+            width: 50px;
+            height: 25px;
+            background: #555555;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-option input[type="checkbox"]:checked {
+            background: #007bff;
+        }
+
+        .toggle-option input[type="checkbox"]::before {
+            content: "";
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-option input[type="checkbox"]:checked::before {
+            transform: translateX(25px);
+        }
+
+        input[type="range"] {
+            appearance: none;
+            width: 100%;
+            margin: 10px 0;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            background: #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            background: #fff;
+            border: 1px solid #777;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+
+        #customSlideMenu .custom-options {
+            padding: 20px !important;
+        }
+
+        #customSlideMenu .custom-option {
+            margin-bottom: 20px !important;
+        }
+
+        #customSlideMenu label {
+            color: white;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        #customSlideMenu input[type="text"] {
+            width: 100% !important;
+            padding: 10px !important;
+            border: 1px solid #444 !important;
+            border-radius: 5px !important;
+            font-size: 1rem !important;
+            background-color: #333 !important;
+            color: white !important;
+            box-sizing: border-box !important;
+        }
+
+        #customSlideMenu input[type="text"]::placeholder {
+            color: #bbb !important;
+        }
+
+        #customSlideMenu button {
+            margin-top: 10px !important;
+            padding: 10px 15px !important;
+            border: none !important;
+            border-radius: 5px !important;
+            background-color: var(--purple) !important;
+            color: white !important;
+            cursor: pointer !important;
+            font-size: 1rem !important;
+            transition: background-color 0.3s ease !important;
+        }
+
+        #customSlideMenu button:hover {
+            background-color: #5a1aa8 !important;
+        }
+
+        /* Credits Popup Styles */
+        #credits-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 15vh;
+        }
+
+        #credits-popup {
+            background: #3a3a3a;
+            color: white;
+            padding: 25px 35px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 550px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            border: 1px solid #555;
+        }
+
+        #close-credits-popup {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2.5rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        #close-credits-popup:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        #credits-popup h3 {
+            text-align: center;
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--purple);
+            padding-bottom: 10px;
+        }
+
+        #credits-popup .credit-person {
+            margin-bottom: 20px;
+        }
+
+        #credits-popup .credit-person h4 {
+            font-size: 1.4rem;
+            color: var(--purple);
+            margin: 0 0 8px 0;
+        }
+
+        #credits-popup .credit-person p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0;
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+                padding: 10px 15px;
+            }
+
+            .menu-icon {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .search-container {
+                display: flex;
+                align-items: center;
+                position: relative;
+            }
+
+            .search-bar {
+                width: 90%;
+                font-size: 0.9rem;
+                font-family: 'primary', sans-serif;
+            }
+
+            .slide-menu,
+            .custom-slide-menu {
+                width: 250px;
+            }
+
+            .categories>a {
+                font-size: 1rem;
+                padding: 15px;
+            }
+
+            .games-grid {
+                gap: 15px;
+                padding: 15px;
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .zone-item .game-title {
+                font-size: 1em;
+            }
+
+            .zone-item .card-play-btn, .zone-item .favorite-btn {
+                height: 32px;
+            }
+
+            .zone-item .favorite-btn {
+                width: 32px;
+            }
+
+            .zone-item .favorite-btn img {
+                width: 16px;
+                height: 16px;
+            }
+
+            .news-container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .edit-button {
+                width: 25px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -906,90 +904,73 @@
             targetUrl
         } from "./appscript.js";
 
-        const numTopGames = 20;
+        // --- DOM Elements ---
         const topGameList = document.getElementById("topGameList");
+        const allListElement = document.getElementById("allList");
+        const favoritesGameList = document.getElementById("favoritesGameList");
+        const favoritesHeader = document.getElementById("favoritesHeader");
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+        const favoritesToggle = document.getElementById("favoritesToggle");
 
-        for (let i = 0; i < numTopGames; i++) {
-            const ghostCard = document.createElement("div");
-            ghostCard.classList.add("ghost-card"),
-                (ghostCard.style.animation = `pulse 2s ${i / 15}s infinite`),
-                topGameList.appendChild(ghostCard);
-        }
-        async function fetchTopGames() {
-            try {
-                const response = await fetch(targetUrl);
-                if (!response.ok) throw new Error("Network error:" + response.statusText);
-                const data = await response.json();
-                if (data && data.content) {
-                    const parsedData = JSON.parse(data.content);
-                    displayTopGames(parsedData);
+        // --- Favorites Management ---
+        const FAVORITES_KEY = 'strongdogXPFavorites';
+        const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
+        const saveFavorites = (favs) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
+        
+        function toggleFavorite(gameId, buttonElement) {
+            let favorites = getFavorites();
+            if (favorites.includes(gameId)) {
+                favorites = favorites.filter(id => id !== gameId);
+                buttonElement.classList.remove('favorited');
+            } else {
+                favorites.push(gameId);
+                buttonElement.classList.add('favorited');
+            }
+            saveFavorites(favorites);
+
+            // Update the star on any other matching card (e.g., in the "All" list if you unfavorite from "Top 20")
+            document.querySelectorAll(`.zone-item[data-game-id='${gameId}'] .favorite-btn`).forEach(btn => {
+                if (favorites.includes(gameId)) {
+                    btn.classList.add('favorited');
+                } else {
+                    btn.classList.remove('favorited');
                 }
-            } catch (e) {
-                console.error(`Error while fetching games: ${e}`);
+            });
+
+            // Re-render favorites list if it's currently visible
+            if (favoritesToggle.checked) {
+                renderFavorites();
             }
         }
 
-        // Create a map of games for fast lookups. This is more efficient than searching the array every time.
-        const gameMap = new Map(games.map(game => [normalizeGameName(game.name), game]));
-
-        fetchTopGames();
-
-        function displayTopGames(topData) {
-            topGameList.innerHTML = "";
-            let foundCount = 0;
-            let index = 1;
-            const displayed = new Set();
-            while (foundCount < numTopGames && index < topData.length) {
-                const row = topData[index],
-                    gameName = row[0],
-                    normalizedGameName = normalizeGameName(gameName);
-
-                if (!displayed.has(normalizedGameName)) {
-                    // Use the map to find the full game object.
-                    const gameData = gameMap.get(normalizedGameName);
-                    if (gameData) {
-                        // Generate the card HTML directly instead of searching the DOM for it.
-                        const cardHTML = getCardHTML(gameData);
-                        topGameList.insertAdjacentHTML('beforeend', cardHTML);
-                        displayed.add(normalizedGameName);
-                        foundCount++;
-                    }
-                }
-                index++;
-            }
-        }
-
-        function normalizeGameName(name) {
-            return name
-                .toLowerCase()
-                .replace(/\s+/g, "")
-                .replace(/[^a-z0-9]/g, "");
-        }
-
+        // --- URL and Path Helpers ---
         function getPageNumberFromURL(url) {
-            const regex = /(strongdog|mathcord|stroongdog)(\d*)/,
-                match = url.match(regex);
+            const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
+            const match = url.match(regex);
             if (match) return match[2] === "" ? 1 : parseInt(match[2], 10);
             return 1;
         }
+
         const siteMapping = window.siteMapping || {};
 
         function getCurrentSiteKey() {
-            const currentURL = window.location.href,
-                keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
-            for (const k of keys)
+            const currentURL = window.location.href;
+            const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
+            for (const k of keys) {
                 if (currentURL.includes(k)) return k;
+            }
             return null;
         }
 
         function getAdjustedUrls(href, imgSrc, page) {
-            let adjustedHref = href,
-                adjustedImgSrc = `./img/${imgSrc}`,
-                currentSiteKey = getCurrentSiteKey();
+            let adjustedHref = href;
+            let adjustedImgSrc = `./img/${imgSrc}`;
+            let currentSiteKey = getCurrentSiteKey();
             if (currentSiteKey) {
-                const currentSitePages = siteMapping[currentSiteKey],
-                    pageMap = {},
-                    currentPageNumber = getPageNumberFromURL(currentSiteKey);
+                const currentSitePages = siteMapping[currentSiteKey];
+                const pageMap = {};
+                const currentPageNumber = getPageNumberFromURL(currentSiteKey);
                 pageMap[currentPageNumber] = currentSiteKey;
                 if (currentSitePages) {
                     currentSitePages.forEach(u => {
@@ -999,15 +980,17 @@
                 }
                 if (page !== undefined && page !== currentPageNumber) {
                     let newBase = pageMap[page];
-                    newBase || (newBase = window.location.origin + `/strongdog${page}`),
-                        (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
-                        (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
+                    if (!newBase) {
+                        newBase = window.location.origin + `/strongdog${page}`;
+                    }
+                    adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`;
+                    adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
                 }
             } else if (page !== undefined && page > 1) {
-                const origin = window.location.origin,
-                    newBase = `${origin}/strongdog${page}`;
-                (adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`),
-                (adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`);
+                const origin = window.location.origin;
+                const newBase = `${origin}/strongdog${page}`;
+                adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`;
+                adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
             }
             return {
                 adjustedHref,
@@ -1015,290 +998,278 @@
             };
         }
 
-        function getCardHTML(game) {
-            const {
-                href,
-                imgSrc,
-                name,
-                page,
-                id
-            } = game, {
-                adjustedHref,
-                adjustedImgSrc
-            } = getAdjustedUrls(href, imgSrc, page),
-                gameLink = `./play/?id=${id}`,
-                normalized = normalizeGameName(name);
+        // --- Game Card Rendering ---
+        function createGameCard(game) {
+            const { href, imgSrc, name, page, id } = game;
+            const { adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
+            const favorites = getFavorites();
 
-            // MODIFIED: Added decoding="async" and explicit width/height attributes.
-            // These additions help the browser render more smoothly by preventing layout shifts
-            // and decoding images off the main thread.
-            return `
-                <a href="${gameLink}" class="card" data-game-id="${normalized}" data-page="${page}">
-                    <img src="${adjustedImgSrc}" alt="${name}" loading="lazy" decoding="async" width="120" height="120">
-                    <figcaption>${name}</figcaption>
-                </a>
-              `;
+            const zoneItem = document.createElement("div");
+            zoneItem.className = "zone-item";
+            zoneItem.dataset.gameId = id; // Use the unique game ID
+            
+            zoneItem.addEventListener('click', (e) => {
+                if (e.target.closest('button')) return; // Don't navigate if a button was clicked
+                window.location.href = `./play/?id=${id}`;
+            });
+
+            const coverImg = document.createElement("img");
+            coverImg.className = "game-cover";
+            coverImg.src = adjustedImgSrc;
+            coverImg.alt = name;
+            coverImg.loading = "lazy";
+            coverImg.onerror = () => {
+                coverImg.src = './img/favicon.ico'; // Fallback image
+                coverImg.style.objectFit = 'contain';
+            };
+
+            const overlay = document.createElement("div");
+            overlay.className = "card-overlay";
+
+            const title = document.createElement("h3");
+            title.className = "game-title";
+            title.textContent = name;
+
+            const buttons = document.createElement("div");
+            buttons.className = "card-buttons";
+
+            const playButton = document.createElement("button");
+            playButton.className = "card-play-btn";
+            playButton.textContent = "PLAY";
+            playButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.location.href = `./play/?id=${id}`;
+            });
+
+            const favoriteButton = document.createElement("button");
+            favoriteButton.className = "favorite-btn";
+            if (favorites.includes(id)) {
+                favoriteButton.classList.add('favorited');
+            }
+            const favImg = document.createElement('img');
+            favImg.src = 'images/star-dark.png'; // Corrected path
+            favImg.alt = 'Favorite';
+            favoriteButton.appendChild(favImg);
+            favoriteButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorite(id, favoriteButton);
+            });
+
+            buttons.append(playButton, favoriteButton);
+            overlay.append(title, buttons);
+            zoneItem.append(coverImg, overlay);
+            return zoneItem;
         }
 
-        const allListElement = document.getElementById("allList");
-        
-        // --- START: New efficient image loading logic ---
-
-        // To handle a large number of games without lag, we implement "virtual scrolling".
-        // Instead of adding all game cards to the page at once (which is slow),
-        // we load them in batches as the user scrolls down. This keeps the page fast and responsive.
-        // We use the IntersectionObserver API to detect when the user is nearing the end of the loaded content.
-
-        // 1. Configuration for virtual scrolling
-        const GAMES_PER_BATCH = 40; // The number of games to load each time the user scrolls down.
-        let currentGameIndex = 0; // A counter to track which games have been loaded so far.
-
-        // 2. Function to load and display the next batch of games
-        function loadMoreGames() {
-            // If we've already loaded all the games, stop the observer to save resources.
-            if (currentGameIndex >= games.length) {
-                if (observer) {
-                    observer.disconnect();
-                }
-                return;
-            }
-
-            // Using a DocumentFragment is much faster for performance than appending elements one by one.
+        function renderGames(gamesToRender, targetElement) {
+            targetElement.innerHTML = '';
             const fragment = document.createDocumentFragment();
-            const endIndex = Math.min(currentGameIndex + GAMES_PER_BATCH, games.length);
-
-            // Create the HTML for the next batch of games
-            for (let i = currentGameIndex; i < endIndex; i++) {
-                const game = games[i];
-                const cardHTML = getCardHTML(game);
-                // A temporary element is needed to convert the HTML string into a real DOM node
-                const tempContainer = document.createElement('div');
-                tempContainer.innerHTML = cardHTML.trim();
-                fragment.appendChild(tempContainer.firstChild);
-            }
-
-            // Append the entire batch of new game cards to the grid in a single operation.
-            allListElement.appendChild(fragment);
-            // Update our counter for the next batch.
-            currentGameIndex = endIndex;
+            gamesToRender.forEach(game => {
+                fragment.appendChild(createGameCard(game));
+            });
+            targetElement.appendChild(fragment);
         }
 
-        // 3. Set up the Intersection Observer to trigger loading more games.
-        // This observer will watch a "sentinel" element at the bottom of the page.
-        const sentinel = document.createElement('div');
-        sentinel.id = 'sentinel';
-        sentinel.style.height = '10px'; // Give it a small height to ensure it can be observed.
-        document.body.appendChild(sentinel); // Add the sentinel to the end of the page body.
-
-        const observerOptions = {
-            root: null, // Use the browser viewport as the scroll area.
-            rootMargin: '300px', // Start loading when the user scrolls within 300px of the bottom.
-            threshold: 0.1 // Trigger when at least 10% of the sentinel is visible.
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            // This callback is triggered whenever the sentinel's visibility changes.
-            if (entries[0].isIntersecting) {
-                loadMoreGames(); // If the sentinel is on-screen, load the next batch of games.
+        // --- Top Games Logic ---
+        async function fetchTopGames() {
+            try {
+                const response = await fetch(targetUrl);
+                if (!response.ok) throw new Error(`Network error: ${response.statusText}`);
+                const data = await response.json();
+                if (data && data.content) {
+                    const parsedData = JSON.parse(data.content);
+                    displayTopGames(parsedData);
+                }
+            } catch (e) {
+                console.error(`Error while fetching games: ${e}`);
+                topGameList.innerHTML = '<p style="color: white; text-align: center;">Could not load top games.</p>';
             }
-        }, observerOptions);
+        }
 
-        // Start observing the sentinel element.
-        observer.observe(sentinel);
+        function displayTopGames(topData) {
+            const numTopGames = 20;
+            const topGameNames = topData.slice(1, numTopGames + 1).map(row => row[0]);
+            
+            const topGameObjects = topGameNames
+                .map(name => games.find(game => game.name === name))
+                .filter(game => game !== undefined); // Filter out any games not found
 
-        // Load the very first batch of games when the page loads.
-        loadMoreGames();
+            renderGames(topGameObjects, topGameList);
+        }
 
-        // --- END: New efficient image loading logic ---
-
-        const searchInput = document.getElementById("searchInput");
-        searchInput.placeholder = `Search ${games.length} games...`;
-
-        const searchResults = document.getElementById("searchResults");
-
+        // --- Favorites Display Logic ---
+        function renderFavorites() {
+            const favoriteIds = getFavorites();
+            if (favoriteIds.length > 0) {
+                const favoriteGames = games.filter(game => favoriteIds.includes(game.id));
+                renderGames(favoriteGames, favoritesGameList);
+            } else {
+                favoritesGameList.innerHTML = '<p style="color: #ccc; text-align: center; grid-column: 1 / -1;">You haven\'t favorited any games yet. Click the star on a game to add it here!</p>';
+            }
+        }
+        
+        favoritesToggle.addEventListener("change", () => {
+            if (favoritesToggle.checked) {
+                favoritesHeader.style.display = "block";
+                favoritesGameList.style.display = "grid";
+                renderFavorites();
+                setCookie("favoritesEnabled", "true", 365);
+            } else {
+                favoritesHeader.style.display = "none";
+                favoritesGameList.style.display = "none";
+                setCookie("favoritesEnabled", "false", 365);
+            }
+        });
+        
+        // --- Search Logic ---
         function updateSearchResults() {
-            const text = searchInput.value.toLowerCase(),
-                filtered = games.filter(g => g.name.toLowerCase().includes(text)).slice(0, 7);
+            const text = searchInput.value.toLowerCase().trim();
+            
+            // Filter all games list in real-time
+            const filteredAllGames = text ? games.filter(g => g.name.toLowerCase().includes(text)) : games;
+            renderGames(filteredAllGames, allListElement);
+
+            // Update dropdown search results
+            const filteredDropdown = text ? games.filter(g => g.name.toLowerCase().includes(text)).slice(0, 7) : [];
+            
             searchResults.innerHTML = "";
-            if (!filtered.length) {
+            if (filteredDropdown.length === 0 || !text) {
                 searchResults.style.display = "none";
                 return;
             }
-            filtered.forEach(game => {
-                    const {
-                        id,
-                        imgSrc,
-                        name,
-                        page
-                    } = game, {
-                        adjustedImgSrc
-                    } = getAdjustedUrls(game.href, imgSrc, page),
-                    linkEl = document.createElement("a");
-                    (linkEl.href = `./play/?id=${id}`),
-                    (linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`),
-                    searchResults.appendChild(linkEl);
-                }),
-                (searchResults.style.display = "block");
+            filteredDropdown.forEach(game => {
+                const { id, imgSrc, name, page } = game;
+                const { adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page);
+                const linkEl = document.createElement("a");
+                linkEl.href = `./play/?id=${id}`;
+                linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`;
+                searchResults.appendChild(linkEl);
+            });
+            searchResults.style.display = "block";
         }
-        if (searchInput && searchResults) {
-            searchInput.addEventListener("focus", updateSearchResults),
-                searchInput.addEventListener("input", updateSearchResults),
-                document.addEventListener("click", ev => {
-                    if (!searchInput.contains(ev.target) && !searchResults.contains(ev.target))
-                        searchResults.style.display = "none";
-                });
-        }
-        const menuIcon = document.getElementById("menuIcon"),
-            slideMenu = document.getElementById("slideMenu"),
-            categories = slideMenu.querySelector(".categories");
-        menuIcon.addEventListener("click", ev => {
-                ev.stopPropagation(),
-                    (slideMenu.style.transform =
-                        slideMenu.style.transform === "translateX(0%)" ?
-                        "translateX(-100%)" :
-                        "translateX(0%)");
-            }),
-            window.addEventListener("click", ev => {
-                if (ev.target !== menuIcon && !slideMenu.contains(ev.target))
-                    slideMenu.style.transform = "translateX(-100%)";
+
+        // --- Initial Page Load & Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial Renders
+            renderGames(games, allListElement);
+            fetchTopGames();
+
+            // Setup search placeholder
+            searchInput.placeholder = `Search ${games.length} games...`;
+
+            // Search event listeners
+            searchInput.addEventListener("focus", updateSearchResults);
+            searchInput.addEventListener("input", updateSearchResults);
+            document.addEventListener("click", ev => {
+                if (!searchInput.contains(ev.target) && !searchResults.contains(ev.target)) {
+                    searchResults.style.display = "none";
+                }
             });
 
-        const randomGameLink = categories.querySelector("#randomGame");
-        randomGameLink?.addEventListener("click", ev => {
-            ev.preventDefault();
-            if (games.length > 0) {
-                const idx = Math.floor(Math.random() * games.length);
-                window.location.href = `./play/?id=${games[idx].id}`;
+            // Restore favorites toggle state from cookie
+            const favsEnabled = getCookie("favoritesEnabled") === "true";
+            favoritesToggle.checked = favsEnabled;
+            if (favsEnabled) {
+                favoritesHeader.style.display = "block";
+                favoritesGameList.style.display = "grid";
+                renderFavorites();
+            }
+        });
+        
+        // --- Slide Menu Logic ---
+        const menuIcon = document.getElementById("menuIcon");
+        const slideMenu = document.getElementById("slideMenu");
+        menuIcon.addEventListener("click", ev => {
+            ev.stopPropagation();
+            slideMenu.style.transform = slideMenu.style.transform === "translateX(0%)" ? "translateX(-100%)" : "translateX(0%)";
+        });
+        window.addEventListener("click", ev => {
+            if (ev.target !== menuIcon && !slideMenu.contains(ev.target)) {
+                slideMenu.style.transform = "translateX(-100%)";
             }
         });
 
-        const blockLanschoolLink = categories.querySelector("#blockLanschool");
+        const blockLanschoolLink = document.querySelector("#blockLanschool");
         blockLanschoolLink?.addEventListener("click", ev => {
             ev.preventDefault();
-            const url = window.location.href,
-                newTab = window.open();
+            const url = window.location.href;
+            const newTab = window.open();
             if (!newTab) return;
             newTab.document.write(`
-                            <html>
-                              <body style="margin:0;height:100vh;">
-                                <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
-                              </body>
-                            </html>
-                          `),
-                newTab.document.close();
+                <html>
+                  <body style="margin:0;height:100vh;">
+                    <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
+                  </body>
+                </html>
+            `);
+            newTab.document.close();
         });
 
-
-        const editAllButton = document.getElementById("editAllButton"),
-            customSlideMenu = document.getElementById("customSlideMenu");
-        editAllButton.addEventListener("click", ev => {
-                ev.stopPropagation(),
-                    (slideMenu.style.transform = "translateX(-100%)"),
-                    (customSlideMenu.style.transform =
-                        customSlideMenu.style.transform === "translateX(0%)" ?
-                        "translateX(-100%)" :
-                        "translateX(0%)");
-            }),
+        // --- Customization Menu Logic ---
+        const customSlideMenu = document.getElementById("customSlideMenu");
+        // NOTE: The 'editAllButton' was not found in the provided HTML, so this part is disabled.
+        // If you have an edit button, ensure it has the id="editAllButton"
+        const editAllButton = document.getElementById("editAllButton");
+        if (editAllButton) {
+            editAllButton.addEventListener("click", ev => {
+                ev.stopPropagation();
+                slideMenu.style.transform = "translateX(-100%)";
+                customSlideMenu.style.transform = customSlideMenu.style.transform === "translateX(0%)" ? "translateX(-100%)" : "translateX(0%)";
+            });
             window.addEventListener("click", ev => {
                 if (
                     ev.target !== editAllButton &&
                     !customSlideMenu.contains(ev.target) &&
                     ev.target.id !== "editAllButton"
-                )
+                ) {
                     customSlideMenu.style.transform = "translateX(-100%)";
+                }
             });
-
+        }
+        
+        // --- Cookie Helpers ---
         function setCookie(name, val, days) {
             const d = new Date();
-            d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days),
-                (document.cookie = `${name}=${val};expires=${d.toUTCString()};path=/`);
+            d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days);
+            document.cookie = `${name}=${val};expires=${d.toUTCString()};path=/`;
         }
-
         function getCookie(name) {
-            const all = `; ${document.cookie}`,
-                parts = all.split(`; ${name}=`);
+            const all = `; ${document.cookie}`;
+            const parts = all.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(";")[0];
             return "";
         }
-        const top20Toggle = document.getElementById("top20Toggle"),
-            topGameHeader = document.getElementById("topGameHeader");
+
+        // --- Top 20 Toggle ---
+        const top20Toggle = document.getElementById("top20Toggle");
+        const topGameHeader = document.getElementById("topGameHeader");
         let top20Disabled = getCookie("top20Disabled") === "true";
-        (top20Toggle.checked = !top20Disabled),
-        top20Disabled &&
-            ((topGameList.style.display = "none"), (topGameHeader.style.display = "none")),
-            top20Toggle.addEventListener("change", () => {
-                if (top20Toggle.checked)
-                    (topGameList.style.display = "flex"),
-                    (topGameHeader.style.display = "block"),
-                    setCookie("top20Disabled", "false", 365);
-                else
-                    (topGameList.style.display = "none"),
-                    (topGameHeader.style.display = "none"),
-                    setCookie("top20Disabled", "true", 365);
-            });
-        const favoritesToggle = document.getElementById("favoritesToggle"),
-            favoritesHeader = document.getElementById("favoritesHeader"),
-            favoritesGameList = document.getElementById("favoritesGameList");
-        let favCookie = getCookie("favoritesDisabled");
-        favCookie === "" && (favCookie = "true");
-        const favoritesDisabled = favCookie === "true";
-        (favoritesToggle.checked = !favoritesDisabled),
-        favoritesDisabled ?
-            ((favoritesHeader.style.display = "none"),
-                (favoritesGameList.style.display = "none")) :
-            ((favoritesHeader.style.display = "block"),
-                (favoritesGameList.style.display = "flex"));
-        favoritesToggle.addEventListener("change", () => {
-            if (favoritesToggle.checked)
-                (favoritesHeader.style.display = "block"),
-                (favoritesGameList.style.display = "flex"),
-                setCookie("favoritesDisabled", "false", 365);
-            else
-                (favoritesHeader.style.display = "none"),
-                (favoritesGameList.style.display = "none"),
-                setCookie("favoritesDisabled", "true", 365);
-        });
-
-        const cardSizeSlider = document.getElementById("cardSizeSlider"),
-            cardSizeValue = document.getElementById("cardSizeValue");
-
-        function updateCardSizes() {
-            const val = parseInt(cardSizeSlider.value, 10);
-            cardSizeValue.textContent = val;
-            const newSize = 120 + val,
-                newGap = Math.max(10 + val / 4, 5),
-                newRadius = val < 0 ? Math.max(15 + val * 0.13, 2) : 15;
-            document.querySelectorAll(".card, .ghost-card").forEach(c => {
-                    (c.style.width = newSize + "px"),
-                    (c.style.height = newSize + "px"),
-                    (c.style.borderRadius = newRadius + "px");
-                }),
-                document.querySelectorAll(".games-grid").forEach(grid => {
-                    grid.style.gap = newGap + "px";
-                }),
-                setCookie("cardSize", val, 365);
+        top20Toggle.checked = !top20Disabled;
+        if (top20Disabled) {
+            topGameList.style.display = "none";
+            topGameHeader.style.display = "none";
         }
-        cardSizeSlider.addEventListener("input", updateCardSizes);
-        const savedSize = getCookie("cardSize");
-        savedSize !== "" && ((cardSizeSlider.value = savedSize), updateCardSizes());
-        document.addEventListener("DOMContentLoaded", () => {
-            const page1Link = document.getElementById("page1-link"),
-                page2Link = document.getElementById("page2-link");
-            if (!page1Link || !page2Link) return;
-            const hostname = window.location.hostname,
-                linkMap = {
-                    "jman1593.github.io": {
-                        page1: "/#",
-                        page2: "/strongdog2/index.html",
-                    },
-                };
-            for (const key in linkMap)
-                if (hostname.includes(key)) {
-                    (page1Link.href = linkMap[key].page1),
-                    (page2Link.href = linkMap[key].page2);
-                    break;
-                }
+        top20Toggle.addEventListener("change", () => {
+            if (top20Toggle.checked) {
+                topGameList.style.display = "grid";
+                topGameHeader.style.display = "block";
+                setCookie("top20Disabled", "false", 365);
+            } else {
+                topGameList.style.display = "none";
+                topGameHeader.style.display = "none";
+                setCookie("top20Disabled", "true", 365);
+            }
         });
+
+        // --- Deprecated Card Size Slider ---
+        const cardSizeSlider = document.getElementById("cardSizeSlider");
+        if (cardSizeSlider) {
+             cardSizeSlider.disabled = true;
+             cardSizeSlider.parentElement.style.opacity = '0.5';
+             cardSizeSlider.parentElement.querySelector('label').textContent += ' (Disabled)';
+        }
+
+        // --- Custom Title and Favicon ---
         (function() {
             var defaultTitle = "strongdog XP",
                 defaultFavicon = "img/favicon.ico",
@@ -1340,36 +1311,6 @@
         })();
     </script>
     <script>
-        if (
-            window.location.hostname === "unblockedmathgames.com" ||
-            window.location.hostname === "mathhub.de.com" ||
-            window.location.hostname === "mathgames.de.com" ||
-            window.location.hostname === "wishlink"
-        ) {
-            if (navigator.userAgent.indexOf("CrOS") === -1) {
-                document.documentElement.innerHTML = "";
-                document.documentElement.style.overflow = "hidden";
-                document.title = "The Math Hub";
-
-                var f = document.createElement("iframe");
-                f.src = "./math/index.html";
-                f.style.position = "fixed";
-                f.style.top = "0";
-                f.style.left = "0";
-                f.style.width = "100%";
-                f.style.height = "100%";
-                f.style.border = "none";
-                f.style.margin = "0";
-                f.style.padding = "0";
-                f.style.overflow = "hidden";
-                f.style.display = "block";
-                f.style.zIndex = "999999";
-
-                document.documentElement.appendChild(f);
-            }
-        }
-    </script>
-    <script>
         // Credits Popup Functionality
         document.addEventListener('DOMContentLoaded', () => {
             const creditsBtn = document.getElementById('creditsBtn');
@@ -1380,11 +1321,9 @@
             if (creditsBtn) {
                 creditsBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    // Close the sidebar
                     if (slideMenu) {
                         slideMenu.style.transform = 'translateX(-100%)';
                     }
-                    // Show the credits popup
                     if (creditsOverlay) {
                         creditsOverlay.style.display = 'flex';
                     }
@@ -1402,7 +1341,6 @@
             }
 
             if (creditsOverlay) {
-                // Close if clicking on the background overlay
                 creditsOverlay.addEventListener('click', (e) => {
                     if (e.target === creditsOverlay) {
                         closePopup();
@@ -1411,22 +1349,7 @@
             }
         });
     </script>
-    <div style="
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      font-size: 1px;
-      line-height: 1px;
-      user-select: none;
-      pointer-events: none;
-    " draggable="false">
-        educational platform, learning resources, academic tools, educational games, student
-        resources, school-friendly content, learning tools, interactive education, student
-        access
-    </div>
+
     <script src="/firebase-config.js" defer></script>
     <script src="/ban-enforcer.js" defer></script>
     <script src="/url-changer.js" defer></script>
