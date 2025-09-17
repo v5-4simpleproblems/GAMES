@@ -22,7 +22,7 @@
         body {
             font-family: var(--ff);
             margin: 0;
-            padding: 0;
+            padding: 0 0 100px 0; /* Add bottom padding to avoid overlap with search bar */
             background-color: var(--bg);
             overflow-x: hidden;
         }
@@ -39,13 +39,6 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            font-family: var(--ff);
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            position: relative;
             font-family: var(--ff);
         }
 
@@ -76,6 +69,11 @@
             cursor: pointer;
             color: white;
             transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        .navbar-right {
+            /* Placeholder for right side elements if search is moved */
+            width: 275px; /* Match old search bar width to keep logo centered */
         }
 
         .menu-icon:hover {
@@ -168,32 +166,8 @@
             text-transform: uppercase;
             box-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
         }
-
-        .search-bar {
-            padding: 0.8rem 1.2rem;
-            font-size: 1rem;
-            border-radius: 15px;
-            width: 275px;
-            border: none;
-            background-color: rgba(0, 0, 0, 0.4);
-            color: white;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-            font-family: var(--ff);
-        }
-
-        .search-bar::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-            font-family: var(--ff);
-        }
-
-        .search-bar:focus {
-            outline: none;
-            background-color: rgba(0, 0, 0, 0.6);
-            font-family: var(--ff);
-        }
         
-        /* --- New Game Grid & Cards Styles --- */
+        /* --- Game Grid & Cards Styles --- */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -202,7 +176,7 @@
         }
 
         .zone-item {
-            background-color: #3a3a3a; /* Dark background for cards */
+            background-color: #3a3a3a;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             cursor: pointer;
@@ -298,26 +272,86 @@
         }
 
         .zone-item .favorite-btn.favorited img {
-            /* Make white, add yellow/orange drop-shadow for tint/glow effect */
             filter: brightness(0) invert(1) drop-shadow(0 0 6px #ffc107) drop-shadow(0 0 10px #ff8c00);
             transform: scale(1.1);
         }
 
-        /* --- End New Game Styles --- */
+        /* --- New Bottom Search Bar Styles --- */
+        #bottom-fixed-bar {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(50, 50, 50, 0.2), rgba(30, 30, 30, 0.1));
+            backdrop-filter: blur(8px) saturate(1.5);
+            -webkit-backdrop-filter: blur(8px) saturate(1.5);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+            width: 450px;
+        }
+        #bottom-fixed-bar input[type="text"] {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+            border-radius: 0;
+            color: #fff;
+            padding: 8px 5px;
+            font-size: 1em;
+            outline: none;
+            font-family: var(--ff);
+            flex-grow: 1;
+            width: auto;
+        }
+        #bottom-fixed-bar input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
 
+        /* Updated Search Results Styling */
         .search-results {
             position: absolute;
+            bottom: 100%; /* Position above the search bar */
             right: 0;
-            top: 71px;
-            background-color: rgba(30, 30, 30, 0.9);
-            backdrop-filter: blur(5px);
-            border-radius: 15px;
-            width: 313px;
-            display: none;
-            overflow: hidden;
-            z-index: 1000;
+            width: 100%;
+            margin-bottom: 10px; /* Space between bar and results */
+            
+            /* Frosted Glass Effect */
+            background: linear-gradient(135deg, rgba(50, 50, 50, 0.3), rgba(30, 30, 30, 0.2));
+            backdrop-filter: blur(8px) saturate(1.5);
+            -webkit-backdrop-filter: blur(8px) saturate(1.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            
+            border-radius: 15px;
+            display: none;
+            overflow: hidden; /* Hide scrollbar until overflow is triggered */
+            z-index: 1000;
+            
+            /* Scrolling behavior */
+            max-height: 350px;
+            overflow-y: auto;
         }
+        
+        /* Custom Scrollbar for Search Results */
+        .search-results::-webkit-scrollbar {
+            width: 8px;
+        }
+        .search-results::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .search-results::-webkit-scrollbar-thumb {
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 4px;
+        }
+        .search-results::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255,255,255,0.5);
+        }
+
 
         .search-results a {
             display: flex;
@@ -332,7 +366,7 @@
         .search-results a:focus,
         .search-results a:hover {
             outline: none;
-            background: rgba(50, 50, 50, 0.7);
+            background: rgba(80, 80, 80, 0.7);
             padding-left: 15px;
         }
 
@@ -349,62 +383,6 @@
             border-bottom: none;
         }
 
-        .news-container {
-            margin: 30px auto;
-            padding: 30px;
-            max-width: 900px;
-            background-color: #444444;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .news {
-            color: white;
-        }
-
-        .credits-title {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: white;
-            border-bottom: 3px solid #ddd;
-            padding-bottom: 10px;
-            text-shadow: none;
-        }
-
-        .credits-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .credits-role {
-            font-weight: 700;
-            color: white;
-            font-size: 1.2rem;
-        }
-
-        .credits-names {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .credits-link {
-            color: #4fa7ff;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .credits-link:hover {
-            text-decoration: underline;
-        }
-
-        .credits-names span {
-            color: #c4c4c4;
-        }
-
         h2 {
             text-align: center;
             color: white;
@@ -415,7 +393,6 @@
 
         .updates-paragraph-text {
             color: black;
-            background-color: #a83632;
             background: linear-gradient(156deg, #d1c4e9, #e6e6fa, #d8bfd8, #e0b0ff);
             padding: 20px;
             border-radius: 15px;
@@ -433,365 +410,32 @@
             align-items: center;
         }
 
-        #topGameList,
-        #allList,
-        #favoritesGameList {
+        #favoritesGameList,
+        #allList {
             max-width: 1600px;
             margin: 0 auto;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #757575;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            color: white;
-        }
-
-        .modal-close {
-            color: #aaa;
-            float: right;
-            font-size: 32px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover,
-        .modal-close:focus {
-            color: #000;
-            transform: scale(1.2);
-        }
-
-        .modal-link {
-            color: blue;
-            text-decoration: underline;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-link:hover {
-            color: var(--purple);
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .edit-button {
-            width: 30px;
-            cursor: pointer;
-            fill: #999;
-            transition: transform 0.3s ease;
-        }
-
-        .edit-button:hover {
-            transform: scale(1.2);
-        }
-
-        .custom-slide-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 400px;
-            background-color: #202020;
-            color: white;
-            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7);
-            z-index: 1003;
-            transition: transform 0.5s ease;
-            transform: translateX(-100%);
-            padding: 20px;
-            overflow-y: auto;
-            box-sizing: border-box;
-        }
-
-        .custom-slide-menu[style*="translateX(0%)"] {
-            transform: translateX(0);
-        }
-
-        .custom-options {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px 0;
-        }
-
-        .toggle-option {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background: #333333;
-            border-radius: 10px;
-        }
-
-        .toggle-option label {
-            font-size: 1.2rem;
-            color: white;
-        }
-
-        .toggle-option input[type="checkbox"] {
-            appearance: none;
-            width: 50px;
-            height: 25px;
-            background: #555555;
-            border-radius: 25px;
-            position: relative;
-            cursor: pointer;
-            outline: none;
-            transition: background 0.3s ease;
-        }
-
-        .toggle-option input[type="checkbox"]:checked {
-            background: #007bff;
-        }
-
-        .toggle-option input[type="checkbox"]::before {
-            content: "";
-            position: absolute;
-            width: 21px;
-            height: 21px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-option input[type="checkbox"]:checked::before {
-            transform: translateX(25px);
-        }
-
-        input[type="range"] {
-            appearance: none;
-            width: 100%;
-            margin: 10px 0;
-            background: transparent;
-        }
-
-        input[type="range"]::-webkit-slider-runnable-track {
-            height: 8px;
-            background: #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            height: 20px;
-            width: 20px;
-            background: #fff;
-            border: 1px solid #777;
-            border-radius: 50%;
-            cursor: pointer;
-            margin-top: -6px;
-        }
-
-        #customSlideMenu .custom-options {
-            padding: 20px !important;
-        }
-
-        #customSlideMenu .custom-option {
-            margin-bottom: 20px !important;
-        }
-
-        #customSlideMenu label {
-            color: white;
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        #customSlideMenu input[type="text"] {
-            width: 100% !important;
-            padding: 10px !important;
-            border: 1px solid #444 !important;
-            border-radius: 5px !important;
-            font-size: 1rem !important;
-            background-color: #333 !important;
-            color: white !important;
-            box-sizing: border-box !important;
-        }
-
-        #customSlideMenu input[type="text"]::placeholder {
-            color: #bbb !important;
-        }
-
-        #customSlideMenu button {
-            margin-top: 10px !important;
-            padding: 10px 15px !important;
-            border: none !important;
-            border-radius: 5px !important;
-            background-color: var(--purple) !important;
-            color: white !important;
-            cursor: pointer !important;
-            font-size: 1rem !important;
-            transition: background-color 0.3s ease !important;
-        }
-
-        #customSlideMenu button:hover {
-            background-color: #5a1aa8 !important;
-        }
-
-        /* Credits Popup Styles */
-        #credits-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 15vh;
-        }
-
-        #credits-popup {
-            background: #3a3a3a;
-            color: white;
-            padding: 25px 35px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 550px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-            position: relative;
-            border: 1px solid #555;
-        }
-
-        #close-credits-popup {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 2.5rem;
-            color: #ccc;
-            cursor: pointer;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        #close-credits-popup:hover {
-            color: white;
-            transform: scale(1.1);
-        }
-
-        #credits-popup h3 {
-            text-align: center;
-            font-size: 2rem;
-            margin-top: 0;
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--purple);
-            padding-bottom: 10px;
-        }
-
-        #credits-popup .credit-person {
-            margin-bottom: 20px;
-        }
-
-        #credits-popup .credit-person h4 {
-            font-size: 1.4rem;
-            color: var(--purple);
-            margin: 0 0 8px 0;
-        }
-
-        #credits-popup .credit-person p {
-            font-size: 1rem;
-            line-height: 1.5;
-            margin: 0;
-            color: #e0e0e0;
-        }
+        /* Other styles from original file... */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; }
+        .modal-content { background-color: #757575; padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); color: white; }
+        .modal-close { color: #aaa; float: right; font-size: 32px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
+        .modal-close:hover, .modal-close:focus { color: #000; transform: scale(1.2); }
+        .custom-slide-menu { position: fixed; top: 0; left: 0; height: 100vh; width: 400px; background-color: #202020; color: white; box-shadow: 5px 0 20px rgba(0, 0, 0, 0.7); z-index: 1003; transition: transform 0.5s ease; transform: translateX(-100%); padding: 20px; overflow-y: auto; box-sizing: border-box; }
+        #credits-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(5px); z-index: 2000; display: none; justify-content: center; align-items: flex-start; padding-top: 15vh; }
+        #credits-popup { background: #3a3a3a; color: white; padding: 25px 35px; border-radius: 15px; width: 90%; max-width: 550px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6); position: relative; border: 1px solid #555; }
+        #close-credits-popup { position: absolute; top: 10px; right: 15px; font-size: 2.5rem; color: #ccc; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
+        #close-credits-popup:hover { color: white; transform: scale(1.1); }
+        #credits-popup h3 { text-align: center; font-size: 2rem; margin-top: 0; margin-bottom: 25px; border-bottom: 2px solid var(--purple); padding-bottom: 10px; }
 
         @media (max-width: 768px) {
-            .navbar {
-                flex-wrap: wrap;
-                padding: 10px 15px;
-            }
-
-            .menu-icon {
-                font-size: 2rem;
-                margin-bottom: 10px;
-            }
-
-            .logo {
-                font-size: 1.8rem;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            .search-container {
-                display: flex;
-                align-items: center;
-                position: relative;
-            }
-
-            .search-bar {
-                width: 90%;
-                font-size: 0.9rem;
-                font-family: 'primary', sans-serif;
-            }
-
-            .slide-menu,
-            .custom-slide-menu {
-                width: 250px;
-            }
-
-            .categories>a {
-                font-size: 1rem;
-                padding: 15px;
-            }
-
-            .games-grid {
-                gap: 15px;
-                padding: 15px;
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-
-            .zone-item .game-title {
-                font-size: 1em;
-            }
-
-            .zone-item .card-play-btn, .zone-item .favorite-btn {
-                height: 32px;
-            }
-
-            .zone-item .favorite-btn {
-                width: 32px;
-            }
-
-            .zone-item .favorite-btn img {
-                width: 16px;
-                height: 16px;
-            }
-
-            .news-container {
-                margin: 20px;
-                padding: 20px;
-            }
-
-            .edit-button {
-                width: 25px;
-            }
+            .navbar { flex-wrap: wrap; padding: 10px 15px; }
+            .menu-icon { font-size: 2rem; margin-bottom: 10px; }
+            .logo { font-size: 1.8rem; }
+            .slide-menu, .custom-slide-menu { width: 250px; }
+            .categories>a { font-size: 1rem; padding: 15px; }
+            .games-grid { gap: 15px; padding: 15px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            #bottom-fixed-bar { width: calc(100% - 30px); left: 15px; right: 15px; bottom: 10px; }
         }
     </style>
 </head>
@@ -800,22 +444,17 @@
     <div class="navbar">
         <div class="menu-icon" id="menuIcon">☰</div>
         <a href="index.html" class="logo">strongdog<span class="xp">XP</span></a>
-        <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search for games…" id="searchInput"
-                autocomplete="off" />
-            <div class="search-results" id="searchResults"></div>
-        </div>
-    </div>
-    <div class="updates-text-container">
+        <div class="navbar-right"></div> </div>
 
+    <div class="updates-text-container">
         <p class="updates-paragraph-text">
             <strong>Welcome to StrongdogXP!</strong><br>
             This website is being hosted by <a href="https://4simpleproblems.github.io/"
                 style="color: #6720BD; font-weight: bold; text-decoration: none;" target="_blank">4SP</a>. I have fixed
             several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
         </p>
-
     </div>
+
     <div class="modal" id="popupModal">
         <div class="modal-content">
             <span class="modal-close" id="closeModal">×</span>
@@ -826,16 +465,15 @@
             </p>
         </div>
     </div>
-    <h2 id="topGameHeader" style="text-align: center">
-        <strong>Top 20</strong>
+    
+    <h2 id="favoritesHeader" style="text-align: center; display: none;">
+        <strong>Favorites</strong>
     </h2>
-    <div class="games-grid" id="topGameList"></div>
-    <div class="section-header" id="favoritesHeader" style="display: none">
-        <h2 style="text-align: center"><strong>Favorites</strong></h2>
-    </div>
-    <div class="games-grid" id="favoritesGameList" style="display: none"></div>
-    <h2 style="text-align: center"><strong>All</strong></h2>
+    <div class="games-grid" id="favoritesGameList" style="display: none;"></div>
+
+    <h2 style="text-align: center"><strong>All Games</strong></h2>
     <div class="games-grid" id="allList"></div>
+
     <div class="slide-menu" id="slideMenu" style="transform: translateX(-100%)">
         <div class="categories">
             <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
@@ -845,157 +483,72 @@
             <a href="#" id="creditsBtn" class="option-link">Credits</a>
         </div>
     </div>
-    <div class="custom-slide-menu" id="customSlideMenu" style="transform: translateX(-100%)">
-        <div class="custom-options" style="padding: 20px">
-            <div class="toggle-option" style="margin-bottom: 10px">
-                <label for="top20Toggle">Show Top 20</label>
-                <input type="checkbox" id="top20Toggle" checked />
-            </div>
-            <div class="toggle-option" style="margin-bottom: 10px">
-                <label for="favoritesToggle">Show Favorites</label>
-                <input type="checkbox" id="favoritesToggle" />
-            </div>
-            <div class="slider-option" style="margin-bottom: 10px">
-                <label for="cardSizeSlider" style="color: #fff; display: block; margin-bottom: 5px">Card Size
-                    Adjustment</label>
-                <input type="range" id="cardSizeSlider" min="-100" max="100" value="0" step="1" style="width: 100%" />
-                <div style="text-align: center; color: #fff; margin-top: 5px">
-                    Size: <span id="cardSizeValue">0</span>
-                </div>
-            </div>
-            <div class="custom-option" style="margin-bottom: 10px">
-                <label for="customTitleInput" style="color: #fff; display: block; margin-bottom: 5px">Custom
-                    Title</label>
-                <input type="text" id="customTitleInput" style="width: 100%; padding: 5px" value="strongdog XP" />
-                <button id="resetTitleBtn" style="margin-top: 5px; padding: 5px 10px">
-                    Reset Title
-                </button>
-            </div>
-            <div class="custom-option" style="margin-bottom: 10px">
-                <label for="customFaviconInput" style="color: #fff; display: block; margin-bottom: 5px">Custom Favicon
-                    URL</label>
-                <input type="text" id="customFaviconInput" style="width: 100%; padding: 5px"
-                    value="img/favicon.ico" />
-                <button id="resetFaviconBtn" style="margin-top: 5px; padding: 5px 10px">
-                    Reset Favicon
-                </button>
-            </div>
-        </div>
-    </div>
-
+    
     <div id="credits-overlay">
         <div id="credits-popup">
             <span id="close-credits-popup">&times;</span>
             <h3>Credits</h3>
-            <div class="credit-person">
-                <h4>John P - Creator of StrongdogXP</h4>
-                <p>He downloaded, compiled and created Strongdog entirely.</p>
-            </div>
-            <div class="credit-person">
-                <h4>4SP</h4>
-                <p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p>
-            </div>
+            <div class="credit-person"><h4>John P - Creator of StrongdogXP</h4><p>He downloaded, compiled and created Strongdog entirely.</p></div>
+            <div class="credit-person"><h4>4SP</h4><p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p></div>
         </div>
+    </div>
+    
+    <div id="bottom-fixed-bar">
+        <input type="text" id="searchInput" placeholder="Search for games…" autocomplete="off" />
+        <div class="search-results" id="searchResults"></div>
     </div>
 
     <script type="module">
         import games from "./cards-data.js";
-        import {
-            targetUrl
-        } from "./appscript.js";
 
         // --- DOM Elements ---
-        const topGameList = document.getElementById("topGameList");
         const allListElement = document.getElementById("allList");
-        const favoritesGameList = document.getElementById("favoritesGameList");
         const favoritesHeader = document.getElementById("favoritesHeader");
+        const favoritesGameList = document.getElementById("favoritesGameList");
         const searchInput = document.getElementById("searchInput");
         const searchResults = document.getElementById("searchResults");
-        const favoritesToggle = document.getElementById("favoritesToggle");
 
         // --- Favorites Management ---
-        const FAVORITES_KEY = 'strongdogXPFavorites';
+        const FAVORITES_KEY = 'strongdogXPFavorites_v2';
         const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
         const saveFavorites = (favs) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
         
-        function toggleFavorite(gameId, buttonElement) {
+        function toggleFavorite(gameId) {
             let favorites = getFavorites();
-            if (favorites.includes(gameId)) {
+            const isFavorited = favorites.includes(gameId);
+
+            if (isFavorited) {
                 favorites = favorites.filter(id => id !== gameId);
-                buttonElement.classList.remove('favorited');
             } else {
                 favorites.push(gameId);
-                buttonElement.classList.add('favorited');
             }
             saveFavorites(favorites);
 
-            // Update the star on any other matching card (e.g., in the "All" list if you unfavorite from "Top 20")
+            // Update all visible cards for this game
             document.querySelectorAll(`.zone-item[data-game-id='${gameId}'] .favorite-btn`).forEach(btn => {
-                if (favorites.includes(gameId)) {
-                    btn.classList.add('favorited');
-                } else {
-                    btn.classList.remove('favorited');
-                }
+                btn.classList.toggle('favorited', !isFavorited);
             });
-
-            // Re-render favorites list if it's currently visible
-            if (favoritesToggle.checked) {
-                renderFavorites();
-            }
+            
+            renderFavorites();
         }
 
         // --- URL and Path Helpers ---
-        function getPageNumberFromURL(url) {
-            const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
-            const match = url.match(regex);
-            if (match) return match[2] === "" ? 1 : parseInt(match[2], 10);
-            return 1;
-        }
-
+        function getPageNumberFromURL(url) { const regex = /(strongdog|mathcord|stroongdog)(\d*)/; const match = url.match(regex); if (match) return match[2] === "" ? 1 : parseInt(match[2], 10); return 1; }
         const siteMapping = window.siteMapping || {};
-
-        function getCurrentSiteKey() {
-            const currentURL = window.location.href;
-            const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
-            for (const k of keys) {
-                if (currentURL.includes(k)) return k;
-            }
-            return null;
-        }
-
+        function getCurrentSiteKey() { const currentURL = window.location.href; const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length); for (const k of keys) { if (currentURL.includes(k)) return k; } return null; }
         function getAdjustedUrls(href, imgSrc, page) {
-            let adjustedHref = href;
-            let adjustedImgSrc = `./img/${imgSrc}`;
-            let currentSiteKey = getCurrentSiteKey();
+            let adjustedImgSrc = `./img/${imgSrc}`; let currentSiteKey = getCurrentSiteKey();
             if (currentSiteKey) {
-                const currentSitePages = siteMapping[currentSiteKey];
-                const pageMap = {};
                 const currentPageNumber = getPageNumberFromURL(currentSiteKey);
-                pageMap[currentPageNumber] = currentSiteKey;
-                if (currentSitePages) {
-                    currentSitePages.forEach(u => {
-                        const pNum = getPageNumberFromURL(u);
-                        pageMap[pNum] = u;
-                    });
-                }
                 if (page !== undefined && page !== currentPageNumber) {
-                    let newBase = pageMap[page];
-                    if (!newBase) {
-                        newBase = window.location.origin + `/strongdog${page}`;
-                    }
-                    adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`;
+                    let newBase = window.location.origin + `/strongdog${page}`;
                     adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
                 }
             } else if (page !== undefined && page > 1) {
-                const origin = window.location.origin;
-                const newBase = `${origin}/strongdog${page}`;
-                adjustedHref = `${newBase}/${href.replace(/^\.\//, "")}`;
+                const newBase = `${window.location.origin}/strongdog${page}`;
                 adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
             }
-            return {
-                adjustedHref,
-                adjustedImgSrc
-            };
+            return { adjustedImgSrc };
         }
 
         // --- Game Card Rendering ---
@@ -1006,10 +559,10 @@
 
             const zoneItem = document.createElement("div");
             zoneItem.className = "zone-item";
-            zoneItem.dataset.gameId = id; // Use the unique game ID
+            zoneItem.dataset.gameId = id;
             
             zoneItem.addEventListener('click', (e) => {
-                if (e.target.closest('button')) return; // Don't navigate if a button was clicked
+                if (e.target.closest('button')) return;
                 window.location.href = `./play/?id=${id}`;
             });
 
@@ -1018,10 +571,7 @@
             coverImg.src = adjustedImgSrc;
             coverImg.alt = name;
             coverImg.loading = "lazy";
-            coverImg.onerror = () => {
-                coverImg.src = './img/favicon.ico'; // Fallback image
-                coverImg.style.objectFit = 'contain';
-            };
+            coverImg.onerror = () => { coverImg.src = './img/favicon.ico'; coverImg.style.objectFit = 'contain'; };
 
             const overlay = document.createElement("div");
             overlay.className = "card-overlay";
@@ -1036,10 +586,7 @@
             const playButton = document.createElement("button");
             playButton.className = "card-play-btn";
             playButton.textContent = "PLAY";
-            playButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.location.href = `./play/?id=${id}`;
-            });
+            playButton.addEventListener('click', (e) => { e.stopPropagation(); window.location.href = `./play/?id=${id}`; });
 
             const favoriteButton = document.createElement("button");
             favoriteButton.className = "favorite-btn";
@@ -1047,13 +594,10 @@
                 favoriteButton.classList.add('favorited');
             }
             const favImg = document.createElement('img');
-            favImg.src = 'images/star-dark.png'; // Corrected path
+            favImg.src = 'images/star-dark.png';
             favImg.alt = 'Favorite';
             favoriteButton.appendChild(favImg);
-            favoriteButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleFavorite(id, favoriteButton);
-            });
+            favoriteButton.addEventListener('click', (e) => { e.stopPropagation(); toggleFavorite(id); });
 
             buttons.append(playButton, favoriteButton);
             overlay.append(title, buttons);
@@ -1070,68 +614,39 @@
             targetElement.appendChild(fragment);
         }
 
-        // --- Top Games Logic ---
-        async function fetchTopGames() {
-            try {
-                const response = await fetch(targetUrl);
-                if (!response.ok) throw new Error(`Network error: ${response.statusText}`);
-                const data = await response.json();
-                if (data && data.content) {
-                    const parsedData = JSON.parse(data.content);
-                    displayTopGames(parsedData);
-                }
-            } catch (e) {
-                console.error(`Error while fetching games: ${e}`);
-                topGameList.innerHTML = '<p style="color: white; text-align: center;">Could not load top games.</p>';
-            }
-        }
-
-        function displayTopGames(topData) {
-            const numTopGames = 20;
-            const topGameNames = topData.slice(1, numTopGames + 1).map(row => row[0]);
-            
-            const topGameObjects = topGameNames
-                .map(name => games.find(game => game.name === name))
-                .filter(game => game !== undefined); // Filter out any games not found
-
-            renderGames(topGameObjects, topGameList);
-        }
-
         // --- Favorites Display Logic ---
         function renderFavorites() {
             const favoriteIds = getFavorites();
             if (favoriteIds.length > 0) {
+                favoritesHeader.style.display = "block";
+                favoritesGameList.style.display = "grid";
                 const favoriteGames = games.filter(game => favoriteIds.includes(game.id));
                 renderGames(favoriteGames, favoritesGameList);
             } else {
-                favoritesGameList.innerHTML = '<p style="color: #ccc; text-align: center; grid-column: 1 / -1;">You haven\'t favorited any games yet. Click the star on a game to add it here!</p>';
+                favoritesHeader.style.display = "none";
+                favoritesGameList.style.display = "none";
             }
         }
         
-        favoritesToggle.addEventListener("change", () => {
-            if (favoritesToggle.checked) {
-                favoritesHeader.style.display = "block";
-                favoritesGameList.style.display = "grid";
-                renderFavorites();
-                setCookie("favoritesEnabled", "true", 365);
-            } else {
-                favoritesHeader.style.display = "none";
-                favoritesGameList.style.display = "none";
-                setCookie("favoritesEnabled", "false", 365);
-            }
-        });
-        
+        // --- Debounce function for performance ---
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
         // --- Search Logic ---
-        function updateSearchResults() {
+        const updateSearchResults = debounce(() => {
             const text = searchInput.value.toLowerCase().trim();
             
-            // Filter all games list in real-time
+            // Filter all games list
             const filteredAllGames = text ? games.filter(g => g.name.toLowerCase().includes(text)) : games;
             renderGames(filteredAllGames, allListElement);
 
             // Update dropdown search results
             const filteredDropdown = text ? games.filter(g => g.name.toLowerCase().includes(text)).slice(0, 7) : [];
-            
             searchResults.innerHTML = "";
             if (filteredDropdown.length === 0 || !text) {
                 searchResults.style.display = "none";
@@ -1146,34 +661,24 @@
                 searchResults.appendChild(linkEl);
             });
             searchResults.style.display = "block";
-        }
+        }, 250); // 250ms delay
 
         // --- Initial Page Load & Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Initial Renders
             renderGames(games, allListElement);
-            fetchTopGames();
+            renderFavorites();
 
-            // Setup search placeholder
             searchInput.placeholder = `Search ${games.length} games...`;
-
-            // Search event listeners
-            searchInput.addEventListener("focus", updateSearchResults);
             searchInput.addEventListener("input", updateSearchResults);
+            
+            // Show results on focus as well
+            searchInput.addEventListener("focus", updateSearchResults);
+            
             document.addEventListener("click", ev => {
-                if (!searchInput.contains(ev.target) && !searchResults.contains(ev.target)) {
+                if (!searchInput.parentElement.contains(ev.target)) {
                     searchResults.style.display = "none";
                 }
             });
-
-            // Restore favorites toggle state from cookie
-            const favsEnabled = getCookie("favoritesEnabled") === "true";
-            favoritesToggle.checked = favsEnabled;
-            if (favsEnabled) {
-                favoritesHeader.style.display = "block";
-                favoritesGameList.style.display = "grid";
-                renderFavorites();
-            }
         });
         
         // --- Slide Menu Logic ---
@@ -1189,164 +694,26 @@
             }
         });
 
-        const blockLanschoolLink = document.querySelector("#blockLanschool");
-        blockLanschoolLink?.addEventListener("click", ev => {
+        // --- Other Scripts ---
+        document.querySelector("#blockLanschool")?.addEventListener("click", ev => {
             ev.preventDefault();
-            const url = window.location.href;
             const newTab = window.open();
-            if (!newTab) return;
-            newTab.document.write(`
-                <html>
-                  <body style="margin:0;height:100vh;">
-                    <iframe src="${url}" style="border:none;width:100%;height:100%"></iframe>
-                  </body>
-                </html>
-            `);
-            newTab.document.close();
+            if (newTab) newTab.document.write(`<html><body style="margin:0;height:100vh;"><iframe src="${window.location.href}" style="border:none;width:100%;height:100%"></iframe></body></html>`);
         });
-
-        // --- Customization Menu Logic ---
-        const customSlideMenu = document.getElementById("customSlideMenu");
-        // NOTE: The 'editAllButton' was not found in the provided HTML, so this part is disabled.
-        // If you have an edit button, ensure it has the id="editAllButton"
-        const editAllButton = document.getElementById("editAllButton");
-        if (editAllButton) {
-            editAllButton.addEventListener("click", ev => {
-                ev.stopPropagation();
-                slideMenu.style.transform = "translateX(-100%)";
-                customSlideMenu.style.transform = customSlideMenu.style.transform === "translateX(0%)" ? "translateX(-100%)" : "translateX(0%)";
-            });
-            window.addEventListener("click", ev => {
-                if (
-                    ev.target !== editAllButton &&
-                    !customSlideMenu.contains(ev.target) &&
-                    ev.target.id !== "editAllButton"
-                ) {
-                    customSlideMenu.style.transform = "translateX(-100%)";
-                }
-            });
-        }
-        
-        // --- Cookie Helpers ---
-        function setCookie(name, val, days) {
-            const d = new Date();
-            d.setTime(d.getTime() + 24 * 60 * 60 * 1e3 * days);
-            document.cookie = `${name}=${val};expires=${d.toUTCString()};path=/`;
-        }
-        function getCookie(name) {
-            const all = `; ${document.cookie}`;
-            const parts = all.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(";")[0];
-            return "";
-        }
-
-        // --- Top 20 Toggle ---
-        const top20Toggle = document.getElementById("top20Toggle");
-        const topGameHeader = document.getElementById("topGameHeader");
-        let top20Disabled = getCookie("top20Disabled") === "true";
-        top20Toggle.checked = !top20Disabled;
-        if (top20Disabled) {
-            topGameList.style.display = "none";
-            topGameHeader.style.display = "none";
-        }
-        top20Toggle.addEventListener("change", () => {
-            if (top20Toggle.checked) {
-                topGameList.style.display = "grid";
-                topGameHeader.style.display = "block";
-                setCookie("top20Disabled", "false", 365);
-            } else {
-                topGameList.style.display = "none";
-                topGameHeader.style.display = "none";
-                setCookie("top20Disabled", "true", 365);
-            }
-        });
-
-        // --- Deprecated Card Size Slider ---
-        const cardSizeSlider = document.getElementById("cardSizeSlider");
-        if (cardSizeSlider) {
-             cardSizeSlider.disabled = true;
-             cardSizeSlider.parentElement.style.opacity = '0.5';
-             cardSizeSlider.parentElement.querySelector('label').textContent += ' (Disabled)';
-        }
-
-        // --- Custom Title and Favicon ---
-        (function() {
-            var defaultTitle = "strongdog XP",
-                defaultFavicon = "img/favicon.ico",
-                titleInput = document.getElementById("customTitleInput"),
-                faviconInput = document.getElementById("customFaviconInput"),
-                resetTitleBtn = document.getElementById("resetTitleBtn"),
-                resetFaviconBtn = document.getElementById("resetFaviconBtn"),
-                faviconEl = document.querySelector('link[rel="icon"]');
-            localStorage.getItem("customTitle") ?
-                ((document.title = localStorage.getItem("customTitle")),
-                    (titleInput.value = localStorage.getItem("customTitle"))) :
-                (titleInput.value = defaultTitle),
-                localStorage.getItem("customFavicon") ?
-                ((faviconEl.href = localStorage.getItem("customFavicon")),
-                    (faviconInput.value = localStorage.getItem("customFavicon"))) :
-                (faviconInput.value = defaultFavicon),
-                titleInput.addEventListener("change", function() {
-                    var e = titleInput.value.trim();
-                    e === "" && ((e = defaultTitle), (titleInput.value = defaultTitle)),
-                        localStorage.setItem("customTitle", e),
-                        (document.title = e);
-                }),
-                faviconInput.addEventListener("change", function() {
-                    var e = faviconInput.value.trim();
-                    e === "" && ((e = defaultFavicon), (faviconInput.value = defaultFavicon)),
-                        localStorage.setItem("customFavicon", e),
-                        (faviconEl.href = e);
-                }),
-                resetTitleBtn.addEventListener("click", function() {
-                    localStorage.removeItem("customTitle"),
-                        (document.title = defaultTitle),
-                        (titleInput.value = defaultTitle);
-                }),
-                resetFaviconBtn.addEventListener("click", function() {
-                    localStorage.removeItem("customFavicon"),
-                        (faviconEl.href = defaultFavicon),
-                        (faviconInput.value = defaultFavicon);
-                });
-        })();
-    </script>
-    <script>
-        // Credits Popup Functionality
         document.addEventListener('DOMContentLoaded', () => {
             const creditsBtn = document.getElementById('creditsBtn');
             const creditsOverlay = document.getElementById('credits-overlay');
             const closeCreditsPopup = document.getElementById('close-credits-popup');
-            const slideMenu = document.getElementById('slideMenu');
-
             if (creditsBtn) {
                 creditsBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    if (slideMenu) {
-                        slideMenu.style.transform = 'translateX(-100%)';
-                    }
-                    if (creditsOverlay) {
-                        creditsOverlay.style.display = 'flex';
-                    }
+                    if (slideMenu) slideMenu.style.transform = 'translateX(-100%)';
+                    if (creditsOverlay) creditsOverlay.style.display = 'flex';
                 });
             }
-
-            const closePopup = () => {
-                if (creditsOverlay) {
-                    creditsOverlay.style.display = 'none';
-                }
-            };
-
-            if (closeCreditsPopup) {
-                closeCreditsPopup.addEventListener('click', closePopup);
-            }
-
-            if (creditsOverlay) {
-                creditsOverlay.addEventListener('click', (e) => {
-                    if (e.target === creditsOverlay) {
-                        closePopup();
-                    }
-                });
-            }
+            const closePopup = () => { if (creditsOverlay) creditsOverlay.style.display = 'none'; };
+            if (closeCreditsPopup) closeCreditsPopup.addEventListener('click', closePopup);
+            if (creditsOverlay) creditsOverlay.addEventListener('click', (e) => { if (e.target === creditsOverlay) closePopup(); });
         });
     </script>
 
@@ -1355,5 +722,4 @@
     <script src="/url-changer.js" defer></script>
     <script src="/panic-key.js" defer></script>
 </body>
-
 </html>
