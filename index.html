@@ -314,13 +314,13 @@
         /* Updated Search Results Styling */
         .search-results {
             position: absolute;
-            bottom: 100%; /* Position above the search bar */
+            bottom: 100%;
             right: 0;
             width: 100%;
-            margin-bottom: 10px; /* Space between bar and results */
+            margin-bottom: 10px;
             
             /* Frosted Glass Effect */
-            background-color: rgba(44, 44, 44, 0.75); /* UPDATED: More opaque background for better frost effect */
+            background: linear-gradient(135deg, rgba(55, 55, 55, 0.4), rgba(40, 40, 40, 0.3)); /* CORRECTED: Semi-transparent background is required for blur */
             backdrop-filter: blur(8px) saturate(1.5);
             -webkit-backdrop-filter: blur(8px) saturate(1.5);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -328,15 +328,13 @@
             
             border-radius: 15px;
             display: none;
-            overflow: hidden; /* Hide scrollbar until overflow is triggered */
+            overflow: hidden;
             z-index: 1000;
             
-            /* Scrolling behavior */
             max-height: 350px;
             overflow-y: auto;
         }
         
-        /* Custom Scrollbar for Search Results */
         .search-results::-webkit-scrollbar {
             width: 8px;
         }
