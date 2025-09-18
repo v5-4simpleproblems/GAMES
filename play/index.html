@@ -12,11 +12,6 @@
     <script src="../ban-enforcer.js"></script>
     <script src="../url-changer.js"></script>
     <style>
-        @font-face {
-            font-family: 'PrimaryFont';
-            /* src: url('../fonts/primary.woff') format('woff'); */
-        }
-
         :root {
             --ff: 'PrimaryFont', Arial, sans-serif;
             --bg: #2e2e2e;
@@ -195,7 +190,7 @@
             color: lightgray;
         }
 
-        /* --- New Favorites Scroll Menu Styles --- */
+        /* --- Favorites Scroll Menu Styles --- */
         .favorites-section {
             padding: 0 40px 40px 40px;
             max-width: 100%;
@@ -296,37 +291,19 @@
 
     <script type="module">
         import games from "../cards-data.js";
+        // site-mapping is no longer needed for this page's logic but kept for potential future use
         import { siteMapping } from "../site-mapping.js";
 
         document.addEventListener("DOMContentLoaded", async function () {
-            // --- Helper Functions ---
-            function getCurrentKeyHostOnly() { return window.location.host; }
-            function getBaseURLForPage(page) {
-                // This complex function for determining base URL is kept from original file
-                const currentHost = getCurrentKeyHostOnly();
-                const currentPath = window.location.pathname;
-                if (currentHost === "4simpleproblems.github.io" && currentPath.toLowerCase().startsWith('/strongdog/')) {
-                    if (!page || page === 1) return "/STRONGDOG/";
-                    if (page === 2) return "/strongdog2/";
-                    return "/STRONGDOG/";
+            // This function is kept from the original file for loading the main game iframe
+            async function getEmbedPath(game) {
+                const page = game.page || 1;
+                let pathPrefix = "../";
+                if (page > 1) {
+                    pathPrefix = `../strongdog${page}/`;
                 }
-                if (!page || page === 1) return "../";
-                return `../strongdog${page}/` || "../";
-            }
-            async function fileExists(url) { try { const r = await fetch(url, { method: "HEAD" }); return r.ok; } catch { return false; } }
-            function adjustHrefPath(path, page) {
-                path = path.replace(/^\.\//, "").replace(/^\//, "");
-                const baseURL = getBaseURLForPage(page);
-                return baseURL.endsWith("/") ? baseURL + path : baseURL + "/" + path;
-            }
-             async function getEmbedPath(adjustedHref, originalHref, page) {
-                let cleanHref = adjustedHref.replace(/index\.html$/, "").replace(/base\.html$/, "").replace(/\.html$/, "");
-                if (!cleanHref.endsWith("/")) cleanHref += "/";
-                const pathsToTry = [cleanHref + "game/index.html", cleanHref + "index.html"];
-                for (const path of pathsToTry) {
-                    if (await fileExists(path)) return path;
-                }
-                return adjustHrefPath(originalHref, page);
+                const gamePath = game.href.replace('./', '');
+                return `${pathPrefix}${gamePath}`;
             }
 
             function embedGame(gamePath, title) {
@@ -342,7 +319,7 @@
                 document.getElementById("gameTitle").textContent = title;
             }
 
-            // --- Main Logic ---
+            // --- Main Game Loading Logic ---
             const urlParams = new URLSearchParams(window.location.search);
             const gameId = urlParams.get("id");
             let selectedGame = null;
@@ -354,15 +331,11 @@
             if (!selectedGame) {
                 embedGame("../404.html", "Game Not Found");
             } else {
-                const page = selectedGame.page;
-                const baseURL = getBaseURLForPage(page);
-                let adjustedHref = selectedGame.href.replace(/^\.\//, "");
-                adjustedHref = baseURL.endsWith("/") ? baseURL + adjustedHref : baseURL + "/" + adjustedHref;
-                const embedPath = await getEmbedPath(adjustedHref, selectedGame.href, page);
+                const embedPath = await getEmbedPath(selectedGame);
                 embedGame(embedPath, selectedGame.name);
             }
             
-            // --- New Fullscreen Logic ---
+            // --- Corrected Fullscreen Logic ---
             const fullscreenButton = document.getElementById("fullscreenButton");
             const gameContainer = document.getElementById('gameContainer');
             const enterIcon = document.getElementById('enterFullscreenIcon');
@@ -370,11 +343,9 @@
 
             fullscreenButton.addEventListener("click", () => {
                 if (!document.fullscreenElement) {
-                    // Enter fullscreen on the container, not the iframe
                     if (gameContainer.requestFullscreen) gameContainer.requestFullscreen();
                     else if (gameContainer.webkitRequestFullscreen) gameContainer.webkitRequestFullscreen();
                 } else {
-                    // Exit fullscreen
                     if (document.exitFullscreen) document.exitFullscreen();
                 }
             });
@@ -385,7 +356,7 @@
                 exitIcon.style.display = isFullscreen ? 'block' : 'none';
             });
             
-            // --- New Favorites Scroll Menu Logic ---
+            // --- Corrected Favorites Scroll Menu Logic ---
             const FAVORITES_KEY = 'strongdogXPFavorites_v2';
             const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
 
@@ -395,12 +366,12 @@
                 const favoritesGrid = document.getElementById('favoritesGrid');
 
                 if (favoriteIds.length === 0) {
-                    favoritesSection.style.display = 'none'; // Hide if no favorites
+                    favoritesSection.style.display = 'none';
                     return;
                 }
 
-                favoritesSection.style.display = 'block'; // Show if favorites exist
-                favoritesGrid.innerHTML = ''; // Clear existing
+                favoritesSection.style.display = 'block';
+                favoritesGrid.innerHTML = '';
                 
                 const favoriteGames = games.filter(game => favoriteIds.includes(game.id));
 
@@ -410,9 +381,13 @@
                     card.href = `./index.html?id=${game.id}`;
 
                     const img = document.createElement('img');
-                    // Simplified path adjustment for images
-                    const baseURL = getBaseURLForPage(game.page);
-                    img.src = `${baseURL}img/${game.imgSrc}`;
+                    
+                    // CORRECTED IMAGE PATH LOGIC
+                    let imagePathPrefix = "../";
+                    if (game.page && game.page > 1) {
+                         imagePathPrefix = `../strongdog${game.page}/`;
+                    }
+                    img.src = `${imagePathPrefix}img/${game.imgSrc}`;
                     img.alt = game.name;
                     img.loading = 'lazy';
 
