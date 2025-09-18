@@ -14,20 +14,17 @@
     <style>
         @font-face {
             font-family: 'PrimaryFont';
-            /* You'll need to provide the actual font file here */
-            /* src: url('fonts/primary.woff') format('woff'); */
+            /* src: url('../fonts/primary.woff') format('woff'); */
         }
 
         :root {
             --ff: 'PrimaryFont', Arial, sans-serif;
             --bg: #2e2e2e;
-            /* Added purple variable for consistency */
             --purple: #6720BD;
         }
 
-        /* This rule hides the body by default. The auth gate script will make it visible only for logged-in users. */
         body {
-            visibility: hidden;
+            visibility: hidden; /* Hidden by default until auth check */
             font-family: var(--ff);
             margin: 0;
             padding: 0;
@@ -63,7 +60,6 @@
         }
 
         .logo .xp {
-            /* UPDATED: from orange to purple */
             color: var(--purple);
             text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
         }
@@ -122,27 +118,8 @@
         }
 
         .categories>a:hover {
-            /* UPDATED: from orange gradient to purple gradient */
             background: linear-gradient(45deg, #6720BD, #8a2be2);
             box-shadow: 0 6px 20px rgba(103, 32, 189, 0.5);
-        }
-
-        .categories>a::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(0, 0, 0, 0.1);
-            transition: all 0.5s ease;
-        }
-
-        .categories>a:hover::after {
-            width: 500px;
-            height: 500px;
         }
 
         .content-wrapper {
@@ -153,10 +130,9 @@
             align-items: flex-start;
         }
         
-        /* UPDATED: Made game area larger */
         .game-area {
             flex-grow: 1;
-            max-width: 95%; /* Increased from 75% */
+            max-width: 95%;
             width: 100%;
         }
 
@@ -211,45 +187,71 @@
             background: rgba(0, 0, 0, 0.6);
         }
 
-        #favoriteIcon.favorited {
-            color: #ffc107;
-            text-shadow: 0 0 12px rgba(255, 193, 7, 0.9);
-        }
-
-        #redirectMessage {
-            display: none;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        #redirectMessage h2,
-        #gameTitle {
-            color: lightgray;
-        }
-
         #gameTitle {
             padding: 20px;
             font-size: 1.5em;
             font-weight: bold;
             text-align: center;
+            color: lightgray;
         }
 
-        @media (max-width: 900px) {
-            .content-wrapper {
-                flex-direction: column-reverse;
-                align-items: center;
-            }
-
-            .game-area {
-                width: 100%;
-                max-width: 100%;
-            }
+        /* --- New Favorites Scroll Menu Styles --- */
+        .favorites-section {
+            padding: 0 40px 40px 40px;
+            max-width: 100%;
+            box-sizing: border-box;
+            display: none; /* Hidden by default, shown via JS if favorites exist */
         }
-
-        @media (max-width: 768px) {
-            .slide-menu {
-                width: 280px;
-            }
+        .favorites-section h2 {
+            font-size: 1.8em;
+            color: #fff;
+            text-align: left;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--purple);
+            padding-bottom: 10px;
+        }
+        .favorites-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding-bottom: 20px; /* Space for scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: var(--purple) #333;
+        }
+        .favorites-grid::-webkit-scrollbar {
+            height: 12px;
+        }
+        .favorites-grid::-webkit-scrollbar-track {
+            background: #333;
+            border-radius: 6px;
+        }
+        .favorites-grid::-webkit-scrollbar-thumb {
+            background-color: var(--purple);
+            border-radius: 6px;
+            border: 2px solid #333;
+        }
+        .fav-card {
+            flex: 0 0 200px; /* width: 200px, don't grow or shrink */
+            text-decoration: none;
+            color: #fff;
+            transition: transform 0.3s ease;
+        }
+        .fav-card:hover {
+            transform: translateY(-5px);
+        }
+        .fav-card img {
+            width: 200px;
+            height: 150px; /* 4:3 aspect ratio */
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        .fav-card span {
+            display: block;
+            text-align: center;
+            font-size: 1em;
+            white-space: normal; /* Allow title to wrap */
         }
     </style>
 </head>
@@ -266,9 +268,7 @@
             <a href="https://4simpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
             <a href="../index.html" class="option-link">Back to StrongdogXP</a>
             <a href="../save/index.html" class="option-link">Save Manager</a>
-            <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
-                Discord Server
-            </a>
+            <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">Discord Server</a>
         </div>
     </div>
 
@@ -281,168 +281,78 @@
         </div>
     </div>
 
-    <p id="fullscreenDisclaimer" style="text-align: center; color: #aaa; margin: 20px; font-size: 0.9em;">
-        Use the fullscreen button for a better experience.
-    </p>
+    <div class="favorites-section" id="favoritesSection">
+        <h2>More Games</h2>
+        <div class="favorites-grid" id="favoritesGrid">
+            </div>
+    </div>
 
     <div class="game-overlay-buttons" id="gameOverlayButtons">
         <button id="fullscreenButton" class="overlay-btn" title="Fullscreen">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
-                </path>
-            </svg>
+             <svg id="enterFullscreenIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+             <svg id="exitFullscreenIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 0-2-2h-3M3 16h3a2 2 0 0 0 2-2v-3"></path></svg>
         </button>
     </div>
 
-    <div id="redirectMessage">
-        <h2>Redirecting to the game...</h2>
-        <p>
-            If you are not redirected automatically,
-            <a href="#" id="manualRedirectLink">click here</a>.
-        </p>
-    </div>
-
-    <script src="../appscript.js"></script>
-
     <script type="module">
         import games from "../cards-data.js";
-        import {
-            siteMapping
-        } from "../site-mapping.js";
+        import { siteMapping } from "../site-mapping.js";
 
         document.addEventListener("DOMContentLoaded", async function () {
-            function getCurrentKeyHostOnly() {
-                return window.location.host;
-            }
-
+            // --- Helper Functions ---
+            function getCurrentKeyHostOnly() { return window.location.host; }
             function getBaseURLForPage(page) {
+                // This complex function for determining base URL is kept from original file
                 const currentHost = getCurrentKeyHostOnly();
                 const currentPath = window.location.pathname;
-
                 if (currentHost === "4simpleproblems.github.io" && currentPath.toLowerCase().startsWith('/strongdog/')) {
                     if (!page || page === 1) return "/STRONGDOG/";
                     if (page === 2) return "/strongdog2/";
-                    if (page === 3) return "/strongdog3/";
-                    if (page === 4) return "/strongdog4/";
                     return "/STRONGDOG/";
                 }
-                const explicitMappings = {
-                    "jman1593.github.io": {
-                        2: "../strongdog2/",
-                    },
-                    "4simpleproblems.github.io": {
-                        2: "../strongdog2/",
-                        3: "../strongdog3/",
-                        4: "../strongdog4/",
-                    }
-                };
-                if (explicitMappings[currentHost] && explicitMappings[currentHost][page]) {
-                    return explicitMappings[currentHost][page];
-                }
                 if (!page || page === 1) return "../";
-                const arr = siteMapping[currentHost];
-                if (!arr) {
-                    if (page === 2) return "../strongdog2/";
-                    if (page === 3) return "../strongdog3/";
-                    if (page === 4) return "../strongdog4/";
-                    return "../";
-                }
-                const index = page - 2;
-                if (arr[index]) return arr[index].replace(/^\.\/$/, "../");
-                if (page === 2) return "../strongdog2/";
-                if (page === 3) return "../strongdog3/";
-                if (page === 4) return "../strongdog4/";
-                return "../";
+                return `../strongdog${page}/` || "../";
             }
-
-            async function getEmbedPath(adjustedHref, originalHref, page) {
+            async function fileExists(url) { try { const r = await fetch(url, { method: "HEAD" }); return r.ok; } catch { return false; } }
+            function adjustHrefPath(path, page) {
+                path = path.replace(/^\.\//, "").replace(/^\//, "");
+                const baseURL = getBaseURLForPage(page);
+                return baseURL.endsWith("/") ? baseURL + path : baseURL + "/" + path;
+            }
+             async function getEmbedPath(adjustedHref, originalHref, page) {
                 let cleanHref = adjustedHref.replace(/index\.html$/, "").replace(/base\.html$/, "").replace(/\.html$/, "");
                 if (!cleanHref.endsWith("/")) cleanHref += "/";
-                const pathsToTry = [cleanHref + "game/index.html", cleanHref + "game/base.html", cleanHref + "gamereal/index.html", cleanHref + "gamereal/base.html", cleanHref + "index.html", cleanHref + "base.html",];
-                try {
-                    const response = await fetch(adjustedHref, {
-                        method: "GET"
-                    });
-                    if (response.ok) {
-                        const text = await response.text();
-                        const match = text.match(/embedGame\((['"])(.*?)\1,\s*(['"])(.*?)\3\)/);
-                        if (match) {
-                            const [, , embedPath, , title] = match;
-                            const resolvedPath = new URL(embedPath, adjustedHref).href;
-                            if (await fileExists(resolvedPath)) return resolvedPath;
-                        }
-                    }
-                } catch (error) {
-                    console.warn("Failed to parse embed path from cards-data.js", error);
-                }
+                const pathsToTry = [cleanHref + "game/index.html", cleanHref + "index.html"];
                 for (const path of pathsToTry) {
                     if (await fileExists(path)) return path;
                 }
                 return adjustHrefPath(originalHref, page);
             }
 
-            function adjustHrefPath(path, page) {
-                path = path.replace(/^\.\//, "").replace(/^\//, "");
-                const baseURL = getBaseURLForPage(page);
-                let finalPath;
-                if (baseURL === "../") {
-                    finalPath = "../" + path;
-                } else {
-                    finalPath = baseURL.endsWith("/") ? baseURL + path : baseURL + "/" + path;
-                }
-                return finalPath;
-            }
-
-            async function fileExists(url) {
-                try {
-                    const response = await fetch(url, {
-                        method: "HEAD"
-                    });
-                    return response.ok;
-                } catch {
-                    return false;
-                }
-            }
-
             function embedGame(gamePath, title) {
                 const iframe = document.createElement("iframe");
                 iframe.src = gamePath;
                 iframe.allowFullscreen = true;
-                
-                // --- MODIFICATION START ---
-                // This sandbox attribute is the key to blocking redirects and ads.
-                // 'allow-scripts': Allows the game's JavaScript to run.
-                // 'allow-same-origin': Allows the game to load its own resources, but blocks third-party content (like ads).
-                // 'allow-forms': Allows forms to be submitted (e.g., for high scores).
-                // 'allow-pointer-lock': Important for many games that need to control the cursor.
-                // By NOT including 'allow-top-navigation', we prevent the iframe from redirecting the main page.
                 iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-pointer-lock');
-                // --- MODIFICATION END ---
                 
                 const gameContainer = document.getElementById('gameContainer');
-                gameContainer.innerHTML = ''; // Clear previous game
+                gameContainer.innerHTML = '';
                 gameContainer.appendChild(iframe);
 
-                const gameTitleElement = document.getElementById("gameTitle");
-                gameTitleElement.textContent = title;
+                document.getElementById("gameTitle").textContent = title;
             }
 
-            let selectedGame = null;
+            // --- Main Logic ---
             const urlParams = new URLSearchParams(window.location.search);
             const gameId = urlParams.get("id");
-            const fullscreenButton = document.getElementById("fullscreenButton");
-            const redirectMessage = document.getElementById("redirectMessage");
-            const manualRedirectLink = document.getElementById("manualRedirectLink");
-            const gameArea = document.getElementById('gameArea');
+            let selectedGame = null;
 
             if (gameId) {
-                const idNum = parseInt(gameId, 10);
-                selectedGame = games.find((g) => g.id === idNum);
+                selectedGame = games.find((g) => g.id === parseInt(gameId, 10));
             }
 
             if (!selectedGame) {
-                embedGame("../404.html", "Not Found");
+                embedGame("../404.html", "Game Not Found");
             } else {
                 const page = selectedGame.page;
                 const baseURL = getBaseURLForPage(page);
@@ -450,44 +360,83 @@
                 adjustedHref = baseURL.endsWith("/") ? baseURL + adjustedHref : baseURL + "/" + adjustedHref;
                 const embedPath = await getEmbedPath(adjustedHref, selectedGame.href, page);
                 embedGame(embedPath, selectedGame.name);
+            }
+            
+            // --- New Fullscreen Logic ---
+            const fullscreenButton = document.getElementById("fullscreenButton");
+            const gameContainer = document.getElementById('gameContainer');
+            const enterIcon = document.getElementById('enterFullscreenIcon');
+            const exitIcon = document.getElementById('exitFullscreenIcon');
 
-                // --- UPDATED: Fullscreen logic ---
-                fullscreenButton.addEventListener("click", () => {
-                    // Select the iframe inside the game container
-                    const gameIframe = document.querySelector('#gameContainer iframe');
+            fullscreenButton.addEventListener("click", () => {
+                if (!document.fullscreenElement) {
+                    // Enter fullscreen on the container, not the iframe
+                    if (gameContainer.requestFullscreen) gameContainer.requestFullscreen();
+                    else if (gameContainer.webkitRequestFullscreen) gameContainer.webkitRequestFullscreen();
+                } else {
+                    // Exit fullscreen
+                    if (document.exitFullscreen) document.exitFullscreen();
+                }
+            });
+
+            document.addEventListener('fullscreenchange', () => {
+                const isFullscreen = !!document.fullscreenElement;
+                enterIcon.style.display = isFullscreen ? 'none' : 'block';
+                exitIcon.style.display = isFullscreen ? 'block' : 'none';
+            });
+            
+            // --- New Favorites Scroll Menu Logic ---
+            const FAVORITES_KEY = 'strongdogXPFavorites_v2';
+            const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
+
+            function renderFavoritesScrollMenu() {
+                const favoriteIds = getFavorites();
+                const favoritesSection = document.getElementById('favoritesSection');
+                const favoritesGrid = document.getElementById('favoritesGrid');
+
+                if (favoriteIds.length === 0) {
+                    favoritesSection.style.display = 'none'; // Hide if no favorites
+                    return;
+                }
+
+                favoritesSection.style.display = 'block'; // Show if favorites exist
+                favoritesGrid.innerHTML = ''; // Clear existing
+                
+                const favoriteGames = games.filter(game => favoriteIds.includes(game.id));
+
+                favoriteGames.forEach(game => {
+                    const card = document.createElement('a');
+                    card.className = 'fav-card';
+                    card.href = `./index.html?id=${game.id}`;
+
+                    const img = document.createElement('img');
+                    // Simplified path adjustment for images
+                    const baseURL = getBaseURLForPage(game.page);
+                    img.src = `${baseURL}img/${game.imgSrc}`;
+                    img.alt = game.name;
+                    img.loading = 'lazy';
+
+                    const title = document.createElement('span');
+                    title.textContent = game.name;
                     
-                    // Check if the iframe exists and request fullscreen on it
-                    if (gameIframe) {
-                        if (gameIframe.requestFullscreen) {
-                            gameIframe.requestFullscreen();
-                        } else if (gameIframe.webkitRequestFullscreen) { // Safari
-                            gameIframe.webkitRequestFullscreen();
-                        } else if (gameIframe.msRequestFullscreen) { // IE11
-                            gameIframe.msRequestFullscreen();
-                        }
-                    }
+                    card.appendChild(img);
+                    card.appendChild(title);
+                    favoritesGrid.appendChild(card);
                 });
-                // The 'fullscreenchange' event listener has been removed as it is no longer needed.
             }
 
-            manualRedirectLink.addEventListener("click", function (e) {
-                e.preventDefault();
-                const selectedId = urlParams.get("id");
-                const sGame = games.find((g) => g.id == selectedId);
-                if (sGame && sGame.href) window.location.href = "../" + sGame.href;
-            });
+            renderFavoritesScrollMenu(); // Initial render
         });
     </script>
     <script>
+        // --- Standard UI Scripts ---
         document.addEventListener("DOMContentLoaded", function () {
             const menuIcon = document.getElementById("menuIcon");
             const slideMenu = document.getElementById("slideMenu");
-
             menuIcon.addEventListener("click", function (event) {
                 event.stopPropagation();
                 slideMenu.classList.toggle('active');
             });
-
             window.addEventListener("click", function (event) {
                 if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
                     slideMenu.classList.remove('active');
@@ -503,30 +452,17 @@
     </script>
 
     <script>
-        /**
-         * Authentication Gate
-         * This script protects the page by ensuring a user is logged in.
-         * 1. If the user is logged out, it redirects to the login page.
-         * 2. If the user is logged in, it reveals the page content, allowing other scripts
-         * (like ban-enforcer.js) to perform their subsequent checks.
-         */
+        // --- Authentication Gate ---
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof firebase === 'undefined') {
-                console.error("Auth Error: Firebase is not loaded.");
                 document.body.style.visibility = 'visible';
                 document.body.innerHTML = `<h1 style="color:white; text-align:center;">Error: Cannot connect to services.</h1>`;
                 return;
             }
-
             firebase.auth().onAuthStateChanged(user => {
                 if (user) {
-                    // User is logged in. Reveal the page.
-                    // The external ban-enforcer.js script will handle checking for bans.
-                    console.log("Authentication successful. Revealing page content.");
                     document.body.style.visibility = 'visible';
                 } else {
-                    // User is logged out. Redirect them to the login page.
-                    console.log("Authentication failed: No user is logged in. Redirecting...");
                     window.location.href = 'https://4simpleproblems.github.io/login.html';
                 }
             });
