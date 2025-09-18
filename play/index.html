@@ -190,7 +190,7 @@
             color: lightgray;
         }
 
-        /* --- Favorites Scroll Menu Styles --- */
+        /* --- New Favorites Scroll Menu Styles --- */
         .favorites-section {
             padding: 0 40px 40px 40px;
             max-width: 100%;
@@ -272,14 +272,17 @@
     <div class="content-wrapper">
         <div class="game-area" id="gameArea">
             <div class="game-container" id="gameContainer">
-                </div>
+                <!-- Game iframe is embedded here by script -->
+            </div>
         </div>
     </div>
 
+    <!-- New Favorites Scroll Menu Section -->
     <div class="favorites-section" id="favoritesSection">
         <h2>More Games</h2>
         <div class="favorites-grid" id="favoritesGrid">
-            </div>
+            <!-- Favorite game cards are populated here by script -->
+        </div>
     </div>
 
     <div class="game-overlay-buttons" id="gameOverlayButtons">
@@ -291,11 +294,11 @@
 
     <script type="module">
         import games from "../cards-data.js";
-        // site-mapping is no longer needed for this page's logic but kept for potential future use
+        // site-mapping is not strictly necessary for this page's logic but is kept for context
         import { siteMapping } from "../site-mapping.js";
 
         document.addEventListener("DOMContentLoaded", async function () {
-            // This function is kept from the original file for loading the main game iframe
+            // --- Helper Functions ---
             async function getEmbedPath(game) {
                 const page = game.page || 1;
                 let pathPrefix = "../";
@@ -335,7 +338,7 @@
                 embedGame(embedPath, selectedGame.name);
             }
             
-            // --- Corrected Fullscreen Logic ---
+            // --- Advanced Fullscreen Logic ---
             const fullscreenButton = document.getElementById("fullscreenButton");
             const gameContainer = document.getElementById('gameContainer');
             const enterIcon = document.getElementById('enterFullscreenIcon');
@@ -343,9 +346,11 @@
 
             fullscreenButton.addEventListener("click", () => {
                 if (!document.fullscreenElement) {
+                    // Enter fullscreen on the container, not the iframe
                     if (gameContainer.requestFullscreen) gameContainer.requestFullscreen();
                     else if (gameContainer.webkitRequestFullscreen) gameContainer.webkitRequestFullscreen();
                 } else {
+                    // Exit fullscreen
                     if (document.exitFullscreen) document.exitFullscreen();
                 }
             });
@@ -356,7 +361,7 @@
                 exitIcon.style.display = isFullscreen ? 'block' : 'none';
             });
             
-            // --- Corrected Favorites Scroll Menu Logic ---
+            // --- Favorites Scroll Menu Logic ---
             const FAVORITES_KEY = 'strongdogXPFavorites_v2';
             const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
 
@@ -366,12 +371,12 @@
                 const favoritesGrid = document.getElementById('favoritesGrid');
 
                 if (favoriteIds.length === 0) {
-                    favoritesSection.style.display = 'none';
+                    favoritesSection.style.display = 'none'; // Hide if no favorites
                     return;
                 }
 
-                favoritesSection.style.display = 'block';
-                favoritesGrid.innerHTML = '';
+                favoritesSection.style.display = 'block'; // Show if favorites exist
+                favoritesGrid.innerHTML = ''; // Clear existing
                 
                 const favoriteGames = games.filter(game => favoriteIds.includes(game.id));
 
