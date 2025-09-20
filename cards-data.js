@@ -1,4 +1,5 @@
 export default [
+  { href: "./html/Doki Doki Literature Club/index.html", imgSrc: "ddlc.png", name: "Doki Doki Literature Club" , 'id': 1154 },
   { href: './html/crazy cattle 3d/index.html', imgSrc: 'crazy cattle 3d.png', name: 'Crazy Cattle 3D' , 'page': 4, 'id': 1153 }, 
   { href: './swf/the binding of isaac/index.html', imgSrc: 'the binding of isaac.jpg', name: 'The Binding Of Isaac' , 'page': 4, 'id': 1151 },
   { href: './swf/territory war/index.html', imgSrc: 'territory war.jpg', name: 'Territory War' , 'page': 4, 'id': 1150 },
