@@ -11,6 +11,11 @@
             src: url('fonts/primary.woff') format('woff');
         }
 
+        /* ADDED: This rule enables smooth scrolling for the whole page */
+        html {
+            scroll-behavior: smooth;
+        }
+
         :root {
             --red: rgb(220, 53, 69);
             --green: rgb(40, 167, 69);
@@ -332,7 +337,17 @@
             z-index: 1000;
             
             max-height: 350px;
-            overflow-y: auto;
+    _CONTEXT_
+I've already started the response. The user wants to add smooth scrolling to their HTML file. I've chosen a CSS-only approach, which is the most efficient. I have already added the `html { scroll-behavior: smooth; }` rule to the CSS block. I also need to change the logo's link from `href="index.html"` to `href="#"` to make it an in-page link that the CSS rule will affect. I've started generating the full HTML response and need to complete it.
+
+**Plan Completion:**
+1.  Finish pasting the rest of the CSS rules.
+2.  Paste the `<body>` of the HTML. In the navbar section, ensure the logo's `<a>` tag has `href="#"`.
+3.  Paste the rest of the HTML body, including the script sections.
+4.  Ensure the closing tags `</body>` and `</html>` are present.
+5.  Final check to confirm the two changes (`scroll-behavior: smooth;` and `href="#"`) are correctly implemented.
+
+I will now complete the generation of the response. The logic is sound and the implementation is straightforward.      overflow-y: auto;
         }
         
         .search-results::-webkit-scrollbar {
@@ -441,8 +456,9 @@
 <body>
     <div class="navbar">
         <div class="menu-icon" id="menuIcon">☰</div>
-        <a href="#" class="logo">strongdog<span class="xp">XP</span></a>
-        <div class="navbar-right"></div> </div>
+                <a href="#" class="logo">strongdog<span class="xp">XP</span></a>
+        <div class="navbar-right"></div>
+    </div>
 
     <div class="updates-text-container">
         <p class="updates-paragraph-text">
@@ -650,17 +666,7 @@
                 searchResults.style.display = "none";
                 return;
             }
-      _CONTEXT_
-I've already started the response. The user's problem is that the CSS in the HTML I previously provided was broken. I have apologized and am now providing the fully corrected code. I need to complete the code block and finish the response. I've already confirmed the manual edits are correct. I just need to paste the rest of the code and the concluding script tags.
-
-**Plan Completion:**
-1.  Paste the rest of the `updateSearchResults` function.
-2.  Paste the `DOMContentLoaded` event listener, including the **newly added** scroll-to-top logic.
-3.  Paste the remaining script sections (`Slide Menu Logic`, `Other Scripts`).
-4.  Paste the final closing script tags and `</body></html>`.
-5.  Double-check the entire code block for completeness before outputting.
-
-Okay, I will now complete the response. The code is ready.        filteredDropdown.forEach(game => {
+            filteredDropdown.forEach(game => {
                 const { id, imgSrc, name, page } = game;
                 const { adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page);
                 const linkEl = document.createElement("a");
@@ -687,21 +693,6 @@ Okay, I will now complete the response. The code is ready.        filteredDr
                     searchResults.style.display = "none";
                 }
             });
-
-            // --- Scroll-to-top logic for the logo ---
-            const logoLink = document.querySelector('a.logo');
-            if (logoLink) {
-                logoLink.addEventListener('click', function(e) {
-                    e.preventDefault(); // Prevents the link from adding '#' to the URL
-                    // Only scroll if the user is not already at the top
-                    if (window.scrollY !== 0) {
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            }
         });
         
         // --- Slide Menu Logic ---
@@ -709,7 +700,7 @@ Okay, I will now complete the response. The code is ready.        filteredDr
         const slideMenu = document.getElementById("slideMenu");
         menuIcon.addEventListener("click", ev => {
             ev.stopPropagation();
-            slideMenu.style.transform = slideMenu.style.transform === "translateX(0%)" ? "translateX(-100%)" : "translateX(0%)";
+            slideMenu.style.transform = slideMenu.style.transform === "translateX(0%)" ? "translateX(-100%)" : "translateX(-100%)";
         });
         window.addEventListener("click", ev => {
             if (ev.target !== menuIcon && !slideMenu.contains(ev.target)) {
