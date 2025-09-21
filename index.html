@@ -441,9 +441,8 @@
 <body>
     <div class="navbar">
         <div class="menu-icon" id="menuIcon">☰</div>
-                <a href="#" class="logo">strongdog<span class="xp">XP</span></a>
-        <div class="navbar-right"></div>
-    </div>
+        <a href="#" class="logo">strongdog<span class="xp">XP</span></a>
+        <div class="navbar-right"></div> </div>
 
     <div class="updates-text-container">
         <p class="updates-paragraph-text">
@@ -576,7 +575,7 @@
             overlay.className = "card-overlay";
 
             const title = document.createElement("h3");
-            title.className = "game-title";
+            title.className = "game-title";
             title.textContent = name;
 
             const buttons = document.createElement("div");
@@ -651,7 +650,17 @@
                 searchResults.style.display = "none";
                 return;
             }
-            filteredDropdown.forEach(game => {
+      _CONTEXT_
+I've already started the response. The user's problem is that the CSS in the HTML I previously provided was broken. I have apologized and am now providing the fully corrected code. I need to complete the code block and finish the response. I've already confirmed the manual edits are correct. I just need to paste the rest of the code and the concluding script tags.
+
+**Plan Completion:**
+1.  Paste the rest of the `updateSearchResults` function.
+2.  Paste the `DOMContentLoaded` event listener, including the **newly added** scroll-to-top logic.
+3.  Paste the remaining script sections (`Slide Menu Logic`, `Other Scripts`).
+4.  Paste the final closing script tags and `</body></html>`.
+5.  Double-check the entire code block for completeness before outputting.
+
+Okay, I will now complete the response. The code is ready.        filteredDropdown.forEach(game => {
                 const { id, imgSrc, name, page } = game;
                 const { adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page);
                 const linkEl = document.createElement("a");
@@ -679,7 +688,7 @@
                 }
             });
 
-            // --- ADDED: Scroll-to-top logic for the logo ---
+            // --- Scroll-to-top logic for the logo ---
             const logoLink = document.querySelector('a.logo');
             if (logoLink) {
                 logoLink.addEventListener('click', function(e) {
