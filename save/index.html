@@ -11,10 +11,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     
-    <script src="../firebase-config.js"></script>
-
-    <script src="../panic-key.js"></script>
-    <script src="../url-changer.js"></script>
+    <script src="../firebase-config.js" defer></script>
+    <script src="../panic-key.js" defer></script>
+    <script src="../url-changer.js" defer></script>
+    <script src="../ban-enforcer.js" defer></script>
     
     <style>
         /* This rule hides the body by default. The auth gate script will make it visible. */
@@ -32,6 +32,7 @@
             --green: rgb(40, 167, 69);
             --ff: 'primary', Arial, sans-serif;
             --bg: #2e2e2e;
+            --purple: #6720BD; /* Added purple variable */
         }
 
         body {
@@ -80,8 +81,8 @@
         }
 
         .logo .xp {
-            color: orange;
-            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+            color: var(--purple); /* Changed to purple */
+            text-shadow: 0 0 10px rgba(103, 32, 189, 0.5); /* Changed to purple */
         }
 
         .menu-icon {
@@ -149,8 +150,8 @@
 
         .categories>a:hover,
         .categories>button:hover {
-            background: linear-gradient(45deg, #ffa500, #ff8433);
-            box-shadow: 0 6px 20px rgba(255, 98, 0, 0.5);
+            background: linear-gradient(45deg, #6720BD, #8a2be2); /* Changed to purple */
+            box-shadow: 0 6px 20px rgba(103, 32, 189, 0.5); /* Changed to purple */
         }
 
         .main-content {
@@ -248,7 +249,7 @@
 
         .loading-animation {
             border: 8px solid #f3f3f3;
-            border-top: 8px solid orange;
+            border-top: 8px solid var(--purple); /* Changed to purple */
             border-radius: 50%;
             width: 60px;
             height: 60px;
@@ -270,7 +271,7 @@
         }
 
         .save-action-btn {
-            background: linear-gradient(45deg, #ffa500, #ff8433);
+            background: linear-gradient(45deg, #6720BD, #8a2be2); /* Changed to purple */
             color: white;
             font-family: var(--ff);
             font-size: 1.2rem;
@@ -288,7 +289,7 @@
 
         .save-action-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 98, 0, 0.5);
+            box-shadow: 0 8px 25px rgba(103, 32, 189, 0.5); /* Changed to purple */
             filter: brightness(1.1);
         }
 
@@ -339,7 +340,7 @@
             font-size: 2rem;
             margin-top: 0;
             margin-bottom: 25px;
-            border-bottom: 2px solid orange;
+            border-bottom: 2px solid var(--purple); /* Changed to purple */
             padding-bottom: 10px;
         }
 
@@ -349,7 +350,7 @@
 
         #credits-popup .credit-person h4 {
             font-size: 1.4rem;
-            color: orange;
+            color: var(--purple); /* Changed to purple */
             margin: 0 0 8px 0;
         }
 
@@ -753,186 +754,5 @@
         });
     </script>
     
-    <script>
-        /**
-         * Authentication Gate (v4.5 - Foolproof Stacking Context Fix)
-         */
-        
-        // --- 1. Immediately create a SIMPLE, invisible shield. ---
-        (function() {
-            if (document.getElementById('auth-shield-temporary')) return;
-            const shield = document.createElement('div');
-            shield.id = 'auth-shield-temporary';
-            Object.assign(shield.style, {
-                position: 'fixed',
-                top: '0',
-                left: '0',
-                width: '100vw',
-                height: '100vh',
-                zIndex: '2147483647',
-                backgroundColor: 'transparent'
-            });
-            document.documentElement.appendChild(shield);
-            console.log("Debug: Temporary auth shield deployed.");
-        })();
-
-        /**
-         * Helper function to remove the temporary shield and restore scrolling.
-         */
-        function removeTemporaryAuthShield() {
-            const shield = document.getElementById('auth-shield-temporary');
-            if (shield) {
-                shield.remove();
-            }
-            if (!document.getElementById('ban-enforcer-container')) {
-                document.documentElement.style.overflow = '';
-                document.body.style.overflow = '';
-            }
-            console.log("Debug: Temporary auth shield removed.");
-        }
-
-        // --- 2. Wait for DOM to be ready, then lock scroll and check auth ---
-        document.addEventListener('DOMContentLoaded', () => {
-            document.documentElement.style.overflow = 'hidden';
-            document.body.style.overflow = 'hidden';
-            console.log("Debug: DOMContentLoaded fired. Page scrolling locked.");
-
-            if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined' || typeof firebase.firestore === 'undefined') {
-                console.error("FATAL ERROR: Firebase is not loaded correctly. Check script order in HTML.");
-                document.body.innerHTML = `<h1 style="font-family: Arial, sans-serif; color: white; text-align: center; margin-top: 40px;">Fatal Error: Page cannot be loaded.</h1>`;
-                document.body.style.visibility = 'visible';
-                removeTemporaryAuthShield();
-                return;
-            }
-
-            firebase.auth().onAuthStateChanged(user => {
-                if (user) {
-                    const db = firebase.firestore();
-                    const banDocRef = db.collection('bans').doc(user.uid);
-
-                    banDocRef.get().then(doc => {
-                        removeTemporaryAuthShield(); // Remove the simple shield in all logged-in cases
-                        if (doc.exists) {
-                            const banData = doc.data();
-                            console.warn(`User ${user.uid} is BANNED. Activating permanent ban screen.`);
-                            showBanScreen(banData); // Build the permanent, visible ban screen
-                        } else {
-                            console.log("Debug: User is logged in and not banned. Granting access.");
-                            document.documentElement.style.overflow = '';
-                            document.body.style.overflow = '';
-                            document.body.style.visibility = 'visible'; // Make the main page content visible
-                        }
-                    }).catch(error => {
-                        console.error("Debug: An error occurred while checking ban status. Granting access as a failsafe.", error);
-                        removeTemporaryAuthShield();
-                        document.body.style.visibility = 'visible';
-                    });
-
-                } else {
-                    console.log("Debug: No user is logged in. Redirecting to login page.");
-                    window.location.href = 'https://4simpleproblems.github.io/login.html';
-                }
-            });
-        });
-
-        /**
-         * Creates the permanent, multi-layer ban screen and starts the persistence guard.
-         */
-        function showBanScreen(banData) {
-            const banContainerId = 'ban-enforcer-container';
-
-            const enforceBanVisuals = () => {
-                document.documentElement.style.overflow = 'hidden';
-                document.body.style.overflow = 'hidden';
-
-                if (!document.getElementById(banContainerId)) {
-                    console.warn("[Guard] Ban container not found. Rebuilding UI.");
-                    
-                    document.body.style.visibility = 'visible';
-
-                    const banContainer = document.createElement('div');
-                    banContainer.id = banContainerId;
-                    Object.assign(banContainer.style, {
-                        position: 'fixed',
-                        top: '0',
-                        left: '0',
-                        width: '100vw',
-                        height: '100vh',
-                        zIndex: '2147483647'
-                    });
-
-                    const shield = document.createElement('div');
-                    Object.assign(shield.style, {
-                        position: 'absolute',
-                        top: '0',
-                        left: '0',
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(10, 10, 10, 0.75)',
-                        backdropFilter: 'blur(14px)',
-                        webkitBackdropFilter: 'blur(14px)'
-                    });
-                    banContainer.appendChild(shield);
-
-                    const homeButton = document.createElement('a');
-                    homeButton.href = '../index.html';
-                    homeButton.innerHTML = `<i class="fa-solid fa-house"></i>`;
-                    Object.assign(homeButton.style, {
-                        position: 'absolute',
-                        top: '20px',
-                        right: '20px',
-                        width: '45px',
-                        height: '45px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '22px',
-                        color: 'white',
-                        textDecoration: 'none',
-                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                        borderRadius: '10px',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        transition: 'background-color 0.3s ease'
-                    });
-                    homeButton.onmouseover = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'; };
-                    homeButton.onmouseout = () => { homeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'; };
-                    banContainer.appendChild(homeButton);
-
-                    const reason = banData.reason ? String(banData.reason).replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'No reason provided.';
-                    const banDate = banData.bannedAt && banData.bannedAt.toDate ? `on ${new Date(banData.bannedAt.seconds * 1000).toLocaleDateString()}` : '';
-                    const messageBox = document.createElement('div');
-                    messageBox.innerHTML = `
-                        <h1 style="font-size: 2.3em; color: #fc0324; margin: 0 0 10px 0; font-weight: bold;">Access Denied</h1>
-                        <p style="font-size: 1.1em; margin: 0 0 15px 0; line-height: 1.4; color: #e0e0e0;">Your account has been suspended from this service.</p>
-                        <p style="font-size: 1em; margin: 0 0 20px 0; color: #bdbdbd;"><strong>Reason:</strong> ${reason}</p>
-                        <p style="font-size: 0.8em; color: #9e9e9e;">This action was taken ${banDate}. If you believe this is an error, please contact 4simpleproblems+support@gmail.com</p>
-                    `;
-                    Object.assign(messageBox.style, {
-                        position: 'absolute',
-                        top: '40px',
-                        left: '40px',
-                        maxWidth: '600px',
-                        width: 'auto',
-                        textAlign: 'left',
-                        color: '#ffffff',
-                        fontFamily: "'PrimaryFont', Arial, sans-serif",
-                        textShadow: '0 2px 8px rgba(0,0,0,0.7)'
-                    });
-                    banContainer.appendChild(messageBox);
-                    document.body.appendChild(banContainer);
-                }
-            };
-
-            if (!document.querySelector('link[href*="font-awesome"]')) {
-                const faLink = document.createElement('link');
-                faLink.rel = 'stylesheet';
-                faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
-                document.head.appendChild(faLink);
-            }
-            
-            enforceBanVisuals();
-            setInterval(enforceBanVisuals, 100);
-        }
-    </script>
 </body>
 </html>
