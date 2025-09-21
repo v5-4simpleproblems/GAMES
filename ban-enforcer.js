@@ -217,7 +217,7 @@ function showBanScreen(banData) {
             console.warn("Debug [Guard]: Home button was removed. Re-creating...");
             homeButton = document.createElement('a'); // Use an anchor tag for navigation
             homeButton.id = homeButtonId;
-            homeButton.href = '../index.html'; // Set the redirection target
+            homeButton.href = 'https://4simpleproblems.github.io/index.html'; // Set the redirection target
 
             // Add the Font Awesome icon
             homeButton.innerHTML = `<i class="fa-solid fa-house"></i>`;
