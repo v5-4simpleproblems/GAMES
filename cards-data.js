@@ -1,13 +1,11 @@
 export default [
-  // New games from cards-data-new.js (Page 5, Titles capitalized)
   { href: './html/Drive Mad 200 Levels/index.html', imgSrc: 'Drive Mad 200 Levels.jpeg', name: 'Drive Mad 200 Levels' , 'page': 5, 'id': 746 },
   { href: './html/City Car Driving Stunt Master/index.html', imgSrc: 'City Car Driving Stunt Master.jpeg', name: 'City Car Driving Stunt Master' , 'page': 5, 'id': 155 },
   { href: './html/Last Breath/index.html', imgSrc: 'Last Breath.jpeg', name: 'Last Breath' , 'page': 5, 'id': 720 },
-  { href: './html/Grow a Garden/index.html', imgSrc: 'Grow a Garden.jpeg', name: 'Grow A Garden' , 'page': 5, 'id': 250 },
-  { href: './html/Steal a Brainrot/index.html', imgSrc: 'Steal a Brainrot.jpeg', name: 'Steal A Brainrot' , 'page': 5, 'id': 731 },
-  { href: './html/clash royale/index.html', imgSrc: 'clash royale.jpeg', name: 'Clash Royale (Ripoff)' , 'page': 5, 'id': 945 },
+  { href: './html/Grow a Garden/index.html', imgSrc: 'Grow a Garden.jpeg', name: 'Grow a Garden' , 'page': 5, 'id': 250 },
+  { href: './html/Steal a Brainrot/index.html', imgSrc: 'Steal a Brainrot.jpeg', name: 'Steal a Brainrot' , 'page': 5, 'id': 731 },
+  { href: './html/clash royale/index.html', imgSrc: 'clash royale.jpeg', name: 'Clash Royale (ripoff)' , 'page': 5, 'id': 945 },
   { href: './html/Solar Smash/index.html', imgSrc: 'Solar Smash.jpeg', name: 'Solar Smash' , 'page': 5, 'id': 145 },
-
   { href: './html/crazy cattle 3d/index.html', imgSrc: 'crazy cattle 3d.png', name: 'Crazy Cattle 3D' , 'page': 4, 'id': 1153 },
   { href: './html/crazy-chicken-3d/index.html', imgSrc: 'cc3d.png', name: 'Crazy Chicken 3D' , 'id': 1154 }, 
   { href: './swf/the binding of isaac/index.html', imgSrc: 'the binding of isaac.jpg', name: 'The Binding Of Isaac' , 'page': 4, 'id': 1151 },
