@@ -91,9 +91,9 @@
             overflow-y: auto;
             box-sizing: border-box;
             background: linear-gradient(to bottom right,
-                    rgba(43, 43, 43, 0.599),
-                    rgba(53, 53, 53, 0.599),
-                    rgba(80, 80, 80, 0.599));
+                        rgba(43, 43, 43, 0.599),
+                        rgba(53, 53, 53, 0.599),
+                        rgba(80, 80, 80, 0.599));
         }
 
         .slide-menu.active {
@@ -457,6 +457,7 @@
                     if (page === 2) return "/strongdog2/";
                     if (page === 3) return "/strongdog3/";
                     if (page === 4) return "/strongdog4/";
+                    if (page === 5) return "/strongdog5/"; // ⬅️ ADDED
                     return "/STRONGDOG/";
                 }
                 const explicitMappings = {
@@ -467,6 +468,7 @@
                         2: "../strongdog2/",
                         3: "../strongdog3/",
                         4: "../strongdog4/",
+                        5: "../strongdog5/", // ⬅️ ADDED
                     }
                 };
                 if (explicitMappings[currentHost] && explicitMappings[currentHost][page]) {
@@ -478,6 +480,7 @@
                     if (page === 2) return "../strongdog2/";
                     if (page === 3) return "../strongdog3/";
                     if (page === 4) return "../strongdog4/";
+                    if (page === 5) return "../strongdog5/"; // ⬅️ ADDED
                     return "../";
                 }
                 const index = page - 2;
@@ -485,6 +488,7 @@
                 if (page === 2) return "../strongdog2/";
                 if (page === 3) return "../strongdog3/";
                 if (page === 4) return "../strongdog4/";
+                if (page === 5) return "../strongdog5/"; // ⬅️ ADDED
                 return "../";
             }
 
