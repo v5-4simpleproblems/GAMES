@@ -1,12 +1,13 @@
 // firebase-config.js
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCbaYBA-Ab3noI-p2ZC57sR7OnLcc7ojL8",
-  authDomain: "foursimpleproblems-v4.firebaseapp.com",
-  projectId: "foursimpleproblems-v4",
-  storageBucket: "foursimpleproblems-v4.firebasestorage.app",
-  messagingSenderId: "251178815270",
-  appId: "1:251178815270:web:cc7fdb5ed05f8d8d203be7"
+  apiKey: "AIzaSyAZBKAckVa4IMvJGjcyndZx6Y1XD52lgro",
+  authDomain: "project-zirconium.firebaseapp.com",
+  projectId: "project-zirconium",
+  storageBucket: "project-zirconium.firebasestorage.app",
+  messagingSenderId: "1096564243475",
+  appId: "1:1096564243475:web:6d0956a70125eeea1ad3e6",
+  measurementId: "G-1D4F692C1Q"
 };
 
 // Initialize Firebase
