@@ -6,27 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <link rel="icon" type="image/x-icon" href="img/favicon.ico" id="faviconLink" />
 
-    <!-- GEIST FONT IMPORT (The same one used in dailyphoto.html) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS for the slim, black theme -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Custom Tailwind Configuration to ensure deep black background and Geist font -->
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        'deep-black': '#0A0A0A',
-                        'card-dark': '#1A1A1A',
+                        'deep-black': '#070707',
+                        'card-dark': '#111111',
                         'accent-purple': '#5A10A9',
+                        'brand-border': '#252525',
                     },
                     fontFamily: {
                         sans: ['Geist', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl': '1rem',
+                        '2xl': '1.25rem',
                     }
                 }
             }
@@ -34,19 +36,24 @@
     </script>
     
     <style>
-        /* Base styles for dark theme and Geist font use */
+        /* Base styles to match playindex.html and dailyphoto.html */
         body {
             font-family: 'Geist', sans-serif;
+            font-weight: 300;
+            background-color: #070707;
             padding-bottom: 100px; /* Space for the fixed search bar */
         }
         
-        /* Custom styles that cannot be fully expressed in Tailwind */
+        h1, h2, h3, .font-bold, .font-semibold, strong {
+            font-weight: 400 !important;
+        }
+
+        /* Logo styling */
         .logo {
-            /* Keep logo centered using absolute positioning as in original CSS */
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            font-weight: 700;
+            font-weight: 700; /* Logo keeps its bold weight */
             letter-spacing: 0.5px;
             text-decoration: none;
             transition: transform 0.3s ease;
@@ -56,155 +63,94 @@
             transform: translateX(-50%) scale(1.02);
         }
 
-        /* Credits Modal Styling - uses custom structure */
+        /* Credits Modal Styling */
         #credits-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); z-index: 2000; align-items: center; justify-content: center;
         }
-
         #credits-popup {
-            background-color: #1A1A1A;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-width: 400px;
-            width: 90%;
-            color: white;
-            position: relative;
+            background-color: #111111; padding: 30px; border-radius: 1rem; border: 1px solid #252525;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); max-width: 400px; width: 90%; color: white; position: relative;
         }
-        
         #close-credits-popup {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            font-weight: 300;
-            cursor: pointer;
-            color: #777;
+            position: absolute; top: 10px; right: 15px; font-size: 28px; font-weight: 300; cursor: pointer; color: #777;
         }
 
-        /* Modal / Popup Styling */
+        /* Generic Modal Styling */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1005; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.7); 
+            display: none; position: fixed; z-index: 1005; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.7);
         }
-
         .modal-content {
-            background-color: #1a1a1a;
-            margin: 15% auto; 
-            padding: 20px;
-            border: 1px solid #333;
-            width: 80%; 
-            max-width: 500px;
-            border-radius: 12px;
-            position: relative;
-            color: white;
+            background-color: #111111; margin: 15% auto; padding: 20px; border: 1px solid #252525;
+            width: 80%; max-width: 500px; border-radius: 1.25rem; position: relative; color: white;
         }
-        
         .modal-close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+            color: #aaa; float: right; font-size: 28px; font-weight: bold;
         }
-
-        .modal-close:hover,
-        .modal-close:focus {
-            color: white;
-            text-decoration: none;
-            cursor: pointer;
+        .modal-close:hover, .modal-close:focus {
+            color: white; text-decoration: none; cursor: pointer;
         }
         
-        /* Search Bar Results */
+        /* Search Bar Results Styling */
         .search-results {
-            max-height: 250px;
-            overflow-y: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 250px; overflow-y: auto; border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         .search-item {
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            color: white;
+            display: flex; align-items: center; padding: 8px 15px; cursor: pointer; transition: background-color 0.2s; color: white; text-decoration: none;
         }
-        .search-item:hover {
-            background-color: #333;
-        }
+        .search-item:hover { background-color: #333; }
+        .search-item img { width: 40px; height: 40px; border-radius: 8px; margin-right: 12px; object-fit: cover;}
 
-        /* Responsiveness for search bar */
         @media (max-width: 768px) {
             #bottom-fixed-bar {
-                width: calc(100% - 30px) !important;
-                left: 15px !important;
-                right: 15px !important;
-                bottom: 10px !important;
+                width: calc(100% - 30px) !important; left: 15px !important; right: 15px !important; bottom: 10px !important;
             }
         }
     </style>
 </head>
 
 <body class="bg-deep-black text-white min-h-screen">
-    <!-- Navbar: Slim Black -->
-    <div class="navbar sticky top-0 z-50 p-4 shadow-xl bg-black/90 backdrop-blur-md flex items-center justify-between">
+    <div class="navbar sticky top-0 z-50 p-4 shadow-xl bg-black/80 backdrop-blur-md flex items-center justify-between border-b border-brand-border">
         <div class="menu-icon text-3xl cursor-pointer transition duration-300 hover:text-accent-purple" id="menuIcon">
-            &#9776; <!-- Hamburger icon -->
-        </div>
+            &#9776; </div>
         <a href="index.html" class="logo text-4xl font-extrabold text-white transition duration-300">
             strongdog<span class="xp text-accent-purple shadow-accent-purple/50 drop-shadow-lg">XP</span>
         </a>
-        <div class="navbar-right w-72"></div> 
+        <div class="navbar-right w-12"></div> 
     </div>
 
-    <!-- Update Message Section: Clean and Dark -->
-    <div class="mx-auto my-5 p-4 sm:p-6 w-full max-w-3xl">
-        <p class="updates-paragraph-text bg-card-dark text-white p-4 rounded-xl shadow-lg border-l-4 border-accent-purple text-sm sm:text-base">
-            <strong>Welcome to StrongdogXP!</strong><br>
-            This website is being hosted by <a href="https://4simpleproblems.github.io/"
-                class="text-accent-purple font-bold no-underline hover:underline" target="_blank">4SP</a>. I have fixed
-            several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
-        </p>
-    </div>
-    
-    <!-- Favorites Section -->
-    <h2 id="favoritesHeader" class="text-center text-3xl font-bold mt-10 mb-5 text-white" style="display: none;">
-        <strong>Favorites</strong>
-    </h2>
-    <div class="games-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4" id="favoritesGameList" style="display: none;"></div>
+    <main class="mx-auto my-5 w-full max-w-7xl px-6">
+        <div class="mx-auto my-8 p-4 sm:p-6 w-full max-w-3xl">
+            <p class="bg-card-dark text-white p-5 rounded-2xl shadow-lg border border-brand-border text-sm sm:text-base text-center">
+                <strong>Welcome to StrongdogXP!</strong><br>
+                This website is being hosted by <a href="https://4simpleproblems.github.io/"
+                    class="text-accent-purple font-bold no-underline hover:underline" target="_blank">4SP</a>. I have fixed
+                several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
+            </p>
+        </div>
+        
+        <h2 id="favoritesHeader" class="text-center text-3xl font-bold mt-12 mb-6 text-white" style="display: none;">
+            <strong>Favorites</strong>
+        </h2>
+        <div class="games-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="favoritesGameList" style="display: none;"></div>
 
-    <!-- All Games Section -->
-    <h2 class="text-center text-3xl font-bold mt-10 mb-5 text-white"><strong>All Games</strong></h2>
-    <div class="games-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 mx-auto max-w-7xl" id="allList">
-        <!-- Game cards will be rendered here by JavaScript -->
-    </div>
+        <h2 class="text-center text-3xl font-bold mt-12 mb-6 text-white"><strong>All Games</strong></h2>
+        <div class="games-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="allList">
+            </div>
+    </main>
 
-    <!-- Slide Menu: Slim Black -->
-    <div class="slide-menu fixed top-0 left-0 h-screen w-80 bg-black/95 backdrop-blur-md shadow-2xl shadow-black/70 z-[1000] transform -translate-x-full transition-transform duration-500 overflow-y-auto p-6" id="slideMenu">
+    <div class="slide-menu fixed top-0 left-0 h-screen w-80 bg-black/95 backdrop-blur-md shadow-2xl shadow-black/70 z-[1000] transform -translate-x-full transition-transform duration-500 overflow-y-auto p-6 border-r border-brand-border" id="slideMenu">
         <h3 class="text-2xl font-bold mb-6 text-white border-b border-gray-700 pb-3">Navigation</h3>
         <div class="categories flex flex-col space-y-3">
-            <a href="https://foursimpleproblems.github.io/logged-in/games.html" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Back to 4SP</a>
-            <a href="#" id="blockLanschool" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Open in about:blank</a>
-            <a href="./save/index.html" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Save manager</a>
-            <a href="https://discord.gg/dyyebUaqRS" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Discord Server</a>
-            <a href="#" id="creditsBtn" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Credits</a>
+            <a href="https://foursimpleproblems.github.io/logged-in/games.html" class="option-link p-4 bg-card-dark rounded-xl text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50 border border-brand-border">Back to 4SP</a>
+            <a href="#" id="blockLanschool" class="option-link p-4 bg-card-dark rounded-xl text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50 border border-brand-border">Open in about:blank</a>
+            <a href="./save/index.html" class="option-link p-4 bg-card-dark rounded-xl text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50 border border-brand-border">Save manager</a>
+            <a href="https://discord.gg/dyyebUaqRS" class="option-link p-4 bg-card-dark rounded-xl text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50 border border-brand-border">Discord Server</a>
+            <a href="#" id="creditsBtn" class="option-link p-4 bg-card-dark rounded-xl text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50 border border-brand-border">Credits</a>
         </div>
     </div>
     
-    <!-- Credits Overlay -->
     <div id="credits-overlay">
         <div id="credits-popup">
             <span id="close-credits-popup">&times;</span>
@@ -220,7 +166,6 @@
         </div>
     </div>
 
-    <!-- Info/Discord Modal -->
     <div class="modal" id="popupModal">
         <div class="modal-content">
             <span class="modal-close" id="closeModal">&times;</span>
@@ -232,19 +177,15 @@
         </div>
     </div>
     
-    <!-- Bottom Search Bar: Frosted Black -->
-    <div id="bottom-fixed-bar" class="fixed bottom-4 right-4 bg-black/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-2xl shadow-black/50 p-3 w-full max-w-md">
-        <div class="relative">
+    <div id="bottom-fixed-bar" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-lg rounded-2xl border border-brand-border shadow-2xl shadow-black/50 p-3 w-full max-w-md">
+        <div class="relative w-full">
             <input type="text" id="searchInput" placeholder="Search for games…" autocomplete="off" class="w-full p-2 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:ring-0 border-b border-accent-purple" />
-            <div class="search-results absolute w-full mt-2 bg-black rounded-lg shadow-xl max-h-60 overflow-y-auto" id="searchResults" style="display: none;">
-                <!-- Search results will be dynamically inserted here -->
-            </div>
+            <div class="search-results absolute bottom-full w-full mb-2 bg-card-dark border border-brand-border rounded-xl shadow-xl max-h-60 overflow-y-auto" id="searchResults" style="display: none;">
+                </div>
         </div>
     </div>
 
-    <!-- Game List Logic (Preserved) -->
     <script type="module">
-        // Assuming 'cards-data.js' is available in the same directory
         import games from "./cards-data.js";
 
         // --- DOM Elements ---
@@ -255,9 +196,7 @@
         const searchResults = document.getElementById("searchResults");
         const slideMenu = document.getElementById("slideMenu");
         const menuIcon = document.getElementById("menuIcon");
-        const closeModal = document.getElementById("closeModal");
-        const popupModal = document.getElementById("popupModal");
-        
+
         // --- Favorites Management ---
         const FAVORITES_KEY = 'strongdogXPFavorites_v2';
         const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
@@ -274,71 +213,56 @@
             }
             saveFavorites(favorites);
 
-            // Update all visible cards for this game
             document.querySelectorAll(`.zone-item[data-game-id='${gameId}'] .favorite-btn`).forEach(btn => {
                 btn.classList.toggle('favorited', !isFavorited);
-                btn.innerHTML = !isFavorited ? '&#9733;' : '&#9734;'; // Star icons
+                btn.innerHTML = !isFavorited ? '&#9733;' : '&#9734;';
             });
             
             renderFavorites();
         }
 
         // --- URL and Path Helpers ---
-        function getPageNumberFromURL(url) { 
-            const regex = /(strongdog|mathcord|stroongdog)(\d*)/; 
-            const match = url.match(regex); 
-            if (match) return match[2] === "" ? 1 : parseInt(match[2], 10); 
-            return 1; 
-        }
-        
+        function getPageNumberFromURL(url) { const regex = /(strongdog|mathcord|stroongdog)(\d*)/; const match = url.match(regex); if (match) return match[2] === "" ? 1 : parseInt(match[2], 10); return 1; }
         const siteMapping = window.siteMapping || {};
-
-        function getCurrentSiteKey() { 
-            const currentURL = window.location.href; 
-            const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length); 
-            for (const k of keys) { 
-                if (currentURL.includes(k)) return k; 
-            } 
-            return null; 
-        }
-
+        function getCurrentSiteKey() { const currentURL = window.location.href; const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length); for (const k of keys) { if (currentURL.includes(k)) return k; } return null; }
         function getAdjustedUrls(href, imgSrc, page) {
-            let adjustedImgSrc = `./img/${imgSrc}`; 
-            let adjustedHref = href;
-            let currentSiteKey = getCurrentSiteKey();
-            
+            let adjustedImgSrc = `./img/${imgSrc}`; let currentSiteKey = getCurrentSiteKey();
             if (currentSiteKey) {
                 const currentPageNumber = getPageNumberFromURL(currentSiteKey);
                 if (page !== undefined && page !== currentPageNumber) {
                     let newBase = window.location.origin + `/strongdog${page}`;
-                    // Adjust image URL only if page number needs correction
                     adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
                 }
+            } else if (page !== undefined && page > 1) {
+                const newBase = `${window.location.origin}/strongdog${page}`;
+                adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
             }
-            
-            // Adjust href path (assuming href is always relative to the root games directory)
-            if (!adjustedHref.startsWith('./')) {
-                 adjustedHref = `./${adjustedHref}`;
-            }
-
-            return { href: adjustedHref, imgSrc: adjustedImgSrc };
+            return { adjustedImgSrc };
         }
 
-        // --- Card Rendering ---
-        function createGameCard(game, isFavorite) {
-            const adjusted = getAdjustedUrls(game.href, game.imgSrc, game.page);
-            const card = document.createElement('div');
-            card.className = 'zone-item bg-card-dark rounded-xl shadow-lg cursor-pointer transition duration-300 hover:shadow-xl hover:shadow-accent-purple/50 transform hover:-translate-y-1 relative overflow-hidden aspect-w-4 aspect-h-3';
-            card.setAttribute('data-game-id', game.id);
-            card.setAttribute('data-keywords', `${game.title.toLowerCase()} ${game.tags ? game.tags.join(' ').toLowerCase() : ''}`);
+        // --- Card Rendering (UPDATED) ---
+        function createGameCard(game) {
+            const { href, imgSrc, name, page, id } = game;
+            const { adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
+            const isFavorite = getFavorites().includes(id);
+
+            const card = document.createElement("div");
+            card.className = 'zone-item bg-card-dark rounded-2xl border border-brand-border cursor-pointer transition-all duration-300 ease-in-out hover:border-accent-purple hover:-translate-y-1.5 hover:shadow-xl hover:shadow-accent-purple/20 relative overflow-hidden aspect-w-1 aspect-h-1';
+            card.dataset.gameId = id;
+
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('button')) return;
+                window.location.href = `./play/?id=${id}`;
+            });
+            
             card.innerHTML = `
-                <img src="${adjusted.imgSrc}" alt="${game.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/1e1e1e/888888?text=4SP'" class="w-full h-full object-cover">
-                <div class="card-overlay absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black via-black/80 to-transparent">
-                    <h3 class="game-title text-white text-lg font-semibold mb-2">${game.title}</h3>
+                <img src="${adjustedImgSrc}" alt="${name}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/111111/888888?text=4SP'" class="w-full h-full object-cover rounded-t-2xl">
+                <div class="card-overlay absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-black via-black/80 to-transparent">
+                    <h3 class="game-title text-white text-lg font-semibold mb-2">${name}</h3>
                     <div class="flex justify-between items-center">
-                        <a href="${adjusted.href}" class="card-play-btn bg-accent-purple text-white font-medium py-2 px-4 rounded-full text-sm transition duration-200 hover:bg-[#7216d8] hover:shadow-lg focus:outline-none flex-grow mr-2">
+                        <button class="card-play-btn bg-accent-purple text-white font-medium py-2 px-4 rounded-full text-sm transition duration-200 hover:bg-[#7216d8] hover:shadow-lg focus:outline-none flex-grow mr-2 text-center">
                             PLAY
-                        </a>
+                        </button>
                         <button class="favorite-btn p-2 rounded-full text-white transition duration-200 focus:outline-none text-xl ${isFavorite ? 'bg-red-600/20 text-red-400 favorited' : 'bg-white/10 hover:bg-white/20'}" title="${isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}">
                             ${isFavorite ? '&#9733;' : '&#9734;'}
                         </button>
@@ -346,179 +270,117 @@
                 </div>
             `;
             
-            // Attach event listeners for play and favorite
-            card.querySelector('.card-play-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                window.location.href = adjusted.href;
-            });
-            card.querySelector('.favorite-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleFavorite(game.id);
-            });
+            card.querySelector('.card-play-btn').addEventListener('click', (e) => { e.stopPropagation(); window.location.href = `./play/?id=${id}`; });
+            card.querySelector('.favorite-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleFavorite(id); });
 
             return card;
         }
 
-        function renderGameList(element, gameData, favorites) {
-            element.innerHTML = '';
-            gameData.forEach(game => {
-                const isFavorite = favorites.includes(game.id);
-                element.appendChild(createGameCard(game, isFavorite));
+        function renderGames(gamesToRender, targetElement) {
+            targetElement.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+            gamesToRender.forEach(game => {
+                fragment.appendChild(createGameCard(game));
             });
-        }
-
-        function renderAllGames() {
-            const favorites = getFavorites();
-            renderGameList(allListElement, games, favorites);
+            targetElement.appendChild(fragment);
         }
 
         function renderFavorites() {
-            const favorites = getFavorites();
-            const favoriteGames = games.filter(game => favorites.includes(game.id));
-
-            if (favoriteGames.length > 0) {
-                favoritesHeader.style.display = 'block';
-                favoritesGameList.style.display = 'grid';
-                renderGameList(favoritesGameList, favoriteGames, favorites);
+            const favoriteIds = getFavorites();
+            if (favoriteIds.length > 0) {
+                favoritesHeader.style.display = "block";
+                favoritesGameList.style.display = "grid";
+                const favoriteGames = games.filter(game => favoriteIds.includes(game.id));
+                renderGames(favoriteGames, favoritesGameList);
             } else {
-                favoritesHeader.style.display = 'none';
-                favoritesGameList.style.display = 'none';
-                favoritesGameList.innerHTML = ''; // Clear the list
+                favoritesHeader.style.display = "none";
+                favoritesGameList.style.display = "none";
             }
         }
-
-        // --- Search Functionality ---
-        function performSearch(query) {
-            const filteredGames = games.filter(game => 
-                game.title.toLowerCase().includes(query.toLowerCase()) || 
-                (game.tags && game.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())))
-            );
-            
-            // Show/hide all games list based on search query
-            allListElement.style.display = query ? 'none' : 'grid';
-            favoritesGameList.style.display = query ? 'none' : (getFavorites().length > 0 ? 'grid' : 'none');
-            favoritesHeader.style.display = query ? 'none' : (getFavorites().length > 0 ? 'block' : 'none');
-            
-            if (query) {
-                // Render search results in the search bar dropdown
-                searchResults.style.display = 'block';
-                searchResults.innerHTML = '';
-                
-                if (filteredGames.length > 0) {
-                    filteredGames.slice(0, 5).forEach(game => { // Limit to 5 results in the dropdown
-                        const item = document.createElement('div');
-                        item.className = 'search-item';
-                        item.textContent = game.title;
-                        item.addEventListener('click', () => {
-                            window.location.href = getAdjustedUrls(game.href, game.imgSrc, game.page).href;
-                        });
-                        searchResults.appendChild(item);
-                    });
-                    if (filteredGames.length > 5) {
-                        const more = document.createElement('div');
-                        more.className = 'p-2 text-center text-xs text-gray-500';
-                        more.textContent = `(${filteredGames.length - 5} more results not shown)`;
-                        searchResults.appendChild(more);
-                    }
-                } else {
-                    searchResults.innerHTML = '<div class="p-2 text-center text-gray-500">No games found.</div>';
-                }
-                
-                // Also render all results directly in the main list area
-                renderGameList(allListElement, filteredGames, getFavorites());
-                allListElement.style.display = 'grid'; // Force show the result grid
-            } else {
-                searchResults.style.display = 'none';
-                searchResults.innerHTML = '';
-                renderAllGames();
-            }
+        
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
         }
 
-        searchInput.addEventListener('input', (e) => {
-            performSearch(e.target.value.trim());
-        });
-        
-        searchInput.addEventListener('focus', () => {
-            if (searchInput.value.trim()) {
-                searchResults.style.display = 'block';
-            }
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!document.getElementById('bottom-fixed-bar').contains(e.target)) {
-                searchResults.style.display = 'none';
-            }
-        });
+        const updateSearchResults = debounce(() => {
+            const text = searchInput.value.toLowerCase().trim();
+            
+            const allGames = games; // Using the imported 'games' array
+            const filteredAllGames = text ? allGames.filter(g => g.name.toLowerCase().includes(text)) : allGames;
+            renderGames(filteredAllGames, allListElement);
 
-        // --- Initialization and Event Listeners ---
+            const filteredDropdown = text ? allGames.filter(g => g.name.toLowerCase().includes(text)).slice(0, 5) : [];
+            searchResults.innerHTML = "";
+            if (filteredDropdown.length === 0 || !text) {
+                searchResults.style.display = "none";
+                return;
+            }
+            
+            filteredDropdown.forEach(game => {
+                const { id, imgSrc, name, page } = game;
+                const { adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page);
+                const linkEl = document.createElement("a");
+                linkEl.href = `./play/?id=${id}`;
+                linkEl.className = 'search-item';
+                linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`;
+                searchResults.appendChild(linkEl);
+            });
+            searchResults.style.display = "block";
+        }, 250);
+
         document.addEventListener('DOMContentLoaded', () => {
-            renderAllGames();
+            renderGames(games, allListElement);
             renderFavorites();
 
-            // Slide Menu Toggle
-            menuIcon.addEventListener('click', () => {
-                slideMenu.classList.toggle('translate-x-0');
-            });
-            // Close menu when clicking outside
-            document.addEventListener('click', (e) => {
-                if (slideMenu.classList.contains('translate-x-0') && !slideMenu.contains(e.target) && e.target !== menuIcon) {
-                    slideMenu.classList.remove('translate-x-0');
+            searchInput.placeholder = `Search ${games.length} games...`;
+            searchInput.addEventListener("input", updateSearchResults);
+            searchInput.addEventListener("focus", updateSearchResults);
+            
+            document.addEventListener("click", ev => {
+                if (!searchInput.closest('#bottom-fixed-bar').contains(ev.target)) {
+                    searchResults.style.display = "none";
                 }
             });
             
-            // "Open in about:blank" functionality
-            const blockLanschool = document.getElementById('blockLanschool');
-            if (blockLanschool) blockLanschool.addEventListener("click", ev => {
-                ev.preventDefault();
-                const newTab = window.open();
-                if (newTab) newTab.document.write(`<html><body style="margin:0;height:100vh;background:#0A0A0A;"><iframe src="${window.location.href}" style="border:none;width:100%;height:100%"></iframe></body></html>`);
+            menuIcon.addEventListener("click", ev => {
+                ev.stopPropagation();
+                slideMenu.classList.toggle('-translate-x-full');
+            });
+            window.addEventListener("click", ev => {
+                if (!slideMenu.classList.contains('-translate-x-full') && !slideMenu.contains(ev.target) && ev.target !== menuIcon) {
+                    slideMenu.classList.add('-translate-x-full');
+                }
             });
 
-            // Credits Modal Logic
+            document.querySelector("#blockLanschool")?.addEventListener("click", ev => {
+                ev.preventDefault();
+                const newTab = window.open();
+                if (newTab) newTab.document.write(`<html><body style="margin:0;height:100vh;background:#070707;"><iframe src="${window.location.href}" style="border:none;width:100%;height:100%"></iframe></body></html>`);
+            });
+
             const creditsBtn = document.getElementById('creditsBtn');
             const creditsOverlay = document.getElementById('credits-overlay');
             const closeCreditsPopup = document.getElementById('close-credits-popup');
-            
             if (creditsBtn) {
                 creditsBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    if (slideMenu) slideMenu.classList.remove('translate-x-0');
+                    if (slideMenu) slideMenu.classList.add('-translate-x-full');
                     if (creditsOverlay) creditsOverlay.style.display = 'flex';
                 });
             }
-            const closePopupFunc = () => { if (creditsOverlay) creditsOverlay.style.display = 'none'; };
-            if (closeCreditsPopup) closeCreditsPopup.addEventListener('click', closePopupFunc);
-            if (creditsOverlay) creditsOverlay.addEventListener('click', (e) => { if (e.target === creditsOverlay) closePopupFunc(); });
+            const closePopup = () => { if (creditsOverlay) creditsOverlay.style.display = 'none'; };
+            if (closeCreditsPopup) closeCreditsPopup.addEventListener('click', closePopup);
+            if (creditsOverlay) creditsOverlay.addEventListener('click', (e) => { if (e.target === creditsOverlay) closePopup(); });
         });
-
-        // Modal (PopupModal) Logic - Display on load
-        window.onload = function() {
-            // Check if the modal has been shown before (using localStorage for persistence)
-            if (localStorage.getItem('strongdogModalShown') !== 'true') {
-                popupModal.style.display = "block";
-                localStorage.setItem('strongdogModalShown', 'true');
-            }
-        }
-        
-        if (closeModal) {
-            closeModal.onclick = function() {
-                popupModal.style.display = "none";
-            }
-        }
-        
-        window.onclick = function(event) {
-            if (event.target == popupModal) {
-                popupModal.style.display = "none";
-            }
-        }
-
     </script>
-    
-    <!-- External Scripts (navigation.js included as requested) -->
-    <script src="./navigation.js" defer></script>
-    <script src="./firebase-config.js" defer></script>
-    <script src="./ban-enforcer.js" defer></script>
-    <script src="./url-changer.js" defer></script>
-    <script src="./panic-key.js" defer></script>
+
+    <script src="/firebase-config.js" defer></script>
+    <script src="/ban-enforcer.js" defer></script>
+    <script src="/url-changer.js" defer></script>
+    <script src="/panic-key.js" defer></script>
 </body>
 </html>
