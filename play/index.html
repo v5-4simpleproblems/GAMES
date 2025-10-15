@@ -465,10 +465,10 @@
                         2: "../strongdog2/",
                     },
                     "v5-4simpleproblems.github.io": {
-                        2: "../strongdog2/",
-                        3: "../strongdog3/",
-                        4: "../strongdog4/",
-                        5: "../strongdog5/", // ⬅️ ADDED
+                        2: "../../strongdog2/",
+                        3: "../../strongdog3/",
+                        4: "../../strongdog4/",
+                        5: "../../strongdog5/", // ⬅️ ADDED
                     }
                 };
                 if (explicitMappings[currentHost] && explicitMappings[currentHost][page]) {
@@ -477,19 +477,19 @@
                 if (!page || page === 1) return "../";
                 const arr = siteMapping[currentHost];
                 if (!arr) {
-                    if (page === 2) return "../strongdog2/";
-                    if (page === 3) return "../strongdog3/";
-                    if (page === 4) return "../strongdog4/";
-                    if (page === 5) return "../strongdog5/"; // ⬅️ ADDED
+                    if (page === 2) return "../../strongdog2/";
+                    if (page === 3) return "../../strongdog3/";
+                    if (page === 4) return "../../strongdog4/";
+                    if (page === 5) return "../../strongdog5/"; // ⬅️ ADDED
                     return "../";
                 }
                 const index = page - 2;
                 if (arr[index]) return arr[index].replace(/^\.\/$/, "../");
-                if (page === 2) return "../strongdog2/";
-                if (page === 3) return "../strongdog3/";
-                if (page === 4) return "../strongdog4/";
-                if (page === 5) return "../strongdog5/"; // ⬅️ ADDED
-                return "../";
+                if (page === 2) return "../../strongdog2/";
+                if (page === 3) return "../../strongdog3/";
+                if (page === 4) return "../../strongdog4/";
+                if (page === 5) return "../../strongdog5/"; // ⬅️ ADDED
+                return "../../";
             }
 
             async function getEmbedPath(adjustedHref, originalHref, page) {
