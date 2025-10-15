@@ -1,355 +1,264 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-    <title>4SP Games</title>
+    <title>4SP - STRONGDOG</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <link rel="icon" type="image/x-icon" href="img/favicon.ico" id="faviconLink" />
 
-    <!-- Geist Font -->
+    <!-- GEIST FONT IMPORT (The same one used in dailyphoto.html) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
     
-    <!-- Navigation Script -->
-    <script src="navigation.js" defer></script>
+    <!-- Tailwind CSS for the slim, black theme -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration to ensure deep black background and Geist font -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-black': '#0A0A0A',
+                        'card-dark': '#1A1A1A',
+                        'accent-purple': '#5A10A9',
+                    },
+                    fontFamily: {
+                        sans: ['Geist', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     
     <style>
-        :root {
-            --purple: #6720BD;
-            --purple-light: #8a2be2;
-        }
-
-        /* Base styling with Geist Font */
+        /* Base styles for dark theme and Geist font use */
         body {
             font-family: 'Geist', sans-serif;
-            font-weight: 300;
-            margin: 0;
-            padding: 40px 0 150px 0; /* Adjust padding for floating bar */
-            background-color: #070707;
-            color: #c0c0c0;
-            overflow-x: hidden;
-        }
-
-        /* Make headings slightly thicker but still thin */
-        h1, h2, h3, .font-bold, .font-semibold, strong {
-            font-weight: 400 !important;
-        }
-
-        /* Slim content container */
-        .main-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+            padding-bottom: 100px; /* Space for the fixed search bar */
         }
         
-        /* --- Game Grid & Cards Styles --- */
-        h2 {
-            text-align: center;
-            color: white;
-            margin: 50px 0 30px 0;
-            font-size: 2.5rem;
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 25px;
-        }
-
-        .zone-item {
-            background-color: #111111;
-            border: 1px solid #252525;
-            border-radius: 1rem;
-            cursor: pointer;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            aspect-ratio: 4 / 3;
-        }
-        
-        .zone-item:hover {
-            transform: translateY(-5px);
-            border-color: var(--purple);
-        }
-
-        .zone-item img.game-cover {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: transform 0.4s ease-in-out;
-        }
-        
-        .zone-item:hover .game-cover {
-            transform: scale(1.1);
-        }
-        
-        .zone-item .card-overlay {
+        /* Custom styles that cannot be fully expressed in Tailwind */
+        .logo {
+            /* Keep logo centered using absolute positioning as in original CSS */
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 15px;
-            opacity: 0;
-            transform: translateY(15px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            box-sizing: border-box;
-            color: #fff;
-        }
-
-        .zone-item:hover .card-overlay {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .zone-item .game-title {
-            font-family: 'Geist', sans-serif;
-            font-size: 1.1em;
-            font-weight: 400;
-            margin: 0 0 10px 0;
-            line-height: 1.3;
-        }
-
-        .zone-item .card-buttons {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .zone-item .card-play-btn, .zone-item .favorite-btn {
-            border: none;
-            border-radius: 8px;
-            height: 38px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Geist', sans-serif;
-        }
-
-        .zone-item .card-play-btn {
-            flex-grow: 1;
-            background-color: var(--purple);
-            color: #fff;
-            font-weight: 400;
-        }
-        .zone-item .card-play-btn:hover {
-            background-color: var(--purple-light);
-            transform: scale(1.05);
-        }
-
-        .zone-item .favorite-btn {
-            width: 38px;
-            background-color: rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
-        }
-        .zone-item .favorite-btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .zone-item .favorite-btn img {
-            width: 20px;
-            height: 20px;
-            transition: filter 0.3s ease, transform 0.3s ease;
-        }
-
-        .zone-item .favorite-btn.favorited img {
-            filter: brightness(0) invert(1) drop-shadow(0 0 6px #ffc107) drop-shadow(0 0 10px #ff8c00);
-            transform: scale(1.1);
-        }
-
-        /* --- Bottom Floating Bar Styles --- */
-        #bottom-fixed-bar {
-            position: fixed;
-            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 10px 20px;
-            background-color: rgba(17, 17, 17, 0.7);
-            backdrop-filter: blur(12px) saturate(1.5);
-            -webkit-backdrop-filter: blur(12px) saturate(1.5);
-            border: 1px solid #252525;
-            border-radius: 1.25rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
-            width: 90%;
-            max-width: 550px;
-            box-sizing: border-box;
-        }
-        
-        .bottom-bar-title {
-            font-weight: 400;
-            font-size: 1.2rem;
-            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
         }
 
-        .search-container {
-            position: relative;
-            flex-grow: 1;
-            display: flex;
+        .logo:hover {
+            transform: translateX(-50%) scale(1.02);
+        }
+
+        /* Credits Modal Styling - uses custom structure */
+        #credits-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
             justify-content: center;
         }
-        
-        #searchInput {
-            background: transparent;
-            border: none;
-            color: #fff;
-            padding: 8px 5px;
-            font-size: 1em;
-            outline: none;
-            font-family: 'Geist', sans-serif;
-            font-weight: 300;
-            width: 100%;
-            text-align: center;
-            border-bottom: 1px solid #444;
-            transition: border-color 0.3s ease;
-        }
-        #searchInput:focus {
-            border-bottom-color: var(--purple);
-        }
-        #searchInput::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .bottom-bar-button {
-            background: none;
-            border: 1px solid #444;
-            color: #c0c0c0;
-            padding: 6px 12px;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            font-family: 'Geist', sans-serif;
-            font-weight: 300;
-            transition: all 0.3s ease;
-        }
-        .bottom-bar-button:hover {
-            border-color: var(--purple);
-            color: #fff;
-            background-color: rgba(103, 32, 189, 0.1);
-        }
 
-        .search-results {
-            position: absolute;
-            bottom: 110%; /* Position above the search bar */
-            left: 0;
-            right: 0;
-            width: 100%;
-            background-color: rgba(22, 22, 22, 0.8);
-            backdrop-filter: blur(8px);
-            border: 1px solid #252525;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
-            border-radius: 1rem;
-            display: none;
-            overflow: hidden;
-            z-index: -1;
-            max-height: 350px;
-            overflow-y: auto;
-        }
-        
-        .search-results::-webkit-scrollbar { width: 8px; }
-        .search-results::-webkit-scrollbar-thumb { background-color: var(--purple); border-radius: 4px; }
-        .search-results::-webkit-scrollbar-track { background-color: #1f2937; }
-
-        .search-results a {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
+        #credits-popup {
+            background-color: #1A1A1A;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
             color: white;
-            padding: 10px 15px;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid #252525;
+            position: relative;
         }
-
-        .search-results a:focus,
-        .search-results a:hover {
-            outline: none;
-            background: #1f1f1f;
-        }
-        .search-results img { width: 50px; height: 50px; object-fit: cover; margin-right: 15px; border-radius: 0.75rem; }
-        .search-results a:last-child { border-bottom: none; }
         
-        .updates-paragraph-text {
-            color: #c0c0c0;
-            background: #111111;
-            border: 1px solid #252525;
-            padding: 25px;
-            border-radius: 1rem;
-            font-size: 1.1rem;
-            text-align: center;
-            max-width: 850px;
-            margin: 20px auto;
+        #close-credits-popup {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: 300;
+            cursor: pointer;
+            color: #777;
         }
 
-        /* Credits popup styling */
-        #credits-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 2000; display: none; justify-content: center; align-items: center; }
-        #credits-popup { background: #111111; color: white; padding: 25px 35px; border-radius: 1rem; width: 90%; max-width: 550px; border: 1px solid #252525; position: relative; }
-        #close-credits-popup { position: absolute; top: 10px; right: 15px; font-size: 2.5rem; color: #ccc; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
-        #close-credits-popup:hover { color: white; transform: scale(1.1); }
-        #credits-popup h3 { text-align: center; font-size: 2rem; margin-top: 0; margin-bottom: 25px; border-bottom: 2px solid var(--purple); padding-bottom: 10px; }
+        /* Modal / Popup Styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1005; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.7); 
+        }
 
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #333;
+            width: 80%; 
+            max-width: 500px;
+            border-radius: 12px;
+            position: relative;
+            color: white;
+        }
+        
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
 
+        .modal-close:hover,
+        .modal-close:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        /* Search Bar Results */
+        .search-results {
+            max-height: 250px;
+            overflow-y: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .search-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: white;
+        }
+        .search-item:hover {
+            background-color: #333;
+        }
+
+        /* Responsiveness for search bar */
         @media (max-width: 768px) {
-            body { padding-top: 20px; padding-bottom: 120px; }
-            .games-grid { gap: 15px; padding: 0; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-            .main-container { padding: 0 1rem; }
-            #bottom-fixed-bar { 
-                width: calc(100% - 30px); 
-                padding: 8px 15px;
-                gap: 10px;
+            #bottom-fixed-bar {
+                width: calc(100% - 30px) !important;
+                left: 15px !important;
+                right: 15px !important;
+                bottom: 10px !important;
             }
-            .bottom-bar-title { font-size: 1rem; }
         }
     </style>
 </head>
 
-<body>
-    <main class="main-container">
-        <div class="updates-paragraph-text">
-            <strong>Welcome to 4SP Games!</strong><br>
-            This is the new central hub for all our games. We're consolidating our libraries, including the classic StrongdogXP collection, into this single, unified experience.
+<body class="bg-deep-black text-white min-h-screen">
+    <!-- Navbar: Slim Black -->
+    <div class="navbar sticky top-0 z-50 p-4 shadow-xl bg-black/90 backdrop-blur-md flex items-center justify-between">
+        <div class="menu-icon text-3xl cursor-pointer transition duration-300 hover:text-accent-purple" id="menuIcon">
+            &#9776; <!-- Hamburger icon -->
         </div>
-    
-        <h2 id="favoritesHeader" style="text-align: center; display: none;">
-            <strong>Favorites</strong>
-        </h2>
-        <div class="games-grid" id="favoritesGameList" style="display: none;"></div>
+        <a href="index.html" class="logo text-4xl font-extrabold text-white transition duration-300">
+            strongdog<span class="xp text-accent-purple shadow-accent-purple/50 drop-shadow-lg">XP</span>
+        </a>
+        <div class="navbar-right w-72"></div> 
+    </div>
 
-        <h2 style="text-align: center"><strong>All Games</strong></h2>
-        <div class="games-grid" id="allList"></div>
-    </main>
+    <!-- Update Message Section: Clean and Dark -->
+    <div class="mx-auto my-5 p-4 sm:p-6 w-full max-w-3xl">
+        <p class="updates-paragraph-text bg-card-dark text-white p-4 rounded-xl shadow-lg border-l-4 border-accent-purple text-sm sm:text-base">
+            <strong>Welcome to StrongdogXP!</strong><br>
+            This website is being hosted by <a href="https://4simpleproblems.github.io/"
+                class="text-accent-purple font-bold no-underline hover:underline" target="_blank">4SP</a>. I have fixed
+            several bugs, and have worked with StrongdogXP to have this connected to my website. So yeah, go nuts.
+        </p>
+    </div>
     
+    <!-- Favorites Section -->
+    <h2 id="favoritesHeader" class="text-center text-3xl font-bold mt-10 mb-5 text-white" style="display: none;">
+        <strong>Favorites</strong>
+    </h2>
+    <div class="games-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4" id="favoritesGameList" style="display: none;"></div>
+
+    <!-- All Games Section -->
+    <h2 class="text-center text-3xl font-bold mt-10 mb-5 text-white"><strong>All Games</strong></h2>
+    <div class="games-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 mx-auto max-w-7xl" id="allList">
+        <!-- Game cards will be rendered here by JavaScript -->
+    </div>
+
+    <!-- Slide Menu: Slim Black -->
+    <div class="slide-menu fixed top-0 left-0 h-screen w-80 bg-black/95 backdrop-blur-md shadow-2xl shadow-black/70 z-[1000] transform -translate-x-full transition-transform duration-500 overflow-y-auto p-6" id="slideMenu">
+        <h3 class="text-2xl font-bold mb-6 text-white border-b border-gray-700 pb-3">Navigation</h3>
+        <div class="categories flex flex-col space-y-3">
+            <a href="https://foursimpleproblems.github.io/logged-in/games.html" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Back to 4SP</a>
+            <a href="#" id="blockLanschool" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Open in about:blank</a>
+            <a href="./save/index.html" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Save manager</a>
+            <a href="https://discord.gg/dyyebUaqRS" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Discord Server</a>
+            <a href="#" id="creditsBtn" class="option-link p-4 bg-card-dark rounded-lg text-white text-lg font-medium text-center transition duration-200 hover:bg-accent-purple hover:shadow-lg hover:shadow-accent-purple/50">Credits</a>
+        </div>
+    </div>
+    
+    <!-- Credits Overlay -->
     <div id="credits-overlay">
         <div id="credits-popup">
             <span id="close-credits-popup">&times;</span>
-            <h3>Credits</h3>
-            <div class="credit-person"><h4>John P - Creator of StrongdogXP</h4><p>He downloaded, compiled and created Strongdog entirely.</p></div>
-            <div class="credit-person"><h4>4SP</h4><p>Converted file directories to work with the website, fixed many bugs, and polished up the design.</p></div>
+            <h3 class="text-xl font-bold mb-4">Credits</h3>
+            <div class="credit-person mb-3 border-b border-gray-700 pb-2">
+                <h4 class="font-semibold text-accent-purple">John P - Creator of StrongdogXP</h4>
+                <p class="text-sm text-gray-400">He downloaded, compiled and created Strongdog entirely.</p>
+            </div>
+            <div class="credit-person">
+                <h4 class="font-semibold text-accent-purple">4SP</h4>
+                <p class="text-sm text-gray-400">Converted file directories to work with the website, fixed many bugs, and polished up the design.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info/Discord Modal -->
+    <div class="modal" id="popupModal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeModal">&times;</span>
+            <p class="text-lg">
+                The strongdog Discord server is a place for strongdog users to chill, request
+                ideas, talk with developers, and have fun!
+                <a href="https://discord.gg/ea4x95f7cH" target="_blank" class="text-accent-purple font-bold hover:underline">Join here</a>.
+            </p>
         </div>
     </div>
     
-    <div id="bottom-fixed-bar">
-        <span class="bottom-bar-title">4SP Games</span>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search for games…" autocomplete="off" />
-            <div class="search-results" id="searchResults"></div>
+    <!-- Bottom Search Bar: Frosted Black -->
+    <div id="bottom-fixed-bar" class="fixed bottom-4 right-4 bg-black/60 backdrop-blur-md rounded-xl border border-gray-700 shadow-2xl shadow-black/50 p-3 w-full max-w-md">
+        <div class="relative">
+            <input type="text" id="searchInput" placeholder="Search for games…" autocomplete="off" class="w-full p-2 bg-transparent text-white placeholder-gray-400 focus:outline-none focus:ring-0 border-b border-accent-purple" />
+            <div class="search-results absolute w-full mt-2 bg-black rounded-lg shadow-xl max-h-60 overflow-y-auto" id="searchResults" style="display: none;">
+                <!-- Search results will be dynamically inserted here -->
+            </div>
         </div>
-        <button id="creditsBtnBottom" class="bottom-bar-button">Credits</button>
     </div>
 
-    <!-- The original script block is preserved for functionality -->
+    <!-- Game List Logic (Preserved) -->
     <script type="module">
+        // Assuming 'cards-data.js' is available in the same directory
         import games from "./cards-data.js";
 
+        // --- DOM Elements ---
         const allListElement = document.getElementById("allList");
         const favoritesHeader = document.getElementById("favoritesHeader");
         const favoritesGameList = document.getElementById("favoritesGameList");
         const searchInput = document.getElementById("searchInput");
         const searchResults = document.getElementById("searchResults");
-
+        const slideMenu = document.getElementById("slideMenu");
+        const menuIcon = document.getElementById("menuIcon");
+        const closeModal = document.getElementById("closeModal");
+        const popupModal = document.getElementById("popupModal");
+        
+        // --- Favorites Management ---
         const FAVORITES_KEY = 'strongdogXPFavorites_v2';
         const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
         const saveFavorites = (favs) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
@@ -365,153 +274,251 @@
             }
             saveFavorites(favorites);
 
+            // Update all visible cards for this game
             document.querySelectorAll(`.zone-item[data-game-id='${gameId}'] .favorite-btn`).forEach(btn => {
                 btn.classList.toggle('favorited', !isFavorited);
+                btn.innerHTML = !isFavorited ? '&#9733;' : '&#9734;'; // Star icons
             });
             
             renderFavorites();
+        }
+
+        // --- URL and Path Helpers ---
+        function getPageNumberFromURL(url) { 
+            const regex = /(strongdog|mathcord|stroongdog)(\d*)/; 
+            const match = url.match(regex); 
+            if (match) return match[2] === "" ? 1 : parseInt(match[2], 10); 
+            return 1; 
+        }
+        
+        const siteMapping = window.siteMapping || {};
+
+        function getCurrentSiteKey() { 
+            const currentURL = window.location.href; 
+            const keys = Object.keys(siteMapping).sort((a, b) => b.length - a.length); 
+            for (const k of keys) { 
+                if (currentURL.includes(k)) return k; 
+            } 
+            return null; 
         }
 
         function getAdjustedUrls(href, imgSrc, page) {
-             let adjustedImgSrc = `./img/${imgSrc}`;
-             return { adjustedImgSrc };
-        }
-
-        function createGameCard(game) {
-            const { href, imgSrc, name, page, id } = game;
-            const { adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
-            const favorites = getFavorites();
-
-            const zoneItem = document.createElement("div");
-            zoneItem.className = "zone-item";
-            zoneItem.dataset.gameId = id;
+            let adjustedImgSrc = `./img/${imgSrc}`; 
+            let adjustedHref = href;
+            let currentSiteKey = getCurrentSiteKey();
             
-            zoneItem.addEventListener('click', (e) => {
-                if (e.target.closest('button')) return;
-                window.location.href = `./play/?id=${id}`;
-            });
-
-            const coverImg = document.createElement("img");
-            coverImg.className = "game-cover";
-            coverImg.src = adjustedImgSrc;
-            coverImg.alt = name;
-            coverImg.loading = "lazy";
-            coverImg.onerror = () => { coverImg.src = './img/favicon.ico'; coverImg.style.objectFit = 'contain'; };
-
-            const overlay = document.createElement("div");
-            overlay.className = "card-overlay";
-
-            const title = document.createElement("h3");
-            title.className = "game-title";
-            title.textContent = name;
-
-            const buttons = document.createElement("div");
-            buttons.className = "card-buttons";
-
-            const playButton = document.createElement("button");
-            playButton.className = "card-play-btn";
-            playButton.textContent = "PLAY";
-            playButton.addEventListener('click', (e) => { e.stopPropagation(); window.location.href = `./play/?id=${id}`; });
-
-            const favoriteButton = document.createElement("button");
-            favoriteButton.className = "favorite-btn";
-            if (favorites.includes(id)) {
-                favoriteButton.classList.add('favorited');
+            if (currentSiteKey) {
+                const currentPageNumber = getPageNumberFromURL(currentSiteKey);
+                if (page !== undefined && page !== currentPageNumber) {
+                    let newBase = window.location.origin + `/strongdog${page}`;
+                    // Adjust image URL only if page number needs correction
+                    adjustedImgSrc = `${newBase}/img/${imgSrc.replace(/^\.\//, "")}`;
+                }
             }
-            const favImg = document.createElement('img');
-            favImg.src = 'images/star-dark.png';
-            favImg.alt = 'Favorite';
-            favoriteButton.appendChild(favImg);
-            favoriteButton.addEventListener('click', (e) => { e.stopPropagation(); toggleFavorite(id); });
+            
+            // Adjust href path (assuming href is always relative to the root games directory)
+            if (!adjustedHref.startsWith('./')) {
+                 adjustedHref = `./${adjustedHref}`;
+            }
 
-            buttons.append(playButton, favoriteButton);
-            overlay.append(title, buttons);
-            zoneItem.append(coverImg, overlay);
-            return zoneItem;
+            return { href: adjustedHref, imgSrc: adjustedImgSrc };
         }
 
-        function renderGames(gamesToRender, targetElement) {
-            targetElement.innerHTML = '';
-            const fragment = document.createDocumentFragment();
-            gamesToRender.forEach(game => {
-                fragment.appendChild(createGameCard(game));
+        // --- Card Rendering ---
+        function createGameCard(game, isFavorite) {
+            const adjusted = getAdjustedUrls(game.href, game.imgSrc, game.page);
+            const card = document.createElement('div');
+            card.className = 'zone-item bg-card-dark rounded-xl shadow-lg cursor-pointer transition duration-300 hover:shadow-xl hover:shadow-accent-purple/50 transform hover:-translate-y-1 relative overflow-hidden aspect-w-4 aspect-h-3';
+            card.setAttribute('data-game-id', game.id);
+            card.setAttribute('data-keywords', `${game.title.toLowerCase()} ${game.tags ? game.tags.join(' ').toLowerCase() : ''}`);
+            card.innerHTML = `
+                <img src="${adjusted.imgSrc}" alt="${game.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/1e1e1e/888888?text=4SP'" class="w-full h-full object-cover">
+                <div class="card-overlay absolute inset-0 flex flex-col justify-end p-3 bg-gradient-to-t from-black via-black/80 to-transparent">
+                    <h3 class="game-title text-white text-lg font-semibold mb-2">${game.title}</h3>
+                    <div class="flex justify-between items-center">
+                        <a href="${adjusted.href}" class="card-play-btn bg-accent-purple text-white font-medium py-2 px-4 rounded-full text-sm transition duration-200 hover:bg-[#7216d8] hover:shadow-lg focus:outline-none flex-grow mr-2">
+                            PLAY
+                        </a>
+                        <button class="favorite-btn p-2 rounded-full text-white transition duration-200 focus:outline-none text-xl ${isFavorite ? 'bg-red-600/20 text-red-400 favorited' : 'bg-white/10 hover:bg-white/20'}" title="${isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}">
+                            ${isFavorite ? '&#9733;' : '&#9734;'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Attach event listeners for play and favorite
+            card.querySelector('.card-play-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.location.href = adjusted.href;
             });
-            targetElement.appendChild(fragment);
+            card.querySelector('.favorite-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorite(game.id);
+            });
+
+            return card;
+        }
+
+        function renderGameList(element, gameData, favorites) {
+            element.innerHTML = '';
+            gameData.forEach(game => {
+                const isFavorite = favorites.includes(game.id);
+                element.appendChild(createGameCard(game, isFavorite));
+            });
+        }
+
+        function renderAllGames() {
+            const favorites = getFavorites();
+            renderGameList(allListElement, games, favorites);
         }
 
         function renderFavorites() {
-            const favoriteIds = getFavorites();
-            if (favoriteIds.length > 0) {
-                favoritesHeader.style.display = "block";
-                favoritesGameList.style.display = "grid";
-                const favoriteGames = games.filter(game => favoriteIds.includes(game.id));
-                renderGames(favoriteGames, favoritesGameList);
+            const favorites = getFavorites();
+            const favoriteGames = games.filter(game => favorites.includes(game.id));
+
+            if (favoriteGames.length > 0) {
+                favoritesHeader.style.display = 'block';
+                favoritesGameList.style.display = 'grid';
+                renderGameList(favoritesGameList, favoriteGames, favorites);
             } else {
-                favoritesHeader.style.display = "none";
-                favoritesGameList.style.display = "none";
+                favoritesHeader.style.display = 'none';
+                favoritesGameList.style.display = 'none';
+                favoritesGameList.innerHTML = ''; // Clear the list
             }
         }
-        
-        function debounce(func, delay) {
-            let timeout;
-            return function(...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
 
-        const updateSearchResults = debounce(() => {
-            const text = searchInput.value.toLowerCase().trim();
+        // --- Search Functionality ---
+        function performSearch(query) {
+            const filteredGames = games.filter(game => 
+                game.title.toLowerCase().includes(query.toLowerCase()) || 
+                (game.tags && game.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())))
+            );
             
-            const filteredAllGames = text ? games.filter(g => g.name.toLowerCase().includes(text)) : games;
-            renderGames(filteredAllGames, allListElement);
-
-            const filteredDropdown = text ? games.filter(g => g.name.toLowerCase().includes(text)).slice(0, 7) : [];
-            searchResults.innerHTML = "";
-            if (filteredDropdown.length === 0 || !text) {
-                searchResults.style.display = "none";
-                return;
+            // Show/hide all games list based on search query
+            allListElement.style.display = query ? 'none' : 'grid';
+            favoritesGameList.style.display = query ? 'none' : (getFavorites().length > 0 ? 'grid' : 'none');
+            favoritesHeader.style.display = query ? 'none' : (getFavorites().length > 0 ? 'block' : 'none');
+            
+            if (query) {
+                // Render search results in the search bar dropdown
+                searchResults.style.display = 'block';
+                searchResults.innerHTML = '';
+                
+                if (filteredGames.length > 0) {
+                    filteredGames.slice(0, 5).forEach(game => { // Limit to 5 results in the dropdown
+                        const item = document.createElement('div');
+                        item.className = 'search-item';
+                        item.textContent = game.title;
+                        item.addEventListener('click', () => {
+                            window.location.href = getAdjustedUrls(game.href, game.imgSrc, game.page).href;
+                        });
+                        searchResults.appendChild(item);
+                    });
+                    if (filteredGames.length > 5) {
+                        const more = document.createElement('div');
+                        more.className = 'p-2 text-center text-xs text-gray-500';
+                        more.textContent = `(${filteredGames.length - 5} more results not shown)`;
+                        searchResults.appendChild(more);
+                    }
+                } else {
+                    searchResults.innerHTML = '<div class="p-2 text-center text-gray-500">No games found.</div>';
+                }
+                
+                // Also render all results directly in the main list area
+                renderGameList(allListElement, filteredGames, getFavorites());
+                allListElement.style.display = 'grid'; // Force show the result grid
+            } else {
+                searchResults.style.display = 'none';
+                searchResults.innerHTML = '';
+                renderAllGames();
             }
-            filteredDropdown.forEach(game => {
-                const { id, imgSrc, name, page } = game;
-                const { adjustedImgSrc } = getAdjustedUrls(game.href, imgSrc, page);
-                const linkEl = document.createElement("a");
-                linkEl.href = `./play/?id=${id}`;
-                linkEl.innerHTML = `<img src="${adjustedImgSrc}" alt="${name}"><span>${name}</span>`;
-                searchResults.appendChild(linkEl);
-            });
-            searchResults.style.display = "block";
-        }, 250);
+        }
 
+        searchInput.addEventListener('input', (e) => {
+            performSearch(e.target.value.trim());
+        });
+        
+        searchInput.addEventListener('focus', () => {
+            if (searchInput.value.trim()) {
+                searchResults.style.display = 'block';
+            }
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('bottom-fixed-bar').contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // --- Initialization and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            renderGames(games, allListElement);
+            renderAllGames();
             renderFavorites();
 
-            searchInput.placeholder = `Search ${games.length} games...`;
-            searchInput.addEventListener("input", updateSearchResults);
-            searchInput.addEventListener("focus", updateSearchResults);
-            
-            document.addEventListener("click", ev => {
-                if (!searchInput.closest('.search-container').contains(ev.target)) {
-                    searchResults.style.display = "none";
+            // Slide Menu Toggle
+            menuIcon.addEventListener('click', () => {
+                slideMenu.classList.toggle('translate-x-0');
+            });
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (slideMenu.classList.contains('translate-x-0') && !slideMenu.contains(e.target) && e.target !== menuIcon) {
+                    slideMenu.classList.remove('translate-x-0');
                 }
             });
+            
+            // "Open in about:blank" functionality
+            const blockLanschool = document.getElementById('blockLanschool');
+            if (blockLanschool) blockLanschool.addEventListener("click", ev => {
+                ev.preventDefault();
+                const newTab = window.open();
+                if (newTab) newTab.document.write(`<html><body style="margin:0;height:100vh;background:#0A0A0A;"><iframe src="${window.location.href}" style="border:none;width:100%;height:100%"></iframe></body></html>`);
+            });
 
-            const creditsBtn = document.getElementById('creditsBtnBottom');
+            // Credits Modal Logic
+            const creditsBtn = document.getElementById('creditsBtn');
             const creditsOverlay = document.getElementById('credits-overlay');
             const closeCreditsPopup = document.getElementById('close-credits-popup');
             
             if (creditsBtn) {
                 creditsBtn.addEventListener('click', (e) => {
                     e.preventDefault();
+                    if (slideMenu) slideMenu.classList.remove('translate-x-0');
                     if (creditsOverlay) creditsOverlay.style.display = 'flex';
                 });
             }
-            const closePopup = () => { if (creditsOverlay) creditsOverlay.style.display = 'none'; };
-            if (closeCreditsPopup) closeCreditsPopup.addEventListener('click', closePopup);
-            if (creditsOverlay) creditsOverlay.addEventListener('click', (e) => { if (e.target === creditsOverlay) closePopup(); });
+            const closePopupFunc = () => { if (creditsOverlay) creditsOverlay.style.display = 'none'; };
+            if (closeCreditsPopup) closeCreditsPopup.addEventListener('click', closePopupFunc);
+            if (creditsOverlay) creditsOverlay.addEventListener('click', (e) => { if (e.target === creditsOverlay) closePopupFunc(); });
         });
+
+        // Modal (PopupModal) Logic - Display on load
+        window.onload = function() {
+            // Check if the modal has been shown before (using localStorage for persistence)
+            if (localStorage.getItem('strongdogModalShown') !== 'true') {
+                popupModal.style.display = "block";
+                localStorage.setItem('strongdogModalShown', 'true');
+            }
+        }
+        
+        if (closeModal) {
+            closeModal.onclick = function() {
+                popupModal.style.display = "none";
+            }
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == popupModal) {
+                popupModal.style.display = "none";
+            }
+        }
+
     </script>
+    
+    <!-- External Scripts (navigation.js included as requested) -->
+    <script src="./navigation.js" defer></script>
+    <script src="./firebase-config.js" defer></script>
+    <script src="./ban-enforcer.js" defer></script>
+    <script src="./url-changer.js" defer></script>
+    <script src="./panic-key.js" defer></script>
 </body>
 </html>
-
