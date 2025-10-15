@@ -91,36 +91,36 @@ let currentAgent = 'Standard'; // Default agent
         };
     };
     
-    // Icon class utility remains the same
+    // UPDATE: Refactored icon class utility for better stability and alignment.
     const getIconClass = (iconName) => {
         if (!iconName) return '';
-        const nameParts = iconName.trim().split(/\s+/).filter(p => p.length > 0);
-        let stylePrefix = 'fa-solid'; 
-        let baseName = '';
-        const stylePrefixes = ['fa-solid', 'fa-regular', 'fa-light', 'fa-thin', 'fa-brands'];
+        const parts = iconName.trim().split(/\s+/).filter(Boolean);
+        let style = 'fa-solid';
+        let name = '';
 
-        const existingPrefix = nameParts.find(p => stylePrefixes.includes(p));
-        if (existingPrefix) {
-            stylePrefix = existingPrefix;
-        }
-
-        const nameCandidate = nameParts.find(p => p.startsWith('fa-') && !stylePrefixes.includes(p));
-
-        if (nameCandidate) {
-            baseName = nameCandidate;
-        } else {
-            baseName = nameParts.find(p => !stylePrefixes.includes(p));
-            if (baseName && !baseName.startsWith('fa-')) {
-                 baseName = `fa-${baseName}`;
+        const styles = ['fa-solid', 'fa-regular', 'fa-light', 'fa-thin', 'fa-brands'];
+        
+        // Loop through parts to find style and name
+        for (const part of parts) {
+            if (styles.includes(part)) {
+                style = part;
+            } else {
+                name = part;
             }
         }
 
-        if (baseName) {
-            return `${stylePrefix} ${baseName}`;
+        // Ensure icon name has 'fa-' prefix
+        if (name && !name.startsWith('fa-')) {
+            name = `fa-${name}`;
         }
         
-        return '';
+        // Return the full class string including fa-fw for fixed-width alignment
+        if (name) {
+            return `fa-fw ${style} ${name}`;
+        }
+        return ''; // Return empty if no name was found
     };
+
 
     /**
      * Attempts to get general location and time data for the system prompt.
@@ -247,6 +247,10 @@ let currentAgent = 'Standard'; // Default agent
                 .nav-tab:not(.active):hover { color: white; border-color: #d1d5db; background-color: rgba(79, 70, 229, 0.05); }
                 .nav-tab.active { color: #4f46e5; border-color: #4f46e5; background-color: rgba(79, 70, 229, 0.1); }
                 .nav-tab.active:hover { color: #6366f1; border-color: #6366f1; background-color: rgba(79, 70, 229, 0.15); }
+
+                /* FIX: Styles to ensure icon is sized correctly and has spacing */
+                .nav-tab i { flex-shrink: 0; }
+                .mr-2 { margin-right: 0.5rem; }
                 
                 /* --- AI Agent Modal Styles --- */
                 .ai-modal {
