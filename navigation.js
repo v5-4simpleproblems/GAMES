@@ -213,6 +213,18 @@ let currentAgent = 'Standard'; // Default agent
                 .auth-navbar nav { max-width: 80rem; margin: auto; padding: 0 1rem; height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative; }
                 .initial-avatar { background: linear-gradient(135deg, #374151 0%, #111827 100%); font-family: sans-serif; text-transform: uppercase; display: flex; align-items: center; justify-content: center; color: white; }
                 
+                /* FIX: Robust logo styling */
+                .auth-navbar-logo {
+                    display: flex;
+                    align-items: center;
+                    flex-shrink: 0; /* Prevents logo from shrinking when space is tight */
+                }
+                .auth-navbar-logo img {
+                    height: 2rem; /* 32px */
+                    width: auto;
+                    display: block; /* Removes bottom spacing on inline images */
+                }
+
                 /* Auth Dropdown Menu Styles */
                 .auth-menu-container { 
                     position: absolute; right: 0; top: 50px; width: 16rem; 
@@ -517,8 +529,8 @@ let currentAgent = 'Standard'; // Default agent
             container.innerHTML = `
                 <header class="auth-navbar">
                     <nav>
-                        <a href="/" class="flex items-center space-x-2 flex-shrink-0">
-                            <img src="${logoPath}" alt="4SP Logo" class="h-8 w-auto">
+                        <a href="/" class="auth-navbar-logo">
+                            <img src="${logoPath}" alt="4SP Logo">
                         </a>
 
                         <div class="tab-wrapper">
@@ -844,3 +856,4 @@ let currentAgent = 'Standard'; // Default agent
     document.addEventListener('DOMContentLoaded', run);
 
 })();
+
