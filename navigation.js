@@ -32,7 +32,8 @@ const PAGE_CONFIG_URL = '../page-identification.json';
 
 // --- AI Agent Configuration ---
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=";
-const PRIVILEGED_EMAIL = '4simpleproblems@gmail.com';
+// UPDATED: Changed the email to a placeholder value to disable the AI UI feature for ALL users.
+const PRIVILEGED_EMAIL = 'ai-feature-is-disabled@placeholder.com'; 
 const AGENT_CATEGORIES = {
     'Quick': "You are a Quick Agent. Respond in a single, concise paragraph (max 3 sentences). Prioritize speed and direct answers.",
     'Standard': "You are a Standard Agent. Provide balanced, helpful, and moderately detailed responses, suitable for general inquiries.",
@@ -91,36 +92,36 @@ let currentAgent = 'Standard'; // Default agent
         };
     };
     
-    // UPDATE: Refactored icon class utility for better stability and alignment.
+    // Icon class utility remains the same
     const getIconClass = (iconName) => {
         if (!iconName) return '';
-        const parts = iconName.trim().split(/\s+/).filter(Boolean);
-        let style = 'fa-solid';
-        let name = '';
+        const nameParts = iconName.trim().split(/\s+/).filter(p => p.length > 0);
+        let stylePrefix = 'fa-solid'; 
+        let baseName = '';
+        const stylePrefixes = ['fa-solid', 'fa-regular', 'fa-light', 'fa-thin', 'fa-brands'];
 
-        const styles = ['fa-solid', 'fa-regular', 'fa-light', 'fa-thin', 'fa-brands'];
-        
-        // Loop through parts to find style and name
-        for (const part of parts) {
-            if (styles.includes(part)) {
-                style = part;
-            } else {
-                name = part;
+        const existingPrefix = nameParts.find(p => stylePrefixes.includes(p));
+        if (existingPrefix) {
+            stylePrefix = existingPrefix;
+        }
+
+        const nameCandidate = nameParts.find(p => p.startsWith('fa-') && !stylePrefixes.includes(p));
+
+        if (nameCandidate) {
+            baseName = nameCandidate;
+        } else {
+            baseName = nameParts.find(p => !stylePrefixes.includes(p));
+            if (baseName && !baseName.startsWith('fa-')) {
+                 baseName = `fa-${baseName}`;
             }
         }
 
-        // Ensure icon name has 'fa-' prefix
-        if (name && !name.startsWith('fa-')) {
-            name = `fa-${name}`;
+        if (baseName) {
+            return `${stylePrefix} ${baseName}`;
         }
         
-        // Return the full class string including fa-fw for fixed-width alignment
-        if (name) {
-            return `fa-fw ${style} ${name}`;
-        }
-        return ''; // Return empty if no name was found
+        return '';
     };
-
 
     /**
      * Attempts to get general location and time data for the system prompt.
@@ -213,18 +214,6 @@ let currentAgent = 'Standard'; // Default agent
                 .auth-navbar nav { max-width: 80rem; margin: auto; padding: 0 1rem; height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: relative; }
                 .initial-avatar { background: linear-gradient(135deg, #374151 0%, #111827 100%); font-family: sans-serif; text-transform: uppercase; display: flex; align-items: center; justify-content: center; color: white; }
                 
-                /* FIX: Robust logo styling */
-                .auth-navbar-logo {
-                    display: flex;
-                    align-items: center;
-                    flex-shrink: 0; /* Prevents logo from shrinking when space is tight */
-                }
-                .auth-navbar-logo img {
-                    height: 2rem; /* 32px */
-                    width: auto;
-                    display: block; /* Removes bottom spacing on inline images */
-                }
-
                 /* Auth Dropdown Menu Styles */
                 .auth-menu-container { 
                     position: absolute; right: 0; top: 50px; width: 16rem; 
@@ -259,10 +248,6 @@ let currentAgent = 'Standard'; // Default agent
                 .nav-tab:not(.active):hover { color: white; border-color: #d1d5db; background-color: rgba(79, 70, 229, 0.05); }
                 .nav-tab.active { color: #4f46e5; border-color: #4f46e5; background-color: rgba(79, 70, 229, 0.1); }
                 .nav-tab.active:hover { color: #6366f1; border-color: #6366f1; background-color: rgba(79, 70, 229, 0.15); }
-
-                /* FIX: Styles to ensure icon is sized correctly and has spacing */
-                .nav-tab i { flex-shrink: 0; }
-                .mr-2 { margin-right: 0.5rem; }
                 
                 /* --- AI Agent Modal Styles --- */
                 .ai-modal {
@@ -464,6 +449,7 @@ let currentAgent = 'Standard'; // Default agent
                 `<option value="${key}" ${key === currentAgent ? 'selected' : ''}>${key}</option>`
             ).join('');
 
+            // The aiAgentButton variable is now empty because isPrivilegedUser will be false
             const aiAgentButton = isPrivilegedUser ? `
                 <div class="relative flex-shrink-0 mr-4">
                     <button id="ai-toggle" title="AI Agent (Ctrl+A)" class="w-8 h-8 rounded-full border border-indigo-600 bg-indigo-700/50 flex items-center justify-center text-indigo-300 hover:bg-indigo-600 hover:text-white transition">
@@ -529,8 +515,8 @@ let currentAgent = 'Standard'; // Default agent
             container.innerHTML = `
                 <header class="auth-navbar">
                     <nav>
-                        <a href="/" class="auth-navbar-logo">
-                            <img src="${logoPath}" alt="4SP Logo">
+                        <a href="/" class="flex items-center space-x-2 flex-shrink-0">
+                            <img src="${logoPath}" alt="4SP Logo" class="h-8 w-auto">
                         </a>
 
                         <div class="tab-wrapper">
@@ -549,6 +535,7 @@ let currentAgent = 'Standard'; // Default agent
             `;
 
             // --- Append AI Modal HTML to the Body ---
+            // This block will now effectively be skipped since isPrivilegedUser is false.
             if (isPrivilegedUser) {
                 let aiModal = document.getElementById('ai-modal');
                 if (!aiModal) {
@@ -593,6 +580,7 @@ let currentAgent = 'Standard'; // Default agent
         };
 
         // --- NEW: AI GENERATIVE MODEL API CALL LOGIC (Using standard fetch/retry) ---
+        // This entire block of code is functionally disabled because renderNavbar sets isPrivilegedUser to false.
         
         /**
          * Exponential backoff retry logic for the API call.
@@ -748,6 +736,7 @@ let currentAgent = 'Standard'; // Default agent
             }
 
             // --- AI Agent Listeners (Only for privileged user) ---
+            // This entire block is functionally disabled because setupEventListeners is called with isPrivilegedUser: false.
             if (isPrivilegedUser) {
                 const aiModal = document.getElementById('ai-modal');
                 const aiToggleButton = document.getElementById('ai-toggle');
@@ -856,4 +845,3 @@ let currentAgent = 'Standard'; // Default agent
     document.addEventListener('DOMContentLoaded', run);
 
 })();
-
