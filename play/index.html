@@ -1,19 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4SP - STRONGDOG</title>
     <link rel="stylesheet" href="../css/style.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="../navigation.js"></script> 
-
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
@@ -21,44 +11,45 @@
     <script src="../panic-key.js"></script>
     <script src="../ban-enforcer.js"></script>
     <script src="../url-changer.js"></script>
-
+    <script src="../navigation.js"></script>
     <style>
-        /* FONT AND ROOT VARS: Updated for Geist and sleek black background */
+        /*
+         * STYLES FOR SLEEK BLACK DESIGN WITH GEIST FONT
+         * NOTE: Geist is not officially on Google Fonts. This simulates its inclusion via a generic sans-serif fallback.
+         */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap'); /* Using Inter as a similar, modern Google Font for the "Geist" effect */
+        
+        /* Fallback definition for Geist-like look, favoring system fonts/Inter */
         :root {
-            --ff: 'Geist', sans-serif;
-            --bg: #070707; /* Sleek Black */
+            --ff: 'Inter', 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --bg: #111111; /* Deeper, sleeker black background */
+            --fg: #f3f3f3; /* Light foreground text */
             --purple: #6720BD;
+            --navbar-bg: rgba(18, 18, 18, 0.95); /* Very dark, slightly transparent navbar */
         }
 
-        /* Base styles for slim/sleek look */
+        /* This rule hides the body by default. The auth gate script will make it visible only for logged-in users. */
         body {
             visibility: hidden;
             font-family: var(--ff);
             margin: 0;
             padding: 0;
             background-color: var(--bg);
-            color: #c0c0c0; /* Light Gray Text */
+            color: var(--fg);
             overflow-x: hidden;
-            transition: all 0.3s ease;
-            font-weight: 300; /* Ensure font is not too heavy */
-        }
-        
-        /* Font weight fix for Geist to look 'slim' */
-        h1, h2, h3, .font-bold, .font-semibold, strong, .tracking-widest, #gameTitle, .favorites-container h2, .favorite-game-card .card-title {
-            font-weight: 400 !important;
+            line-height: 1.6;
         }
 
-
-        /* NAVIGATION BAR: Sleek Black, Stronger Shadow */
         .navbar {
-            background-color: rgba(17, 17, 17, 0.9);
-            backdrop-filter: blur(10px);
+            background-color: var(--navbar-bg);
+            backdrop-filter: blur(8px);
             color: white;
-            padding: 15px 30px;
+            padding: 12px 25px; /* Compact padding */
+            height: 60px; /* Slim height */
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); /* Darker shadow */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -68,46 +59,44 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            font-weight: 700;
-            font-size: 2.5rem;
-            letter-spacing: 1px;
-            transition: transform 0.3s ease;
+            font-weight: 600; /* Sleeker font-weight */
+            font-size: 1.8rem; /* Compact size */
+            letter-spacing: -0.5px; /* Tighter letter-spacing */
+            transition: color 0.3s ease;
             text-decoration: none;
-            color: white;
+            color: var(--fg);
         }
 
         .logo .xp {
             color: var(--purple);
-            text-shadow: 0 0 10px rgba(103, 32, 189, 0.5);
+            text-shadow: 0 0 8px rgba(103, 32, 189, 0.4);
+            font-weight: 700;
         }
 
         .menu-icon {
-            font-size: 2.5rem;
+            font-size: 1.8rem; /* Compact size */
             cursor: pointer;
-            color: white;
-            transition: transform 0.3s ease, color 0.3s ease;
+            color: var(--fg);
+            transition: opacity 0.3s ease;
+            line-height: 1;
         }
 
-        /* SLIDE MENU: Sleek Dark Background, Darker Shadow */
         .slide-menu {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            width: 400px;
+            width: 300px; /* Slimmer menu */
+            background-color: rgba(18, 18, 18, 0.98); /* Dark background for sleek look */
             backdrop-filter: blur(10px);
             color: white;
-            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.9); /* Darker shadow */
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.8);
             z-index: 1003;
-            transition: transform 0.5s ease;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); /* Smoother transition */
             transform: translateX(-100%);
             padding: 20px;
-            overflow-y: auto;
             box-sizing: border-box;
-            /* Sleek dark background gradient */
-            background: linear-gradient(to bottom right,
-                    rgba(17, 17, 17, 0.9),
-                    rgba(25, 25, 25, 0.9));
+            overflow-y: auto;
         }
 
         .slide-menu.active {
@@ -117,72 +106,56 @@
         .categories {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            padding-top: 30px;
+            gap: 10px; /* Compact gap */
+            padding-top: 20px;
         }
 
-        /* CATEGORY LINKS: Slimmer/Compact Look */
         .categories>a {
-            padding: 17px;
-            background: linear-gradient(45deg, #151515, #222222); /* Sleek dark button background */
-            border-radius: 8px; /* Slimmer/Compact rounding (down from 15px) */
+            padding: 12px 15px; /* Slimmer padding */
+            background-color: #222; /* Darker card background */
+            border-radius: 8px; /* Slightly more modern radius */
             text-decoration: none;
-            color: white;
-            transition: transform 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
-            text-align: center;
-            font-size: 1.2rem;
+            color: var(--fg);
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            text-align: left;
+            font-size: 1rem; /* Compact font size */
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            border-left: 3px solid transparent;
         }
 
         .categories>a:hover {
-            background: linear-gradient(45deg, #6720BD, #8a2be2);
-            box-shadow: 0 6px 20px rgba(103, 32, 189, 0.6);
+            background-color: #282828;
+            border-left-color: var(--purple); /* Sleek accent on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
         }
 
-        .categories>a::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(0, 0, 0, 0.1);
-            transition: all 0.5s ease;
-        }
-
-        .categories>a:hover::after {
-            width: 500px;
-            height: 500px;
-        }
+        /* Removed complex ::after hover effect for a cleaner, faster transition */
 
         .content-wrapper {
             display: flex;
             justify-content: center;
-            padding: 40px 20px;
-            gap: 30px;
+            padding: 30px 15px; /* Compact padding */
+            gap: 20px; /* Compact gap */
             align-items: flex-start;
         }
 
         .game-area {
             flex-grow: 1;
-            max-width: 95%;
+            max-width: 1000px; /* Increased max-width for modern display */
             width: 100%;
         }
 
-        /* GAME CONTAINER: Slimmer/Sleeker Rounding */
         .game-container {
             width: 100%;
             padding-top: 56.25%;
-            /* 16:9 Aspect Ratio */
             background-color: #000;
             position: relative;
             overflow: hidden;
-            border-radius: 12px; /* Slimmer/Sleeker rounding (down from 20px) */
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8); /* Darker shadow */
+            border-radius: 12px; /* Sleeker radius */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
             contain: strict;
         }
 
@@ -195,41 +168,41 @@
             border: none;
         }
 
-        /* OVERLAY BUTTONS: Slimmer/Sleek Look */
         .game-overlay-buttons {
             position: fixed;
-            bottom: 15px;
-            left: 15px;
+            bottom: 20px; /* Slight adjustment */
+            left: 20px;
             z-index: 1004;
             display: flex;
-            gap: 10px;
+            gap: 8px; /* Compact gap */
         }
 
         .overlay-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px; /* Slimmer/Compact rounding (down from 12px) */
-            background-color: rgba(10, 10, 10, 0.5); /* Darker background */
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Slimmer border */
-            font-size: 24px;
+            width: 44px; /* Slimmer button */
+            height: 44px; /* Slimmer button */
+            border-radius: 8px; /* Sleeker radius */
+            background-color: rgba(30, 30, 30, 0.5);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 20px; /* Compact icon size */
             color: #fff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .overlay-btn:hover {
-            transform: scale(1.1);
-            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.05);
+            background: rgba(0, 0, 0, 0.7);
+            border-color: var(--purple);
         }
 
         #favoriteIcon.favorited {
             color: #ffc107;
-            text-shadow: 0 0 12px rgba(255, 193, 7, 0.9);
+            text-shadow: 0 0 10px rgba(255, 193, 7, 0.7);
         }
 
         #redirectMessage {
@@ -240,96 +213,102 @@
 
         #redirectMessage h2,
         #gameTitle {
-            color: #c0c0c0;
+            color: var(--fg);
         }
 
         #gameTitle {
-            padding: 20px;
-            font-size: 1.5em;
+            padding: 15px; /* Compact padding */
+            font-size: 1.2em; /* Compact font size */
+            font-weight: 500; /* Sleek font-weight */
             text-align: center;
+            margin: 0;
         }
         
-        /* FAVORITES CONTAINER: Slimmer/Sleek Look */
+        /* --- FAVORITES SCROLLBAR STYLES (Adjusted for sleek look) --- */
         .favorites-container {
-            width: 90%;
+            width: 95%; /* More compact width */
             max-width: 1200px;
-            margin: 40px auto 20px auto;
-            padding: 20px;
-            background-color: #111111; /* Sleek Darker Panel */
-            border-radius: 12px; /* Slimmer rounding (down from 20px) */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); /* Darker shadow */
+            margin: 30px auto 15px auto; /* Compact margin */
+            padding: 15px; /* Compact padding */
+            background-color: #181818; /* Darker background */
+            border-radius: 10px; /* Sleeker radius */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
         }
 
         .favorites-container h2 {
             margin-top: 0;
-            margin-bottom: 20px;
-            color: #e0e0e0;
+            margin-bottom: 15px; /* Compact margin */
+            color: var(--fg);
             text-align: center;
-            font-size: 1.8rem;
-            font-weight: 400; /* Adjusted for Geist */
+            font-size: 1.4rem; /* Compact size */
+            font-weight: 600;
         }
 
         .favorites-scroll {
             overflow-x: auto;
             overflow-y: hidden;
             white-space: nowrap;
-            padding-bottom: 15px;
+            padding-bottom: 10px; /* Space for scrollbar */
         }
 
-        /* Custom Scrollbar Styling (Sleeker/Slimmer) */
+        /* Custom Scrollbar Styling - Sleek and Purple */
         .favorites-scroll::-webkit-scrollbar {
-            height: 8px; /* Slimmer scrollbar (down from 12px) */
+            height: 8px; /* Slimmer scrollbar */
         }
         .favorites-scroll::-webkit-scrollbar-track {
-            background: #0f0f0f; /* Darker track */
-            border-radius: 4px; /* Slimmer radius */
+            background: #181818;
+            border-radius: 8px;
         }
         .favorites-scroll::-webkit-scrollbar-thumb {
             background-color: var(--purple);
-            border-radius: 4px; /* Slimmer radius */
-            border: 2px solid #070707; /* Border matches new body color */
+            border-radius: 8px;
+            border: 2px solid #181818; /* Slimmer border */
         }
         .favorites-scroll::-webkit-scrollbar-thumb:hover {
             background-color: #8a2be2;
         }
 
-        /* FAVORITE CARDS: Slimmer/Compact Look */
         .favorite-game-card {
             display: inline-block;
             vertical-align: top;
-            width: 220px;
-            margin-right: 20px;
+            width: 180px; /* Slimmer card */
+            margin-right: 15px; /* Compact margin */
             text-decoration: none;
-            background: #1a1a1a; /* Sleek dark card background */
-            border-radius: 8px; /* Slimmer/Compact rounding (down from 15px) */
+            background: #252525;
+            border-radius: 8px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); /* Darker shadow */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
             position: relative;
         }
 
-        .favorite-game-card:last-child {
-            margin-right: 0;
-        }
-
         .favorite-game-card:hover {
-            transform: translateY(-5px); /* Slimmer hover effect (down from -8px) */
-            box-shadow: 0 10px 25px rgba(103, 32, 189, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(103, 32, 189, 0.5);
         }
 
         .favorite-game-card img {
             width: 100%;
-            height: 124px;
+            height: 101px; /* Maintain 16:9 aspect ratio for 180px width */
             object-fit: cover;
-            border-bottom: 2px solid var(--purple); /* Slimmer border (down from 3px) */
+            border-bottom: 2px solid var(--purple); /* Slimmer border */
         }
 
         .favorite-game-card .card-title {
-            color: #c0c0c0;
-            padding: 15px;
-            font-size: 1rem;
+            color: var(--fg);
+            padding: 10px; /* Compact padding */
+            font-size: 0.9rem; /* Compact font size */
             white-space: normal;
             text-align: center;
+            font-weight: 400;
+        }
+        /* --- END: FAVORITES SCROLLBAR STYLES --- */
+        
+        #fullscreenDisclaimer {
+            text-align: center;
+            color: #888;
+            margin: 10px 0 30px 0; /* Compact margin */
+            font-size: 0.8em; /* Compact font size */
         }
 
         @media (max-width: 900px) {
@@ -361,8 +340,8 @@
 
     <div class="slide-menu" id="slideMenu">
         <div class="categories">
-            <a href="https://forsimpleproblems.github.io/logged-in/games.html" class="option-link">Back to 4SP</a>
-            <a href="../index.html" class="option-link">Back to StrongdogXP</a>
+            <a href="https://forsimpleproblems.github.io/logged-in/games.html" class="option-link">Explore Games (4SP)</a>
+            <a href="../index.html" class="option-link">StrongdogXP Home</a>
             <a href="../save/index.html" class="option-link">Save Manager</a>
             <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
                 Discord Server
@@ -379,11 +358,13 @@
         </div>
     </div>
     
-    <div class="favorites-container" id="favorites-container" style="display: none;"> <h2>Your Favorite Games</h2>
+    <div class="favorites-container" id="favorites-container" style="display: none;"> 
+        <h2>Your Favorite Games</h2>
         <div class="favorites-scroll" id="favorites-bar">
-            </div>
+        </div>
     </div>
-    <p id="fullscreenDisclaimer" style="text-align: center; color: #aaa; margin: 20px; font-size: 0.9em;">
+    
+    <p id="fullscreenDisclaimer">
         Use the fullscreen button for a better experience.
     </p>
 
