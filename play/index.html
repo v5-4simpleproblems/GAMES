@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="dark">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4SP - STRONGDOG</title>
+    <link rel="stylesheet" href="../css/style.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
-    <script src="../navigation.js"></script>
     
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../navigation.js"></script> 
+
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
@@ -15,42 +21,44 @@
     <script src="../panic-key.js"></script>
     <script src="../ban-enforcer.js"></script>
     <script src="../url-changer.js"></script>
+
     <style>
-        /* --- UPDATED: Professional & Sleek Black Theme --- */
+        /* FONT AND ROOT VARS: Updated for Geist and sleek black background */
         :root {
             --ff: 'Geist', sans-serif;
-            --bg: #070707;
-            --panel-bg: #111111;
-            --border-color: #252525;
-            --text-color: #c0c0c0;
+            --bg: #070707; /* Sleek Black */
             --purple: #6720BD;
         }
 
-        /* This rule hides the body by default. The auth gate script will make it visible only for logged-in users. */
+        /* Base styles for slim/sleek look */
         body {
             visibility: hidden;
             font-family: var(--ff);
-            font-weight: 300;
             margin: 0;
             padding: 0;
             background-color: var(--bg);
-            color: var(--text-color);
+            color: #c0c0c0; /* Light Gray Text */
             overflow-x: hidden;
+            transition: all 0.3s ease;
+            font-weight: 300; /* Ensure font is not too heavy */
         }
-
-        /* Ensure headings and strong text are slightly thicker but still slim */
-        h1, h2, h3, strong {
+        
+        /* Font weight fix for Geist to look 'slim' */
+        h1, h2, h3, .font-bold, .font-semibold, strong, .tracking-widest, #gameTitle, .favorites-container h2, .favorite-game-card .card-title {
             font-weight: 400 !important;
         }
 
+
+        /* NAVIGATION BAR: Sleek Black, Stronger Shadow */
         .navbar {
-            background-color: var(--panel-bg);
-            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(17, 17, 17, 0.9);
+            backdrop-filter: blur(10px);
             color: white;
             padding: 15px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); /* Darker shadow */
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -60,7 +68,7 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            font-weight: 400; /* Updated font weight */
+            font-weight: 700;
             font-size: 2.5rem;
             letter-spacing: 1px;
             transition: transform 0.3s ease;
@@ -80,21 +88,26 @@
             transition: transform 0.3s ease, color 0.3s ease;
         }
 
+        /* SLIDE MENU: Sleek Dark Background, Darker Shadow */
         .slide-menu {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
             width: 400px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
             color: white;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.9); /* Darker shadow */
             z-index: 1003;
             transition: transform 0.5s ease;
             transform: translateX(-100%);
             padding: 20px;
             overflow-y: auto;
             box-sizing: border-box;
+            /* Sleek dark background gradient */
+            background: linear-gradient(to bottom right,
+                    rgba(17, 17, 17, 0.9),
+                    rgba(25, 25, 25, 0.9));
         }
 
         .slide-menu.active {
@@ -108,21 +121,42 @@
             padding-top: 30px;
         }
 
+        /* CATEGORY LINKS: Slimmer/Compact Look */
         .categories>a {
             padding: 17px;
-            background-color: #1f1f1f;
-            border-radius: 0.75rem;
-            border: 1px solid transparent;
+            background: linear-gradient(45deg, #151515, #222222); /* Sleek dark button background */
+            border-radius: 8px; /* Slimmer/Compact rounding (down from 15px) */
             text-decoration: none;
             color: white;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            transition: transform 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
             text-align: center;
             font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
         .categories>a:hover {
-            background-color: #2a2a2a;
-            border-color: var(--purple);
+            background: linear-gradient(45deg, #6720BD, #8a2be2);
+            box-shadow: 0 6px 20px rgba(103, 32, 189, 0.6);
+        }
+
+        .categories>a::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .categories>a:hover::after {
+            width: 500px;
+            height: 500px;
         }
 
         .content-wrapper {
@@ -139,6 +173,7 @@
             width: 100%;
         }
 
+        /* GAME CONTAINER: Slimmer/Sleeker Rounding */
         .game-container {
             width: 100%;
             padding-top: 56.25%;
@@ -146,8 +181,8 @@
             background-color: #000;
             position: relative;
             overflow: hidden;
-            border-radius: 1rem;
-            border: 1px solid var(--border-color);
+            border-radius: 12px; /* Slimmer/Sleeker rounding (down from 20px) */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8); /* Darker shadow */
             contain: strict;
         }
 
@@ -160,6 +195,7 @@
             border: none;
         }
 
+        /* OVERLAY BUTTONS: Slimmer/Sleek Look */
         .game-overlay-buttons {
             position: fixed;
             bottom: 15px;
@@ -172,9 +208,11 @@
         .overlay-btn {
             width: 48px;
             height: 48px;
-            border-radius: 12px;
-            background-color: rgba(17, 17, 17, 0.8);
-            border: 1px solid var(--border-color);
+            border-radius: 8px; /* Slimmer/Compact rounding (down from 12px) */
+            background-color: rgba(10, 10, 10, 0.5); /* Darker background */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Slimmer border */
             font-size: 24px;
             color: #fff;
             cursor: pointer;
@@ -186,8 +224,7 @@
 
         .overlay-btn:hover {
             transform: scale(1.1);
-            background: #2a2a2a;
-            border-color: var(--purple);
+            background: rgba(0, 0, 0, 0.8);
         }
 
         #favoriteIcon.favorited {
@@ -203,25 +240,24 @@
 
         #redirectMessage h2,
         #gameTitle {
-            color: lightgray;
+            color: #c0c0c0;
         }
 
         #gameTitle {
             padding: 20px;
             font-size: 1.5em;
-            font-weight: 400; /* Updated font weight */
             text-align: center;
         }
-
-        /* --- UPDATED: Favorites scrollbar styles --- */
+        
+        /* FAVORITES CONTAINER: Slimmer/Sleek Look */
         .favorites-container {
             width: 90%;
             max-width: 1200px;
             margin: 40px auto 20px auto;
             padding: 20px;
-            background-color: var(--panel-bg);
-            border-radius: 1rem;
-            border: 1px solid var(--border-color);
+            background-color: #111111; /* Sleek Darker Panel */
+            border-radius: 12px; /* Slimmer rounding (down from 20px) */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); /* Darker shadow */
         }
 
         .favorites-container h2 {
@@ -230,7 +266,7 @@
             color: #e0e0e0;
             text-align: center;
             font-size: 1.8rem;
-            font-weight: 400;
+            font-weight: 400; /* Adjusted for Geist */
         }
 
         .favorites-scroll {
@@ -238,40 +274,37 @@
             overflow-y: hidden;
             white-space: nowrap;
             padding-bottom: 15px;
-            /* Space for scrollbar */
         }
 
-        /* Custom Scrollbar Styling */
+        /* Custom Scrollbar Styling (Sleeker/Slimmer) */
         .favorites-scroll::-webkit-scrollbar {
-            height: 12px;
+            height: 8px; /* Slimmer scrollbar (down from 12px) */
         }
-
         .favorites-scroll::-webkit-scrollbar-track {
-            background: #1f1f1f;
-            border-radius: 10px;
+            background: #0f0f0f; /* Darker track */
+            border-radius: 4px; /* Slimmer radius */
         }
-
         .favorites-scroll::-webkit-scrollbar-thumb {
             background-color: var(--purple);
-            border-radius: 10px;
-            border: 3px solid #1f1f1f;
+            border-radius: 4px; /* Slimmer radius */
+            border: 2px solid #070707; /* Border matches new body color */
         }
-
         .favorites-scroll::-webkit-scrollbar-thumb:hover {
             background-color: #8a2be2;
         }
 
+        /* FAVORITE CARDS: Slimmer/Compact Look */
         .favorite-game-card {
             display: inline-block;
             vertical-align: top;
             width: 220px;
             margin-right: 20px;
             text-decoration: none;
-            background: #1a1a1a;
-            border-radius: 0.75rem;
+            background: #1a1a1a; /* Sleek dark card background */
+            border-radius: 8px; /* Slimmer/Compact rounding (down from 15px) */
             overflow: hidden;
-            transition: border-color 0.3s ease;
-            border: 1px solid transparent;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); /* Darker shadow */
             position: relative;
         }
 
@@ -280,26 +313,24 @@
         }
 
         .favorite-game-card:hover {
-            border-color: var(--purple);
+            transform: translateY(-5px); /* Slimmer hover effect (down from -8px) */
+            box-shadow: 0 10px 25px rgba(103, 32, 189, 0.5);
         }
 
         .favorite-game-card img {
             width: 100%;
             height: 124px;
-            /* Maintain 16:9 aspect ratio */
             object-fit: cover;
-            border-bottom: 3px solid var(--purple);
+            border-bottom: 2px solid var(--purple); /* Slimmer border (down from 3px) */
         }
 
         .favorite-game-card .card-title {
-            color: #e0e0e0;
+            color: #c0c0c0;
             padding: 15px;
             font-size: 1rem;
             white-space: normal;
-            /* Allow title to wrap if it's long */
             text-align: center;
         }
-        /* --- END: FAVORITES SCROLLBAR STYLES --- */
 
         @media (max-width: 900px) {
             .content-wrapper {
@@ -347,11 +378,10 @@
             </div>
         </div>
     </div>
-
-    <div class="favorites-container" id="favorites-container" style="display: none;">
-        <h2>Your Favorite Games</h2>
+    
+    <div class="favorites-container" id="favorites-container" style="display: none;"> <h2>Your Favorite Games</h2>
         <div class="favorites-scroll" id="favorites-bar">
-        </div>
+            </div>
     </div>
     <p id="fullscreenDisclaimer" style="text-align: center; color: #aaa; margin: 20px; font-size: 0.9em;">
         Use the fullscreen button for a better experience.
@@ -384,7 +414,7 @@
         } from "../site-mapping.js";
 
         document.addEventListener("DOMContentLoaded", async function () {
-
+            
             // --- NEW: FUNCTION TO LOAD FAVORITE GAMES ---
             async function loadFavoriteGames(userId) {
                 const db = firebase.firestore();
@@ -478,7 +508,7 @@
             async function getEmbedPath(adjustedHref, originalHref, page) {
                 let cleanHref = adjustedHref.replace(/index\.html$/, "").replace(/base\.html$/, "").replace(/\.html$/, "");
                 if (!cleanHref.endsWith("/")) cleanHref += "/";
-                const pathsToTry = [cleanHref + "game/index.html", cleanHref + "game/base.html", cleanHref + "gamereal/index.html", cleanHref + "gamereal/base.html", cleanHref + "index.html", cleanHref + "base.html",];
+                const pathsToTry = [cleanHref + "game/index.html", cleanHref + "game/base.html", cleanHref + "gamereal/index.html", cleanHref + "gamereal/base.html", cleanHref + "index.html", cleanHref + "base.html", ];
                 try {
                     const response = await fetch(adjustedHref, {
                         method: "GET"
@@ -592,7 +622,7 @@
                 const sGame = games.find((g) => g.id == selectedId);
                 if (sGame && sGame.href) window.location.href = "../" + sGame.href;
             });
-
+            
             // This needs to be outside the DOMContentLoaded but inside the script for auth to work properly on page load
         });
     </script>
@@ -642,11 +672,11 @@
                     // The external ban-enforcer.js script will handle checking for bans.
                     console.log("Authentication successful. Revealing page content.");
                     document.body.style.visibility = 'visible';
-
+                    
                     // NEW: Manually trigger an event to load favorites, since the logic is now in a module.
                     // This ensures the DOM is ready and the user is authenticated.
                     document.dispatchEvent(new CustomEvent('userAuthenticated', { detail: { uid: user.uid } }));
-
+                    
                 } else {
                     // User is logged out. Redirect them to the login page.
                     console.log("Authentication failed: No user is logged in. Redirecting...");
@@ -655,7 +685,7 @@
             });
         });
     </script>
-
+    
     <script type="module">
         // This is a bit of a workaround to call a function inside a module from a regular script.
         // We listen for the custom event dispatched when the user is authenticated.
@@ -663,10 +693,10 @@
             // Since we can't directly call the function, we have to duplicate the logic or re-architect.
             // For simplicity, we will re-run the fetching logic here. A better long-term solution
             // would be to have a shared state management system.
-
+            
             // Re-importing necessary modules for this script block.
             import games from "../cards-data.js";
-
+    
             async function loadFavoriteGames(userId) {
                 const db = firebase.firestore();
                 const favoritesContainer = document.getElementById('favorites-container');
