@@ -36,6 +36,51 @@
         .touch-control.radio { left: 50%; transform: translateX(-50%); width: 40vmin; height: 10vmin; }
         .touch-control.weapon { right: 6vmin; top: 5vmin; height: 14vmin; width: 16vmin; }
     </style>
+
+    <!-- VERN Proxy Scripts -->
+    <script src="/GAMES/uv/uv.bundle.js?v=2.1.7"></script>
+    <script src="/GAMES/uv/uv.client.js?v=2.1.7"></script>
+    <script src="/GAMES/uv/uv.config.js?v=2.1.7"></script>
+    <script src="/GAMES/baremux/index.js?v=2.1.7"></script>
+    <script>
+        window.__4sp_proxy_init = (async () => {
+            if ("serviceWorker" in navigator) {
+                try {
+                    await navigator.serviceWorker.register("/GAMES/sw.js", {
+                        scope: "/GAMES/"
+                    });
+                } catch (e) {
+                    console.error("SW Register Failed", e);
+                }
+            }
+            try {
+                const connection = new BareMux.BareMuxConnection("/GAMES/baremux/worker.js");
+                await connection.setTransport("/GAMES/libcurl/index.mjs", [
+                    { wisp: "wss://wisp.mercurynate.xyz/" },
+                    { wisp: "wss://wisp.rhw.one/" },
+                    { wisp: "wss://wisp.mercurywork.shop/" },
+                    { wisp: "wss://t9.v-v.top/wisp/" }
+                ]);
+            } catch (e) {
+                console.error("BareMux Init Failed", e);
+            }
+        })();
+
+        function proxyUrl(url) {
+            if (!url) return url;
+            const origin = window.location.origin;
+            try {
+                const absoluteUrl = new URL(url, document.baseURI).href;
+                if (absoluteUrl.startsWith('http') && !absoluteUrl.startsWith(origin)) {
+                    return origin + "/GAMES/uv/service/" + __uv$config.encodeUrl(absoluteUrl);
+                }
+                return absoluteUrl;
+            } catch (e) {
+                return url;
+            }
+        }
+    </script>
+
 </head>
 <body data-is-touch="0" data-state-car="0" data-state-car-gun="0" data-state-gun="0" data-state-bike="0" data-state-menu="1" data-state-cutscene="0" data-state-mobring="0" data-state-job="0" data-state-disable-controls="0" data-state-panzer="0" data-state-car-with-weapon="0" data-state-hunter="0" data-state-scope-mode="0" data-state-scope-gun="0">
     <div class="intro-container">
@@ -299,7 +344,7 @@ UNKNOWN_ACTION=
         async function getFile(name) { const db = await openDB(); return new Promise((resolve, reject) => { const tx = db.transaction(STORE_NAME, "readonly"); const store = tx.objectStore(STORE_NAME); const request = store.get(name); request.onsuccess = e => resolve(e.target.result); }); }
         async function fetchWithCache(name, url, displayName) {
             let cached = await getFile(name); if (cached) { loadedBytes += cached.byteLength; return cached; }
-            const response = await fetch(url); const reader = response.body.getReader(); let chunks = []; let received = 0;
+            const response = await fetch(proxyUrl(url)); const reader = response.body.getReader(); let chunks = []; let received = 0;
             while (true) {
                 const { done, value } = await reader.read(); if (done) break;
                 received += value.length; loadedBytes += value.length; chunks.push(value);
@@ -355,7 +400,7 @@ UNKNOWN_ACTION=
                 return originalOpen.call(this, method, url, ...rest);
             };
 
-            async function loadGame(data) {
+            async function loadGame(data) { if (window.__4sp_proxy_init) await window.__4sp_proxy_init;
                 var Module = {
                     mainCalled: () => { try { Module.FS.unlink("/vc-assets/local/revc.ini"); Module.FS.createDataFile("/vc-assets/local/revc.ini", 0, revc_ini, true, true); } catch (e) { console.error('mainCalled error:', e); } },
                     syncRevcIni: () => { try { const path = Module.FS.lookupPath("/vc-assets/local/revc.ini"); if (path && path.node && path.node.contents) localStorage.setItem('vcsky.revc.ini', new TextDecoder().decode(path.node.contents)); } catch (e) { console.error('syncRevcIni error:', e); } },
@@ -366,7 +411,7 @@ UNKNOWN_ACTION=
                     canvas: document.getElementById('canvas'),
                     setStatus: (text) => { if (!text) { document.querySelector('.intro-container').classList.add('fade-out'); return; } document.getElementById("status").textContent = text; },
                     instantiateWasm: async (info, receiveInstance) => {
-                        const wasm = await (await fetch("index.wasm")).arrayBuffer();
+                        const wasm = await (await fetch(proxyUrl("index.wasm"))).arrayBuffer();
                         const module = await WebAssembly.instantiate(wasm, info);
                         return receiveInstance(module.instance, module);
                     }
@@ -381,7 +426,7 @@ UNKNOWN_ACTION=
                 btns.forEach(b => emulator.AddDisplayButtonEventListeners(0, [{ buttonIndex: b.i, tapTarget: document.querySelector('.touch-control' + b.t) }]));
             }
 
-            fetch("index.data").then(r => r.arrayBuffer()).then(buf => {
+            fetch(proxyUrl("index.data")).then(r => r.arrayBuffer()).then(buf => {
                 document.getElementById("status").textContent = "Click to continue...";
                 window.addEventListener('click', () => loadGame(buf), { once: true });
             });
