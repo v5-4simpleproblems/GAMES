@@ -81,6 +81,78 @@
         }
     </script>
 
+
+    <!-- MINI VERN PROXY -->
+    <script>
+        (function() {
+            const UV_BUNDLE = "{UV_BUNDLE}";
+            const BAREMUX_INDEX = "{BAREMUX_INDEX}";
+            const BAREMUX_WORKER = "data:application/javascript;base64,{BAREMUX_WORKER}";
+            const LIBCURL_INDEX = "data:application/javascript;base64,{LIBCURL_INDEX}";
+            
+            const injectScript = (b64) => {
+                const s = document.createElement('script');
+                s.textContent = atob(b64);
+                document.head.appendChild(s);
+            };
+
+            injectScript(UV_BUNDLE);
+            injectScript(BAREMUX_INDEX);
+
+            window.__uv$config = {
+                prefix: '/mini-proxy/',
+                encodeUrl: (url) => btoa(url).replace(/\//g, '_').replace(/\+/g, '-').replace(/=/g, ''),
+                decodeUrl: (url) => {
+                    url = url.replace(/_/g, '/').replace(/-/g, '+');
+                    while (url.length % 4) url += '=';
+                    return atob(url);
+                }
+            };
+
+            window.__4sp_proxy_init = (async () => {
+                if ("serviceWorker" in navigator) {
+                    const SW_CODE = `importScripts('data:application/javascript;base64,{UV_BUNDLE}');
+self.__uv$config = {{ prefix: '/mini-proxy/', encodeUrl: (url) => btoa(url).replace(/\//g, '_').replace(/\+/g, '-').replace(/=/g, ''), decodeUrl: (url) => {{ url = url.replace(/_/g, '/').replace(/-/g, '+'); while (url.length % 4) url += '='; return atob(url); }}, handler: 'data:application/javascript;base64,{UV_HANDLER}', client: 'data:application/javascript;base64,{UV_CLIENT}', bundle: 'data:application/javascript;base64,{UV_BUNDLE}', sw: 'data:application/javascript;base64,{UV_SW}' }};
+importScripts('data:application/javascript;base64,{UV_SW}');
+const uv = new UVServiceWorker();
+self.addEventListener('fetch', event => event.respondWith(uv.route(event) ? uv.fetch(event) : fetch(event.request)));`;
+                    const swBlob = new Blob([SW_CODE], { type: 'application/javascript' });
+                    const swUrl = URL.createObjectURL(swBlob);
+                    try {
+                        await navigator.serviceWorker.register(swUrl, { scope: '/' });
+                        console.log("Mini-Proxy SW Registered");
+                    }} catch (e) {
+                        console.error("Mini-Proxy SW Register Failed", e);
+                    }
+                }
+                try {
+                    const connection = new BareMux.BareMuxConnection(BAREMUX_WORKER);
+                    await connection.setTransport(LIBCURL_INDEX, [
+                        { wisp: "wss://wisp.mercurynate.xyz/" },
+                        { wisp: "wss://wisp.rhw.one/" },
+                        { wisp: "wss://wisp.mercurywork.shop/" },
+                        { wisp: "wss://t9.v-v.top/wisp/" }
+                    ]);
+                    console.log("Mini-Proxy BareMux Initialized");
+                }} catch (e) {
+                    console.error("Mini-Proxy BareMux Init Failed", e);
+                }
+            }})();
+
+            window.proxyUrl = function(url) {
+                if (!url) return url;
+                const origin = window.location.origin;
+                try {
+                    const absoluteUrl = new URL(url, document.baseURI).href;
+                    if (absoluteUrl.startsWith('http') && !absoluteUrl.startsWith(origin)) {
+                        return origin + window.__uv$config.prefix + window.__uv$config.encodeUrl(absoluteUrl);
+                    }
+                    return absoluteUrl;
+                }} catch (e) { return url; }
+            };
+        }})();
+    </script>
+
 </head>
 <body data-is-touch="0" data-state-car="0" data-state-car-gun="0" data-state-gun="0" data-state-bike="0" data-state-menu="1" data-state-cutscene="0" data-state-mobring="0" data-state-job="0" data-state-disable-controls="0" data-state-panzer="0" data-state-car-with-weapon="0" data-state-hunter="0" data-state-scope-mode="0" data-state-scope-gun="0">
     <div class="intro-container">
